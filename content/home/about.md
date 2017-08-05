@@ -12,31 +12,29 @@ weight = 1
 # List your academic interests.
 [interests]
   interests = [
-    "Artificial Intelligence",
-    "Computational Linguistics",
-    "Information Retrieval"
+    "Business Analytics",
+    "Predictive Modelling",
+    "Digital Analytics",
+    "Machine Learning",
+    "Score Card Modelling",
+    "Customer Behaviours"
   ]
 
 # List your qualifications (such as academic degrees).
 [[education.courses]]
-  course = "PhD in Artificial Intelligence"
-  institution = "Stanford University"
+  course = "Msc in Quantitative Methods in Economics & Information System"
+  institution = "Warsaw School of Economics"
+  year = 2014
+
+[[education.courses]]
+  course = "BSc in Quantitative Methods in Economics & Information System"
+  institution = "Warsaw School of Economics"
   year = 2012
-
-[[education.courses]]
-  course = "MEng in Artificial Intelligence"
-  institution = "Massachusetts Institute of Technology"
-  year = 2009
-
-[[education.courses]]
-  course = "BSc in Artificial Intelligence"
-  institution = "Massachusetts Institute of Technology"
-  year = 2008
  
 +++
 
-# Biography
+# About me
 
-Lena Smith is a professor of artificial intelligence at the Stanford AI Lab. Her research interests include distributed robotics, mobile computing and programmable matter. She leads the Robotic Neurobiology group, which develops self-reconfiguring robots, systems of self-organizing robots, and mobile sensor networks.
+Anh Hoang Duc is a Business Analytics professional from Hanoi, Vietnam. He has a background in Quantitative Methods in Economics & is a co-founder of [Ranalytics.vn](ranalytics.vn), a group of data-addicted R users specializing in data analytics with the dream to bring the power of R & analytics to Vietnam. His courses provide various aspects of R such as data analysis, data wrangling, data vizualization or predictive model.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate. 
+
