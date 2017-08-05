@@ -25,3 +25,9 @@ I am a teaching instructor for the following courses at University X:
 - CS105: An intro to computer science
 - CS106: An intro to computer science
 - CS107: An intro to computer science
+
+
+No | Project
+---|--------
+1 | Predicting credit card attritor with GBM
+2 | Optimizing banking branch - Spatial Analytics
