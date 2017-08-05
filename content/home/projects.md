@@ -26,8 +26,8 @@ view = 1
   tag = "*"
   
 [[filter]]
-  name = "Deep Learning"
-  tag = ".deep-learning"
+  name = "Predictive Modelling"
+  tag = ".predictive-modelling"
 
 [[filter]]
   name = "Other"

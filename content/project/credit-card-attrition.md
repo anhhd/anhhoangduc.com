@@ -13,7 +13,7 @@ image_preview = "bubbles.jpg"
 
 # Tags: can be used for filtering projects.
 # Example: `tags = ["machine-learning", "deep-learning"]`
-tags = ["deep-learning"]
+tags = ["predictive-modelling"]
 
 # Optional external URL for project (replaces project detail page).
 external_link = "http://www.analyticsbicc.com.vn/case-studies/rbd-credit-card-attrition/"
