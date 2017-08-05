@@ -1,4 +1,6 @@
 library(blogdown)
+install.packages("rmarkdown")
 getwd()
 new_site(theme = "gcushen/hugo-academic")
 serve_site()
+library(rmarkdown)
