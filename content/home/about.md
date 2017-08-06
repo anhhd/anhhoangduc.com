@@ -17,7 +17,8 @@ weight = 1
     "Digital Analytics",
     "Machine Learning",
     "Score Card Modelling",
-    "Customer Behaviours"
+    "Customer Behaviours",
+    "Customer Segmetations"
   ]
 
 # List your qualifications (such as academic degrees).
@@ -37,6 +38,6 @@ weight = 1
 
 Anh Hoang Duc is a Business Analytics professional from Hanoi, Vietnam. He has a background in Quantitative Methods in Economics & is a co-founder of [Ranalytics.vn](https://www.ranalytics.vn), a group of data-addicted R users specializing in data analytics with the dream to bring the power of R & analytics to Vietnam. He is also an instructor of [RStudio](https://www.rstudio.com/instructors/) & [Datacamp](https://www.goo.gl/RzGcmq) in Vietnam, providing various aspects of R such as data analysis, data wrangling, data vizualization or predictive modelling with R.
 
-Currently, Anh is leading the Advanced Analytics department in Business Inteligence Competency Center in [VPBank](https://www.vpbank.com.vn) with the purpose to build a team with strong analytics capability to solve real business problems within the bank. The team has been applying various techniques to help the bank understand customers better.
+Currently, Anh is leading the Advanced Analytics department in Business Inteligence Competency Center in [VPBank](https://www.vpbank.com.vn) with the purpose to build a team with strong analytics capability to solve real business problems within the bank. The team has been applying various techniques to help the bank understand customers better and make better decisions. 
 
 
