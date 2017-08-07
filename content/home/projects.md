@@ -30,8 +30,8 @@ view = 1
   tag = ".predictive-modelling"
 
 [[filter]]
-  name = "Other"
-  tag = ".demo"
+  name = "Tools"
+  tag = ".tool"
 
 +++
 Some selected interesting projects that I have done with my fantastic team

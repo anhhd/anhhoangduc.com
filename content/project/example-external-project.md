@@ -3,17 +3,17 @@
 date = "2016-04-27"
 
 # Project title.
-title = "External Project"
+title = "R package for automation"
 
 # Project summary to display on homepage.
-summary = "An example of linking directly to an external project website using `external_link`."
+summary = "Building an R package to standardize & toautomate common analytics tasks for Analytics team."
 
 # Optional image to display on homepage (relative to `static/img/` folder).
-image_preview = "boards.jpg"
+image_preview = "r-package.jpg"
 
 # Tags: can be used for filtering projects.
 # Example: `tags = ["machine-learning", "deep-learning"]`
-tags = ["demo"]
+tags = ["tool"]
 
 # Optional external URL for project (replaces project detail page).
 external_link = "http://example.org"
