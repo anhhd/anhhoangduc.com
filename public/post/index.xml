@@ -11,6 +11,51 @@
     <atom:link href="/post/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Install R packages from Github through proxy</title>
+      <link>/post/install-r-packages-from-github-through-proxy/</link>
+      <pubDate>Sat, 12 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/post/install-r-packages-from-github-through-proxy/</guid>
+      <description>&lt;p&gt;The easiest way to install an R package is from R-Cran. However, as the number of R users is growing up very fast, many developers are contribute to R community through Github. And the standard way to install from Github is to use &lt;code&gt;devtools&lt;/code&gt; package with &lt;code&gt;install_github()&lt;/code&gt; command.&lt;/p&gt;
+&lt;p&gt;In many organization, especially financial organization like banking industry, sometimes it is very hard to install an R package from CRAN or Github due to security process. So, in this post I will share with you 2 ways to install an R package via proxy&lt;/p&gt;
+&lt;div id=&#34;method-1-using-downloader-package&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Method 1: Using &lt;code&gt;downloader&lt;/code&gt; package&lt;/h2&gt;
+&lt;p&gt;In this method, the only thing that you need to change is the Github repository of the R package needed to be installed.&lt;/p&gt;
+&lt;p&gt;For example, if you want to install package &lt;code&gt;easyRFM&lt;/code&gt; from Github with the following link: &lt;code&gt;github.com/hoxo-m/easyRFM&lt;/code&gt;, you can easily install wih the following codes:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Step 1: Install downloader from CRAN
+install.packages(&amp;quot;downloader&amp;quot;)
+library(downloader)
+
+#Step 2: Download R package from Github in format .tar.gz
+download(&amp;quot;https://github.com/hoxo-m/easyRFM/archive/master.tar.gz&amp;quot;,
+         &amp;quot;easyRFM.tar.gz&amp;quot;)
+
+#Step 3: Install from source
+install.packages(&amp;quot;easyRFM.tar.gz&amp;quot;, repos = NULL, type = &amp;quot;source&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;method-2-using-httr-package-to-modify-your-proxy&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Method 2: Using &lt;code&gt;httr&lt;/code&gt; package to modify your proxy&lt;/h2&gt;
+&lt;p&gt;In this method, you can modify your proxy using &lt;code&gt;httr&lt;/code&gt; package. To modify your proxy, the key function is &lt;code&gt;set_config&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;httr::set_config(use_proxy(&amp;quot;your_proxy:your_port&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For instance, if your proxy is &lt;code&gt;11.36.22.12&lt;/code&gt; &amp;amp; your port is &lt;code&gt;8080&lt;/code&gt;, you can modify your proxy as follows:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Step 1: Call httr &amp;amp; devtools
+library(httr)
+library(devtools)
+
+#Step 2: Modify proxy
+set_config(use_proxy(&amp;quot;11.36.22.12:8080&amp;quot;))
+
+#Step 3: Install package directly from Github
+install_github(&amp;quot;rstats-db/odbc&amp;quot;)
+
+#Step 4: Reset your proxy if needed
+reset_config()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Two methods above help me alot to install R packages, specially from Github. Hope that it will help you also to make your life easier to use R in your life of data scientists.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
       <title>How to manage libraries in R efficiently?</title>
       <link>/post/how-to-manage-libraries-in-r-efficiently/</link>
       <pubDate>Thu, 10 Aug 2017 00:00:00 +0000</pubDate>
