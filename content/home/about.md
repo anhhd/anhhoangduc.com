@@ -18,7 +18,8 @@ weight = 1
     "Machine Learning",
     "Score Card Modelling",
     "Customer Behaviours",
-    "Customer Segmetations"
+    "Customer Segmetations",
+    "Marketing Analytics"
   ]
 
 # List your qualifications (such as academic degrees).
