@@ -10,7 +10,7 @@ subtitle = ""
 widget = "custom"
 
 # Order that this section will appear in.
-weight = 60
+weight = 5
 
 +++
 
@@ -18,3 +18,9 @@ I am teaching some R courses with [Ranalytics](http://www.ranalytics.vn):
 
 - [Data analysis with R - in Vietnamese](https://www.slideshare.net/thekingin2039/gii-thiu-v-kha-hc-phn-tch-d-liu-vi-r)
 - [Basic introduction to R in Vietnamese - Datacamp course](https://www.goo.gl/RzGcmq)
+
+Recently, I have joined some conferences and workshops. During which, I am very happy to share my experience building analytics capabilities & implementations for attendees from different backgrounds.
+
+- Human Resources Development Fund (HRDF) Conference, Kuala Lumpur, Malaysia (19 Mar, 2018)
+- Next BigTech Asia Conference/Workshop, Kuala Lumpur, Malaysia (12-16 Mar, 2018)
+- R users meetup - Experience sharing about Business Analytics (Mar, 2017)
