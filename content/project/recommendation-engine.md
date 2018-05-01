@@ -9,7 +9,7 @@ title = "Build recommendation engine for VPBank's customers"
 summary = "Using apriori algorithm to find frequent patterns and build recommendation engine for all products and customers for `VPBank`"
 
 # Optional image to display on homepage (relative to `static/img/` folder).
-image_preview = "recommendation-engine.jpg"
+#image_preview = "recommendation-engine.jpg"
 
 # Tags: can be used for filtering projects.
 # Example: `tags = ["machine-learning", "deep-learning"]`
@@ -24,5 +24,19 @@ math = false
 # Optional featured image (relative to `static/img/` folder).
 [header]
 image = "headers/bubbles-wide.jpg"
-caption = "My caption :smile:"
 +++
+
+## The challenge
+
+SMEs division wanted to cross-sell products for each customers. The challenge is to identify suitable products for each customers & transfer the output to sales for deep-farming
+
+## Solution
+
+Applied *apriori algorithm* on customer products holding data to develop the recommendation engine. The engine was integrated with Customer 360 and automatically updated every month. For each sale, the engine found customer patterns with the highest probabilities of purchase a given product.
+
+## Business Impact
+
+- Identified next best offer products for all customers for SMEs monthly
+- Increased cross selling campain 1.88X
+
+

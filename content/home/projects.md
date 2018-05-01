@@ -33,6 +33,10 @@ view = 1
   name = "Tools"
   tag = ".tool"
 
+[[filter]]
+  name = "Spatial Analytics"
+  tag = ".spatial-analytics"
+
 +++
 Some selected interesting projects that I have done with my fantastic team
 

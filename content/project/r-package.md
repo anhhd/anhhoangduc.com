@@ -6,10 +6,10 @@ date = "2016-04-27"
 title = "R package for Analytics automation"
 
 # Project summary to display on homepage.
-summary = "Building an R package to standardize & to automate common analytics tasks for Analytics team."
+summary = "Build an R package to standardize & to automate common analytics tasks for Analytics team."
 
 # Optional image to display on homepage (relative to `static/img/` folder).
-image_preview = "r-package.jpg"
+#image_preview = "r-package.jpg"
 
 # Tags: can be used for filtering projects.
 # Example: `tags = ["machine-learning", "deep-learning"]`
@@ -21,9 +21,13 @@ external_link = false
 # Does the project detail page use math formatting?
 math = false
 
+# Optional featured image (relative to `static/img/` folder).
+[header]
+image = "headers/bubbles-wide.jpg"
+
 +++
 
-## Business problems
+## The challenge
 
 When working in BICC - VPBank, there are some common questions that a data science team has to solve:
 
