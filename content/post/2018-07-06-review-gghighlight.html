@@ -1,0 +1,110 @@
+---
+title: Review gghighlight
+author: Anh Hoang Duc
+date: '2018-07-06'
+slug: review-gghighlight
+categories:
+  - R
+tags:
+  - Vizualization
+summary: "Review gghighlight package"
+---
+
+
+
+<p>I have been watching <code>gghighlight</code> for couple of months as his package addresses one of problems that I very much care about: “Highlighting in ggplot”. Recently, the package has released in CRAN with big improvement since the first version. So, I decided to test this package in some common charts in <code>ggplot2</code></p>
+<p>First, let’s set up some theme to use during the experiment.</p>
+<pre class="r"><code>#Set up library &amp; theme
+
+library(dplyr)
+library(ggplot2)
+library(gghighlight)
+
+my_theme &lt;- function(){
+  list(
+      theme_bw(),
+      scale_fill_brewer(palette = &quot;Set1&quot;),
+      scale_color_brewer(palette = &quot;Set1&quot;)
+    )
+}</code></pre>
+<div id="highlight-bar-chart" class="section level2">
+<h2>Highlight bar chart</h2>
+<pre class="r"><code>data &lt;- mtcars %&gt;% mutate(cyl = factor(cyl))
+
+data %&gt;% 
+  ggplot(aes(cyl, mpg)) +
+  geom_bar(aes(fill = cyl), stat = &quot;identity&quot;) +
+  my_theme() +
+  gghighlight(cyl == 6) +
+  labs(title = &quot;Example 1 - highlight without text&quot;) </code></pre>
+<p><img src="/post/2018-07-06-review-gghighlight_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<ul>
+<li>Highlight bar chart with text</li>
+</ul>
+<pre class="r"><code>data %&gt;% 
+  group_by(cyl) %&gt;% 
+  summarise(mpg = sum(mpg)) %&gt;% 
+  ggplot(aes(cyl, mpg)) +
+  geom_bar(aes(fill = cyl), stat = &quot;identity&quot;) +
+  geom_text(aes(label = mpg),
+                       hjust = -0.3) +
+  my_theme() +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 320)) +
+  gghighlight(cyl == 6) +
+  labs(title = &quot;Example 2 - Hightlight with text (version 1)&quot;)</code></pre>
+<p><img src="/post/2018-07-06-review-gghighlight_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>As you can see, text in columns where cyl equal to 4 &amp; 8 still appears, which is not what I expected. However, by moving <code>geom_text</code> layer after highlighting layer, I can hide all texts which I don’t want to highlight. Let’s check another example:</p>
+<pre class="r"><code>data %&gt;% 
+  group_by(cyl) %&gt;% 
+  summarise(mpg = sum(mpg)) %&gt;% 
+  ungroup %&gt;% 
+  ggplot(aes(cyl, mpg)) +
+  geom_bar(aes(fill = cyl), stat = &quot;identity&quot;) +
+  my_theme() +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 320)) +
+  gghighlight(cyl == 6) +
+  geom_text(aes(label = mpg),
+                       hjust = -0.3) +
+    labs(title = &quot;Example 3 - Hightlight with text (version 2)&quot;)</code></pre>
+<p><img src="/post/2018-07-06-review-gghighlight_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Boom! It created the plot I desired exactly! This functionality is so great that I shared with my coleagues right after realizing how cool it is &amp; all members of my team were very impressed!</p>
+<p>Let’s check other use cases where <code>gghighlight</code> could change the way we emphasize readers to get insights from charts.</p>
+</div>
+<div id="boxplot" class="section level2">
+<h2>Boxplot</h2>
+<pre class="r"><code>iris %&gt;% 
+  ggplot(aes(Species, Sepal.Length)) +
+  geom_boxplot(aes(fill = Species)) +
+  my_theme() +
+  facet_wrap(~Species) +
+  gghighlight() +
+  theme(legend.position = &quot;top&quot;) +
+  labs(title = &quot;Example 4 - highlight for box plot&quot;)</code></pre>
+<p><img src="/post/2018-07-06-review-gghighlight_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="scatter-plot" class="section level2">
+<h2>Scatter plot</h2>
+<p>With <code>gghighlight</code>, it is very easy to highlight interesting points in a graph. You can add different layers after <code>gghighlight</code> to emphasize your poitns. For example, I want to create a scatter plot in mtcars with mpg &amp; disp being horizontal &amp; vertical axis respectively and emphasize some points under following conditions:</p>
+<ul>
+<li>Emphasize points with <code>disp</code> between 350 &amp; 400</li>
+<li>Add names of cars for these above points</li>
+<li>Make emphasized points in different color &amp; bigger</li>
+</ul>
+<p>The solution utilizing <code>gghighlight</code> is so simple as follows:</p>
+<pre class="r"><code>df &lt;- mtcars %&gt;% mutate(name = row.names(.))
+df %&gt;% 
+  ggplot(aes(mpg, disp)) +
+  geom_point(col = &quot;darkred&quot;) +
+  my_theme() +
+  gghighlight(disp &gt; 350 &amp; disp &lt;= 400,
+              unhighlighted_colour = alpha(&quot;darkgreen&quot;, 0.4),
+              use_direct_label = T,
+              label_key = name,
+              label_params = list(size = 5)) +
+  geom_point(col = &quot;darkred&quot;, size = 2.5) +
+  labs(title = &quot;Example 5 - Hightlight points&quot;)</code></pre>
+<p><img src="/post/2018-07-06-review-gghighlight_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>After practicing some examples, I do fall in love with this greate R package! It will add much value to ggplot2 it has been already added in my daily packges to use in R! Highly recommended package for all R users and many thanks <a href="https://twitter.com/yutannihilat_en">Hiroaki Yutani</a> for creating such a great R package!</p>
+</div>
