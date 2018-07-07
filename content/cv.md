@@ -13,8 +13,8 @@ widget = "custom"
 weight = 7
 +++
 
-<object data="/pdf/ducanhcv.pdf#page=2" 
-<iframe src="/pdf/ducanhcv.pdf#page=2" width="900" height="1200" style="border: none;">
+<object data="/pdf/ducanhcv.pdf#page=1" 
+<iframe src="/pdf/ducanhcv.pdf#page=1" width="900" height="1200" style="border: none;">
 This browser does not support PDFs. Please download the PDF to view it: <a href="/pdf/ducanhcv.pdf">Download PDF</a>
 </iframe>
 </object>
