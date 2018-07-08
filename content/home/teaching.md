@@ -16,7 +16,7 @@ weight = 3
 
 I am teaching some R courses with [Ranalytics](http://www.ranalytics.vn):
 
-- [Data analysis with R - in Vietnamese](https://www.slideshare.net/thekingin2039/gii-thiu-v-kha-hc-phn-tch-d-liu-vi-r)
+- [Data analysis with R - in Vietnamese](https://www.slideshare.net/thekingin2039/gii-thiu-v-kha-hc-vi-r-ranalyticsvn)
 - [Basic introduction to R in Vietnamese - Datacamp course](https://www.goo.gl/RzGcmq)
 
 Recently, I have joined some conferences and workshops. During which, I am very happy to share my experience building analytics capabilities & implementations for attendees from different backgrounds.
