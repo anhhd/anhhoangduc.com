@@ -1,9 +1,9 @@
 +++
 # Date this page was created.
-date = "2017-09-27"
+date = "2018-06-20"
 
 # Project title.
-title = "Analyze customer location"
+title = "Analyze customer location with spatial analytics"
 
 # Project summary to display on homepage.
 summary = "Using Google geolocation service & spatial analytics to analyze customer location."
@@ -38,4 +38,3 @@ To solve the problem, the team crawed spatial data from Google Maps to identify 
 - Identify the exact location of customer
 - Analyze the distance from a customer to the branch
 - Estimate the effect of relocating a branch
-
