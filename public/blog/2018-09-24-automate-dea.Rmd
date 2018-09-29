@@ -1,0 +1,66 @@
+---
+title: Automate DEA with purrr and NSE
+author: Anh Hoang Duc
+date: '2018-08-25'
+slug: automate-dea-with-purrr-and-NSE
+categories:
+  - book
+tags: [programming]
+summary: "Using purrr with NSE to automate data exploratory analysis"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = F)
+```
+
+In the life of an analyst, one have to spend much time on data exploratory analysis. In `VPBank` package, this task has been solved easily with the function `compare_group`. However, if you want to analyze multiple numeric variables with one category variable, the traditional approches are somewhat cubersome. This tutorial will guide you the way to automate all analysis of DEA by combining the power of `compare_group` & functional programming with `purrr`.
+
+**Ilustrative example**: For all numeric variables in dataset iris, make an analysis to analysis this variable with `Species`.
+
+```{r, warning = F, message = F}
+library(tidyverse)
+iris %>% head
+```
+
+The traditinal ways to do the task are to follow 2 approaches:
+
+- Make analysis for every variables without loop. For example: `compare_group(Sepal.Length, Species)` and repeat it for each & every variable.
+- Make a `for loop` to run a loop for analysis. However, this approach has some limitation, especially in readability in coding & diffculty in programming.
+
+To overcome this diffculty, you can use `map` in `purrr` and modify some part of `compare_group` function. The strategy is as follows.
+
+- Step 1: Modify the `compare_group` function to fix data and group variable for analysis
+- Step 2: Map all numeric variables to the new function.
+
+Let see the example below.
+
+# Step 1: Modify function
+
+```{r}
+# Step 1: Create the function
+
+my_stat <- function(x){
+  x <- enquo(x)
+  iris %>% 
+    compare_group(!!x, Species)
+}
+
+# Test the function
+my_stat(Sepal.Length)
+```
+
+# Step 2: Using map to automate analysis
+
+```{r}
+# Step 2: Apply map for the new function
+
+library(purrr)
+iris %>% 
+  select_if(is.numeric) %>% 
+  names %>% 
+  syms %>% 
+  map(my_stat)
+```
+
+The power of functional programming & non-standard evaluation in `tidyverse` is incredible. This approach could help one release much time of programming and focus and results & insights.
+

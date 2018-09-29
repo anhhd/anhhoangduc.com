@@ -1,0 +1,53 @@
+---
+title: Automate DEA with purrr and NSE
+author: Anh Hoang Duc
+date: '2018-08-25'
+slug: automate-dea-with-purrr-and-NSE
+categories:
+  - book
+tags: [programming]
+summary: "Using purrr with NSE to automate data exploratory analysis"
+---
+
+
+
+<p>In the life of an analyst, one have to spend much time on data exploratory analysis. In <code>VPBank</code> package, this task has been solved easily with the function <code>compare_group</code>. However, if you want to analyze multiple numeric variables with one category variable, the traditional approches are somewhat cubersome. This tutorial will guide you the way to automate all analysis of DEA by combining the power of <code>compare_group</code> &amp; functional programming with <code>purrr</code>.</p>
+<p><strong>Ilustrative example</strong>: For all numeric variables in dataset iris, make an analysis to analysis this variable with <code>Species</code>.</p>
+<pre class="r"><code>library(tidyverse)
+iris %&gt;% head</code></pre>
+<p>The traditinal ways to do the task are to follow 2 approaches:</p>
+<ul>
+<li>Make analysis for every variables without loop. For example: <code>compare_group(Sepal.Length, Species)</code> and repeat it for each &amp; every variable.</li>
+<li>Make a <code>for loop</code> to run a loop for analysis. However, this approach has some limitation, especially in readability in coding &amp; diffculty in programming.</li>
+</ul>
+<p>To overcome this diffculty, you can use <code>map</code> in <code>purrr</code> and modify some part of <code>compare_group</code> function. The strategy is as follows.</p>
+<ul>
+<li>Step 1: Modify the <code>compare_group</code> function to fix data and group variable for analysis</li>
+<li>Step 2: Map all numeric variables to the new function.</li>
+</ul>
+<p>Let see the example below.</p>
+<div id="step-1-modify-function" class="section level1">
+<h1>Step 1: Modify function</h1>
+<pre class="r"><code># Step 1: Create the function
+
+my_stat &lt;- function(x){
+  x &lt;- enquo(x)
+  iris %&gt;% 
+    compare_group(!!x, Species)
+}
+
+# Test the function
+my_stat(Sepal.Length)</code></pre>
+</div>
+<div id="step-2-using-map-to-automate-analysis" class="section level1">
+<h1>Step 2: Using map to automate analysis</h1>
+<pre class="r"><code># Step 2: Apply map for the new function
+
+library(purrr)
+iris %&gt;% 
+  select_if(is.numeric) %&gt;% 
+  names %&gt;% 
+  syms %&gt;% 
+  map(my_stat)</code></pre>
+<p>The power of functional programming &amp; non-standard evaluation in <code>tidyverse</code> is incredible. This approach could help one release much time of programming and focus and results &amp; insights.</p>
+</div>

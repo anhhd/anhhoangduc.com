@@ -25,6 +25,55 @@ This browser does not support PDFs. Please download the PDF to view it: &lt;a hr
     </item>
     
     <item>
+      <title>Automate DEA with purrr and NSE</title>
+      <link>/blog/automate-dea-with-purrr-and-nse/</link>
+      <pubDate>Sat, 25 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/blog/automate-dea-with-purrr-and-nse/</guid>
+      <description>&lt;p&gt;In the life of an analyst, one have to spend much time on data exploratory analysis. In &lt;code&gt;VPBank&lt;/code&gt; package, this task has been solved easily with the function &lt;code&gt;compare_group&lt;/code&gt;. However, if you want to analyze multiple numeric variables with one category variable, the traditional approches are somewhat cubersome. This tutorial will guide you the way to automate all analysis of DEA by combining the power of &lt;code&gt;compare_group&lt;/code&gt; &amp;amp; functional programming with &lt;code&gt;purrr&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Ilustrative example&lt;/strong&gt;: For all numeric variables in dataset iris, make an analysis to analysis this variable with &lt;code&gt;Species&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+iris %&amp;gt;% head&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The traditinal ways to do the task are to follow 2 approaches:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Make analysis for every variables without loop. For example: &lt;code&gt;compare_group(Sepal.Length, Species)&lt;/code&gt; and repeat it for each &amp;amp; every variable.&lt;/li&gt;
+&lt;li&gt;Make a &lt;code&gt;for loop&lt;/code&gt; to run a loop for analysis. However, this approach has some limitation, especially in readability in coding &amp;amp; diffculty in programming.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To overcome this diffculty, you can use &lt;code&gt;map&lt;/code&gt; in &lt;code&gt;purrr&lt;/code&gt; and modify some part of &lt;code&gt;compare_group&lt;/code&gt; function. The strategy is as follows.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Step 1: Modify the &lt;code&gt;compare_group&lt;/code&gt; function to fix data and group variable for analysis&lt;/li&gt;
+&lt;li&gt;Step 2: Map all numeric variables to the new function.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Let see the example below.&lt;/p&gt;
+&lt;div id=&#34;step-1-modify-function&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Step 1: Modify function&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Step 1: Create the function
+
+my_stat &amp;lt;- function(x){
+  x &amp;lt;- enquo(x)
+  iris %&amp;gt;% 
+    compare_group(!!x, Species)
+}
+
+# Test the function
+my_stat(Sepal.Length)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;step-2-using-map-to-automate-analysis&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Step 2: Using map to automate analysis&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Step 2: Apply map for the new function
+
+library(purrr)
+iris %&amp;gt;% 
+  select_if(is.numeric) %&amp;gt;% 
+  names %&amp;gt;% 
+  syms %&amp;gt;% 
+  map(my_stat)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The power of functional programming &amp;amp; non-standard evaluation in &lt;code&gt;tidyverse&lt;/code&gt; is incredible. This approach could help one release much time of programming and focus and results &amp;amp; insights.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Writing a book with bookdown in foreign languages</title>
       <link>/blog/writing-a-book-with-bookdown-in-foreign-languages/</link>
       <pubDate>Sat, 25 Aug 2018 00:00:00 +0000</pubDate>
@@ -645,16 +694,6 @@ to maintain them with the bank, for instance:&lt;/p&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Thanks to the package, it has saved many working days for analytics team and make analytics process much shorter.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>A Person Re-Identification System For Mobile Devices</title>
-      <link>/publication/person-re-identification/</link>
-      <pubDate>Tue, 01 Sep 2015 00:00:00 +0000</pubDate>
-      
-      <guid>/publication/person-re-identification/</guid>
-      <description>&lt;p&gt;More detail can easily be written here using &lt;em&gt;Markdown&lt;/em&gt; and $\rm \LaTeX$ math code.&lt;/p&gt;
 </description>
     </item>
     
