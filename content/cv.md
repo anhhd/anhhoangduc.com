@@ -5,7 +5,7 @@
 date = "2018-10-04"
 draft = false
   
-title = "Anh Hoang Duc - Curriculum viate"
+title = "Anh Hoang Duc - Curriculum vitae"
 subtitle = ""
 widget = "custom"
   
