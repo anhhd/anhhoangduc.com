@@ -21,6 +21,7 @@ I am teaching some R courses with [Ranalytics](http://www.ranalytics.vn):
 
 Recently, I have joined some conferences and workshops. During which, I am very happy to share my experience building analytics capabilities & implementations for attendees from different backgrounds.
 
+- Practical Implementation of RPA, AI and Machine Learning in Financial Services, Singapore (28-30 January, 2019) on *Working with AI & customer analytics for better engagement*
 - Human Resources Development Fund (HRDF) Conference, Kuala Lumpur, Malaysia (19 Mar, 2018)
 - Next BigTech Asia Conference/Workshop, Kuala Lumpur, Malaysia (12-16 Mar, 2018)
 - R users meetup - Experience sharing about Business Analytics (Mar, 2017)
