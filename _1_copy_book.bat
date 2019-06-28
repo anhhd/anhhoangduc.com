@@ -10,4 +10,4 @@ REM cscript "%source_email%\_3_send_email.vbs"
 
 REM search_index make book slow in netlify
 REM del /S "%cd%\search_index.json" /F /Q
-rem ren "%destination%\search_index.json" "_search_index.json"
+ren "%destination%\search_index.json" "_search_index.json"
