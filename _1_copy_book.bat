@@ -7,3 +7,7 @@ del /S "%destination%\*" /F /Q
 xcopy /s "%source%" "%destination%"
 
 REM cscript "%source_email%\_3_send_email.vbs"
+
+REM search_index make book slow in netlify
+REM del /S "%cd%\search_index.json" /F /Q
+ren "%destination%\search_index.json" "_search_index.json"
