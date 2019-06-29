@@ -15,6 +15,9 @@ weight = 4
 
 Apart from my work, I really enjoy my time to create shiny apps to automate some common analysis problems for my team, some of them are as follows:
 
-- [Market basket analysis](https://anhhoangduc.shinyapps.io/basket_analysis/)
-- [Customers segmentation with RFM](https://anhhoangduc.shinyapps.io/rfm_segmentation/)
+- [Market basket analysis](https://anhhoangduc.shinyapps.io/basket_analysis/): Recommendation engine based on customer behaviours 
+using apriori algorithm
+- [Customers segmentation with RFM](https://anhhoangduc.shinyapps.io/rfm_segmentation/): Cluster customers transaction behaviours
+using RFM techniques (Recency - Frequency - Monetary)
+- [Static to Dynamic SQLServer](https://anhhoangduc.shinyapps.io/static-sql/): Auto translate Static SQL to Dynamic SQL with parameters
   
