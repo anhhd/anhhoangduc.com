@@ -1,0 +1,139 @@
+Xây dựng web service với Azure
+==============================
+
+Log in vào Azure
+----------------
+
+.. code:: r
+
+   library(AzureML)
+   library(tidyverse)
+
+   #Tạo workspace
+   sessionInfo()
+   ws <- workspace(
+     id = "2052e86780c342fcb7cdf5a7179b447a",
+     auth = "76186c54e53443e38b78226ebb5f2873"
+   )
+
+Tạo web service
+---------------
+
+-  Cài đặt `Rtools <https://cran.r-project.org/bin/windows/Rtools/>`__
+
+-  Điều chỉnh Path cho zip tool & khởi động lại R (tắt RStudio và bật
+   lại)
+
+.. code:: r
+
+   Sys.which("zip")
+   Rtools.bin="C:\\RBuildTools\\3.4\\bin"
+   sys.path = Sys.getenv("PATH")
+   if (Sys.which("zip") == "" ) {
+     system(paste("setx PATH \"", Rtools.bin, ";", sys.path, "\"", sep = ""))
+   }
+
+-  Kết quả sau khi khởi động lại R
+
+.. code:: r
+
+   Sys.which("zip")
+
+Xây dựng API đơn giản
+---------------------
+
+.. code:: r
+
+   add <- function(x, y){
+     x + y
+   }
+
+   api <- publishWebService(
+     ws,
+     fun = add, 
+     name = "AzureML-vignette-silly",
+     inputSchema = list(
+       x = "numeric", 
+       y = "numeric"
+     ), 
+     outputSchema = list(
+       ans = "numeric"
+     )
+   )
+
+.. code:: r
+
+   api %>% class
+   api %>% names
+
+   #Tìm kiếm document
+   (helpPageUrl <- api$HelpLocation)
+
+   #ServiceID
+   api$WebServiceId
+
+   #Tìm kiếm thông tin
+
+   (webservices <- services(ws, name = "AzureML-vignette-silly"))
+
+   #Sử dụng webservice
+   df <- data.frame(
+     x = 1:5,
+     y = 6:10
+   )
+   s <- services(ws, name = "AzureML-vignette-silly")
+   s <- tail(s, 1) # Sử dụng services mới nhất
+   ep <- endpoints(ws, s)
+
+   consume(ep, df)
+
+-  Xóa webservice
+
+.. code:: r
+
+   deleteWebService(ws, name = "AzureML-vignette-silly")
+
+Xây dựng API web service cho mô hình dự báo
+-------------------------------------------
+
+.. code:: r
+
+   library(MASS)
+   library(gbm)
+
+   test <- Boston[1:5, 1:13]
+   set.seed(123)
+
+   gbm1 <- gbm(medv ~ .,
+               distribution = "gaussian",
+               n.trees = 5000,
+               interaction.depth = 8,
+               n.minobsinnode = 1,
+               shrinkage = 0.01,
+               cv.folds = 5,
+               data = Boston,
+               n.cores = 1) # You can set this to n.cores = NULL to use all cores
+
+   best.iter <- gbm.perf(gbm1, method="cv", plot=FALSE)
+
+   mypredict <- function(newdata){
+     require(gbm)
+     predict(gbm1, newdata, best.iter)
+   }
+
+   # Example use of the prediction function
+   print(mypredict(test))
+
+   ep <- publishWebService(ws = ws, 
+                           fun = mypredict, 
+                           name = "AzureML-vignette-gbm",
+                           inputSchema = test) #Thêm định dạng của dataframe trong input
+
+   # Sử dụng service
+   print(consume(ep, test))
+
+Tài liệu tham khảo
+------------------
+
+-  Hướng dẫn AzureML
+   https://cran.r-project.org/web/packages/AzureML/vignettes/getting_started.html

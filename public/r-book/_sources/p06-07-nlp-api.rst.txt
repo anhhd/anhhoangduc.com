@@ -1,0 +1,76 @@
+Sử dụng API từ các dịch vụ đám mây
+==================================
+
+Azure
+-----
+
+Azure cho phép sử dụng dịch vụ điện toán đám mây để phân tích
+``sentiment analysis``
+
+.. code:: r
+
+   #Text Analysis with Azure Machine Learning
+   #Key to Text Analysis: 
+   #Key 1: 01d3b74966574fee929ee6b6462ff2f3
+   #Key 2: 80a9b1f8d635412b9f4804e51bfbcef6
+
+   my_subscription_key <- "01d3b74966574fee929ee6b6462ff2f3"
+   #Packages
+   library(httr)
+   library(jsonlite)
+
+   # Below is the Request body for the API having text 
+   # id 1 = Negative sentiments, id 2 = Positive sentiments
+
+   request_body <- data.frame(
+     language = c("en","en"),
+     id = c("1","2"),
+     text = c("This is wasted! I'm angry",
+              "This is awesome! Good Job Team! appreciated")
+   )
+
+   # Converting the Request body(Dataframe) to Request body(JSON)
+
+   request_body_json <- toJSON(list(documents = request_body), auto_unbox = TRUE)
+
+   # Below we are calling API (Adding Request headers using add_headers)
+
+   result <- POST("https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment",
+                  body = request_body_json,
+                  add_headers(.headers = 
+                                c("Content-Type"="application/json",
+                                  "Ocp-Apim-Subscription-Key"="01d3b74966574fee929ee6b6462ff2f3")))
+   Output <- content(result)
+
+   # Show Output
+   Output
+
+
+
+   # Detect language ---------------------------------------------------------
+
+   # Below is the Request body for the API
+   request_body <- data.frame(
+     id = "1",
+     text = "Bài báo như dở hơi! Thật là khốn nạn! Làm như kít",
+     stringsAsFactors = FALSE
+   )
+
+   # Converting the Request body(Dataframe) to Request body(JSON)
+   request_body_json <- toJSON(list(documents = request_body), auto_unbox = TRUE)
+
+   # Below we are calling API (Adding Request headers using add_headers)
+   # Here parameter numberOfLanguagesToDetect=1
+
+   result <- POST("https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/languages?numberOfLanguagesToDetect=1",
+                  body = request_body_json ,
+                  add_headers(.headers = c("Content-Type"="application/json",
+                                           "Ocp-Apim-Subscription-Key"=my_subscription_key))
+   )
+   Output <- content(result)
+   Output
+
+Tài liệu tham khảo
+------------------
+
+-  https://bigdataenthusiast.wordpress.com/

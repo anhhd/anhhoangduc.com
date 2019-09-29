@@ -1,0 +1,742 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="vi" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="vi" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>9. Power analysis &mdash; Tài liệu Phân tích dữ liệu với R 2019</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'2019',
+              LANGUAGE:'vi',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript" src="_static/copybutton.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Tìm Kiếm" href="search.html" />
+    <link rel="next" title="10. Phương pháp ước lượng lấy mẫu" href="p02-20-sampling-methods.html" />
+    <link rel="prev" title="8. Xác suất và phân phối thống kê cơ bản" href="p02-15-thong-ke-co-ban.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Phân tích dữ liệu với R
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Giới thiệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-gioi-thieu.html">Khoa học dữ liệu và nghề phân tích dữ liệu</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Phân tích khám phá dữ liệu</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p02-03-bien-doi-du-lieu-dplyr.html">1. Ngữ pháp của biến đổi dữ liệu với DPLYR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-04-phan-ra-va-xoay-chieu-du-lieu.html">2. Phân rã và xoay chiều dữ liệu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-05-cac-chi-so-thong-ke.html">3. Các chỉ số thống kê mô tả cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-06-lap-trinh-ham.html">4. Lập trình hàm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-07-lap-trinh-ham-voi-purrr.html">5. Lập trình chức năng hàm với purrr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-08-bien-doi-du-lieu-text.html">6. Biến đổi dữ liệu text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-11-quan-ly-nhieu-mo-hinh.html">7. Quản lý kết quả phân tích từ nhiều mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-15-thong-ke-co-ban.html">8. Xác suất và phân phối thống kê cơ bản</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">9. Power analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gioi-thieu">9.1. Giới thiệu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vi-du">9.2. Ví dụ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hieu-sau-hon-ve-p-value">9.3. Hiểu sâu hơn về p-value</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mot-so-test-thong-ke">9.4. Một số test thống kê</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sai-lam-loai-1-va-loai-2">9.4.1. Sai lầm loại 1 và loại 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kich-thuoc-mau-doi-voi-mot-chi-so-trung-binh">9.4.2. Kích thước mẫu đối với một chỉ số trung bình</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kich-thuoc-mau-khi-so-sanh-hai-so-trung-binh">9.4.3. Kích thước mẫu khi so sánh hai số trung bình</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#su-dung-khoang-tin-cay-khi-uoc-luong-trung-binh">9.4.4. Sử dụng khoảng tin cậy khi ước lượng trung bình</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#su-dung-ty-le-phuong-sai">9.4.5. Sử dụng tỷ lệ phương sai</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tai-lieu-tham-khao">9.5. Tài liệu tham khảo</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="p02-20-sampling-methods.html">10. Phương pháp ước lượng lấy mẫu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-50-datatable.html">11. Biến đổi dữ liệu với <code class="docutils literal notranslate"><span class="pre">data.table</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-60-thu-thap-du-lieu-tu-website.html">12. Thu thập dữ liệu từ website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-99-meo-trong-r.html">13. Các mẹo trong R</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Supervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p03-01-nguyen-ly-du-bao.html">1. Các nguyên lý dự báo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-02-mo-hinh-ols.html">2. Mô hình OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Unsupervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p04-01-unsupervised-learning.html">1. Unsupervised learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-02-kmeans.html">2. k-means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-03-hierarchical-clustering.html">3. Hierachical clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-04-basket-analysis.html">4. Phân tích giỏ hàng</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-05-pca.html">5. Principal component analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-06-factor-analysis.html">6. Phân tích nhân tố ẩn (factor analysis)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Chuỗi thời gian</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p05-01-chuoi-thoi-gian.html">1. Giới thiệu về chuỗi thời gian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-02-arima.html">2. Mô hình ARIMA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html">3. Phân tích chuỗi thời gian với tidyquant và timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-06-du-bao-ts-voi-prophet.html">4. Dự báo chuỗi thời gian với prophet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-07-du-bao-ts-voi-timetk.html">5. Dự báo chuỗi thời gian với timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-08-abnomaly-detection.html">6. Abnomaly detection trong times series</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ngôn ngữ tự nghiên</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p06-01-nlp-co-ban.html">1. Xử lý ngôn ngữ tự nhiên cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-04-text-classification.html">2. Phân loại text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-07-nlp-api.html">3. Sử dụng API từ các dịch vụ đám mây</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-10-ocr-tesseract.html">4. OCR với <code class="docutils literal notranslate"><span class="pre">tesseract</span></code></a></li>
+</ul>
+<p class="caption"><span class="caption-text">Các phương pháp khác</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p07-01-survival-analysis.html">1. Survival analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-02-causal-impact.html">2. Causal Impact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-03-collaborative-filtering.html">3. Collaborative Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-07-spatial-data.html">4. Spatial data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-10-shiny.html">5. Shiny apps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p09-01-gioi-thieu-deep-learning.html">1. Giới thiệu cơ bản về Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-02-co-ban-kien-thuc-toan.html">2. Kiến thức cơ bản toán học cho deep learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-03-mo-hinh-deep-learning-co-ban.html">3. Mô hình deep learning cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-04-convolution-neural-network.html">4. Convolution neural networks</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cloud Computing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p10-01-cai-dat-rstudio-server-tren-amazon.html">1. Cài đặt server RStudio trên Amazon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-03-web-service-azure.html">2. Xây dựng web service với Azure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-09-apis-voi-plumber.html">3. API với Plumber</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Kiến thức bổ trợ</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p11-01-git.html">1. Sử dụng GIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-02-cmd.html">2. CMD và Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-03-docker.html">3. Sử dụng docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-04-apis.html">4. API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-05-html-css.html">5. Cơ bản về HTML và CSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-09-other.html">6. Các tricks khác</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Case studies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p13-01-casestudy-truc-quan-hoa.html">1. Trực quan hóa dữ liệu</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Phân tích dữ liệu với R</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>9. Power analysis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/p02-16-power-analysis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="power-analysis">
+<h1>9. Power analysis<a class="headerlink" href="#power-analysis" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gioi-thieu">
+<h2>9.1. Giới thiệu<a class="headerlink" href="#gioi-thieu" title="Permalink to this headline">¶</a></h2>
+<p>Power Analysis để trả lời ba vấn đề sau:</p>
+<ul class="simple">
+<li>Số lượng mẫu cần thiết cho thống kê</li>
+<li>Đánh giá ảnh hưởng của cỡ mẫu trên ước lượng</li>
+<li>Đánh giá độ mạnh của test</li>
+</ul>
+<p><strong>Kiểm định thống kê (statistical hypothesis)</strong></p>
+<p>Trong kiểm định thống kê, cơ bản đi qua các bước sau:</p>
+<ul class="simple">
+<li>Bước 1: Đưa ra giả định (null hypothesis ) <span class="math notranslate">\(H_0\)</span> và giả định
+thay thế (alternative hypothesis) <span class="math notranslate">\(H_1\)</span></li>
+<li>Bước 2: Tính toán xác suất có thể giữ lại <span class="math notranslate">\(H_0\)</span> p-value.</li>
+<li>Bước 3: Ra quyết định dựa trên p-value. Nếu p-value nhỏ hơn mức ý
+nghĩa thống kê (significance level) <span class="math notranslate">\(\alpha\)</span>, ta loại bỏ
+<span class="math notranslate">\(H_0\)</span>, sử dụng <span class="math notranslate">\(H_1\)</span>. Ta nói rằng, kết quả đưa ra với độ
+tin cậy về mặt thống kê là <span class="math notranslate">\(1-\alpha\)</span></li>
+</ul>
+<p><strong>Các loại lỗi với thống kê</strong></p>
+<p>Khi làm kiểm định sẽ có các trường hợp sau:</p>
+<p><img alt="image0" src="Images/16-power-analysis-1.png" /></p>
+<p><strong>Bốn khía cạnh khi xem xét kiểm định thống kê</strong></p>
+<p>Khi phân tích kiểm định thống kê cần xem xét đến 4 yếu tố:</p>
+<ul class="simple">
+<li>Sample size (cớ mẫu): Số lượng quan sát có trong mẫu</li>
+<li>Significance level (ý nghĩa thống kê): Xác suất xảy ra sai số loại 1
+hay xác suất KHÔNG xảy ra <span class="math notranslate">\(H_0\)</span></li>
+<li>Power (Độ mạnh): 1 trừ xác suất xảy ra lỗi loại 2</li>
+<li>Effect size: Giá trị thực tế - Giá trị giả thuyết. VD: <span class="math notranslate">\(H_0\)</span>:
+giá trị trung bình là 90, giá trị trung bình thực tế là 100. Vậy,
+effect size = 90 - 100 = -10. <strong>Lưu ý</strong>: Effect size phụ thuộc nhiều
+vào phương pháp và do đó, có nhiều cách tính khác nhau</li>
+</ul>
+<p><img alt="image1" src="Images/16-power-analysis-2.png" /></p>
+<p><img alt="image2" src="Images/16-power-analysis-3.png" /></p>
+</div>
+<div class="section" id="vi-du">
+<h2>9.2. Ví dụ<a class="headerlink" href="#vi-du" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">pwr.t.test</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="p">,</span><span class="n">d</span><span class="o">=</span><span class="p">,</span><span class="n">sig.level</span><span class="o">=</span><span class="p">,</span><span class="n">power</span><span class="o">=</span><span class="p">,</span><span class="n">level</span><span class="o">=</span><span class="p">,</span> <span class="n">type</span><span class="o">=</span><span class="p">,</span> <span class="n">alternatie</span><span class="o">=</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Trong đó:</p>
+<ul class="simple">
+<li>n: cỡ mẫu</li>
+<li>d: effect size là độ khác biệt đã được chuẩn hóa giữa 2 mẫu
+(standardized mean difference)
+<span class="math notranslate">\(d=\fraction{\mu_1-\mu_2}{\sigma}\)</span> với <span class="math notranslate">\(\mu_1\)</span>,
+<span class="math notranslate">\(\mu_2\)</span> là giá trị trung bình của 2 nhóm, <span class="math notranslate">\(\sigma^2\)</span> là
+là phương sai của mẫu</li>
+<li>sig.level: significance level</li>
+<li>power: power level</li>
+<li>type: two-saple, on-sample</li>
+<li>alternativeL Xác định test là 1 phía hay hai phía</li>
+</ul>
+<p><strong>Ví dụ 1</strong>: Ta cần so sánh thời gian phản ứng khi KH gọi đến cho 2 nhóm
+tài xế: Nhóm 1 sử dụng di động, nhóm 2 không sử dụng di động với độ lệch
+chuẩn là 1.25 giây. Giả định sự khác biệt giữa 2 nhóm là 1 giây được coi
+là cao thì d=1/1.25=0.8. Ta muốn chắc chắn 2 điều sau:</p>
+<ul class="simple">
+<li>90% chắc chắn rằng xảy ra sự khác biệt (power=90%)</li>
+<li>95% chắc chắn rằng yếu tố xảy ra không phải do ngẫu nhiên
+(sig.level=5%)</li>
+</ul>
+<p>Hỏi cẩn bao nhiêu quan sát trong mẫu?</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#install.packages(&quot;pwr&quot;)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">pwr</span><span class="p">)</span>
+<span class="nf">pwr.t.test</span><span class="p">(</span><span class="n">d</span><span class="o">=</span><span class="m">.8</span><span class="p">,</span> <span class="n">sig.level</span><span class="o">=</span><span class="m">.05</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="m">0.9</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s">&quot;two.sample&quot;</span><span class="p">,</span>
+             <span class="n">alternative</span><span class="o">=</span><span class="s">&quot;two.sided&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+<span class="c1">##      Two-sample t test power calculation</span>
+<span class="c1">##</span>
+<span class="c1">##               n = 33.82555</span>
+<span class="c1">##               d = 0.8</span>
+<span class="c1">##       sig.level = 0.05</span>
+<span class="c1">##           power = 0.9</span>
+<span class="c1">##     alternative = two.sided</span>
+<span class="c1">##</span>
+<span class="c1">## NOTE: n is number in *each* group</span>
+</pre></div>
+</div>
+<p>Kết quả cho thấy ta cần 34 quan sát trong mỗi nhóm tài xế (sử dụng và
+không sử dụng di động) để có thể phát hiện ra độ khác biệt (effect size)
+0.8 với độ chắc chắn 90% và 5% xảy ra hiện tượng trên chỉ do ngẫu nhiên</p>
+<p>Các chỉ số khác có thể được tính toán nếu có đủ 3 trong 4 yếu tố đầu vào</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tìm power</span>
+<span class="nf">pwr.t.test</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="m">34</span><span class="p">,</span><span class="n">d</span><span class="o">=</span><span class="m">.8</span><span class="p">,</span> <span class="n">sig.level</span><span class="o">=</span><span class="m">.05</span><span class="p">,</span> <span class="n">type</span><span class="o">=</span><span class="s">&quot;two.sample&quot;</span><span class="p">,</span>
+             <span class="n">alternative</span><span class="o">=</span><span class="s">&quot;two.sided&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+<span class="c1">##      Two-sample t test power calculation</span>
+<span class="c1">##</span>
+<span class="c1">##               n = 34</span>
+<span class="c1">##               d = 0.8</span>
+<span class="c1">##       sig.level = 0.05</span>
+<span class="c1">##           power = 0.9015019</span>
+<span class="c1">##     alternative = two.sided</span>
+<span class="c1">##</span>
+<span class="c1">## NOTE: n is number in *each* group</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tìm d</span>
+<span class="nf">pwr.t.test</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="m">34</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="m">0.9</span><span class="p">,</span> <span class="n">sig.level</span> <span class="o">=</span> <span class="m">0.05</span><span class="p">,</span> <span class="n">type</span><span class="o">=</span><span class="s">&quot;two.sample&quot;</span><span class="p">,</span>
+             <span class="n">alternative</span><span class="o">=</span><span class="s">&quot;two.sided&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+<span class="c1">##      Two-sample t test power calculation</span>
+<span class="c1">##</span>
+<span class="c1">##               n = 34</span>
+<span class="c1">##               d = 0.7978727</span>
+<span class="c1">##       sig.level = 0.05</span>
+<span class="c1">##           power = 0.9</span>
+<span class="c1">##     alternative = two.sided</span>
+<span class="c1">##</span>
+<span class="c1">## NOTE: n is number in *each* group</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="hieu-sau-hon-ve-p-value">
+<h2>9.3. Hiểu sâu hơn về p-value<a class="headerlink" href="#hieu-sau-hon-ve-p-value" title="Permalink to this headline">¶</a></h2>
+<p><strong>Định nghĩa p-value</strong>: <em>“P value is the probability of obtaining an
+effect at least as extreme as the one in your sample data, assuming the
+truth of the null hypothesis”</em></p>
+<p><strong>Giải thích</strong>: Nếu ta giả định <span class="math notranslate">\(H_0\)</span> đúng, <span class="math notranslate">\(H_0\)</span> sẽ xảy ra
+với xác suất p_value do yếu tố ngẫu nhiên lấy mẫu</p>
+<p>Các bước tính toán p-value được diễn ra theo trình tự sau:</p>
+<ul class="simple">
+<li>Đề ra một giả thuyết chính (<span class="math notranslate">\(H_1\)</span>)</li>
+<li>Từ giả thuyết chính, đưa ra giả thuyết đảo (<span class="math notranslate">\(H_0\)</span>)</li>
+<li>Thu thập dữ liệu trên mẫu D</li>
+<li>Tính toán xác suất XẢY RA D nếu <span class="math notranslate">\(H_0\)</span> là sự thật, hay
+<span class="math notranslate">\(P(D|H_0)\)</span></li>
+</ul>
+<p><strong>Ví dụ</strong>: Giả sử ta sử dụng 2 loại vắc-xin A &amp; B để so sánh sự khác
+biệt về hiệu quả trên 1000 bệnh nhân, ta thấy p-value = 4%. Điều này
+nghĩa là: Nếu ta giả định rằng A &amp; B không có sự khác biệt
+(<span class="math notranslate">\(H_0: \mu_A=\mu_B\)</span>) thì xác suất xảy ra sự khác biệt giữa A &amp; B
+về mặt thống kê chỉ là 4%</p>
+<p><strong>Kết luận sai</strong>: Nếu loại bỏ <span class="math notranslate">\(H_0\)</span>, giữ <span class="math notranslate">\(H_1\)</span>, chỉ có 4%
+khả năng xảy ra sai số.</p>
+<p>Các bước tính toán:</p>
+<ul class="simple">
+<li>Bước 1: <span class="math notranslate">\(H_1\)</span> - Có sự khác biệt về hiệu quả 2 vắc xin</li>
+<li>Bước 2: <span class="math notranslate">\(H_0\)</span> - Không có sự khác biệt giữa hai loại vắc-xin</li>
+<li>Bước 3: Thu thập dữ liệu trên mẫu 1000 người</li>
+<li>Bước 4: Giả định rằng <span class="math notranslate">\(H_0\)</span> là chính xác, tức là sự khác biệt
+giữa người sử dụng A và B chỉ là do yếu tố ngẫu nhiên thì xác suất
+tìm được mẫu D có 1000 bệnh nhân mà sự khác biệt giữa hiệu quả của A
+&amp; B trong nghiên cứu chỉ là 4%</li>
+</ul>
+<p>Như vậy, p-value không nói trực tiếp đến giả thuyết chính (alternative
+hypothesis <span class="math notranslate">\(H_1\)</span>) mà chỉ GIÁN TIẾP đưa ta quyết định lựa chọn.</p>
+<p><strong>Khiếm khuyết của p-value</strong>: P-value đưa ra xác suất (độ khả dĩ) của dữ
+kiện mà không đửa ra xác suất của giả thuyết</p>
+</div>
+<div class="section" id="mot-so-test-thong-ke">
+<h2>9.4. Một số test thống kê<a class="headerlink" href="#mot-so-test-thong-ke" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sai-lam-loai-1-va-loai-2">
+<h3>9.4.1. Sai lầm loại 1 và loại 2<a class="headerlink" href="#sai-lam-loai-1-va-loai-2" title="Permalink to this headline">¶</a></h3>
+<div class="figure" id="id3">
+<img alt="SAI LẦM LOẠI 1 VÀ LOẠI 2" src="Images/Sai%20lam%20loai%201_2.png" />
+<p class="caption"><span class="caption-text">SAI LẦM LOẠI 1 VÀ LOẠI 2</span></p>
+</div>
+<p>P(loại 1) = <span class="math notranslate">\(\alpha\)</span> : mức ý nghĩa</p>
+<p>P(loại 2) = <span class="math notranslate">\(\beta\)</span> ; với <span class="math notranslate">\(1 - \beta\)</span> gọi là lực kiểm định</p>
+<p>Do <span class="math notranslate">\(\alpha\)</span> và <span class="math notranslate">\(\beta\)</span> có xu thế ngược nhau, ta cố định
+<span class="math notranslate">\(\alpha\)</span> và chọn hàm quyết định để <span class="math notranslate">\(\beta\)</span> nhỏ nhất (hay
+<span class="math notranslate">\(1 - \beta\)</span> lớn nhất)</p>
+<p>Hằng số C liên quan đến sai lầm loại 1 và loại 2 :</p>
+<div class="figure" id="id4">
+<img alt="HẰNG SỐ C" src="Images/Hang%20so%20C.png" />
+<p class="caption"><span class="caption-text">HẰNG SỐ C</span></p>
+</div>
+</div>
+<div class="section" id="kich-thuoc-mau-doi-voi-mot-chi-so-trung-binh">
+<h3>9.4.2. Kích thước mẫu đối với một chỉ số trung bình<a class="headerlink" href="#kich-thuoc-mau-doi-voi-mot-chi-so-trung-binh" title="Permalink to this headline">¶</a></h3>
+<p>Công thức :</p>
+<div class="math notranslate">
+\[n = \frac{C}{(\frac{d}{\sigma})^{2}}\]</div>
+<p>Trong đó,</p>
+<p>C : hằng số giữa sai lầm loại 1 và loại 2</p>
+<p>d : độ dao động của trung bình mà nghiên cứu muốn chỉ ra</p>
+<p><span class="math notranslate">\(\sigma\)</span> : căn cứ về độ dao động từ các nghiên cứu trước đó</p>
+<p><strong>Ví dụ 3.2.1:</strong></p>
+<p>Ước tính chiều cao ở nam giới Việt Nam, chấp nhận sai số 1 cm (d = 1),
+khoảng tin cậy 95% (<span class="math notranslate">\(\alpha\)</span> = 0.05), power = 80% (<span class="math notranslate">\(\beta\)</span> =
+0.2). Các nghiên cứu trước đó cho thấy độ lệch chuẩn khoảng 4.6 cm.</p>
+<p>Công thức ước tính cỡ mẫu cần thiết cho nghiên cứu :</p>
+<div class="math notranslate">
+\[n = \frac{C}{(\frac{d}{\sigma})^{2}} = \frac{7.85}{(1/4.6)^{2}} = 166\]</div>
+<p>Dùng hàm power.t.test có thể ước tính cỡ mẫu trên :</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">power.t.test</span><span class="p">(</span><span class="n">delta</span> <span class="o">=</span> <span class="m">1</span>
+             <span class="p">,</span><span class="n">sd</span> <span class="o">=</span> <span class="m">4.6</span>
+             <span class="p">,</span><span class="n">sig.level</span> <span class="o">=</span> <span class="m">.05</span>
+             <span class="p">,</span><span class="n">power</span> <span class="o">=</span> <span class="m">.80</span>
+             <span class="p">,</span><span class="n">type</span> <span class="o">=</span> <span class="s">&#39;one.sample&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+<span class="c1">##      One-sample t test power calculation</span>
+<span class="c1">##</span>
+<span class="c1">##               n = 168.0131</span>
+<span class="c1">##           delta = 1</span>
+<span class="c1">##              sd = 4.6</span>
+<span class="c1">##       sig.level = 0.05</span>
+<span class="c1">##           power = 0.8</span>
+<span class="c1">##     alternative = two.sided</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="kich-thuoc-mau-khi-so-sanh-hai-so-trung-binh">
+<h3>9.4.3. Kích thước mẫu khi so sánh hai số trung bình<a class="headerlink" href="#kich-thuoc-mau-khi-so-sanh-hai-so-trung-binh" title="Permalink to this headline">¶</a></h3>
+<p>Công thức :</p>
+<div class="math notranslate">
+\[n = 2\frac{C}{(\frac{d}{\sigma})^{2}}\]</div>
+<p>Trong đó,</p>
+<p>C : hằng số giữa sai lầm loại 1 và loại 2</p>
+<p>d : chênh lệch trung bình giữa 2 nhóm mà nghiên cứu muốn chỉ ra</p>
+<p><span class="math notranslate">\(\sigma\)</span> : căn cứ về độ khác biệt trung bình từ các ghiên cứu
+trước đó</p>
+<p><strong>Ví dụ 3.3.1:</strong></p>
+<p>Để đánh giá hiệu quả của chương trình tặng quà Loyalty nhằm thúc đẩy
+khách hàng gửi TD Online. Có 2 nhóm được chọn: nhóm 1 được tặng quà
+Loyalty và nhóm 2 không được tặng quà Loyalty.Hiệu quả từ các chương
+trình trước đó cho thấy trung bình có 5% số khách hàng gửi TD Online, độ
+lệch chuẩn 0.5%. Cần nghiên cứu bao nhiêu khách hàng để “chứng minh”
+nhóm 1 gửi TD Online nhiều hơn nhóm 2 là 1.1 lần?</p>
+<p>Gọi trung bình của 2 nhóm là <span class="math notranslate">\(\mu_1\)</span> và <span class="math notranslate">\(\mu_2\)</span></p>
+<p>Nhóm 1 gửi nhiều hơn nhóm 2 là 1.1 lần nên:</p>
+<div class="math notranslate">
+\[\mu_1 = 1.1 * \mu_2 = 1.1 * 0.05 = 0.055\]</div>
+<p>Chênh lệch trung bình giữa 2 nhóm :</p>
+<div class="math notranslate">
+\[d = \mu_1 - \mu_2 = 0.055 - 0.05 = 0.005\]</div>
+<p>Với <span class="math notranslate">\(\alpha = 0.05\)</span>, <span class="math notranslate">\(power = 0.9\)</span> công thức ước tính cỡ mẫu
+cần thiết cho nghiên cứu :</p>
+<div class="math notranslate">
+\[n = 2\frac{C}{(\frac{d}{\sigma})^{2}} = 2\frac{10.51}{(0.005/0.05)^{2}} = 2102\]</div>
+<p>Thực hành trong R</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">power.t.test</span><span class="p">(</span><span class="n">delta</span> <span class="o">=</span> <span class="m">0.005</span>
+             <span class="p">,</span><span class="n">sd</span> <span class="o">=</span> <span class="m">0.05</span>
+             <span class="p">,</span><span class="n">sig.level</span> <span class="o">=</span> <span class="m">.05</span>
+             <span class="p">,</span><span class="n">power</span> <span class="o">=</span> <span class="m">.90</span>
+             <span class="p">,</span><span class="n">type</span> <span class="o">=</span> <span class="s">&#39;two.sample&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+<span class="c1">##      Two-sample t test power calculation</span>
+<span class="c1">##</span>
+<span class="c1">##               n = 2102.445</span>
+<span class="c1">##           delta = 0.005</span>
+<span class="c1">##              sd = 0.05</span>
+<span class="c1">##       sig.level = 0.05</span>
+<span class="c1">##           power = 0.9</span>
+<span class="c1">##     alternative = two.sided</span>
+<span class="c1">##</span>
+<span class="c1">## NOTE: n is number in *each* group</span>
+</pre></div>
+</div>
+<p>Kết quả chỉ ra rằng cần nghiên cứu trên 2102 khách hàng mỗi nhóm (tổng
+cộng 4204 khách hàng)</p>
+<p>##Kích thước mẫu khi phân tích phương sai</p>
+<p>Trong phân tích phương sai (ANOVA), hệ số trung bình bình phương phần dư
+(residual mean square - RMS) chính là ước tính của độ dao động khi đo
+lường các nhóm.</p>
+<p><strong>Ví dụ 3.4.1</strong></p>
+<p>Tìm sự khác biệt giữa thu nhập của 2 người A và B</p>
+<p>Tạo biến :</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">&lt;-</span> <span class="nf">rnorm</span><span class="p">(</span><span class="m">1000</span><span class="p">,</span><span class="m">5</span><span class="p">,</span><span class="m">1</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">&lt;-</span>  <span class="nf">rnorm</span><span class="p">(</span><span class="m">1000</span><span class="p">,</span><span class="m">6</span><span class="p">,</span><span class="m">2</span><span class="p">)</span>
+
+<span class="n">A</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.</span>
+<span class="c1">##   1.798   4.413   5.023   5.026   5.645   8.149</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">B</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.</span>
+<span class="c1">##  -1.745   4.812   6.126   6.164   7.492  13.022</span>
+</pre></div>
+</div>
+<p>Phân tích ANOVA</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="nf">rep</span><span class="p">(</span><span class="s">&quot;A&quot;</span><span class="p">,</span><span class="m">1000</span><span class="p">),</span><span class="nf">rep</span><span class="p">(</span><span class="s">&quot;B&quot;</span><span class="p">,</span><span class="m">1000</span><span class="p">))</span>
+<span class="n">x</span> <span class="o">&lt;-</span> <span class="nf">as.factor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+
+<span class="n">data.anov</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="n">data.anov</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##        y          x</span>
+<span class="c1">##  Min.   :-1.745   A:1000</span>
+<span class="c1">##  1st Qu.: 4.545   B:1000</span>
+<span class="c1">##  Median : 5.393</span>
+<span class="c1">##  Mean   : 5.595</span>
+<span class="c1">##  3rd Qu.: 6.446</span>
+<span class="c1">##  Max.   :13.022</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">aov.model</span> <span class="o">&lt;-</span> <span class="nf">aov</span><span class="p">(</span><span class="n">y</span> <span class="o">~</span> <span class="n">x</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">data.anov</span><span class="p">)</span>
+<span class="nf">summary</span><span class="p">(</span><span class="n">aov.model</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##               Df Sum Sq Mean Sq F value Pr(&gt;F)</span>
+<span class="c1">## x              1    647   647.5   255.5 &lt;2e-16 ***</span>
+<span class="c1">## Residuals   1998   5063     2.5</span>
+<span class="c1">## ---</span>
+<span class="c1">## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
+</pre></div>
+</div>
+<p>Xác định kích thước mẫu để chỉ ra rằng có sự khác biệt giữa thu nhập của
+A và B</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">groupmeans</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="nf">mean</span><span class="p">(</span><span class="n">A</span><span class="p">),</span> <span class="nf">mean</span><span class="p">(</span><span class="n">B</span><span class="p">))</span>
+
+<span class="nf">power.anova.test</span><span class="p">(</span><span class="n">groups</span> <span class="o">=</span> <span class="nf">length</span><span class="p">(</span><span class="n">groupmeans</span><span class="p">)</span>
+                 <span class="p">,</span><span class="n">between.var</span> <span class="o">=</span> <span class="nf">var</span><span class="p">(</span><span class="n">groupmeans</span><span class="p">)</span>
+                 <span class="p">,</span><span class="n">within.var</span> <span class="o">=</span> <span class="m">2.5</span>       <span class="c1">##mean Sq residuals</span>
+                 <span class="p">,</span><span class="n">power</span> <span class="o">=</span> <span class="m">0.90</span>
+                 <span class="p">,</span><span class="n">sig.level</span> <span class="o">=</span> <span class="m">0.05</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+<span class="c1">##      Balanced one-way analysis of variance power calculation</span>
+<span class="c1">##</span>
+<span class="c1">##          groups = 2</span>
+<span class="c1">##               n = 41.5547</span>
+<span class="c1">##     between.var = 0.6474801</span>
+<span class="c1">##      within.var = 2.5</span>
+<span class="c1">##       sig.level = 0.05</span>
+<span class="c1">##           power = 0.9</span>
+<span class="c1">##</span>
+<span class="c1">## NOTE: n is number in each group</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="su-dung-khoang-tin-cay-khi-uoc-luong-trung-binh">
+<h3>9.4.4. Sử dụng khoảng tin cậy khi ước lượng trung bình<a class="headerlink" href="#su-dung-khoang-tin-cay-khi-uoc-luong-trung-binh" title="Permalink to this headline">¶</a></h3>
+<p>Xuất phát từ việc ước lượng trung bình của biến ngẫu nhiên X phân phối
+chuẩn ta có :</p>
+<div class="math notranslate">
+\[\mu_X - U_\frac{\alpha}{2}\frac{\sigma}{\sqrt{n}} &lt; \mu &lt; \mu_X + U_\frac{\alpha}{2}\frac{\sigma}{\sqrt{n}}\]</div>
+<p>Khoảng tin cậy theo ước lượng này :</p>
+<div class="math notranslate">
+\[I = 2U_\frac{\alpha}{2}\frac{\sigma}{\sqrt{n}} = 2 U_\frac{\alpha}{2}S\sqrt{\frac{N - n}{nN}}\]</div>
+<p>Trong đó,</p>
+<ul class="simple">
+<li><span class="math notranslate">\(S\)</span> : độ lệch chuẩn của mẫu điều tra thử</li>
+<li><span class="math notranslate">\(N\)</span> : kích thước tổng thể</li>
+<li><span class="math notranslate">\(n\)</span> : kích thước mẫu quan sát</li>
+</ul>
+<p>Với việc lựa chọn I (biến động của giá trị trung bình), ta có thể xác
+định kích thước mẫu :</p>
+<div class="math notranslate">
+\[n &gt;= \frac {N}{1 + N(\frac{I}{2U_\frac{\alpha}{2} S})^{2}}\]</div>
+<p>Tính hệ số <span class="math notranslate">\(U_{\alpha/2}\)</span></p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="m">0.05</span>
+<span class="nf">qnorm</span><span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">a</span><span class="o">/</span><span class="m">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 1.959964</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="su-dung-ty-le-phuong-sai">
+<h3>9.4.5. Sử dụng tỷ lệ phương sai<a class="headerlink" href="#su-dung-ty-le-phuong-sai" title="Permalink to this headline">¶</a></h3>
+<p>Công thức tính phương sai :</p>
+<div class="math notranslate">
+\[\sigma_X^{2} &gt;= \frac{\sigma^{2}}{n} \frac{N - n}{N - 1}\]</div>
+<p>Từ đó :</p>
+<div class="math notranslate">
+\[n &gt;= \frac{N\sigma^{2}}{(N – 1)\sigma_X^{2} + \sigma^{2}} = \frac{N}{1 + (N -1)\frac{\sigma_X^{2}}{\sigma^{2}}}\]</div>
+<p>Bằng việc lựa chọn tỷ lệ của phương sai trung bình mẫu so với phương sai
+tổng thể ( <a href="#id1"><span class="problematic" id="id2">:raw-latex:`\frac{\sigma_X^{2}}{\sigma^{2}}`</span></a> ), ta có thể xác
+định kích thước mẫu.</p>
+</div>
+</div>
+<div class="section" id="tai-lieu-tham-khao">
+<h2>9.5. Tài liệu tham khảo<a class="headerlink" href="#tai-lieu-tham-khao" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="http://rpsychologist.com/d3/NHST/">Vizualize type 1, type 2, power, sample
+size</a></li>
+<li><a class="reference external" href="http://stattrek.com/hypothesis-test/power-of-test.aspx?Tutorial=AP">Power of Hypothesis
+test</a></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="p02-20-sampling-methods.html" class="btn btn-neutral float-right" title="10. Phương pháp ước lượng lấy mẫu" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="p02-15-thong-ke-co-ban.html" class="btn btn-neutral float-left" title="8. Xác suất và phân phối thống kê cơ bản" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anh Hoang Duc
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

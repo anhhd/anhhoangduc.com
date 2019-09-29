@@ -1,0 +1,609 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="vi" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="vi" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1. Pivot - Unpivot &mdash; Tài liệu Khai thác dữ liệu với SQL 2019</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'2019',
+              LANGUAGE:'vi',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript" src="_static/copybutton.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Tìm Kiếm" href="search.html" />
+    <link rel="next" title="3. SQLCMD" href="p02-04-sqlcmd.html" />
+    <link rel="prev" title="11. Tricks khi dùng với SQL" href="p01-02-tricks-sql.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Khai thác dữ liệu với SQL
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">SQL cơ bản</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html">1. Giới thiệu về SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#cac-nhom-cau-lenh-truy-van-tong-hop">2. Các nhóm câu lệnh truy vấn, tổng hợp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#cac-nhom-cau-lenh-thay-doi-du-lieu-trong-csdl">3. Các nhóm câu lệnh thay đổi dữ liệu trong CSDL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#sub-query">4. Sub Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#cac-nhom-cau-lenh-co-ban-khac">5. Các nhóm câu lệnh cơ bản khác</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#sql-dong-voi-exec">6. SQL động với Exec</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#ham-va-thu-tuc">7. Hàm và thủ tục</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#cac-nhom-cau-lenh-nang-cao">8. Các nhóm câu lệnh nâng cao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#dat-job-trong-sql">9. Đặt job trong SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#cac-nhom-cau-lenh-quan-tri">10. Các nhóm câu lệnh quản trị</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-02-tricks-sql.html">11. Tricks khi dùng với SQL</a></li>
+</ul>
+<p class="caption"><span class="caption-text">SQL nâng cao</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Pivot - Unpivot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#nhom-cau-lenh-co-ban">1.1. Nhóm câu lệnh cơ bản</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#procedure-pivot">1.2. Procedure pivot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#procedure-unpivot">1.3. Procedure unpivot</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#chia-mot-cot-thanh-nhieu-cot">2. Chia một cột thành nhiều cột</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-04-sqlcmd.html">3. SQLCMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-05-sql-project.html">4. SQL prọject</a></li>
+</ul>
+<p class="caption"><span class="caption-text">SQL &amp; Analytics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p03-06-sql-va-excel.html">1. Kết nối SQL với Excel phục vụ báo cáo tự động</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-r-va-sql.html">2. R &amp; SQL Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-r-server.html">3. SQL RServer</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Xây dựng DataMart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p04-11-xay-dung-database.html">1. Xây dựng Data warehouse &amp; Data Mart</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tài liệu tham khảo:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p09-79-tai-lieu-tham-khao.html">Tài liệu tham khảo</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Khai thác dữ liệu với SQL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>1. Pivot - Unpivot</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/p02-03-sql-nang-cao.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="pivot-unpivot">
+<h1>1. Pivot - Unpivot<a class="headerlink" href="#pivot-unpivot" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="nhom-cau-lenh-co-ban">
+<h2>1.1. Nhóm câu lệnh cơ bản<a class="headerlink" href="#nhom-cau-lenh-co-ban" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="c1">-- Tạo bảng</span>
+<span class="k">create</span> <span class="k">table</span> <span class="o">#</span><span class="n">student</span>
+<span class="p">(</span>
+<span class="n">id</span> <span class="nb">int</span><span class="p">,</span>
+<span class="n">mark1</span> <span class="nb">float</span><span class="p">,</span>
+<span class="n">mark2</span> <span class="nb">float</span><span class="p">,</span>
+<span class="n">mark3</span> <span class="nb">float</span>
+<span class="p">)</span>
+
+<span class="k">insert</span> <span class="k">into</span> <span class="o">#</span><span class="n">student</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="o">#</span><span class="n">student</span> <span class="k">values</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="o">#</span><span class="n">student</span> <span class="k">values</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1">-- UNPIVOT</span>
+
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span>
+<span class="p">(</span><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="o">#</span><span class="n">Student</span><span class="p">)</span> <span class="n">a</span>
+<span class="n">UNPIVOT</span>
+<span class="p">(</span><span class="n">value_var</span> <span class="k">FOR</span> <span class="n">group_var</span> <span class="k">IN</span> <span class="p">(</span><span class="n">Mark1</span><span class="p">,</span> <span class="n">Mark2</span><span class="p">,</span> <span class="n">Mark3</span><span class="p">)</span>
+<span class="p">)</span> <span class="n">b</span>
+
+<span class="c1">-- PIVOT</span>
+
+<span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">into</span> <span class="o">#</span><span class="n">student_pivot</span> <span class="k">FROM</span>
+<span class="p">(</span><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="o">#</span><span class="n">Student</span><span class="p">)</span> <span class="n">a</span>
+<span class="n">UNPIVOT</span>
+<span class="p">(</span><span class="n">value_var</span> <span class="k">FOR</span> <span class="n">group_var</span> <span class="k">IN</span> <span class="p">(</span><span class="n">Mark1</span><span class="p">,</span> <span class="n">Mark2</span><span class="p">,</span> <span class="n">Mark3</span><span class="p">)</span>
+<span class="p">)</span> <span class="n">b</span>
+
+
+<span class="k">select</span> <span class="o">*</span> <span class="k">from</span>
+<span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="o">#</span><span class="n">student_pivot</span><span class="p">)</span> <span class="n">a</span>
+<span class="n">pivot</span>
+<span class="p">(</span><span class="k">sum</span><span class="p">(</span><span class="n">value_var</span><span class="p">)</span> <span class="k">for</span> <span class="n">group_var</span> <span class="k">in</span> <span class="p">(</span><span class="n">mark1</span><span class="p">,</span> <span class="n">mark2</span><span class="p">,</span> <span class="n">mark3</span><span class="p">))</span> <span class="n">b</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="procedure-pivot">
+<h2>1.2. Procedure pivot<a class="headerlink" href="#procedure-pivot" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Dynamic sql</li>
+</ul>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">declare</span> <span class="o">@</span><span class="k">data</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+<span class="k">declare</span> <span class="o">@</span><span class="k">group</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+<span class="k">set</span> <span class="o">@</span><span class="k">data</span> <span class="o">=</span> <span class="s1">&#39;#student_pivot&#39;</span>
+<span class="k">set</span> <span class="o">@</span><span class="k">group</span> <span class="o">=</span> <span class="n">STUFF</span><span class="p">(</span>
+<span class="p">(</span><span class="k">SELECT</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="n">b</span><span class="p">.</span><span class="n">group_var</span>
+              <span class="k">FROM</span>
+              <span class="p">(</span><span class="k">select</span> <span class="k">distinct</span> <span class="n">group_var</span> <span class="k">from</span> <span class="o">#</span><span class="n">student_pivot</span>
+              <span class="k">where</span> <span class="n">group_var</span> <span class="k">not</span> <span class="k">like</span> <span class="s1">&#39;mark1&#39;</span><span class="p">)</span> <span class="n">b</span>
+              <span class="k">FOR</span> <span class="n">XML</span> <span class="n">PATH</span> <span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)),</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+<span class="k">declare</span> <span class="o">@</span><span class="n">sqlstr</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span>
+<span class="k">set</span> <span class="o">@</span><span class="n">sqlstr</span> <span class="o">=</span> <span class="n">N</span><span class="s1">&#39;select * from</span>
+<span class="s1">(select * from &#39;</span><span class="o">+</span> <span class="o">@</span><span class="k">data</span> <span class="o">+</span><span class="s1">&#39;) a</span>
+<span class="s1">pivot</span>
+<span class="s1">(sum(value_var) for group_var in (&#39;</span> <span class="o">+</span> <span class="o">@</span><span class="k">group</span> <span class="o">+</span> <span class="s1">&#39;)) b</span>
+<span class="s1">&#39;</span>
+<span class="k">exec</span> <span class="n">sp_executesql</span> <span class="o">@</span><span class="n">sqlstr</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Procedure</li>
+</ul>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">drop</span> <span class="k">procedure</span> <span class="k">if</span> <span class="k">exists</span> <span class="n">sql_pivot</span>
+<span class="k">create</span> <span class="k">procedure</span> <span class="n">sql_pivot</span>  <span class="o">@</span><span class="k">data</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">),</span>
+                            <span class="o">@</span><span class="k">group</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">),</span> <span class="c1">-- Variable to pivot</span>
+                            <span class="o">@</span><span class="k">row</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">),</span> <span class="c1">-- Column to keep as key</span>
+                            <span class="o">@</span><span class="n">value</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">),</span> <span class="c1">-- Column to calculate</span>
+                            <span class="o">@</span><span class="k">function</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="c1">-- Function to calculate</span>
+                            <span class="o">@</span><span class="n">stored_data</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;##pivot_result&#39;</span> <span class="c1">-- Store data result</span>
+<span class="k">as</span>
+<span class="k">begin</span>
+<span class="k">declare</span> <span class="o">@</span><span class="k">sql</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span>
+<span class="k">set</span> <span class="o">@</span><span class="k">sql</span> <span class="o">=</span> <span class="s1">&#39;</span>
+<span class="s1">declare @group_value nvarchar(max)</span>
+<span class="s1">set @group_value = STUFF(</span>
+<span class="s1">(SELECT &#39;&#39;,&#39;&#39; + b.&#39;</span><span class="o">+@</span><span class="k">group</span><span class="o">+</span><span class="s1">&#39;</span>
+<span class="s1">              FROM</span>
+<span class="s1">              (select distinct &#39;</span><span class="o">+</span> <span class="o">@</span><span class="k">group</span> <span class="o">+</span><span class="s1">&#39; from &#39;</span><span class="o">+</span> <span class="o">@</span><span class="k">data</span> <span class="o">+</span><span class="s1">&#39;) b</span>
+<span class="s1">              FOR XML PATH (&#39;&#39;&#39;&#39;)),1,1,&#39;&#39;&#39;&#39;)</span>
+
+<span class="s1">declare @sqlstr nvarchar(max)</span>
+<span class="s1">set @sqlstr = N&#39;&#39;</span>
+<span class="s1">drop table if exists &#39;</span><span class="o">+</span> <span class="o">@</span><span class="n">stored_data</span> <span class="o">+</span><span class="s1">&#39;</span>
+<span class="s1">select *</span>
+<span class="s1">into &#39;</span><span class="o">+</span> <span class="o">@</span><span class="n">stored_data</span> <span class="o">+</span><span class="s1">&#39;</span>
+<span class="s1">from</span>
+<span class="s1">(select &#39;</span><span class="o">+</span> <span class="o">@</span><span class="k">group</span><span class="o">+</span> <span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="o">@</span><span class="k">row</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span><span class="o">+@</span><span class="n">value</span> <span class="o">+</span><span class="s1">&#39;  from &#39;</span><span class="o">+</span> <span class="o">@</span><span class="k">data</span> <span class="o">+</span><span class="s1">&#39;) a</span>
+<span class="s1">pivot</span>
+<span class="s1">(&#39;</span><span class="o">+@</span><span class="k">function</span><span class="o">+</span><span class="s1">&#39;(&#39;</span><span class="o">+</span> <span class="o">@</span><span class="n">value</span> <span class="o">+</span><span class="s1">&#39;) for &#39;</span><span class="o">+@</span><span class="k">group</span><span class="o">+</span><span class="s1">&#39; in (&#39;&#39; + @group_value + &#39;&#39;)) b</span>
+<span class="s1">&#39;&#39;</span>
+<span class="s1">exec sp_executesql @sqlstr</span>
+<span class="s1">&#39;</span>
+<span class="k">exec</span> <span class="n">sp_executesql</span> <span class="o">@</span><span class="k">sql</span>
+<span class="k">end</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Ví dụ:</li>
+</ul>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">sql_pivot</span> <span class="o">@</span><span class="k">data</span> <span class="o">=</span> <span class="s1">&#39;##student_pivot&#39;</span><span class="p">,</span> <span class="o">@</span><span class="k">row</span> <span class="o">=</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span>
+<span class="o">@</span><span class="k">group</span><span class="o">=</span> <span class="s1">&#39;group_var&#39;</span><span class="p">,</span> <span class="o">@</span><span class="n">value</span> <span class="o">=</span> <span class="s1">&#39;value_var&#39;</span><span class="p">,</span> <span class="o">@</span><span class="k">function</span> <span class="o">=</span> <span class="s1">&#39;sum&#39;</span>
+<span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="o">##</span><span class="n">pivot_result</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="procedure-unpivot">
+<h2>1.3. Procedure unpivot<a class="headerlink" href="#procedure-unpivot" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Dynamic sql: Cho phép nhiều ID</li>
+<li>Cách 1: Chỉ sử dụng với các data trong máy local</li>
+</ul>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">declare</span> <span class="o">@</span><span class="k">data</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;student&#39;</span>
+<span class="k">declare</span> <span class="o">@</span><span class="n">id_var</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;id&#39;&#39;,&#39;&#39;mark1&#39;&#39;&#39;</span>
+<span class="k">declare</span> <span class="o">@</span><span class="n">group_var</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;group_var&#39;</span>
+<span class="k">declare</span> <span class="o">@</span><span class="n">value_var</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;value_var&#39;</span>
+
+<span class="k">declare</span> <span class="o">@</span><span class="k">sql</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span>
+<span class="k">set</span> <span class="o">@</span><span class="k">sql</span> <span class="o">=</span> <span class="s1">&#39;</span>
+<span class="s1">declare @cols AS NVARCHAR(MAX)</span>
+<span class="s1">   select @cols = STUFF((SELECT &#39;&#39;,&#39;&#39; + QUOTENAME(column_name)</span>
+<span class="s1">                    FROM (</span>
+<span class="s1">                        select   table_name, column_name, ordinal_position, data_type</span>
+<span class="s1">                        from   information_schema.columns</span>
+<span class="s1">                        where   table_name = &#39;&#39;&#39;</span><span class="o">+@</span><span class="k">data</span><span class="o">+</span><span class="s1">&#39;&#39;&#39; and</span>
+<span class="s1">                        column_name not in (&#39;</span><span class="o">+@</span><span class="n">id_var</span><span class="o">+</span><span class="s1">&#39;)</span>
+<span class="s1">                        ) cols</span>
+<span class="s1">                    ORDER BY ordinal_position</span>
+<span class="s1">                    FOR XML PATH(&#39;&#39;&#39;&#39;), TYPE).value(&#39;&#39;.&#39;&#39;, &#39;&#39;NVARCHAR(MAX)&#39;&#39;),1,1,&#39;&#39;&#39;&#39;)</span>
+<span class="s1">select @cols</span>
+
+<span class="s1">declare @key AS NVARCHAR(MAX)</span>
+<span class="s1">   select @key = STUFF((SELECT &#39;&#39;,&#39;&#39; + QUOTENAME(column_name)</span>
+<span class="s1">                    FROM (</span>
+<span class="s1">                        select   table_name, column_name, ordinal_position, data_type</span>
+<span class="s1">                        from   information_schema.columns</span>
+<span class="s1">                        where   table_name = &#39;&#39;&#39;</span><span class="o">+@</span><span class="k">data</span><span class="o">+</span><span class="s1">&#39;&#39;&#39; and</span>
+<span class="s1">                        column_name in (&#39;</span><span class="o">+@</span><span class="n">id_var</span><span class="o">+</span><span class="s1">&#39;)</span>
+<span class="s1">                        ) cols</span>
+<span class="s1">                    ORDER BY ordinal_position</span>
+<span class="s1">                    FOR XML PATH(&#39;&#39;&#39;&#39;), TYPE).value(&#39;&#39;.&#39;&#39;, &#39;&#39;NVARCHAR(MAX)&#39;&#39;),1,1,&#39;&#39;&#39;&#39;)</span>
+<span class="s1">select @key</span>
+
+<span class="s1">declare @sqlstr nvarchar(max)</span>
+<span class="s1">set @sqlstr = N&#39;&#39;</span>
+<span class="s1">            select &#39;&#39;+@key+&#39;&#39;, &#39;</span><span class="o">+@</span><span class="n">group_var</span><span class="o">+</span><span class="s1">&#39;, &#39;</span><span class="o">+@</span><span class="n">value_var</span><span class="o">+</span><span class="s1">&#39;</span>
+<span class="s1">            from(</span>
+<span class="s1">               select *</span>
+<span class="s1">               from &#39;</span><span class="o">+@</span><span class="k">data</span><span class="o">+</span><span class="s1">&#39;</span>
+<span class="s1">            ) as a</span>
+<span class="s1">            unpivot</span>
+<span class="s1">            (</span>
+<span class="s1">              &#39;</span><span class="o">+@</span><span class="n">value_var</span><span class="o">+</span><span class="s1">&#39; for &#39;</span><span class="o">+@</span><span class="n">group_var</span><span class="o">+</span><span class="s1">&#39; in (&#39;&#39; + @cols + &#39;&#39;)</span>
+<span class="s1">            ) as b&#39;&#39;</span>
+<span class="s1">print @sqlstr</span>
+<span class="s1">exec sp_executesql @sqlstr</span>
+<span class="s1">&#39;</span>
+
+<span class="k">exec</span> <span class="n">sp_executesql</span> <span class="o">@</span><span class="k">sql</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Cách 2: Khái quát dynamic sql</li>
+</ul>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">declare</span> <span class="o">@</span><span class="n">db</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;tempdb&#39;</span>
+<span class="k">declare</span> <span class="o">@</span><span class="k">data</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;##student&#39;</span>
+<span class="k">declare</span> <span class="o">@</span><span class="n">id_var</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;id&#39;&#39;&#39;</span>
+<span class="k">declare</span> <span class="o">@</span><span class="n">group_var</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;group_var&#39;</span>
+<span class="k">declare</span> <span class="o">@</span><span class="n">value_var</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;value_var&#39;</span>
+<span class="k">declare</span> <span class="o">@</span><span class="n">stored_data</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;##a&#39;</span>
+<span class="k">declare</span> <span class="o">@</span><span class="k">sql</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span>
+
+<span class="k">set</span> <span class="o">@</span><span class="k">sql</span> <span class="o">=</span> <span class="n">N</span><span class="s1">&#39;</span>
+<span class="s1">drop table if exists ##all_cols</span>
+<span class="s1">select name into ##all_cols</span>
+<span class="s1">from &#39;</span><span class="o">+@</span><span class="n">db</span><span class="o">+</span><span class="s1">&#39;.sys.columns</span>
+<span class="s1">where object_id in (select object_id from &#39;</span><span class="o">+@</span><span class="n">db</span><span class="o">+</span><span class="s1">&#39;.sys.tables where name like &#39;&#39;%&#39;</span><span class="o">+@</span><span class="k">data</span><span class="o">+</span><span class="s1">&#39;&#39;&#39;)</span>
+
+<span class="s1">declare @cols AS NVARCHAR(MAX)</span>
+<span class="s1">   select @cols = STUFF((SELECT &#39;&#39;,&#39;&#39; + QUOTENAME(name)</span>
+<span class="s1">                    FROM (</span>
+<span class="s1">                        select name from ##all_cols</span>
+<span class="s1">                        where name not in (&#39;</span><span class="o">+@</span><span class="n">id_var</span><span class="o">+</span><span class="s1">&#39;)</span>
+<span class="s1">                        ) cols</span>
+<span class="s1">                    FOR XML PATH(&#39;&#39;&#39;&#39;), TYPE).value(&#39;&#39;.&#39;&#39;, &#39;&#39;NVARCHAR(MAX)&#39;&#39;),1,1,&#39;&#39;&#39;&#39;)</span>
+<span class="s1">select @cols</span>
+
+<span class="s1">declare @key AS NVARCHAR(MAX)</span>
+<span class="s1">   select @key = STUFF((SELECT &#39;&#39;,&#39;&#39; + QUOTENAME(name)</span>
+<span class="s1">                    FROM (</span>
+<span class="s1">                        select name from ##all_cols</span>
+<span class="s1">                        where name in (&#39;</span><span class="o">+@</span><span class="n">id_var</span><span class="o">+</span><span class="s1">&#39;)</span>
+<span class="s1">                        ) cols</span>
+<span class="s1">                    FOR XML PATH(&#39;&#39;&#39;&#39;), TYPE).value(&#39;&#39;.&#39;&#39;, &#39;&#39;NVARCHAR(MAX)&#39;&#39;),1,1,&#39;&#39;&#39;&#39;)</span>
+<span class="s1">select @key</span>
+
+<span class="s1">--Run procedure</span>
+
+<span class="s1">declare @sqlstr nvarchar(max)</span>
+<span class="s1">set @sqlstr = N&#39;&#39;</span>
+<span class="s1">            drop table if exists &#39;</span><span class="o">+@</span><span class="n">stored_data</span><span class="o">+</span><span class="s1">&#39;</span>
+<span class="s1">            select &#39;&#39;+@key+&#39;&#39;, &#39;</span><span class="o">+@</span><span class="n">group_var</span><span class="o">+</span><span class="s1">&#39;, &#39;</span><span class="o">+@</span><span class="n">value_var</span><span class="o">+</span><span class="s1">&#39;</span>
+<span class="s1">            into &#39;</span><span class="o">+@</span><span class="n">stored_data</span><span class="o">+</span><span class="s1">&#39;</span>
+<span class="s1">            from(</span>
+<span class="s1">               select *</span>
+<span class="s1">               from &#39;</span><span class="o">+@</span><span class="n">db</span><span class="o">+</span><span class="s1">&#39;.dbo.[&#39;</span><span class="o">+@</span><span class="k">data</span><span class="o">+</span><span class="s1">&#39;]</span>
+<span class="s1">            ) as a</span>
+<span class="s1">            unpivot</span>
+<span class="s1">            (</span>
+<span class="s1">              &#39;</span><span class="o">+@</span><span class="n">value_var</span><span class="o">+</span><span class="s1">&#39; for &#39;</span><span class="o">+@</span><span class="n">group_var</span><span class="o">+</span><span class="s1">&#39; in (&#39;&#39; + @cols + &#39;&#39;)</span>
+<span class="s1">            ) as b</span>
+<span class="s1">            select * from &#39;</span><span class="o">+@</span><span class="n">stored_data</span><span class="o">+</span><span class="s1">&#39;</span>
+<span class="s1">            &#39;&#39;</span>
+<span class="s1">print @sqlstr</span>
+<span class="s1">exec sp_executesql @sqlstr</span>
+<span class="s1">&#39;</span>
+<span class="k">exec</span> <span class="n">sp_executesql</span> <span class="o">@</span><span class="k">sql</span>
+</pre></div>
+</div>
+<p><strong>Lưu ý</strong>: Các bảng phải là bảng trong db hoặc bảng lưu ở global
+environment</p>
+<ul class="simple">
+<li>Procedure</li>
+</ul>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">drop</span> <span class="k">procedure</span> <span class="k">if</span> <span class="k">exists</span> <span class="n">sql_unpivot</span>
+<span class="k">create</span> <span class="k">procedure</span> <span class="n">sql_unpivot</span>
+ <span class="o">@</span><span class="n">db</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;tempdb&#39;</span><span class="p">,</span> <span class="c1">--Database contains data</span>
+<span class="o">@</span><span class="k">data</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">),</span> <span class="c1">-- Name of data</span>
+<span class="o">@</span><span class="n">id_var</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">),</span> <span class="c1">-- Key variables</span>
+<span class="o">@</span><span class="n">group_var</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;group_var&#39;</span><span class="p">,</span> <span class="c1">--Name of groups variable</span>
+<span class="o">@</span><span class="n">value_var</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;value_var&#39;</span><span class="p">,</span> <span class="c1">-- Name of value variable</span>
+<span class="o">@</span><span class="n">stored_data</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="o">=</span> <span class="s1">&#39;##unpivot_result&#39;</span>  <span class="c1">-- Data storage</span>
+<span class="k">as</span>
+<span class="k">begin</span>
+<span class="k">declare</span> <span class="o">@</span><span class="k">sql</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span>
+<span class="k">set</span> <span class="o">@</span><span class="k">sql</span> <span class="o">=</span> <span class="n">N</span><span class="s1">&#39;</span>
+<span class="s1">drop table if exists ##all_cols</span>
+<span class="s1">select name into ##all_cols</span>
+<span class="s1">from &#39;</span><span class="o">+@</span><span class="n">db</span><span class="o">+</span><span class="s1">&#39;.sys.columns</span>
+<span class="s1">where object_id in (select object_id from &#39;</span><span class="o">+@</span><span class="n">db</span><span class="o">+</span><span class="s1">&#39;.sys.tables where name like &#39;&#39;%&#39;</span><span class="o">+@</span><span class="k">data</span><span class="o">+</span><span class="s1">&#39;&#39;&#39;)</span>
+
+<span class="s1">declare @cols AS NVARCHAR(MAX)</span>
+<span class="s1">   select @cols = STUFF((SELECT &#39;&#39;,&#39;&#39; + QUOTENAME(name)</span>
+<span class="s1">                    FROM (</span>
+<span class="s1">                        select name from ##all_cols</span>
+<span class="s1">                        where name not in (&#39;</span><span class="o">+@</span><span class="n">id_var</span><span class="o">+</span><span class="s1">&#39;)</span>
+<span class="s1">                        ) cols</span>
+<span class="s1">                    FOR XML PATH(&#39;&#39;&#39;&#39;), TYPE).value(&#39;&#39;.&#39;&#39;, &#39;&#39;NVARCHAR(MAX)&#39;&#39;),1,1,&#39;&#39;&#39;&#39;)</span>
+<span class="s1">-- Show columns</span>
+<span class="s1">print @cols</span>
+
+<span class="s1">declare @key AS NVARCHAR(MAX)</span>
+<span class="s1">   select @key = STUFF((SELECT &#39;&#39;,&#39;&#39; + QUOTENAME(name)</span>
+<span class="s1">                    FROM (</span>
+<span class="s1">                        select name from ##all_cols</span>
+<span class="s1">                        where name in (&#39;</span><span class="o">+@</span><span class="n">id_var</span><span class="o">+</span><span class="s1">&#39;)</span>
+<span class="s1">                        ) cols</span>
+<span class="s1">                    FOR XML PATH(&#39;&#39;&#39;&#39;), TYPE).value(&#39;&#39;.&#39;&#39;, &#39;&#39;NVARCHAR(MAX)&#39;&#39;),1,1,&#39;&#39;&#39;&#39;)</span>
+<span class="s1">-- Show key</span>
+<span class="s1">print @key</span>
+
+<span class="s1">--Run procedure</span>
+
+<span class="s1">declare @sqlstr nvarchar(max)</span>
+<span class="s1">set @sqlstr = N&#39;&#39;</span>
+<span class="s1">            drop table if exists &#39;</span><span class="o">+@</span><span class="n">stored_data</span><span class="o">+</span><span class="s1">&#39;</span>
+<span class="s1">            select &#39;&#39;+@key+&#39;&#39;, &#39;</span><span class="o">+@</span><span class="n">group_var</span><span class="o">+</span><span class="s1">&#39;, &#39;</span><span class="o">+@</span><span class="n">value_var</span><span class="o">+</span><span class="s1">&#39;</span>
+<span class="s1">            into &#39;</span><span class="o">+@</span><span class="n">stored_data</span><span class="o">+</span><span class="s1">&#39;</span>
+<span class="s1">            from(</span>
+<span class="s1">               select *</span>
+<span class="s1">               from &#39;</span><span class="o">+@</span><span class="n">db</span><span class="o">+</span><span class="s1">&#39;.dbo.[&#39;</span><span class="o">+@</span><span class="k">data</span><span class="o">+</span><span class="s1">&#39;]</span>
+<span class="s1">            ) as a</span>
+<span class="s1">            unpivot</span>
+<span class="s1">            (</span>
+<span class="s1">              &#39;</span><span class="o">+@</span><span class="n">value_var</span><span class="o">+</span><span class="s1">&#39; for &#39;</span><span class="o">+@</span><span class="n">group_var</span><span class="o">+</span><span class="s1">&#39; in (&#39;&#39; + @cols + &#39;&#39;)</span>
+<span class="s1">            ) as b</span>
+<span class="s1">            select * from &#39;</span><span class="o">+@</span><span class="n">stored_data</span><span class="o">+</span><span class="s1">&#39;</span>
+<span class="s1">            &#39;&#39;</span>
+<span class="s1">print @sqlstr</span>
+<span class="s1">exec sp_executesql @sqlstr</span>
+<span class="s1">&#39;</span>
+<span class="k">exec</span> <span class="n">sp_executesql</span> <span class="o">@</span><span class="k">sql</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">exec</span> <span class="n">sql_unpivot</span> <span class="o">@</span><span class="n">db</span> <span class="o">=</span> <span class="s1">&#39;loan_db&#39;</span><span class="p">,</span> <span class="o">@</span><span class="k">data</span> <span class="o">=</span> <span class="s1">&#39;MONTHLY_LCY_AMOUNT - M74 - BICDATA&#39;</span><span class="p">,</span>
+<span class="o">@</span><span class="n">id_var</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;id&#39;&#39;, &#39;&#39;YEARMONTH&#39;&#39;, &#39;&#39;APP&#39;&#39;,&#39;&#39;ACCTNO&#39;&#39;, &#39;&#39;CIF&#39;&#39;, &#39;&#39;AVERAGE_BAL&#39;&#39;, &#39;&#39;BI_SEGMENT&#39;&#39;&#39;</span>
+</pre></div>
+</div>
+<p><strong>Lưu ý</strong>:</p>
+<ul class="simple">
+<li>Bắt buộc phải có alias sau bảng</li>
+</ul>
+</div>
+</div>
+<div class="section" id="chia-mot-cot-thanh-nhieu-cot">
+<h1>2. Chia một cột thành nhiều cột<a class="headerlink" href="#chia-mot-cot-thanh-nhieu-cot" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">tbl_SplitColumns</span> <span class="p">(</span><span class="n">col1</span> <span class="nb">varchar</span><span class="p">(</span><span class="k">max</span><span class="p">))</span>
+<span class="k">GO</span>
+
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">tbl_SplitColumns</span>
+<span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;part1 part2 part3&#39;</span><span class="p">),(</span><span class="s1">&#39;abc xyz pqr&#39;</span><span class="p">),(</span><span class="s1">&#39;one two three&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Hello man nua nha&#39;</span><span class="p">)</span>
+<span class="k">GO</span>
+
+
+<span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">tbl_SplitColumns</span>
+
+<span class="k">DECLARE</span> <span class="o">@</span><span class="k">delimiter</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">SET</span> <span class="o">@</span><span class="k">delimiter</span><span class="o">=</span><span class="s1">&#39; &#39;</span>
+<span class="p">;</span><span class="k">WITH</span> <span class="n">CTE</span> <span class="k">AS</span>
+<span class="p">(</span>
+    <span class="k">SELECT</span>
+        <span class="n">col1</span><span class="p">,</span>
+        <span class="k">CAST</span><span class="p">(</span><span class="s1">&#39;&lt;A&gt;&#39;</span> <span class="o">+</span> <span class="k">REPLACE</span><span class="p">(</span><span class="n">col1</span><span class="p">,</span> <span class="o">@</span><span class="k">delimiter</span> <span class="p">,</span> <span class="s1">&#39;&lt;/A&gt;&lt;A&gt;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&lt;/A&gt;&#39;</span> <span class="k">AS</span> <span class="n">XML</span><span class="p">)</span> <span class="k">AS</span> <span class="n">XMLString</span>
+    <span class="k">FROM</span> <span class="n">tbl_SplitColumns</span>
+<span class="p">)</span>
+<span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">CTE</span>
+<span class="k">SELECT</span>
+     <span class="n">XMLString</span><span class="p">.</span><span class="n">value</span><span class="p">(</span><span class="s1">&#39;/A[1]&#39;</span><span class="p">,</span> <span class="s1">&#39;varchar(10)&#39;</span><span class="p">)</span> <span class="k">As</span> <span class="n">C1</span>
+     <span class="p">,</span><span class="n">XMLString</span><span class="p">.</span><span class="n">value</span><span class="p">(</span><span class="s1">&#39;/A[2]&#39;</span><span class="p">,</span> <span class="s1">&#39;varchar(10)&#39;</span><span class="p">)</span> <span class="k">As</span> <span class="n">C2</span>
+     <span class="p">,</span><span class="n">XMLString</span><span class="p">.</span><span class="n">value</span><span class="p">(</span><span class="s1">&#39;/A[3]&#39;</span><span class="p">,</span> <span class="s1">&#39;varchar(10)&#39;</span><span class="p">)</span> <span class="k">As</span> <span class="n">C3</span>
+     <span class="p">,</span><span class="n">XMLString</span><span class="p">.</span><span class="n">value</span><span class="p">(</span><span class="s1">&#39;/A[4]&#39;</span><span class="p">,</span> <span class="s1">&#39;varchar(10)&#39;</span><span class="p">)</span> <span class="k">As</span> <span class="n">C4</span>
+  <span class="k">FROM</span> <span class="n">CTE</span>
+<span class="k">GO</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="p02-04-sqlcmd.html" class="btn btn-neutral float-right" title="3. SQLCMD" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="p01-02-tricks-sql.html" class="btn btn-neutral float-left" title="11. Tricks khi dùng với SQL" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anh Hoang Duc
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

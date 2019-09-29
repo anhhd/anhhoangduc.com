@@ -1,0 +1,442 @@
+Tricks khi dùng với SQL
+=======================
+
+Dữ liệu bị collate
+------------------
+
+-  Khi làm việc, dữ liệu các bảng có thể bị convert định dạng khác nhau.
+   Trong trường hợp này, phải dùng ``COLLATE DATABASE_DEFAULT``
+
+.. code:: sql
+
+   select top 10 * from 
+   INFORMATION_SCHEMA.columns
+   where table_name COLLATE DATABASE_DEFAULT in (select new_table COLLATE DATABASE_DEFAULT 
+   from table_rename
+   )
+
+Drop nhiều bảng theo điều kiện
+------------------------------
+
+.. code:: sql
+
+   declare @string nvarchar(max) 
+   SET @STRING = ''
+   SELECT @STRING = @STRING + 'DROP TABLE ANALYTICS.DBO.' + TABLE_NAME + ';' 
+   FROM ANALYTICS.INFORMATION_SCHEMA.TABLES 
+   WHERE TABLE_NAME like 'Mckinsey%'
+   exec (@string)
+
+Auto Wrap in MSSQL
+------------------
+
+Tools >> Options >> Text Editor >> Transact SQL >> General >> WordWrap
+
+Format định dạng thêm ký tự 00 trước số
+---------------------------------------
+
+.. code:: sql
+
+   select FORMAT(01,'00#') as index
+
+Kiểm tra định dạng dữ liệu một bảng
+-----------------------------------
+
+.. code:: sql
+
+   -- Với Link server
+   select * from ANHNT67.DATA.INFORMATION_SCHEMA.COLUMNS where TABLE_NAME='CARD_LIVE'
+
+   -- Với Local
+   select * from COLUMNS where TABLE_NAME='CARD_LIVE'
+
+   -- Kiểm tra toàn bộ thông tin
+   sp_help table_name 
+   sp_help CARD_LIVE
+
+Convert từ tiếng Việt có dấu sang không dấu
+-------------------------------------------
+
+.. code:: sql
+
+   CREATE FUNCTION [dbo].[fChuyenCoDauThanhKhongDau](@inputVar NVARCHAR(MAX) )
+   RETURNS NVARCHAR(MAX)
+   AS
+   BEGIN    
+       IF (@inputVar IS NULL OR @inputVar = '')  RETURN ''
+      
+       DECLARE @RT NVARCHAR(MAX)
+       DECLARE @SIGN_CHARS NCHAR(256)
+       DECLARE @UNSIGN_CHARS NCHAR (256)
+
+       SET @SIGN_CHARS = N'ăâđêôơưàảãạáằẳẵặắầẩẫậấèẻẽẹéềểễệếìỉĩịíòỏõọóồổỗộốờởỡợớùủũụúừửữựứỳỷỹỵýĂÂĐÊÔƠƯÀẢÃẠÁẰẲẴẶẮẦẨẪẬẤÈẺẼẸÉỀỂỄỆẾÌỈĨỊÍÒỎÕỌÓỒỔỖỘỐỜỞỠỢỚÙỦŨỤÚỪỬỮỰỨỲỶỸỴÝ' + NCHAR(272) + NCHAR(208)
+       SET @UNSIGN_CHARS = N'aadeoouaaaaaaaaaaaaaaaeeeeeeeeeeiiiiiooooooooooooooouuuuuuuuuuyyyyyAADEOOUAAAAAAAAAAAAAAAEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOUUUUUUUUUUYYYYYDD'
+
+       DECLARE @COUNTER int
+       DECLARE @COUNTER1 int
+      
+       SET @COUNTER = 1
+       WHILE (@COUNTER <= LEN(@inputVar))
+       BEGIN  
+           SET @COUNTER1 = 1
+           WHILE (@COUNTER1 <= LEN(@SIGN_CHARS) + 1)
+           BEGIN
+               IF UNICODE(SUBSTRING(@SIGN_CHARS, @COUNTER1,1)) = UNICODE(SUBSTRING(@inputVar,@COUNTER ,1))
+               BEGIN          
+                   IF @COUNTER = 1
+                       SET @inputVar = SUBSTRING(@UNSIGN_CHARS, @COUNTER1,1) + SUBSTRING(@inputVar, @COUNTER+1,LEN(@inputVar)-1)      
+                   ELSE
+                       SET @inputVar = SUBSTRING(@inputVar, 1, @COUNTER-1) +SUBSTRING(@UNSIGN_CHARS, @COUNTER1,1) + SUBSTRING(@inputVar, @COUNTER+1,LEN(@inputVar)- @COUNTER)
+                   BREAK
+               END
+               SET @COUNTER1 = @COUNTER1 +1
+           END
+           SET @COUNTER = @COUNTER +1
+       END
+       -- SET @inputVar = replace(@inputVar,' ','-')
+       RETURN @inputVar
+   END
+
+-  Ví dụ
+
+.. code:: sql
+
+   select dbo.fChuyenCoDauThanhKhongDau(N'Một thiên thần') 
+
+Sửa default template trong SQL
+------------------------------
+
+-  Sửa file ``SQLfile.sql`` tại đường dẫn sau
+   ``C:\Program Files (x86)\Microsoft SQL Server\130\Tools\Binn\ManagementStudio\SqlWorkbenchProjectItems\Sql``
+
+-  Nội dung default script
+
+.. code:: sql
+
+   /********************************
+   Script:         Giao dịch Ebanking
+   Author:         AnhHD3
+   Created date:   20180701
+   Modifed date:   20181127
+   ========================================
+   Description: Create Data Preparation 
+   for datamart
+   ========================================
+   Affected tables:
+       - [dbo].[POS_ECOMCARD_2017]
+
+   Steps:
+       - Step 1: Declare date
+       - Step 2: 
+           - POS transaction
+           - ATM/CDM transaction
+   *********************************/
+   SELECT TOP 1 * FROM XXX
+
+Bắt đầu têm bảng với DIM
+------------------------
+
+-  Tên các bảng thường bắt đầu bằng Dim - viết tắt của Dimension
+
+Xóa bảng nếu tồn tại
+--------------------
+
+.. code:: sql
+
+   drop table if exists CROSS_SELLING_RESULTS
+
+Tìm kiếm kiểu dữ liệu trong bảng của db
+---------------------------------------
+
+.. code:: sql
+
+   -- Kiểm tra thông tin kiểu dữ liệu trong bảng
+   select table_name, column_name, data_type from [learningsql].[INFORMATION_SCHEMA].[columns]
+
+Sử dụng drop và create trong cùng batch
+---------------------------------------
+
+-  DROP và CREATE không thể chạy cùng trong 1 batch, khi muốn sử dụng
+   phải thêm câu lệnh GO
+
+.. code:: sql
+
+   drop table if exists #temp
+   GO
+
+   create table #temp(abc int)
+   insert into #temp(abc)
+   values (1), (2)
+   GO
+
+Phân biệt định dạng integer
+---------------------------
+
+-  SQL không phân biệt được định dạng numeric & integer ngay lập tức
+
+.. code:: sql
+
+   select 7/10  -- Trả kết quả 0
+
+   --So sánh
+
+   select 7.0/10 -- Chạy đúng
+
+VARCHAR vs. NVARCHAR
+--------------------
+
+-  varchar vs. nvarchar: nvarchar cho phép lưu trữ ký tự Unicode,
+   varchar không cho phép
+-  varchar(n) vs. varchar(max):
+
++--------------------+----------------------------+
+| varchar(n)         | varchar(max)               |
++====================+============================+
+| Tối đa 8000 ký tự  | Tối đa hơn 2 tỷ, khoảng 2G |
++--------------------+----------------------------+
+| Cho phép tạo index | Không cho phép tạo index   |
++--------------------+----------------------------+
+
+.. code:: sql
+
+   --Varchar(50): Work
+   CREATE TABLE dbo.Employee
+   (id INT identity(1,1)
+      PRIMARY KEY,
+    Name VARCHAR(50))
+   GO
+   CREATE INDEX IX_EmployeeName 
+    ON dbo.Employee(Name)
+   GO
+
+   --Varchar(max): Not work
+   CREATE TABLE dbo.Employee
+   (id INT identity(1,1)
+      PRIMARY KEY,
+    Name VARCHAR(Max))
+   GO
+   CREATE INDEX IX_EmployeeName
+    ON dbo.Employee(Name)
+   GO 
+
+Primary key vs. Unique key
+--------------------------
+
++---------+-------------------------+----------------------------------+
+| Tiêu    | Primary key             | Unique key                       |
+| chí     |                         |                                  |
++=========+=========================+==================================+
+| NULL    | Không cho phép null     | Cho phép MỘT giá trị NULL        |
++---------+-------------------------+----------------------------------+
+| Index   | Default là clustered    | Default là unique non-cluster    |
+|         | index                   | index                            |
++---------+-------------------------+----------------------------------+
+| Limit   | Chỉ có 1 key            | Có thể có nhiều key              |
++---------+-------------------------+----------------------------------+
+
+EXEC vs. EXEC()
+---------------
+
+-  Exec dùng để thực hiện các procedure. VD: ``exec sp_pivot``
+-  Exec() dùng để thực hiện dinamic SQL.
+
+.. code:: sql
+
+   exec('Select top 10 * from @table')
+
+Xem tất cả các user-defined procedure
+-------------------------------------
+
+.. code:: sql
+
+   SELECT name, 
+          type
+     FROM dbo.sysobjects
+    WHERE (type = 'P') and
+    name like 'u%'
+
+Làm việc với link server
+------------------------
+
+**Vấn đề**: Cách link server thủ công (GUI) có thể sẽ gặp vấn đề khi
+cùng lúc làm việc với nhiều server. Ta có thể sử dụng T-SQL để làm việc
+với link server như sau
+
+.. code:: sql
+
+   -- Bước 1: Tạo link server 
+
+   EXEC sp_addlinkedserver     
+      @server='RBD',   
+      @srvproduct=N'',  
+      @provider=N'SQLNCLI',
+      @datasrc='10.39.200.204'
+
+   -- Bước 2: Tạo password
+
+   EXEC sp_addlinkedsrvlogin
+     @rmtsrvname ='RBD'
+   , @useself = 'FALSE'
+   , @rmtuser = 'bic_user'
+   , @rmtpassword = 'bic_user'
+
+.. code:: sql
+
+   -- Kiểm tra tất cả link server
+   sp_helpserver
+
+   -- Xóa link server RBD
+   sp_dropserver 'RBD', 'droplogins';  
+
+Procedure tạo nhiều link server
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: sql
+
+   drop procedure if exists u_createlinkserver
+   GO
+   create procedure u_createlinkserver 
+       @name nvarchar(max),
+       @source nvarchar(max),
+       @user nvarchar(max),
+       @password nvarchar(max)
+   as
+
+   BEGIN
+       EXEC sp_addlinkedserver     
+          @server=@name,   
+          @srvproduct=N'',  
+          @provider=N'SQLNCLI',
+          @datasrc=@source;
+      
+       EXEC sp_addlinkedsrvlogin
+         @rmtsrvname = @name
+       , @useself = 'FALSE'
+       , @rmtuser = @user
+       , @rmtpassword = @password
+   END 
+
+**Ví dụ**:
+
+.. code:: sql
+
+   exec u_createlinkserver 
+       @name='RBD',   
+       @source='10.39.200.204',
+       @user = 'bic_user',
+       @password = 'bic_user'
+
+Tìm tất cả các bảng, cột trong Database
+---------------------------------------
+
+.. code:: sql
+
+   SELECT 'SERVER_74' as SERVER,
+           'BICDATA' as DATA_BASE,
+           lst.name AS Table_Name, 
+           lsc.name AS Column_Name, 
+           lsc.max_length as Max_Length
+   FROM [M74].[BICDATA].[sys].[tables] lst
+       INNER JOIN [M74].[BICDATA].[sys].[columns] lsc
+           ON lst.OBJECT_ID=lsc.object_id
+   union 
+   SELECT 'SERVER_16' as SERVER,
+          'VPB_WHR2' as DATA_BASE,
+          lst.name AS Table_Name, 
+          lsc.name AS Column_Name, 
+          lsc.max_length as Max_Length
+   FROM [M16].[VPB_WHR2].[sys].[tables] lst
+       INNER JOIN [M16].[VPB_WHR2].[sys].[columns] lsc
+           ON lst.OBJECT_ID=lsc.object_id
+   ORDER BY DATA_BASE, lst.name, lsc.name
+
+Các lưu ý giúp tăng tốc độ truy vấn
+-----------------------------------
+
+-  Không nên dùng select \*, sẽ tốn tài nguyên
+-  Không dùng distinct, gây chậm câu lệnh
+-  Khi dùng câu lệnh UNION, kết quả tương tự như SELECT DISTINCT. Do đó
+   nếu biết chắc rằng không có 1 hàng nào trùng lắp được tạo ra từ kết
+   quả của UNION thì ta nên sử dụng câu lệnh UNION ALL.
+-  Ưu tiên sử dụng câu lệnh theo mức độ ưu tiên: IN >> OR, EXISTS >> IN,
+   BETWEEN >> IN
+-  Khi truy vấn, phải đảm bảo điều kiệu sargable (search argument able):
+
+   -  Tránh sử dụng function trong điều kiện where
+   -  Các cột nào là index nên đưa vào trước
+
+.. code:: sql
+
+   --VD 1
+   -- câu lệnh 1 (non-sargable)
+   SELECT * FROM Sales.Individual
+   WHERE CustomerID+2 = 11002
+
+   -- câu lệnh 2 (sargable)
+   SELECT * FROM Sales.Individual
+   WHERE CustomerID = 11000
+
+   ----
+   --VD2
+   -- Câu lệnh 1: Non-sargable
+   SELECT member_number, first_name, last_name
+   FROM members
+   WHERE DATEDIFF(yy,datofbirth,GETDATE()) > 21 
+
+   -- Câu lệnh 2: Sargable
+   SELECT member_number, first_name, last_name
+   FROM members
+   WHERE dateofbirth < DATEADD(yy,-21,GETDATE()) 
+
+-  Khi dùng IN, có thể thay thế bằng UNION ALL
+
+.. code:: sql
+
+   -- Câu lệnh 1: 242 ms 
+   set statistics time on 
+   select * from [CUSTOMER - M74 - BICDATA] where cus_name like 'VO%' or cus_name like '%PHAN%'
+
+   -- Câu lệnh 2: 172 ms
+   set statistics time on 
+   select * from [CUSTOMER - M74 - BICDATA] where cus_name like 'VO%'
+   union all
+   select * from [CUSTOMER - M74 - BICDATA] where cus_name like '%PHAN%'
+
+-  Khi muốn xác định sự tồn tại của 1 record, không nên dùng count(*),
+   nên dùng if exists
+
+-  Dùng hàm tính toán tổng hợp với IN
+
+.. code:: sql
+
+   -- Câu lệnh 1: 18 ms
+   set statistics time on
+   SELECT MIN(IntDataColumn) 
+     FROM [dbo].[Parent]
+    WHERE ParentID IN (SELECT TOP 2 ParentID 
+                         FROM [dbo].[Parent] 
+                       ORDER BY IntDataColumn DESC)
+
+   -- Câu lệnh 2: 0 ms
+   set statistics time on
+   SELECT MIN(IntDataColumn) 
+     FROM (SELECT TOP 2 IntDataColumn 
+             FROM [dbo].[Parent] 
+           ORDER BY IntDataColumn DESC) AS A
+
+Chạy file .BAT từ T-SQL
+-----------------------
+
+.. code:: sql
+
+   sp_configure 'show advanced options', '1'
+   RECONFIGURE
+   sp_configure 'xp_cmdshell', '1' 
+   RECONFIGURE
+
+.. code:: sql
+
+   EXEC xp_cmdshell 'cmd /c "F:\D\my_file.bat"'  
+
+**Lưu ý**: Cách sử dụng ``xp_cmdshell`` khắc phục được nhược điểm của
+``sqlcmd``, cho phép đặt job với file ``bat``

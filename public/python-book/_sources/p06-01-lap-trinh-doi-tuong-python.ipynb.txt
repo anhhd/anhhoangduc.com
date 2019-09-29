@@ -1,0 +1,915 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Lập trình hướng - đối tượng với Python"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Giới thiệu"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "- `Ngôn ngữ tự nhiên (natural language)` là ngôn ngữ do con người sáng tạo qua nhiều năm để nghe, nói, đọc, viết. \n",
+    "- `Formal language` là ngôn ngữ do con người tạo ra để phục vụ các ứng dụng nhất định\n",
+    "        - `Token` là đơn vị của ngôn ngữ. Ví dụ: 3*8=1&8, & không phải là token được sử dụng trong phép toán\n",
+    "        - `Structure` là cấu trúc hay ngữ pháp của ngôn ngữ (syntax)\n",
+    "- Khi đọc 1 statement, ta cần phải tìm hiểu cấu trúc của statement đó, quá trình này gọi là `parsing`"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**Object-oriented programming** - lập trình hướng đối tượng là mô hình lập trình (programming paradigm) rất phổ biến hiện nay.<br>\n",
+    "Các ngôn ngữ truyền thống như C, Fortran, Matlab..được viết theo mô hình **Procedural Programming** - lập trình hướng thủ tục, trong đó các câu lệnh, biến và data được chạy một cách độc lập hoặc được nhóm vào trong một hàm.\n",
+    "\n",
+    "Ngược lại với phương pháp trên, với **OOP**, `data`, `function` và `variable` đều được *đóng gói* trong `object`, khi đó chúng ta gọi function là **method**. **Python** là ngôn ngữ kết hợp cả 2 phương pháp này tuy nhiên nhìn chung thì **Python** nghiêng về phong cách **OOP** hơn."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Hai khái niệm quan trọng nhất trong phần này là `Class` và `Object`, chúng ta sẽ thử tìm hiểu xem nó là gì qua các phần ở dưới."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Objects"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "> *In Python, almost everything is an object, with its properties and methods.*<br>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Trong Python, object bao gồm các thành phần:\n",
+    "- Type - Kiểu dữ liệu\n",
+    "- ID (unique) - Dùng để xác định vị trí của đối tượng trong memory \n",
+    "- Data\n",
+    "- Methods"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Type - kiểu dữ liệu"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Về các kiểu dữ liệu cơ bản, chúng ta đã nắm vững ở chương 1"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "str"
+      ]
+     },
+     "execution_count": 22,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "s = 'This is a string'\n",
+    "type(s)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Object cũng có thể là function"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 49,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<function __main__.f(x)>"
+      ]
+     },
+     "execution_count": 49,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "def f(x): \n",
+    "    return x**2\n",
+    "f"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 50,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "function"
+      ]
+     },
+     "execution_count": 50,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "type(f)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "hoặc thậm chí là `module`"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 54,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<module 'math' (built-in)>"
+      ]
+     },
+     "execution_count": 54,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import math\n",
+    "math"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 55,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "module"
+      ]
+     },
+     "execution_count": 55,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "type(math)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Identity"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Mọi `object` trong Python đều có 1 id unique - mỗi id tương ứng với 1 vị trí trong memory, có thể lấy id này qua hàm id"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "2345023434280"
+      ]
+     },
+     "execution_count": 26,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "x = 2.5\n",
+    "y = 2.5\n",
+    "id(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "2345023434208"
+      ]
+     },
+     "execution_count": 27,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "id(y)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "True"
+      ]
+     },
+     "execution_count": 28,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "x == y "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "False"
+      ]
+     },
+     "execution_count": 29,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "x is y"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Ở vd trên, x và y có cùng giá trị, tuy nhiên ko phải cùng 1 object"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "2345023434280"
+      ]
+     },
+     "execution_count": 31,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "z = x\n",
+    "id(z)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "True"
+      ]
+     },
+     "execution_count": 32,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "z is x"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "x được gán cho z nên z và x sẽ có chung 1 id - *chia sẻ tham chiếu đến bộ nhớ chứ ko tạo ra 1 ô nhớ mới*"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Object Content - Data & Attributes"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Nếu chúng ta gán `x=42` - có nghĩa là tạo 1 object x có kiểu dữ liệu `int` và giá trị là `42`, thực tế thì object x chứa nhiều nội dung hơn thế, có thể xem vd dưới"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0"
+      ]
+     },
+     "execution_count": 38,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "x = 42\n",
+    "x.imag"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "int"
+      ]
+     },
+     "execution_count": 37,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "x.__class__"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Thử gõ `x.` sau đó ấn `Tab` chúng ta sẽ thấy hiện lên rất nhiều thông tin liên quan đến object vừa tạo, những thông tin này được gọi là `attribute` của `object`\n",
+    "- e.g. `imag` và `__class__` là các attribute của x"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Methods"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Trong các `attribute` của `object`, thuộc tính `function` được gọi là `method`"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "['foo', 'bar', 3]"
+      ]
+     },
+     "execution_count": 1,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "x = ['foo', 'bar']\n",
+    "x.append(3) \n",
+    "x"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Khi gọi method, method sẽ xử lý trên data của object hoặc data được nhập vào"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "'THIS IS A STRING'"
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "x = ['a', 'b']\n",
+    "x.append('c')\n",
+    "s = 'This is a string'\n",
+    "s.upper()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**Tóm tắt:**"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "|      Tên   | Purpose         | Similar to |      Syntax        |\n",
+    "| -----------|:---------------:|:----------:|-------------------:|\n",
+    "| Attribute  | Lưu trữ dữ liệu | Variable   | object.attribute() |\n",
+    "| Method     | Process dữ liệu |   Function | object.method()    |"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Class"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Phần trước chúng ta đã giới thiệu cơ bản về `Object-oriented Programming` và tìm hiểu về `Object`, phần này sẽ tìm hiểu cách tạo 1 object. Để làm được việc này, **Python** cung cấp 1 kiểu dữ liệu gọi là **Class**, hiểu đơn giản **Class** giống như 1 *bản thiết kế/ template* để tạo ra **Object** và trong bản thiết kế đó chúng ta có thể chỉ rõ được những đặc điểm mà mình mong muốn. \n",
+    "\n",
+    "Hay nói cách khác `Class` là kiểu dữ liệu tự tạo ra. Dữ liệu được chứa trong `Class` được gọi là `attribute`"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 144,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "class Point:\n",
+    "    \"\"\"Kiểu dữ liệu 2D\n",
+    "    Attributes: x, y\n",
+    "    \"\"\""
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 137,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "__main__.Point"
+      ]
+     },
+     "execution_count": 137,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "Point"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Vì `Point` được lưu trữ ở global environment nên tên đầy đủ sẽ là `__main__.Point`. Quá trình tạo object mới được gọi là `instantiation`  hay object là `instance` mới của `class`"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 139,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "blank = Point()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 143,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Thêm attribute cho class\n",
+    "blank.x = 3\n",
+    "blank.y = 4"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Methods"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "`Methods` là hàm được sử dụng trong class. Bản chất của `methods` là hàm nhưng có các điểm khác biệt sau\n",
+    "\n",
+    "- Methods được khai báo ngay trong class\n",
+    "- Ngữ pháp để gọi methods sẽ khác so với với gọi function"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 147,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Cách viết thường\n",
+    "class Time:\n",
+    "    \"\"\"Trả ra kết qua time\"\"\"\n",
+    "    \n",
+    "def print_time(time):\n",
+    "    print('%.2d:%.2d:%.2d' % (time.hour, time.minute, time.second))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 149,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "start = Time()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 151,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "09:45:20\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Assign attribute\n",
+    "start.hour = 9\n",
+    "start.minute = 45\n",
+    "start.second = 20\n",
+    "print_time(start)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Với cách viết trên, ta phải để time dưới dạng argument. Tuy nhiên, ta có thể thay đổi cách viết bằng cách tạo methods trong class như sau."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 166,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "class Time:\n",
+    "    \"\"\"Trả ra thời gian\"\"\"\n",
+    "    def print_time(time):\n",
+    "        print('%.2d:%.2d:%.2d' % (time.hour, time.minute, time.second))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 167,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "09:45:20\n"
+     ]
+    }
+   ],
+   "source": [
+    "start = Time()\n",
+    "start.hour = 9\n",
+    "start.minute = 45\n",
+    "start.second = 20\n",
+    "print_time(start)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 168,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "09:45:20\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Sử dụng methods\n",
+    "Time.print_time(start)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 170,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "09:45:20\n"
+     ]
+    }
+   ],
+   "source": [
+    "start.print_time()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### __Init__ method "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "- `__init__` được sử dụng khi tạo ra object đầu tiên trong class\n",
+    "- `selft` là method được sử dụng khi tạo ra đối tượng mới (instance)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 174,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "class Time:\n",
+    "    def __init__(self, hour = 0, minute = 0, second = 0):\n",
+    "        self.hour = hour\n",
+    "        self.minute = minute\n",
+    "        self.second = second\n",
+    "    def print_time(time):\n",
+    "        print('%.2d:%.2d:%.2d' % (time.hour, time.minute, time.second))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 175,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "start = Time()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 178,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "00:00:00\n"
+     ]
+    }
+   ],
+   "source": [
+    "start.print_time()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Khi sử dụng class với __init__, ta có thể xây dựng tham số"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 183,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "09:45:00\n"
+     ]
+    }
+   ],
+   "source": [
+    "Time(9, 45).print_time()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**Lưu ý**: Khi chưa sử dụng __str__ method, khi print class sẽ không trả ra kết quả mong muốn"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 184,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<__main__.Time object at 0x0000029037DFEDD8>\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(Time(9, 45))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### `__str__` method"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "- `__str__` là method cho phép hiển thị giá trị của instance"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "class Time:\n",
+    "    def __init__(self, hour = 0, minute = 0, second = 0):\n",
+    "        self.hour = hour\n",
+    "        self.minute = minute\n",
+    "        self.second = second\n",
+    "    def print_time(time):\n",
+    "        print('%.2d:%.2d:%.2d' % (time.hour, time.minute, time.second))\n",
+    "    def __str__(time):\n",
+    "        return '%.2d:%.2d:%.2d' % (time.hour, time.minute, time.second)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "04:05:08\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(Time(4,5,8))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "04:05:06\n"
+     ]
+    }
+   ],
+   "source": [
+    "Time(4,5,6).print_time()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Tài liệu tham khảo"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "- Think Python"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.1"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

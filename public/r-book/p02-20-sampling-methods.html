@@ -1,0 +1,628 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="vi" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="vi" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>10. Phương pháp ước lượng lấy mẫu &mdash; Tài liệu Phân tích dữ liệu với R 2019</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'2019',
+              LANGUAGE:'vi',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript" src="_static/copybutton.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Tìm Kiếm" href="search.html" />
+    <link rel="next" title="11. Biến đổi dữ liệu với data.table" href="p02-50-datatable.html" />
+    <link rel="prev" title="9. Power analysis" href="p02-16-power-analysis.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Phân tích dữ liệu với R
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Giới thiệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-gioi-thieu.html">Khoa học dữ liệu và nghề phân tích dữ liệu</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Phân tích khám phá dữ liệu</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p02-03-bien-doi-du-lieu-dplyr.html">1. Ngữ pháp của biến đổi dữ liệu với DPLYR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-04-phan-ra-va-xoay-chieu-du-lieu.html">2. Phân rã và xoay chiều dữ liệu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-05-cac-chi-so-thong-ke.html">3. Các chỉ số thống kê mô tả cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-06-lap-trinh-ham.html">4. Lập trình hàm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-07-lap-trinh-ham-voi-purrr.html">5. Lập trình chức năng hàm với purrr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-08-bien-doi-du-lieu-text.html">6. Biến đổi dữ liệu text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-11-quan-ly-nhieu-mo-hinh.html">7. Quản lý kết quả phân tích từ nhiều mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-15-thong-ke-co-ban.html">8. Xác suất và phân phối thống kê cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-16-power-analysis.html">9. Power analysis</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">10. Phương pháp ước lượng lấy mẫu</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gioi-thieu">10.1. Giới thiệu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cross-validation">10.2. Cross-Validation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#validation-set-approach">10.2.1. Validation Set Approach</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#leave-one-out-cross-validation-loocv">10.2.2. Leave-One-Out Cross-Validation (LOOCV)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#k-fold-cross-validation">10.2.3. k-Fold Cross-Validation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#boostrap">10.3. Boostrap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#permutation-tests">10.4. Permutation tests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tai-lieu-tham-khao">10.5. Tài liệu tham khảo</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="p02-50-datatable.html">11. Biến đổi dữ liệu với <code class="docutils literal notranslate"><span class="pre">data.table</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-60-thu-thap-du-lieu-tu-website.html">12. Thu thập dữ liệu từ website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-99-meo-trong-r.html">13. Các mẹo trong R</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Supervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p03-01-nguyen-ly-du-bao.html">1. Các nguyên lý dự báo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-02-mo-hinh-ols.html">2. Mô hình OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Unsupervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p04-01-unsupervised-learning.html">1. Unsupervised learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-02-kmeans.html">2. k-means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-03-hierarchical-clustering.html">3. Hierachical clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-04-basket-analysis.html">4. Phân tích giỏ hàng</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-05-pca.html">5. Principal component analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-06-factor-analysis.html">6. Phân tích nhân tố ẩn (factor analysis)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Chuỗi thời gian</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p05-01-chuoi-thoi-gian.html">1. Giới thiệu về chuỗi thời gian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-02-arima.html">2. Mô hình ARIMA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html">3. Phân tích chuỗi thời gian với tidyquant và timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-06-du-bao-ts-voi-prophet.html">4. Dự báo chuỗi thời gian với prophet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-07-du-bao-ts-voi-timetk.html">5. Dự báo chuỗi thời gian với timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-08-abnomaly-detection.html">6. Abnomaly detection trong times series</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ngôn ngữ tự nghiên</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p06-01-nlp-co-ban.html">1. Xử lý ngôn ngữ tự nhiên cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-04-text-classification.html">2. Phân loại text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-07-nlp-api.html">3. Sử dụng API từ các dịch vụ đám mây</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-10-ocr-tesseract.html">4. OCR với <code class="docutils literal notranslate"><span class="pre">tesseract</span></code></a></li>
+</ul>
+<p class="caption"><span class="caption-text">Các phương pháp khác</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p07-01-survival-analysis.html">1. Survival analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-02-causal-impact.html">2. Causal Impact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-03-collaborative-filtering.html">3. Collaborative Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-07-spatial-data.html">4. Spatial data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-10-shiny.html">5. Shiny apps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p09-01-gioi-thieu-deep-learning.html">1. Giới thiệu cơ bản về Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-02-co-ban-kien-thuc-toan.html">2. Kiến thức cơ bản toán học cho deep learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-03-mo-hinh-deep-learning-co-ban.html">3. Mô hình deep learning cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-04-convolution-neural-network.html">4. Convolution neural networks</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cloud Computing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p10-01-cai-dat-rstudio-server-tren-amazon.html">1. Cài đặt server RStudio trên Amazon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-03-web-service-azure.html">2. Xây dựng web service với Azure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-09-apis-voi-plumber.html">3. API với Plumber</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Kiến thức bổ trợ</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p11-01-git.html">1. Sử dụng GIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-02-cmd.html">2. CMD và Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-03-docker.html">3. Sử dụng docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-04-apis.html">4. API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-05-html-css.html">5. Cơ bản về HTML và CSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-09-other.html">6. Các tricks khác</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Case studies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p13-01-casestudy-truc-quan-hoa.html">1. Trực quan hóa dữ liệu</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Phân tích dữ liệu với R</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>10. Phương pháp ước lượng lấy mẫu</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/p02-20-sampling-methods.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="phuong-phap-uoc-luong-lay-mau">
+<h1>10. Phương pháp ước lượng lấy mẫu<a class="headerlink" href="#phuong-phap-uoc-luong-lay-mau" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gioi-thieu">
+<h2>10.1. Giới thiệu<a class="headerlink" href="#gioi-thieu" title="Permalink to this headline">¶</a></h2>
+<p>Các phương pháp thống kê thông thường sẽ kiểm định và xác định các
+khoảng tin cậy. Các phương pháp này đều dựa trên giả định dữ liệu có
+phân phối chuẩn hoặc phân phối thông dụng nào đó và phụ thuộc vào quá
+trình lấy mẫu.</p>
+<p>Đối với các phân tích thông thường, có 2 nhánh:</p>
+<ul class="simple">
+<li>Permutation test</li>
+<li>Boostrapping</li>
+</ul>
+<p>Đối với data mining, các phương pháp của “Resampling” được dùng để đánh
+giá chât lượng mô hình. Phương pháp này cho phép đánh giá gần đúng MSE
+trên tập dữ liệu test</p>
+</div>
+<div class="section" id="cross-validation">
+<h2>10.2. Cross-Validation<a class="headerlink" href="#cross-validation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="validation-set-approach">
+<h3>10.2.1. Validation Set Approach<a class="headerlink" href="#validation-set-approach" title="Permalink to this headline">¶</a></h3>
+<p><strong>Validation Set Approach</strong>: Phương pháp chia đôi tập dữ liệu thành 2
+phần: train <span class="math notranslate">\(\&amp;\)</span> test. Mô hình thu được từ tập “train” sẽ được ứng
+dụng để tính toán bên tập “test”</p>
+</div>
+<div class="section" id="leave-one-out-cross-validation-loocv">
+<h3>10.2.2. Leave-One-Out Cross-Validation (LOOCV)<a class="headerlink" href="#leave-one-out-cross-validation-loocv" title="Permalink to this headline">¶</a></h3>
+<p>LOOCV là phương pháp tương tự như Validation Set. Tuy nhiên, LOOCV khác
+như sau:</p>
+<ul class="simple">
+<li>Thay vì chia thành 2 tập dữ liệu ngẫu nhiên, LOOCV chia tập dữ liệu
+thành n lần (n là số quan sát trong tập):</li>
+<li>Mỗi lần chia tập dữ liệu, tập train có (n-1) quan sát, tập test có
+<strong>1</strong> quan sát</li>
+<li>Xây dựng mô hình, tính MSE cho mỗi lần</li>
+<li>MSE cho cả phương pháp bằng trung bình MSE</li>
+</ul>
+<p>Cách làm như sau:</p>
+<ul>
+<li><p class="first">Lần 1: Train = <span class="math notranslate">\({(x_2, y_2),...,(x_n,y_n)}\)</span>, Test =
+<span class="math notranslate">\({x_1,y_1}\)</span></p>
+</li>
+<li><p class="first">Lần 2: Train = <span class="math notranslate">\({(x_1, y_1),(x_3, y_3)...,(x_n,y_n)}\)</span>, Test =
+<span class="math notranslate">\({x_2,y_2}\)</span></p>
+</li>
+<li><p class="first">Lần n: Train = <span class="math notranslate">\({(x_1, y_1),...,(x_{n-1},y_{n-1})}\)</span>, Test =
+<span class="math notranslate">\({x_n,y_n}\)</span></p>
+</li>
+<li><p class="first">MSE với mỗi lần chia được tính như sau:</p>
+<div class="math notranslate">
+\[MSE_1 = (y_1 - \hat{y_1})^2\]</div>
+<div class="math notranslate">
+\[MSE_2 = (y_2 - \hat{y_2})^2\]</div>
+<div class="math notranslate">
+\[MSE_n = (y_n - \hat{y_n})^2\]</div>
+</li>
+</ul>
+<p>MSE trung bình được tính như sau:</p>
+<div class="math notranslate">
+\[CV_{(n)}=\frac{1}{n} \sum_{i=1}^n MSE_i\]</div>
+<p><strong>Điểm mạnh của LOOCV</strong>:</p>
+<ul class="simple">
+<li>Giảm rõ rệt bias (sai lệch so với thực tế) so với phương pháp
+“Validation Set Approach - VSA”&quot;</li>
+<li>Tính ổn định tốt hơn so với VSA. Với VSA, mỗi lần chia thành các tập
+train <span class="math notranslate">\(\&amp;\)</span> set đều được làm ngẫu nhiên, do đó, MSE sẽ khác với
+mỗi lần thực hiện mô hình</li>
+</ul>
+<p><strong>Điểm yếu của LOOCV</strong>:</p>
+<ul class="simple">
+<li>Tốn kém và mất thời gian</li>
+</ul>
+</div>
+<div class="section" id="k-fold-cross-validation">
+<h3>10.2.3. k-Fold Cross-Validation<a class="headerlink" href="#k-fold-cross-validation" title="Permalink to this headline">¶</a></h3>
+<p>Thuật toán của k-Fold như sau:</p>
+<ul>
+<li><p class="first">Bước 1: Chia tập dữ liệu thành k phần ngẫu nhiên</p>
+</li>
+<li><p class="first">Bước 2: Sử dụng tập con thứ nhất sẽ được dùng làm tập Validate, tính
+<span class="math notranslate">\(MSE_1\)</span></p>
+</li>
+<li><p class="first">Bước 3: Sử dụng tập con thứ hai làm tập validate, tính <span class="math notranslate">\(MSE_2\)</span></p>
+</li>
+<li><p class="first">Làm tương tự đến tập k</p>
+</li>
+<li><p class="first">Bước 4: MSE của tập test được ước lượng bằng trung bình cộng của các
+MSE</p>
+<div class="math notranslate">
+\[CV_{(k)}=\frac{1}{n}\sum_{i=1}{k}MSE_i\]</div>
+</li>
+</ul>
+<p><strong>Lưu ý</strong>: LOOCV là trường hợp đặc biệt của k-fold CV với <span class="math notranslate">\(k=n\)</span></p>
+<p><strong>CV đối với mô hình phân loại (Classification)</strong></p>
+<p>Đối với mô hình LOOCV</p>
+<div class="math notranslate">
+\[CV_{(n)}=\frac{1}{n}\sum_{i=1}{n}Err_i\]</div>
+<p>trong đó</p>
+<div class="math notranslate">
+\[Err_i=I(y_i \neq \hat{y_i})\]</div>
+<p>Các mô hình khác được tính tương tự</p>
+</div>
+</div>
+<div class="section" id="boostrap">
+<h2>10.3. Boostrap<a class="headerlink" href="#boostrap" title="Permalink to this headline">¶</a></h2>
+<p>Boostrap là phương pháp <em>rất mạnh</em> để ước lượng mô hình và các chỉ số
+thống kê.</p>
+<p>Giả sử ta cần ước lượng giá trị trung bình của X nhưng chỉ có
+<span class="math notranslate">\(n=3\)</span> quan sát. Ta áp dụng thuật toán như sau:</p>
+<ul class="simple">
+<li>Bước 1: Lấy ngẫu nhiên <span class="math notranslate">\(n=3\)</span> quan sát bất kỳ từ tập dữ liệu,
+cho phép lấy lại - nghĩa là 1 quan sát có thể xuất hiện 1 hoặc nhiều
+lần khi lấy ngẫu nhiên</li>
+<li>Bước 2: Tính giá trị trung bình: <span class="math notranslate">\(\hat{X_1}\)</span></li>
+<li>Bước 3: Lặp lại bước 1,2 với <span class="math notranslate">\(B\)</span> lần đủ lớn</li>
+<li>Bước 4: Giá trị trung bình của X được ước lượng bằng trung bình cộng
+của <span class="math notranslate">\(\hat{X_i}\)</span></li>
+</ul>
+<p>Gọi <span class="math notranslate">\(\alpha_j\)</span> là giá trị (hoặc ước lượng) của <span class="math notranslate">\(\alpha\)</span>
+trong mỗi lần lấy dữ liệu của boostrap. Gọi <span class="math notranslate">\(\bar{\hat{\alpha}}\)</span>
+là ước lượng của <span class="math notranslate">\(alpha\)</span> trong toàn bộ dữ liệu, ta có:</p>
+<div class="math notranslate">
+\[\bar{\hat{\alpha}}=\frac{1}{B} \sum_{j=1}^B \alpha_j\]</div>
+<div class="math notranslate">
+\[SE_B(\hat{\alpha})=\sqrt{\frac{1}{B-1}\sum_{j=1}^{B}(\alpha_j-\bar{\hat{\alpha}})^2}\]</div>
+<p><img alt="image0" src="Images/sampling-01.png" /></p>
+</div>
+<div class="section" id="permutation-tests">
+<h2>10.4. Permutation tests<a class="headerlink" href="#permutation-tests" title="Permalink to this headline">¶</a></h2>
+<p>Giả sử ta có 2 nhóm bệnh nhân như bảng dưới đây và đặt ra câu hỏi liệu
+có sự khác biệt về mean giữa 2 nhóm không:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Treatment A</th>
+<th class="head">Treatment B</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>40</td>
+<td>57</td>
+</tr>
+<tr class="row-odd"><td>57</td>
+<td>64</td>
+</tr>
+<tr class="row-even"><td>45</td>
+<td>55</td>
+</tr>
+<tr class="row-odd"><td>55</td>
+<td>62</td>
+</tr>
+<tr class="row-even"><td>58</td>
+<td>65</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Cách thông thường</strong> (parametric approach):</p>
+<ul class="simple">
+<li>Giả định cả 2 nhóm có phân phối chuẩn, cùng phương sai</li>
+<li>Tính t-statistic, so sánh với phân bố lý thuyết.</li>
+<li>Nếu các quan sát thực tế không nằm trong khoảng 95% của lý thuyết,
+loại bỏ <span class="math notranslate">\(H_0\)</span></li>
+</ul>
+<p><strong>Permutation</strong>:</p>
+<ol class="arabic simple">
+<li>Tính t-statistic cho 10 quan sát</li>
+<li>Đặt 10 chỉ số t-statistic đó vào 1 nhóm</li>
+<li>Lấy ngẫu nhiên 5 score cho nhóm A, 5 score cho nhóm B</li>
+</ol>
+<p>##Ví dụ với R</p>
+<p>###Cross Validation</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mpg_auto</span> <span class="o">&lt;-</span> <span class="n">mtcars[mtcars</span><span class="o">$</span><span class="n">am</span> <span class="o">==</span> <span class="m">0</span><span class="p">,</span><span class="n">]</span><span class="o">$</span><span class="n">mpg</span> <span class="c1"># automatic transmission mileage</span>
+<span class="n">mpg_manual</span> <span class="o">&lt;-</span> <span class="n">mtcars[mtcars</span><span class="o">$</span><span class="n">am</span> <span class="o">==</span> <span class="m">1</span><span class="p">,</span><span class="n">]</span><span class="o">$</span><span class="n">mpg</span> <span class="c1"># manual transmission mileage</span>
+<span class="n">transmission_ttest</span> <span class="o">&lt;-</span> <span class="nf">t.test</span><span class="p">(</span><span class="n">mpg_auto</span><span class="p">,</span> <span class="n">mpg_manual</span><span class="p">)</span>
+<span class="n">transmission_ttest</span><span class="o">$</span><span class="n">p.value</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 0.001373638</span>
+</pre></div>
+</div>
+<p>###Boostrap</p>
+<ul class="simple">
+<li>Sử dụng package <strong>boot</strong> để phân tích booststrap:<ul>
+<li><strong>boot</strong>: Tính boostrap</li>
+<li><strong>boot.ci</strong>: Tính confidence level</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">bootobject</span> <span class="o">&lt;-</span> <span class="nf">boot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="p">,</span> <span class="n">statistic</span> <span class="o">=</span> <span class="p">,</span> <span class="n">R</span><span class="o">=</span> <span class="p">,</span> <span class="kc">...</span><span class="p">)</span>
+
+<span class="c1">#R: Số lần muốn bootstrap</span>
+<span class="c1">#statistic: chỉ số thống kê muốn tính boostrap</span>
+
+<span class="nf">boot.ci</span><span class="p">(</span><span class="n">bootobject</span><span class="p">,</span> <span class="n">conf</span> <span class="o">=</span> <span class="p">,</span> <span class="n">type</span> <span class="o">=</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">boot</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">broom</span><span class="p">)</span>
+<span class="n">mean.fun</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">i</span><span class="p">){</span>
+    <span class="n">m</span> <span class="o">&lt;-</span> <span class="nf">mean</span><span class="p">(</span><span class="n">d</span><span class="o">$</span><span class="n">mpg[i]</span><span class="p">)</span>
+    <span class="nf">return</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">#boot với tidy</span>
+
+<span class="n">mtcars</span> <span class="o">%&gt;%</span>
+  <span class="nf">group_by</span><span class="p">(</span><span class="n">vs</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">do</span><span class="p">(</span><span class="nf">boot</span><span class="p">(</span><span class="n">.,</span> <span class="n">mean.fun</span><span class="p">,</span> <span class="m">1000</span><span class="p">,</span>
+          <span class="n">parallel</span> <span class="o">=</span> <span class="s">&quot;multicore&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">tidy</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">print</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 2 x 4</span>
+<span class="c1">## # Groups:   vs [2]</span>
+<span class="c1">##      vs statistic     bias std.error</span>
+<span class="c1">##   &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;</span>
+<span class="c1">## 1     0      16.6 -0.0638      0.851</span>
+<span class="c1">## 2     1      24.6 -0.00281     1.42</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#boot.ci</span>
+<span class="n">boot.mean</span> <span class="o">&lt;-</span> <span class="nf">boot</span><span class="p">(</span><span class="n">mtcars</span><span class="p">,</span> <span class="n">mean.fun</span><span class="p">,</span> <span class="m">1000</span><span class="p">,</span> <span class="n">parallel</span> <span class="o">=</span> <span class="s">&quot;multicore&quot;</span><span class="p">)</span>
+<span class="n">boot.mean</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+<span class="c1">## ORDINARY NONPARAMETRIC BOOTSTRAP</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+<span class="c1">## Call:</span>
+<span class="c1">## boot(data = mtcars, statistic = mean.fun, R = 1000, parallel = &quot;multicore&quot;)</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+<span class="c1">## Bootstrap Statistics :</span>
+<span class="c1">##     original      bias    std. error</span>
+<span class="c1">## t1* 20.09062 -0.01904375    1.103623</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">boot.ci</span><span class="p">(</span><span class="n">boot.mean</span><span class="p">,</span> <span class="n">conf</span> <span class="o">=</span> <span class="m">0.95</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS</span>
+<span class="c1">## Based on 1000 bootstrap replicates</span>
+<span class="c1">##</span>
+<span class="c1">## CALL :</span>
+<span class="c1">## boot.ci(boot.out = boot.mean, conf = 0.95)</span>
+<span class="c1">##</span>
+<span class="c1">## Intervals :</span>
+<span class="c1">## Level      Normal              Basic</span>
+<span class="c1">## 95%   (17.95, 22.27 )   (17.82, 22.25 )</span>
+<span class="c1">##</span>
+<span class="c1">## Level     Percentile            BCa</span>
+<span class="c1">## 95%   (17.93, 22.36 )   (18.15, 22.61 )</span>
+<span class="c1">## Calculations and Intervals on Original Scale</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#boot.ci với tidy</span>
+<span class="n">mtcars</span> <span class="o">%&gt;%</span>
+  <span class="nf">group_by</span><span class="p">(</span><span class="n">vs</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">do</span><span class="p">({</span>
+    <span class="nf">boot</span><span class="p">(</span><span class="n">.,</span> <span class="n">mean.fun</span><span class="p">,</span> <span class="m">1000</span><span class="p">,</span>
+          <span class="n">parallel</span> <span class="o">=</span> <span class="s">&quot;multicore&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">df</span><span class="p">;</span>
+    <span class="p">(</span><span class="n">df</span> <span class="o">%&gt;%</span> <span class="n">boot.ci</span><span class="p">)</span><span class="o">$</span><span class="n">normal</span> <span class="o">%&gt;%</span> <span class="n">tidy</span>
+    <span class="p">})</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 2 x 4</span>
+<span class="c1">## # Groups:   vs [2]</span>
+<span class="c1">##      vs  conf    V2    V3</span>
+<span class="c1">##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="c1">## 1     0  0.95  14.9  18.3</span>
+<span class="c1">## 2     1  0.95  21.8  27.4</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tai-lieu-tham-khao">
+<h2>10.5. Tài liệu tham khảo<a class="headerlink" href="#tai-lieu-tham-khao" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>R in Action (chapter 12)</li>
+<li>Introduction to Statistical Learning (chapter 5)</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="p02-50-datatable.html" class="btn btn-neutral float-right" title="11. Biến đổi dữ liệu với data.table" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="p02-16-power-analysis.html" class="btn btn-neutral float-left" title="9. Power analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anh Hoang Duc
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

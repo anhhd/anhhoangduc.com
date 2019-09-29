@@ -1,0 +1,701 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="vi" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="vi" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>8. Regularization &mdash; Tài liệu Phân tích dữ liệu với R 2019</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'2019',
+              LANGUAGE:'vi',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript" src="_static/copybutton.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Tìm Kiếm" href="search.html" />
+    <link rel="next" title="9. Mô hình phi tuyến tính" href="p03-17-nonlinear.html" />
+    <link rel="prev" title="7. Feature Engineering" href="p03-09-feature-engineering.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Phân tích dữ liệu với R
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Giới thiệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-gioi-thieu.html">Khoa học dữ liệu và nghề phân tích dữ liệu</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Phân tích khám phá dữ liệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p02-03-bien-doi-du-lieu-dplyr.html">1. Ngữ pháp của biến đổi dữ liệu với DPLYR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-04-phan-ra-va-xoay-chieu-du-lieu.html">2. Phân rã và xoay chiều dữ liệu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-05-cac-chi-so-thong-ke.html">3. Các chỉ số thống kê mô tả cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-06-lap-trinh-ham.html">4. Lập trình hàm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-07-lap-trinh-ham-voi-purrr.html">5. Lập trình chức năng hàm với purrr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-08-bien-doi-du-lieu-text.html">6. Biến đổi dữ liệu text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-11-quan-ly-nhieu-mo-hinh.html">7. Quản lý kết quả phân tích từ nhiều mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-15-thong-ke-co-ban.html">8. Xác suất và phân phối thống kê cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-16-power-analysis.html">9. Power analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-20-sampling-methods.html">10. Phương pháp ước lượng lấy mẫu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-50-datatable.html">11. Biến đổi dữ liệu với <code class="docutils literal notranslate"><span class="pre">data.table</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-60-thu-thap-du-lieu-tu-website.html">12. Thu thập dữ liệu từ website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-99-meo-trong-r.html">13. Các mẹo trong R</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Supervised learning</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p03-01-nguyen-ly-du-bao.html">1. Các nguyên lý dự báo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-02-mo-hinh-ols.html">2. Mô hình OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">8. Regularization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gioi-thieu">8.1. Giới thiệu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subset-selection">8.2. Subset Selection</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#best-subset-selection">8.2.1. Best subset selection</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#vi-du-thuc-te">8.3. Ví dụ thực tế</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#best-subset-selection-1">8.3.1. Best subset selection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#stepwise-methods">8.3.2. Stepwise methods</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ridge-lasso">8.3.3. Ridge &amp; Lasso</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Unsupervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p04-01-unsupervised-learning.html">1. Unsupervised learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-02-kmeans.html">2. k-means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-03-hierarchical-clustering.html">3. Hierachical clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-04-basket-analysis.html">4. Phân tích giỏ hàng</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-05-pca.html">5. Principal component analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-06-factor-analysis.html">6. Phân tích nhân tố ẩn (factor analysis)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Chuỗi thời gian</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p05-01-chuoi-thoi-gian.html">1. Giới thiệu về chuỗi thời gian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-02-arima.html">2. Mô hình ARIMA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html">3. Phân tích chuỗi thời gian với tidyquant và timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-06-du-bao-ts-voi-prophet.html">4. Dự báo chuỗi thời gian với prophet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-07-du-bao-ts-voi-timetk.html">5. Dự báo chuỗi thời gian với timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-08-abnomaly-detection.html">6. Abnomaly detection trong times series</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ngôn ngữ tự nghiên</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p06-01-nlp-co-ban.html">1. Xử lý ngôn ngữ tự nhiên cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-04-text-classification.html">2. Phân loại text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-07-nlp-api.html">3. Sử dụng API từ các dịch vụ đám mây</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-10-ocr-tesseract.html">4. OCR với <code class="docutils literal notranslate"><span class="pre">tesseract</span></code></a></li>
+</ul>
+<p class="caption"><span class="caption-text">Các phương pháp khác</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p07-01-survival-analysis.html">1. Survival analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-02-causal-impact.html">2. Causal Impact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-03-collaborative-filtering.html">3. Collaborative Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-07-spatial-data.html">4. Spatial data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-10-shiny.html">5. Shiny apps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p09-01-gioi-thieu-deep-learning.html">1. Giới thiệu cơ bản về Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-02-co-ban-kien-thuc-toan.html">2. Kiến thức cơ bản toán học cho deep learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-03-mo-hinh-deep-learning-co-ban.html">3. Mô hình deep learning cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-04-convolution-neural-network.html">4. Convolution neural networks</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cloud Computing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p10-01-cai-dat-rstudio-server-tren-amazon.html">1. Cài đặt server RStudio trên Amazon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-03-web-service-azure.html">2. Xây dựng web service với Azure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-09-apis-voi-plumber.html">3. API với Plumber</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Kiến thức bổ trợ</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p11-01-git.html">1. Sử dụng GIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-02-cmd.html">2. CMD và Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-03-docker.html">3. Sử dụng docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-04-apis.html">4. API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-05-html-css.html">5. Cơ bản về HTML và CSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-09-other.html">6. Các tricks khác</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Case studies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p13-01-casestudy-truc-quan-hoa.html">1. Trực quan hóa dữ liệu</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Phân tích dữ liệu với R</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>8. Regularization</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/p03-15-regularization.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="regularization">
+<h1>8. Regularization<a class="headerlink" href="#regularization" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gioi-thieu">
+<h2>8.1. Giới thiệu<a class="headerlink" href="#gioi-thieu" title="Permalink to this headline">¶</a></h2>
+<p>Mô hình OLS có nhiều ưu điểm, tuy nhiên OLS gặp các vấn đề sau:</p>
+<ul class="simple">
+<li><strong>Độ chính xác</strong>: OLS ít bị biến thiên (variance) khi
+<span class="math notranslate">\(n \gg p\)</span>, nghĩa là số lượng quan sát lớn hơn rất nhiều so với
+số biến. Tuy nhiên, nếu n không lớn hơn nhiều so với p, mô hình sẽ
+gặp phải vấn đề “overfitting” và “bias”. Nếu <span class="math notranslate">\(p \succ n\)</span>, sẽ có
+nhiều giá trị ước lượng của tham số, variance của mô hình sẽ rất lớn.
+Để xử lý vấn đề này, ta có thể sử dụng kỹ thuật “constraining” hoặc
+“shrinking” các tham số ước lượng</li>
+<li><strong>Khả năng giải thích ý nghĩa mô hình</strong>: Một số biến không ảnh hưởng
+đến mô hình nhưng với OLS, các giá trị ước lượng tham số luôn lớn hơn
+0. Để mô hình gần với thực tế hơn (giảm bias), ta sử dụng kỹ thuật
+“variable selection” (hay feature selection) để loại bỏ các biến
+không phù hợp trong mô hình.</li>
+</ul>
+<p>Ba phương pháp sử dụng:</p>
+<ul class="simple">
+<li><strong>Subset selection</strong>: Phương pháp này xác định tập giá trị của p mà
+ta tin rằng có liên quan đến biến phụ thuộc, sau đó sử dụng OLS để
+giảm tập biến</li>
+<li><strong>Shrinkage</strong>: Còn được gọi là <strong>regularization</strong> có tác dụng giảm
+variance của mô hình. Phương pháp này sử dụng tất cả các biến và cho
+phép ước lượng coefficient có giá trị bằng 0, do đó được dùng trong
+“variable selection”</li>
+<li><strong>Dimension Reduction</strong>: Giảm p biến thành không gian M chiều với
+<span class="math notranslate">\(M \prec p\)</span>, trong đó có M tổ hợp tuyến tính của biến. Các giá
+trị này được sử dụng để dự báo biến phụ thuộc y</li>
+</ul>
+</div>
+<div class="section" id="subset-selection">
+<h2>8.2. Subset Selection<a class="headerlink" href="#subset-selection" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="best-subset-selection">
+<h3>8.2.1. Best subset selection<a class="headerlink" href="#best-subset-selection" title="Permalink to this headline">¶</a></h3>
+<p>Thuật toán này cho phép lựa chọn mô hình có số biến phụ thuộc tối ưu
+bằng việc xây dựng rất nhiều mô hình và chọn ra từ đó mô hình có RSS
+thấp nhất.</p>
+<p>Các bước thực hiện:</p>
+<ol class="arabic simple">
+<li>Gọi <span class="math notranslate">\(M_0\)</span> là mô hình ban đầu (null model). Mô hình này không có
+biến độc lập, dự báo giá trị Y bằng giá trị trung bình của tập train</li>
+<li>Với k=1..p:</li>
+</ol>
+<ul class="simple">
+<li>Xây dựng <span class="math notranslate">\((\stackrel{p}{k})\)</span> mô hình với đúng k biến độc lập</li>
+<li>Lựa chọn từ mô hình gọi là <span class="math notranslate">\(M_k\)</span> với RSS có giá trị nhỏ nhất</li>
+</ul>
+<ol class="arabic simple" start="3">
+<li>Chọn các mô hình <span class="math notranslate">\(M_0,...,M_k\)</span> bằng cross validation bằng các
+tiêu chí AIC, BIC hoặc <span class="math notranslate">\(\overline{R}^2\)</span></li>
+</ol>
+<p><strong>Ghi chú</strong>:</p>
+<ul class="simple">
+<li>Subset selection lựa chọn mô hình tốt nhất từ <span class="math notranslate">\(2^p\)</span> mô hình.
+Trong bước 2, ta đã giảm việc lựa chọn cross validation từ
+<span class="math notranslate">\(2^p\)</span> xuông p+1 mô hình</li>
+<li>Phải xây dựng rất nhiều mô hình, điều này có thể khiến quá trình phân
+tích tốn nhiều thời gian</li>
+</ul>
+<p>###Stepwise selection ####Forward stepwise selection</p>
+<p>Các bước thực hiện:</p>
+<ol class="arabic simple">
+<li>Xây dựng null model không chưa biến độc lập</li>
+<li>Thêm ĐÚNG 1 biến độc lập, lựa chọn mô hình có RSS nhỏ nhất, gọi là mô
+hình <span class="math notranslate">\(M_1\)</span></li>
+<li>Lặp lại bước 2 cho đến khi tất cả các biến đều được đưa vào mô hình,
+mô hình có tất cả các biến là <span class="math notranslate">\(M_p\)</span></li>
+<li>Lựa chọn mô hình tốt nhất của <span class="math notranslate">\(M_0,...,M_p\)</span> bằng cross
+validation</li>
+</ol>
+<p>Ví dụ: Mô hình có 3 biến <span class="math notranslate">\(X_1\)</span>, <span class="math notranslate">\(X_2\)</span>, <span class="math notranslate">\(X3\)</span>, biến phụ
+thuộc là Y, ta thực hiện như sau:</p>
+<ol class="arabic simple">
+<li>Gọi null model <span class="math notranslate">\(M_0\)</span> không chưa biến độc lập</li>
+<li>Lựa chọn <span class="math notranslate">\(M_1\)</span> là mô hình CHỈ chưa MỘT biến độc lập (cách thực
+hiện: Xây dưng 3 mô hình với lần lượt từng biến, chọn mô hình có RSS
+thấp nhât), giả sử là mô hình chỉ chưa biến <span class="math notranslate">\(X_1\)</span></li>
+<li>Lặp lại bước 2, xây dụng 2 mô hình bằng cách thêm lần lượt
+<span class="math notranslate">\(X_2\)</span>, <span class="math notranslate">\(X_3\)</span> vào mô hình 2</li>
+<li>Thực hiện cross validation để cọn mô hình tốt nhất</li>
+</ol>
+<div class="math notranslate">
+\[Ghi chú\]</div>
+<p>:</p>
+<ul class="simple">
+<li>Mô hình này giảm đáng kể số lượng mô hình. Tổng số mô hình được xây
+dựng là <span class="math notranslate">\(1+\frac{p(p+1)}{2}\)</span></li>
+<li>Phương pháp này không đảm bảo lựa chọn được mô hình tốt nhất từ
+<span class="math notranslate">\(2^p\)</span> mô hình. VD: Mô hình có 3 biến
+<span class="math notranslate">\(X_1\)</span>,…,<span class="math notranslate">\(X_3\)</span>, ta có:<ul>
+<li>Mô hình 1 biến tốt nhất là mô hình với <span class="math notranslate">\(X_1\)</span></li>
+<li>Mô hình 2 biến tốt nhất là mô hình với <span class="math notranslate">\(X_2\)</span> và <span class="math notranslate">\(X_3\)</span></li>
+<li>Phương pháp stepwise selection, mô hình 2 biến tốt nhất là
+<span class="math notranslate">\(X_1\)</span> và <span class="math notranslate">\(X_2\)</span></li>
+</ul>
+</li>
+</ul>
+<p>####Backward stepwise selection</p>
+<p>Phương pháp này ngược lại với forward stepwise, xây dựng mô hình full,
+sau đó giảm biến lần lượt</p>
+<p><strong>Phương pháp chọn mô hình tốt nhất</strong>:</p>
+<ul class="simple">
+<li>Phương pháp gián tiếp: Ước lượng sai số của test error bằng cách điều
+chỉnh các tiêu chí dựa vào biến. VD: AIC, BIC, Adjusted-R-squared</li>
+<li>Phương pháp trực tiếp: Ước lượng trực tiếp dựa trên cross validation</li>
+</ul>
+<p>##Shrinkage methods ###Ridge regression</p>
+<p>Hàm mục tiêu của OLS là tối thiểu hóa RSS:</p>
+<div class="math notranslate">
+\[RSS = \sum^n_{i=1}(y_i - \beta_0 - \sum^p_{i=1}\beta_jx_{ij})^2\]</div>
+<p>Ridge regression tương tự như OLS, tuy nhiên hàm mục tiêu là tối thiểu
+hóa hàm sau</p>
+<div class="math notranslate">
+\[RSS + \lambda\sum_{j=1}^p\beta_j^2\]</div>
+<p><strong>Ghi chú</strong>:</p>
+<ul class="simple">
+<li><span class="math notranslate">\(\lambda\sum\beta_j^2\)</span> được gọi là shrinkage penalty. Giá trị
+này sẽ nhỏ khi <span class="math notranslate">\(\beta_j\)</span> tiến gần đến 0</li>
+<li><span class="math notranslate">\(\lambda \geq 0\)</span> được gọi là tuning parameter</li>
+<li>Với <span class="math notranslate">\(\lambda = 0\)</span>, ridge regression trở thành OLS</li>
+<li>Việc lựa chọn giá trị của <span class="math notranslate">\(\lambda\)</span> rất quan trọng với ridge
+regression</li>
+<li>Giá trị <span class="math notranslate">\(\beta_j\)</span> không bị đánh penalty, giá trị này chính là
+giá trị trung bình của biến y khi các biến khác bằng 0</li>
+</ul>
+<p><strong>Ridge regression</strong> tốt hơn OLS tuân theo quy luận bias-variance
+trade-off</p>
+<p>###Lasso regression</p>
+<p>Ridge regression có nhược điểm là không đưa các giá trị ước lượng của
+biến về 0 mà chỉ tiệm cận 0. Lasso khắc phục nhược điểm đó bằng việc
+thay đổi hàm mục tiêu như sau:</p>
+<p>Minimize <span class="math notranslate">\(RSS + \lambda(\sum_{j=1}^p|\beta_j|)\)</span></p>
+<p><strong>Ghi chú</strong>: Lasso còn được sử dụng là subset selection</p>
+<p><strong>Cách tiếp cận khác của Ridge và Lasso</strong></p>
+<p>Mô hình Ridge và Lasso có thể được viết lại như sau:</p>
+<p>Minimize <span class="math notranslate">\(RSS\)</span>, subject to:</p>
+<ul class="simple">
+<li><span class="math notranslate">\(\sum_{j=1}^p|\beta_j| \leq s\)</span>, với Lasso regression</li>
+<li><span class="math notranslate">\(\sum_{j=1}^p\beta_j^2 \leq s\)</span>, với Ridge regression</li>
+</ul>
+<p>Do đó, Ridge regression chỉ cho phép các giá trị của tham số tiệm cận 0</p>
+<p>###Lựa chọn tuning parameter</p>
+<p><img alt="image0" src="Images/regularization-01.png" /></p>
+<p><strong>Lưu ý</strong>: Lasso cho phép mô hình có tính giải thích tốt hơn do số lượng
+predictor ít hơn. Tuy nhiên, với 1 số trường hợp, khi mối quan hệ giữa
+các biến (<span class="math notranslate">\(\beta\)</span>) gần bằng 0, mô hình Ridge sẽ tốt hơn</p>
+</div>
+</div>
+<div class="section" id="vi-du-thuc-te">
+<h2>8.3. Ví dụ thực tế<a class="headerlink" href="#vi-du-thuc-te" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="best-subset-selection-1">
+<span id="id1"></span><h3>8.3.1. Best subset selection<a class="headerlink" href="#best-subset-selection-1" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">ISLR</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span>
+<span class="c1">#Xử lý số liệu</span>
+<span class="nf">names</span><span class="p">(</span><span class="n">Hitters</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  [1] &quot;AtBat&quot;     &quot;Hits&quot;      &quot;HmRun&quot;     &quot;Runs&quot;      &quot;RBI&quot;</span>
+<span class="c1">##  [6] &quot;Walks&quot;     &quot;Years&quot;     &quot;CAtBat&quot;    &quot;CHits&quot;     &quot;CHmRun&quot;</span>
+<span class="c1">## [11] &quot;CRuns&quot;     &quot;CRBI&quot;      &quot;CWalks&quot;    &quot;League&quot;    &quot;Division&quot;</span>
+<span class="c1">## [16] &quot;PutOuts&quot;   &quot;Assists&quot;   &quot;Errors&quot;    &quot;Salary&quot;    &quot;NewLeague&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Loại bỏ giá trị bị thiếu</span>
+<span class="n">data</span> <span class="o">&lt;-</span> <span class="nf">na.omit</span><span class="p">(</span><span class="n">Hitters</span><span class="p">)</span>
+<span class="nf">is.na</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">sum</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 0</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">dim</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 263  20</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">leaps</span><span class="p">)</span>
+<span class="c1">#Xây dựng mô hình</span>
+<span class="n">regfit.full</span> <span class="o">&lt;-</span> <span class="nf">regsubsets</span><span class="p">(</span><span class="n">Salary</span> <span class="o">~</span> <span class="n">.,</span> <span class="n">data</span><span class="p">,</span> <span class="n">nvmax</span> <span class="o">=</span> <span class="m">19</span><span class="p">)</span>
+<span class="n">reg.summary</span> <span class="o">&lt;-</span> <span class="n">regfit.full</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+<span class="nf">names</span><span class="p">(</span><span class="n">reg.summary</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;which&quot;  &quot;rsq&quot;    &quot;rss&quot;    &quot;adjr2&quot;  &quot;cp&quot;     &quot;bic&quot;    &quot;outmat&quot; &quot;obj&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">reg.summary</span><span class="o">$</span><span class="n">adjr2</span> <span class="o">%&gt;%</span> <span class="n">which.max</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 11</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Biểu đồ đơn giản</span>
+<span class="nf">plot</span><span class="p">(</span><span class="n">reg.summary</span><span class="o">$</span><span class="n">adjr2</span><span class="p">,</span> <span class="n">xlab</span><span class="o">=</span><span class="s">&quot;Number of variables&quot;</span><span class="p">,</span> <span class="n">ylab</span> <span class="o">=</span> <span class="s">&quot;Adjusted R-squared&quot;</span><span class="p">)</span>
+<span class="nf">points </span><span class="p">(</span><span class="m">11</span><span class="p">,</span><span class="n">reg.summary</span><span class="o">$</span><span class="n">adjr2[11]</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s">&quot;red&quot;</span><span class="p">,</span><span class="n">cex</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="n">pch</span><span class="o">=</span><span class="m">20</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="image1" src="p03-15-regularization_files/figure-html/unnamed-chunk-2-1.png" /></p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Biểu đồ với GGPLOT2</span>
+<span class="n">reg.summary2</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span>
+  <span class="n">nr</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">19</span><span class="p">),</span>
+  <span class="n">adjr2</span> <span class="o">=</span> <span class="n">reg.summary</span><span class="o">$</span><span class="n">adjr2</span><span class="p">,</span>
+  <span class="n">bic</span> <span class="o">=</span> <span class="n">reg.summary</span><span class="o">$</span><span class="n">bic</span>
+<span class="p">)</span>
+<span class="nf">ggplot</span><span class="p">(</span><span class="n">reg.summary2</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">nr</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">adjr2</span><span class="p">))</span> <span class="o">+</span> <span class="nf">geom_point</span><span class="p">()</span> <span class="o">+</span> <span class="nf">geom_line</span><span class="p">()</span> <span class="o">+</span>
+  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="nf">which.max</span><span class="p">(</span><span class="n">adjr2</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="n">adjr2</span><span class="p">)),</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span><span class="m">5</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">geom_text</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="nf">which.max</span><span class="p">(</span><span class="n">adjr2</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="m">1.05</span><span class="o">*</span><span class="nf">max</span><span class="p">(</span><span class="n">adjr2</span><span class="p">)),</span>
+                      <span class="n">label</span> <span class="o">=</span> <span class="n">reg.summary2</span><span class="o">$</span><span class="n">adjr2</span> <span class="o">%&gt;%</span> <span class="n">max</span> <span class="o">%&gt;%</span> <span class="nf">round</span><span class="p">(</span><span class="m">3</span><span class="p">))</span> <span class="o">+</span>
+  <span class="nf">theme_bw</span><span class="p">()</span> <span class="o">+</span>
+  <span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;Number of variables&quot;</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;Adjusted R-squared&quot;</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">ggtitle</span><span class="p">(</span><span class="s">&quot;Best model selection&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="image2" src="p03-15-regularization_files/figure-html/unnamed-chunk-2-2.png" /></p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#####</span>
+<span class="nf">plot</span><span class="p">(</span><span class="n">regfit.full</span> <span class="p">,</span><span class="n">scale</span><span class="o">=</span><span class="s">&quot;bic&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="image3" src="p03-15-regularization_files/figure-html/unnamed-chunk-2-3.png" /></p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Xem coef của mô hình</span>
+<span class="nf">coef</span><span class="p">(</span><span class="n">regfit.full</span><span class="p">,</span><span class="m">11</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  (Intercept)        AtBat         Hits        Walks       CAtBat</span>
+<span class="c1">##  135.7512195   -2.1277482    6.9236994    5.6202755   -0.1389914</span>
+<span class="c1">##        CRuns         CRBI       CWalks      LeagueN    DivisionW</span>
+<span class="c1">##    1.4553310    0.7852528   -0.8228559   43.1116152 -111.1460252</span>
+<span class="c1">##      PutOuts      Assists</span>
+<span class="c1">##    0.2894087    0.2688277</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="stepwise-methods">
+<h3>8.3.2. Stepwise methods<a class="headerlink" href="#stepwise-methods" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">lapply</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;ISLR&quot;</span><span class="p">,</span><span class="s">&quot;leaps&quot;</span><span class="p">),</span> <span class="n">library</span><span class="p">,</span> <span class="n">character.only</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [[1]]</span>
+<span class="c1">##  [1] &quot;leaps&quot;     &quot;ggplot2&quot;   &quot;dplyr&quot;     &quot;ISLR&quot;      &quot;methods&quot;</span>
+<span class="c1">##  [6] &quot;stats&quot;     &quot;graphics&quot;  &quot;grDevices&quot; &quot;utils&quot;     &quot;datasets&quot;</span>
+<span class="c1">## [11] &quot;base&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## [[2]]</span>
+<span class="c1">##  [1] &quot;leaps&quot;     &quot;ggplot2&quot;   &quot;dplyr&quot;     &quot;ISLR&quot;      &quot;methods&quot;</span>
+<span class="c1">##  [6] &quot;stats&quot;     &quot;graphics&quot;  &quot;grDevices&quot; &quot;utils&quot;     &quot;datasets&quot;</span>
+<span class="c1">## [11] &quot;base&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">regfit.fwd</span> <span class="o">&lt;-</span> <span class="nf">regsubsets</span><span class="p">(</span><span class="n">Salary</span>∼<span class="n">.,data</span><span class="o">=</span><span class="n">data</span> <span class="p">,</span><span class="n">nvmax</span><span class="o">=</span><span class="m">19</span><span class="p">,</span><span class="n">method</span> <span class="o">=</span><span class="s">&quot;forward&quot;</span><span class="p">)</span>
+<span class="n">regfit.fwd</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Subset selection object</span>
+<span class="c1">## Call: regsubsets.formula(Salary ~ ., data = data, nvmax = 19, method = &quot;forward&quot;)</span>
+<span class="c1">## 19 Variables  (and intercept)</span>
+<span class="c1">##            Forced in Forced out</span>
+<span class="c1">## AtBat          FALSE      FALSE</span>
+<span class="c1">## Hits           FALSE      FALSE</span>
+<span class="c1">## HmRun          FALSE      FALSE</span>
+<span class="c1">## Runs           FALSE      FALSE</span>
+<span class="c1">## RBI            FALSE      FALSE</span>
+<span class="c1">## Walks          FALSE      FALSE</span>
+<span class="c1">## Years          FALSE      FALSE</span>
+<span class="c1">## CAtBat         FALSE      FALSE</span>
+<span class="c1">## CHits          FALSE      FALSE</span>
+<span class="c1">## CHmRun         FALSE      FALSE</span>
+<span class="c1">## CRuns          FALSE      FALSE</span>
+<span class="c1">## CRBI           FALSE      FALSE</span>
+<span class="c1">## CWalks         FALSE      FALSE</span>
+<span class="c1">## LeagueN        FALSE      FALSE</span>
+<span class="c1">## DivisionW      FALSE      FALSE</span>
+<span class="c1">## PutOuts        FALSE      FALSE</span>
+<span class="c1">## Assists        FALSE      FALSE</span>
+<span class="c1">## Errors         FALSE      FALSE</span>
+<span class="c1">## NewLeagueN     FALSE      FALSE</span>
+<span class="c1">## 1 subsets of each size up to 19</span>
+<span class="c1">## Selection Algorithm: forward</span>
+<span class="c1">##           AtBat Hits HmRun Runs RBI Walks Years CAtBat CHits CHmRun CRuns</span>
+<span class="c1">## 1  ( 1 )  &quot; &quot;   &quot; &quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 2  ( 1 )  &quot; &quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 3  ( 1 )  &quot; &quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 4  ( 1 )  &quot; &quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 5  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot; &quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 6  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 7  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 8  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot; &quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;</span>
+<span class="c1">## 9  ( 1 )  &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;</span>
+<span class="c1">## 10  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;</span>
+<span class="c1">## 11  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot; &quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;</span>
+<span class="c1">## 12  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot;*&quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;</span>
+<span class="c1">## 13  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot; &quot;   &quot;*&quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;</span>
+<span class="c1">## 14  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot; &quot;   &quot; &quot;    &quot;*&quot;</span>
+<span class="c1">## 15  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot; &quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot;*&quot;   &quot; &quot;    &quot;*&quot;</span>
+<span class="c1">## 16  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot;*&quot;   &quot; &quot;    &quot;*&quot;</span>
+<span class="c1">## 17  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot; &quot;*&quot;   &quot; &quot;   &quot;*&quot;    &quot;*&quot;   &quot; &quot;    &quot;*&quot;</span>
+<span class="c1">## 18  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot; &quot;*&quot;   &quot;*&quot;   &quot;*&quot;    &quot;*&quot;   &quot; &quot;    &quot;*&quot;</span>
+<span class="c1">## 19  ( 1 ) &quot;*&quot;   &quot;*&quot;  &quot;*&quot;   &quot;*&quot;  &quot;*&quot; &quot;*&quot;   &quot;*&quot;   &quot;*&quot;    &quot;*&quot;   &quot;*&quot;    &quot;*&quot;</span>
+<span class="c1">##           CRBI CWalks LeagueN DivisionW PutOuts Assists Errors NewLeagueN</span>
+<span class="c1">## 1  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot; &quot;       &quot; &quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 2  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot; &quot;       &quot; &quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 3  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot; &quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 4  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 5  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 6  ( 1 )  &quot;*&quot;  &quot; &quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 7  ( 1 )  &quot;*&quot;  &quot;*&quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 8  ( 1 )  &quot;*&quot;  &quot;*&quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 9  ( 1 )  &quot;*&quot;  &quot;*&quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot; &quot;     &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 10  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot; &quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 11  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 12  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot; &quot;    &quot; &quot;</span>
+<span class="c1">## 13  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot; &quot;</span>
+<span class="c1">## 14  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot; &quot;</span>
+<span class="c1">## 15  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot; &quot;</span>
+<span class="c1">## 16  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot; &quot;</span>
+<span class="c1">## 17  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot;*&quot;</span>
+<span class="c1">## 18  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot;*&quot;</span>
+<span class="c1">## 19  ( 1 ) &quot;*&quot;  &quot;*&quot;    &quot;*&quot;     &quot;*&quot;       &quot;*&quot;     &quot;*&quot;     &quot;*&quot;    &quot;*&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">coef</span><span class="p">(</span><span class="n">regfit.fwd</span><span class="p">,</span><span class="m">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## (Intercept)        Hits        CRBI</span>
+<span class="c1">## -47.9559022   3.3008446   0.6898994</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">coef</span><span class="p">(</span><span class="n">regfit.full</span><span class="p">,</span><span class="m">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## (Intercept)        Hits        CRBI</span>
+<span class="c1">## -47.9559022   3.3008446   0.6898994</span>
+</pre></div>
+</div>
+<p><strong>Lưu ý</strong>: Với số lượng biến nhỏ, mô hình best selection và stepwise đưa
+ra kết quả tương tự nhau</p>
+</div>
+<div class="section" id="ridge-lasso">
+<h3>8.3.3. Ridge &amp; Lasso<a class="headerlink" href="#ridge-lasso" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">glmnet</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">ISLR</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span>
+<span class="nf">data</span><span class="p">(</span><span class="s">&quot;Hitters&quot;</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">&lt;-</span> <span class="nf">model.matrix</span><span class="p">(</span><span class="n">Salary</span>∼<span class="n">.,</span> <span class="n">Hitters</span><span class="p">)</span><span class="n">[</span><span class="p">,</span><span class="m">-1</span><span class="n">]</span>
+<span class="n">y</span> <span class="o">&lt;-</span> <span class="n">Hitters</span><span class="o">$</span><span class="n">Salary</span>
+<span class="c1">#Hàm model.matrix cho phép chuyển biến categorical sang dummies</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="p03-17-nonlinear.html" class="btn btn-neutral float-right" title="9. Mô hình phi tuyến tính" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="p03-09-feature-engineering.html" class="btn btn-neutral float-left" title="7. Feature Engineering" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anh Hoang Duc
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

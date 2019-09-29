@@ -1,0 +1,468 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="vi" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="vi" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>5. Principal component analysis &mdash; Tài liệu Phân tích dữ liệu với R 2019</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'2019',
+              LANGUAGE:'vi',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript" src="_static/copybutton.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Tìm Kiếm" href="search.html" />
+    <link rel="next" title="6. Phân tích nhân tố ẩn (factor analysis)" href="p04-06-factor-analysis.html" />
+    <link rel="prev" title="4. Phân tích giỏ hàng" href="p04-04-basket-analysis.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Phân tích dữ liệu với R
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Giới thiệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-gioi-thieu.html">Khoa học dữ liệu và nghề phân tích dữ liệu</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Phân tích khám phá dữ liệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p02-03-bien-doi-du-lieu-dplyr.html">1. Ngữ pháp của biến đổi dữ liệu với DPLYR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-04-phan-ra-va-xoay-chieu-du-lieu.html">2. Phân rã và xoay chiều dữ liệu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-05-cac-chi-so-thong-ke.html">3. Các chỉ số thống kê mô tả cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-06-lap-trinh-ham.html">4. Lập trình hàm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-07-lap-trinh-ham-voi-purrr.html">5. Lập trình chức năng hàm với purrr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-08-bien-doi-du-lieu-text.html">6. Biến đổi dữ liệu text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-11-quan-ly-nhieu-mo-hinh.html">7. Quản lý kết quả phân tích từ nhiều mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-15-thong-ke-co-ban.html">8. Xác suất và phân phối thống kê cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-16-power-analysis.html">9. Power analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-20-sampling-methods.html">10. Phương pháp ước lượng lấy mẫu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-50-datatable.html">11. Biến đổi dữ liệu với <code class="docutils literal notranslate"><span class="pre">data.table</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-60-thu-thap-du-lieu-tu-website.html">12. Thu thập dữ liệu từ website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-99-meo-trong-r.html">13. Các mẹo trong R</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Supervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p03-01-nguyen-ly-du-bao.html">1. Các nguyên lý dự báo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-02-mo-hinh-ols.html">2. Mô hình OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Unsupervised learning</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p04-01-unsupervised-learning.html">1. Unsupervised learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-02-kmeans.html">2. k-means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-03-hierarchical-clustering.html">3. Hierachical clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-04-basket-analysis.html">4. Phân tích giỏ hàng</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">5. Principal component analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gioi-thieu">5.1. Giới thiệu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ly-thuyet">5.2. Lý thuyết</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#thuc-hanh">5.3. Thực hành</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="p04-06-factor-analysis.html">6. Phân tích nhân tố ẩn (factor analysis)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Chuỗi thời gian</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p05-01-chuoi-thoi-gian.html">1. Giới thiệu về chuỗi thời gian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-02-arima.html">2. Mô hình ARIMA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html">3. Phân tích chuỗi thời gian với tidyquant và timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-06-du-bao-ts-voi-prophet.html">4. Dự báo chuỗi thời gian với prophet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-07-du-bao-ts-voi-timetk.html">5. Dự báo chuỗi thời gian với timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-08-abnomaly-detection.html">6. Abnomaly detection trong times series</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ngôn ngữ tự nghiên</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p06-01-nlp-co-ban.html">1. Xử lý ngôn ngữ tự nhiên cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-04-text-classification.html">2. Phân loại text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-07-nlp-api.html">3. Sử dụng API từ các dịch vụ đám mây</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-10-ocr-tesseract.html">4. OCR với <code class="docutils literal notranslate"><span class="pre">tesseract</span></code></a></li>
+</ul>
+<p class="caption"><span class="caption-text">Các phương pháp khác</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p07-01-survival-analysis.html">1. Survival analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-02-causal-impact.html">2. Causal Impact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-03-collaborative-filtering.html">3. Collaborative Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-07-spatial-data.html">4. Spatial data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-10-shiny.html">5. Shiny apps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p09-01-gioi-thieu-deep-learning.html">1. Giới thiệu cơ bản về Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-02-co-ban-kien-thuc-toan.html">2. Kiến thức cơ bản toán học cho deep learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-03-mo-hinh-deep-learning-co-ban.html">3. Mô hình deep learning cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-04-convolution-neural-network.html">4. Convolution neural networks</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cloud Computing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p10-01-cai-dat-rstudio-server-tren-amazon.html">1. Cài đặt server RStudio trên Amazon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-03-web-service-azure.html">2. Xây dựng web service với Azure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-09-apis-voi-plumber.html">3. API với Plumber</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Kiến thức bổ trợ</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p11-01-git.html">1. Sử dụng GIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-02-cmd.html">2. CMD và Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-03-docker.html">3. Sử dụng docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-04-apis.html">4. API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-05-html-css.html">5. Cơ bản về HTML và CSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-09-other.html">6. Các tricks khác</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Case studies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p13-01-casestudy-truc-quan-hoa.html">1. Trực quan hóa dữ liệu</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Phân tích dữ liệu với R</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>5. Principal component analysis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/p04-05-pca.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="principal-component-analysis">
+<h1>5. Principal component analysis<a class="headerlink" href="#principal-component-analysis" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gioi-thieu">
+<h2>5.1. Giới thiệu<a class="headerlink" href="#gioi-thieu" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Pricipal</span> <span class="pre">Component</span> <span class="pre">Analysis</span></code> và <code class="docutils literal notranslate"><span class="pre">Factor</span> <span class="pre">Analysis</span></code> không quan tâm
+đến việc dự báo do không có biến cần dự báo trước. Các kỹ thuật này trả
+lời các câu hỏi sau</p>
+<ul class="simple">
+<li>Liệu tồn tại các nhóm giữa các đối tượng trong dữ liệu?</li>
+<li>Làm thế nào để giảm số lượng các biến?</li>
+<li>Liệu có tồn tại mối quan hệ ẩn giữa các biến?</li>
+</ul>
+<p><strong>So sánh giữa PCA và FA</strong></p>
+<p>PCA &amp; FA là 2 phương pháp có quan hệ mật thiết với nhau. Có thể coi FA
+là phương pháp ngược lại với PCA</p>
+<ul class="simple">
+<li>PCA là kỹ thuật giảm số lượng các biến có tương quan với nhau thành 1
+số ít biến không tương quan và vẫn đảm bảo được càng nhiều thông tin
+(variance) của tập dữ liệu gốc càng tốt. VD: Giảm 30 biến thành 2
+biến mới không tương quan với nhau, vẫn giữ được phần lớn lượng thông
+tin (ít nhất 80%) so với dữ liệu gốc. Mỗi biến mới được gọi là 1
+“Principal Component”</li>
+<li>FA là kỹ thuật tìm những biến “ẩn” ảnh hưởng đến các dữ liệu gốc. VD:
+30 biến từ tập dữ liệu gốc được tổ hợp từ 4 biến ẩn (latent factor)</li>
+</ul>
+</div>
+<div class="section" id="ly-thuyet">
+<h2>5.2. Lý thuyết<a class="headerlink" href="#ly-thuyet" title="Permalink to this headline">¶</a></h2>
+<p>Gọi <span class="math notranslate">\(X_1,...,X_p\)</span> là các biến trong tập dữ liệu ban đầu.
+<span class="math notranslate">\(PC_1\)</span> (<code class="docutils literal notranslate"><span class="pre">The</span> <span class="pre">first</span> <span class="pre">principal</span> <span class="pre">component</span></code>) là tổ hơp tuyến tính đã
+chuẩn hóa của X (<code class="docutils literal notranslate"><span class="pre">normalized</span> <span class="pre">linear</span> <span class="pre">combination</span></code>):</p>
+<div class="math notranslate">
+\[Z_1=\phi_{11} X_1 + \phi_{21}X_2+...+\phi_{p1}X_p\]</div>
+<p>Chuẩn hóa (normalized) được định nghĩa là:</p>
+<div class="math notranslate">
+\[\sum_{j=1}^p\phi_{j1}^2=1\]</div>
+<p><span class="math notranslate">\(\phi_{11},...,\phi_{p1}\)</span> được gọi là “loadings” của PC1</p>
+<p><span class="math notranslate">\(Z_2\)</span> được gọi là <span class="math notranslate">\(PC_2\)</span> nếu <span class="math notranslate">\(Z_2\)</span> thỏa mãn các điều
+kiện tương tự như <span class="math notranslate">\(PC_1\)</span> và <span class="math notranslate">\(Z_2\)</span> vuông góc với <span class="math notranslate">\(Z_1\)</span>,
+nghĩa là:</p>
+<div class="math notranslate">
+\[\sum_{j=1}^p\phi_{j1}\phi_{j2}=0\]</div>
+<p><strong>Thuật toán</strong>:</p>
+<ul class="simple">
+<li>Chuẩn hóa ma trận phương sai, hiệp phương sai của tập dữ liệu gốc về
+dạng chuẩn N(0,1)</li>
+<li>Tìm giá trị riêng và vectơ riêng (eigen value - eigen vector) của ma
+trận trên</li>
+<li>Mỗi tổ hợp của giá trị riêng của vector riêng là một PC</li>
+</ul>
+<p><strong>Ý nghĩa</strong>:</p>
+<ul class="simple">
+<li><span class="math notranslate">\(PC_1\)</span> là tổ hợp tuyến tính của các biến X mà trong đó, phương
+sai của cả tập dữ liệu thay đổi nhiều nhất</li>
+<li><span class="math notranslate">\(PC_2\)</span> là chiều thứ 2 của dữ liệu, vuông góc với dữ liệu 1, var
+biến đổi nhiều thứ nhì</li>
+</ul>
+<p><strong>Lựa chọn số PC</strong>:</p>
+<p>Có 3 cách lựa chọn sau:</p>
+<ul class="simple">
+<li>Lựa chọn dưa trên lý thuyết đã biết</li>
+<li>Lựa chọn PC có giá trị riêng lớn hơn 1</li>
+<li>Lựa chọn số PC cho đến khi tổng var của tất cả các PC lớn hơn hoặc
+bằng 80% var của tập dữ liệu gốc</li>
+</ul>
+</div>
+<div class="section" id="thuc-hanh">
+<h2>5.3. Thực hành<a class="headerlink" href="#thuc-hanh" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">psych</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">broom</span><span class="p">)</span>
+
+<span class="n">data</span> <span class="o">&lt;-</span> <span class="n">iris</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">Species</span><span class="p">)</span>
+<span class="nf">describe</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##              vars   n mean   sd median trimmed  mad min max range  skew</span>
+<span class="c1">## Sepal.Length    1 150 5.84 0.83   5.80    5.81 1.04 4.3 7.9   3.6  0.31</span>
+<span class="c1">## Sepal.Width     2 150 3.06 0.44   3.00    3.04 0.44 2.0 4.4   2.4  0.31</span>
+<span class="c1">## Petal.Length    3 150 3.76 1.77   4.35    3.76 1.85 1.0 6.9   5.9 -0.27</span>
+<span class="c1">## Petal.Width     4 150 1.20 0.76   1.30    1.18 1.04 0.1 2.5   2.4 -0.10</span>
+<span class="c1">##              kurtosis   se</span>
+<span class="c1">## Sepal.Length    -0.61 0.07</span>
+<span class="c1">## Sepal.Width      0.14 0.04</span>
+<span class="c1">## Petal.Length    -1.42 0.14</span>
+<span class="c1">## Petal.Width     -1.36 0.06</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">pr.out</span> <span class="o">&lt;-</span> <span class="nf">prcomp</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span> <span class="c1">#Scale data</span>
+<span class="n">pr.out</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Standard deviations (1, .., p=4):</span>
+<span class="c1">## [1] 1.7083611 0.9560494 0.3830886 0.1439265</span>
+<span class="c1">##</span>
+<span class="c1">## Rotation (n x k) = (4 x 4):</span>
+<span class="c1">##                     PC1         PC2        PC3        PC4</span>
+<span class="c1">## Sepal.Length  0.5210659 -0.37741762  0.7195664  0.2612863</span>
+<span class="c1">## Sepal.Width  -0.2693474 -0.92329566 -0.2443818 -0.1235096</span>
+<span class="c1">## Petal.Length  0.5804131 -0.02449161 -0.1421264 -0.8014492</span>
+<span class="c1">## Petal.Width   0.5648565 -0.06694199 -0.6342727  0.5235971</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">pr.out</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Importance of components%s:</span>
+<span class="c1">##                           PC1    PC2     PC3     PC4</span>
+<span class="c1">## Standard deviation     1.7084 0.9560 0.38309 0.14393</span>
+<span class="c1">## Proportion of Variance 0.7296 0.2285 0.03669 0.00518</span>
+<span class="c1">## Cumulative Proportion  0.7296 0.9581 0.99482 1.00000</span>
+</pre></div>
+</div>
+<p>Trong ví dụ trên, ta thấy <code class="docutils literal notranslate"><span class="pre">PC2</span></code> đã cover được 95% độ biến động của dữ
+liệu. Do đó, ta có thể chọn 2 nhân tố chính để thực hiện <code class="docutils literal notranslate"><span class="pre">PCA</span></code>. Kết
+quả trực quan hóa sau khi thực hiện PCA như sau.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">ggfortify</span><span class="p">)</span>
+<span class="nf">autoplot</span><span class="p">(</span><span class="n">pr.out</span><span class="p">,</span> <span class="n">loadings</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
+         <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;Species&quot;</span><span class="p">,</span>
+         <span class="n">loadings.colour</span> <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span>
+         <span class="n">loadings.label</span> <span class="o">=</span> <span class="bp">T</span><span class="p">,</span>
+         <span class="n">data</span> <span class="o">=</span> <span class="n">iris</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
+  <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;top&quot;</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">labs</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">&quot;PCA for iris dataset&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="image0" src="p04-05-pca_files/figure-html/unnamed-chunk-3-1.png" /></p>
+<p>Trong ví dụ trên, ta thấy loài hoa <code class="docutils literal notranslate"><span class="pre">setosa</span></code> được phân thành nhóm riêng
+và yếu tố được tách nhánh nhiều nhất của nhóm này là <code class="docutils literal notranslate"><span class="pre">Sepal</span></code>. Trong
+khi đó, hai loại hoa còn lại khác nhau phần lớn ở thuộc tính <code class="docutils literal notranslate"><span class="pre">Petal</span></code></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="p04-06-factor-analysis.html" class="btn btn-neutral float-right" title="6. Phân tích nhân tố ẩn (factor analysis)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="p04-04-basket-analysis.html" class="btn btn-neutral float-left" title="4. Phân tích giỏ hàng" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anh Hoang Duc
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

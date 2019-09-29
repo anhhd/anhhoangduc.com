@@ -1,0 +1,84 @@
+CMD và Bash
+===========
+
+``cmd`` và ``bash`` là các công cụ trong Windows cho phép thực hiện một
+loạt các công việc thông thường trên máy tính thông qua code.
+
+Cách đơn giản nhất để tạo ``bat`` là lưu định dạng file dưới dạng
+``.bat`` từ ``notepad++``
+
+Comment trong bat
+-----------------
+
+-  Sử dụng ``REM``
+
+.. code:: bat
+
+   REM phần comment
+
+Chạy file script python từ bat
+------------------------------
+
+.. code:: bat
+
+   python fix_md.py
+
+Delete tất cả các file và folder
+--------------------------------
+
+.. code:: bat
+
+   del /S "..\sphinx-book\_source\*" /F /Q
+
+Convert file với pandoc
+-----------------------
+
+Cho phép convert các file ``markdown`` sang ``rst`` và giữa nguyên định
+dạng tên file
+
+.. code:: bat
+
+   for %%i in (*.md) do pandoc -f markdown -t rst %%~ni.md > ../sphinx-book/_source/%%~ni.rst
+
+Copy nhiều file sang folder khác
+--------------------------------
+
+.. code:: bat
+
+   set "source=..\sphinx-book\_config"
+   set "destination=..\sphinx-book\_source"
+
+   xcopy /s/Y "%source%" "%destination%" 
+
+Xóa nhiều file trong folder
+---------------------------
+
+Xóa định dạng file nhất định trong 1 folder
+
+.. code:: bat
+
+   del /S "..\sphinx-book\_build\html\*.md" /F /Q
+   del /S "..\sphinx-book\_build\html\*.html" /F /Q
+   del /S "..\sphinx-book\_build\html\*.js" /F /Q
+
+Assign quyền trong 1 thư mục
+----------------------------
+
+Assign quyền cho 1 user vào 1 thư mục
+
+.. code:: bat
+
+   icacls "D:\01.aadwebsite" /grant vpbank.com.vn\truongnh3:(OI)(CI)R
+
+Copy từ 1 folder sang folder khác bằng bat
+------------------------------------------
+
+.. code:: bat
+
+   set "source=D:\1. DBS\DBS team documents\03.Tong hop SQL\02.SQL website\_site"
+   set "destination=D:\01.aadwebsite\bi-knowledge"
+   set "source_email=D:\1. DBS\DBS team documents\03.Tong hop SQL\02.SQL website\"
+
+   del /S "%destination%\*" /F /Q
+
+   xcopy /s "%source%" "%destination%"

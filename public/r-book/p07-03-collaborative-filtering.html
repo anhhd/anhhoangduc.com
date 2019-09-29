@@ -1,0 +1,811 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="vi" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="vi" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. Collaborative Filtering &mdash; Tài liệu Phân tích dữ liệu với R 2019</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'2019',
+              LANGUAGE:'vi',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript" src="_static/copybutton.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Tìm Kiếm" href="search.html" />
+    <link rel="next" title="4. Spatial data" href="p07-07-spatial-data.html" />
+    <link rel="prev" title="2. Causal Impact" href="p07-02-causal-impact.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Phân tích dữ liệu với R
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Giới thiệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-gioi-thieu.html">Khoa học dữ liệu và nghề phân tích dữ liệu</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Phân tích khám phá dữ liệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p02-03-bien-doi-du-lieu-dplyr.html">1. Ngữ pháp của biến đổi dữ liệu với DPLYR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-04-phan-ra-va-xoay-chieu-du-lieu.html">2. Phân rã và xoay chiều dữ liệu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-05-cac-chi-so-thong-ke.html">3. Các chỉ số thống kê mô tả cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-06-lap-trinh-ham.html">4. Lập trình hàm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-07-lap-trinh-ham-voi-purrr.html">5. Lập trình chức năng hàm với purrr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-08-bien-doi-du-lieu-text.html">6. Biến đổi dữ liệu text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-11-quan-ly-nhieu-mo-hinh.html">7. Quản lý kết quả phân tích từ nhiều mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-15-thong-ke-co-ban.html">8. Xác suất và phân phối thống kê cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-16-power-analysis.html">9. Power analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-20-sampling-methods.html">10. Phương pháp ước lượng lấy mẫu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-50-datatable.html">11. Biến đổi dữ liệu với <code class="docutils literal notranslate"><span class="pre">data.table</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-60-thu-thap-du-lieu-tu-website.html">12. Thu thập dữ liệu từ website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-99-meo-trong-r.html">13. Các mẹo trong R</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Supervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p03-01-nguyen-ly-du-bao.html">1. Các nguyên lý dự báo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-02-mo-hinh-ols.html">2. Mô hình OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Unsupervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p04-01-unsupervised-learning.html">1. Unsupervised learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-02-kmeans.html">2. k-means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-03-hierarchical-clustering.html">3. Hierachical clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-04-basket-analysis.html">4. Phân tích giỏ hàng</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-05-pca.html">5. Principal component analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-06-factor-analysis.html">6. Phân tích nhân tố ẩn (factor analysis)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Chuỗi thời gian</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p05-01-chuoi-thoi-gian.html">1. Giới thiệu về chuỗi thời gian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-02-arima.html">2. Mô hình ARIMA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html">3. Phân tích chuỗi thời gian với tidyquant và timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-06-du-bao-ts-voi-prophet.html">4. Dự báo chuỗi thời gian với prophet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-07-du-bao-ts-voi-timetk.html">5. Dự báo chuỗi thời gian với timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-08-abnomaly-detection.html">6. Abnomaly detection trong times series</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ngôn ngữ tự nghiên</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p06-01-nlp-co-ban.html">1. Xử lý ngôn ngữ tự nhiên cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-04-text-classification.html">2. Phân loại text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-07-nlp-api.html">3. Sử dụng API từ các dịch vụ đám mây</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-10-ocr-tesseract.html">4. OCR với <code class="docutils literal notranslate"><span class="pre">tesseract</span></code></a></li>
+</ul>
+<p class="caption"><span class="caption-text">Các phương pháp khác</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p07-01-survival-analysis.html">1. Survival analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-02-causal-impact.html">2. Causal Impact</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Collaborative Filtering</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gioi-thieu">3.1. Giới thiệu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#phuong-phap">3.2. Phương pháp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#user-user-cf">3.2.1. User-user CF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#item-item-cf">3.2.2. Item-Item CF</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#thuc-hanh">3.3. Thực hành</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="p07-07-spatial-data.html">4. Spatial data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-10-shiny.html">5. Shiny apps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p09-01-gioi-thieu-deep-learning.html">1. Giới thiệu cơ bản về Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-02-co-ban-kien-thuc-toan.html">2. Kiến thức cơ bản toán học cho deep learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-03-mo-hinh-deep-learning-co-ban.html">3. Mô hình deep learning cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-04-convolution-neural-network.html">4. Convolution neural networks</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cloud Computing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p10-01-cai-dat-rstudio-server-tren-amazon.html">1. Cài đặt server RStudio trên Amazon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-03-web-service-azure.html">2. Xây dựng web service với Azure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-09-apis-voi-plumber.html">3. API với Plumber</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Kiến thức bổ trợ</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p11-01-git.html">1. Sử dụng GIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-02-cmd.html">2. CMD và Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-03-docker.html">3. Sử dụng docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-04-apis.html">4. API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-05-html-css.html">5. Cơ bản về HTML và CSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-09-other.html">6. Các tricks khác</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Case studies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p13-01-casestudy-truc-quan-hoa.html">1. Trực quan hóa dữ liệu</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Phân tích dữ liệu với R</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>3. Collaborative Filtering</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/p07-03-collaborative-filtering.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="collaborative-filtering">
+<h1>3. Collaborative Filtering<a class="headerlink" href="#collaborative-filtering" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gioi-thieu">
+<h2>3.1. Giới thiệu<a class="headerlink" href="#gioi-thieu" title="Permalink to this headline">¶</a></h2>
+<p>Khi sử dụng internet chúng ta có thể gặp rất nhiều hiện tượng như sau:</p>
+<ul class="simple">
+<li>Khi kết thúc 1 video, Youtube tự động chuyển sang 1 video khác mà khả
+năng cao người dùng sẽ thích</li>
+<li>Facebook suggest những quảng cáo dựa trên hành vi của người dùng</li>
+<li>Facebook gợi ý kết bạn</li>
+<li>Khi mua hàng trên Amazon hệ thống sẽ gợi ý những món hành có thể mua
+cùng (Frequently bought together)</li>
+<li>Facebook gợi ý kết bạn</li>
+</ul>
+<p>Bằng cách quảng cáo sản phẩm hướng vào các đối tượng tiềm năng sẽ làm
+cho hiệu quả của Marketing tăng lên cũng như hiệu quả của kinh doanh.
+Thuật toán đứng đằng sau những ứng dụng như này có tên gọi chung là
+Recommendation Systems. Recommendation Systems có tuổi đời khá trẻ so
+với các thuật toán Machine Learning khác vì nó xuất hiện từ nhu cầu bùng
+nổ của Internet cách đây 10-15 năm trước.</p>
+<p>Các <code class="docutils literal notranslate"><span class="pre">Recommendation</span> <span class="pre">Systems</span></code> thường được chia thành 2 nhóm lớn:</p>
+<ul class="simple">
+<li>Content-based systems: hệ thống sẽ recommend dựa trên đặc tính của
+Item. VD: một User xem rất nhiều video trên Youtube thể loại nhạc trẻ
+Việt của Sơn Tùng thì hệ thống Recommendation Systems sẽ gợi ý cho
+Users này một số video cùng thể loại như Chạy ngay đi. Đặc điểm của
+Content-based Recommendation Systems là việc xây dựng mô hình cho mỗi
+user không phụ thuộc vào các users khác mà phụ thuộc vào profile của
+mỗi items. Việc làm này có lợi thế là tiết kiệm bộ nhớ và thời gian
+tính toán. Cách tiếp cận này yêu cầu việc sắp xếp các Item vào các
+nhóm rõ ràng, tuy nhiên nếu Item không có nhóm cụ thể hoặc khó xác
+định nhóm thì việc sử dụng Content-based Systems là không thể</li>
+<li>Neighborhood-based Collaborative Filtering (Khi nói về
+Collaborarative Filtering ta có thể ngầm hiểu đây là phương pháp
+NBCF): Ý tưởng cơ bản của NBCF là xác định mức độ quan tâm của một
+user tới một item dựa trên các users khác gần giống với user này.
+Việc gần giống nhau giữa các users có thể được xác định thông qua mức
+độ quan tâm của các users này tới các items khác mà hệ thống đã biết.
+VD: A,T,N đều thích xem video về nhạc trẻ, ngoài ra T và A thích xem
+video của Chim sẻ đi nắng. Dựa trên thông tin của T và A, hệ thống sẽ
+tính toán sự tương quan giữa 3 users và dự đoán rằng N sẽ thích xem
+video của Chim Sẻ Đi Nắng và gợi ý cho người dùng này</li>
+</ul>
+<p>Trong bài viết này ta sẽ đi vào nghiên cứu Collaborative Filtering do có
+tính ứng dụng cao hơn trong thực tế</p>
+</div>
+<div class="section" id="phuong-phap">
+<h2>3.2. Phương pháp<a class="headerlink" href="#phuong-phap" title="Permalink to this headline">¶</a></h2>
+<p>Collaborative Filtering được chia thành 2 nhóm: User-based CF và
+Item-based CF</p>
+<div class="section" id="user-user-cf">
+<h3>3.2.1. User-user CF<a class="headerlink" href="#user-user-cf" title="Permalink to this headline">¶</a></h3>
+<p>Phương pháp này sẽ tính toán sự tương quan giữa các users với nhau
+(similarity).</p>
+<p>Các bước tính toán:</p>
+<ul class="simple">
+<li>Bước 1: Xây dựng ma trận rating matrix dựa trên mức độ đánh giá các
+bộ phim của các khách hàng này</li>
+</ul>
+<center><p><img alt="image0" src="Images/p07-03-cf01.png" /></p>
+</center><ul class="simple">
+<li>Bước 2: Normalise dữ liệu rating: Việc đầu tiên CF sẽ tính trung bình
+các rating của từng User, sau đó sẽ tính giá trị giữa các các rating
+đến các giá trị trung bình này. Bản chất của việc normalise dữ liệu
+đến từ việc tính cách của khách hàng luôn khác nhau (có những người
+khi xem bộ phim thấy rất hay sẽ đánh giá 5đ, tuy nhiên có những người
+khó tính hơn chỉ đánh giá 4). Do vậy, khi tính toán trung bình sẽ
+mang lại mức đánh giá là tốt nhất khi những giá trị lớn hơn trung
+bình là bộ phim khách hàng thích còn dưới trung bình là không thích.</li>
+<li>Bước 3: Tính toán Similarities giữa các Users và Items : Phương pháp
+thường được sử dụng là Cosine Similarity giữa các Users với nhau. Giá
+trị của Cosin Similarity giữa các Users sẽ trong khoảng [-1,1]. Giá
+trị 1 thể hiện 2 vector hoàn toàn tương đồng với nhau, với - 1 sẽ thể
+hiện ngược lại qua đó sẽ tạo ra ma trận Similarity. Từ ma trận
+Similarity ta sẽ biết những Users nào có hành vi giống với Users nào.</li>
+<li>Bước 4: Sử dụng concept của phương pháp K-nearest neighbor để dự báo
+giá trị rating bị missing. CF sẽ lựa chọn k Users có mức độ
+similarity cao nhất (tức các khách hàng có hành vi giống nhất)</li>
+<li>Bước 5: Tính giá trị dự báo rating items dựa trên trung bình điều hòa
+giá trị similarity và rating của các k users giống nó nhất</li>
+</ul>
+</div>
+<div class="section" id="item-item-cf">
+<h3>3.2.2. Item-Item CF<a class="headerlink" href="#item-item-cf" title="Permalink to this headline">¶</a></h3>
+<p>Phương pháp này sẽ tính toán sự tương quan giữa các Item với nhau
+(similarity). Các bước tính toán tương tự tuy nhiên sẽ thực hiện việc
+tính toán similarity theo các Item với nhau</p>
+</div>
+</div>
+<div class="section" id="thuc-hanh">
+<h2>3.3. Thực hành<a class="headerlink" href="#thuc-hanh" title="Permalink to this headline">¶</a></h2>
+<p>Data được sử dụng là MovieLense ghi nhận lịch sử rating phim của 943
+khách hàng với 1664 bộ phim. Các bộ phim được rating sẽ có giá trị từ 1
+đến 5. Mục tiêu của bài thực hành là xây dựng và kiểm định
+recommendation model để suggest cho khách hàng nên xem bộ phim gì tiếp
+theo.</p>
+<ul class="simple">
+<li><strong>Bước 1</strong>: Chia bộ data thành 2 phần: Train (chiếm 90% dữ liệu),
+Test (10% còn lại). Ở đây ta sẽ chia Test thành 2 data nhỏ là
+Test_known dùng để predict và Test_unknown dùng để kiểm định sự chính
+xác của mô hình</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">recommenderlab</span><span class="p">)</span>
+<span class="nf">rm</span><span class="p">(</span><span class="n">list</span> <span class="o">=</span> <span class="nf">ls</span><span class="p">())</span>
+<span class="nf">data</span><span class="p">(</span><span class="n">MovieLense</span><span class="p">)</span>
+<span class="n">MovieLense</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## 943 x 1664 rating matrix of class &#39;realRatingMatrix&#39; with 99392 ratings.</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">MovieLenseMeta[1</span><span class="o">:</span><span class="m">5</span><span class="p">,</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="n">]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##               title year</span>
+<span class="c1">## 1  Toy Story (1995) 1995</span>
+<span class="c1">## 2  GoldenEye (1995) 1995</span>
+<span class="c1">## 3 Four Rooms (1995) 1995</span>
+<span class="c1">## 4 Get Shorty (1995) 1995</span>
+<span class="c1">## 5    Copycat (1995) 1995</span>
+<span class="c1">##                                                      url unknown Action</span>
+<span class="c1">## 1  http://us.imdb.com/M/title-exact?Toy%20Story%20(1995)       0      0</span>
+<span class="c1">## 2    http://us.imdb.com/M/title-exact?GoldenEye%20(1995)       0      1</span>
+<span class="c1">## 3 http://us.imdb.com/M/title-exact?Four%20Rooms%20(1995)       0      0</span>
+<span class="c1">## 4 http://us.imdb.com/M/title-exact?Get%20Shorty%20(1995)       0      1</span>
+<span class="c1">## 5      http://us.imdb.com/M/title-exact?Copycat%20(1995)       0      0</span>
+<span class="c1">##   Adventure Animation Children&#39;s Comedy Crime</span>
+<span class="c1">## 1         0         1          1      1     0</span>
+<span class="c1">## 2         1         0          0      0     0</span>
+<span class="c1">## 3         0         0          0      0     0</span>
+<span class="c1">## 4         0         0          0      1     0</span>
+<span class="c1">## 5         0         0          0      0     1</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">evaluation_value</span> <span class="o">&lt;-</span> <span class="nf">evaluationScheme</span><span class="p">(</span><span class="n">MovieLense</span><span class="p">,</span>
+                                     <span class="n">method</span> <span class="o">=</span> <span class="s">&quot;split&quot;</span><span class="p">,</span>
+                                     <span class="n">train</span> <span class="o">=</span> <span class="m">0.9</span><span class="p">,</span>
+                                     <span class="n">given</span> <span class="o">=</span> <span class="m">12</span><span class="p">)</span>
+<span class="n">train</span> <span class="o">&lt;-</span> <span class="nf">getData</span><span class="p">(</span><span class="n">evaluation_value</span><span class="p">,</span> <span class="s">&quot;train&quot;</span><span class="p">)</span>
+<span class="n">test_known</span> <span class="o">&lt;-</span> <span class="nf">getData</span><span class="p">(</span><span class="n">evaluation_value</span><span class="p">,</span> <span class="s">&quot;known&quot;</span><span class="p">)</span>
+<span class="n">test_unknown</span> <span class="o">&lt;-</span> <span class="nf">getData</span><span class="p">(</span><span class="n">evaluation_value</span><span class="p">,</span> <span class="s">&quot;unknown&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>Bước 2</strong>: Xây dựng mô hình CF dựa trên tập Train và Predict trên
+tập Test_known</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">ubcf_model</span> <span class="o">&lt;-</span> <span class="nf">Recommender</span><span class="p">(</span><span class="n">train</span><span class="p">,</span>
+                        <span class="s">&quot;UBCF&quot;</span><span class="p">,</span>
+                        <span class="n">param</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">method</span> <span class="o">=</span> <span class="s">&quot;Cosine&quot;</span><span class="p">,</span> <span class="n">nn</span> <span class="o">=</span> <span class="m">50</span><span class="p">))</span>
+<span class="n">pred_ubcf</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">ubcf_model</span><span class="p">,</span> <span class="n">test_known</span><span class="p">,</span> <span class="n">type</span><span class="o">=</span><span class="s">&quot;ratings&quot;</span><span class="p">)</span>
+<span class="nf">as</span><span class="p">(</span><span class="n">pred_ubcf</span><span class="p">,</span> <span class="s">&quot;matrix&quot;</span><span class="p">)</span><span class="n">[</span><span class="p">,</span><span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="n">]</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##     Toy Story (1995) GoldenEye (1995) Four Rooms (1995) Get Shorty (1995)</span>
+<span class="c1">## 4           4.421210         4.415353          4.328985          4.349323</span>
+<span class="c1">## 10          4.327399         4.119472          4.136775          4.028380</span>
+<span class="c1">## 11          3.747648         3.648259          3.645138          3.629051</span>
+<span class="c1">## 31          4.192838         4.127646          4.101834          4.073601</span>
+<span class="c1">## 33          3.697059         3.666006          3.649045          3.666667</span>
+<span class="c1">## 36          4.032523         3.983421          4.000000          3.979622</span>
+<span class="c1">## 45          3.967710         3.746192          3.706468          3.747949</span>
+<span class="c1">## 46          3.590443         3.569516          3.541151          3.568813</span>
+<span class="c1">## 57                NA         3.407113          3.435862          3.389376</span>
+<span class="c1">## 59          3.981359         3.568130          3.662826          3.557073</span>
+<span class="c1">## 63          3.086330         3.119000          3.062735          3.065928</span>
+<span class="c1">## 96          4.365256         4.179174          4.273285          4.264496</span>
+<span class="c1">## 147         4.330704         4.412868          4.408210          4.438387</span>
+<span class="c1">## 148         4.449344         4.437918          4.410389          4.415094</span>
+<span class="c1">## 157               NA         3.666667                NA          3.666667</span>
+<span class="c1">## 168         3.464049         3.401360          3.317032          3.293521</span>
+<span class="c1">## 172         3.855446         3.600111          3.648172          3.498847</span>
+<span class="c1">## 185         4.463785         4.150303          4.226950          4.103887</span>
+<span class="c1">## 189         4.079474         3.695849          3.772761          3.856601</span>
+<span class="c1">## 190         3.302981         3.057035          3.032170          3.068976</span>
+<span class="c1">## 191         3.773430         3.750000          3.750000          3.750000</span>
+<span class="c1">## 194         3.409557         3.189066          3.208680          3.198428</span>
+<span class="c1">## 202               NA         3.315959          3.338321          3.287643</span>
+<span class="c1">## 203               NA         3.485993          3.465214          3.489449</span>
+<span class="c1">## 206         2.776407         2.750000          2.750000          2.750000</span>
+<span class="c1">## 228         3.198686         3.038269          3.083333          3.112435</span>
+<span class="c1">## 243         3.556658         3.367506          3.372734          3.350273</span>
+<span class="c1">## 283         4.638194         4.377335          4.291894          4.331916</span>
+<span class="c1">## 294         3.774074         3.464827          3.516965          3.500316</span>
+<span class="c1">## 298         4.246827         3.956409          3.946195          4.011294</span>
+<span class="c1">## 303         3.462658               NA          3.066977          3.124955</span>
+<span class="c1">## 320         4.117976         3.790795          3.833678          3.989945</span>
+<span class="c1">## 325         3.364207         3.048275          2.974332          3.194193</span>
+<span class="c1">## 336         3.566418         3.275910          3.237078          3.225717</span>
+<span class="c1">## 340               NA         3.478552          3.493617          3.435268</span>
+<span class="c1">## 345         3.586931         3.428216          3.470760          3.546982</span>
+<span class="c1">## 349         3.271529         3.259560          3.108025          3.273441</span>
+<span class="c1">## 352         3.834929         3.529398          3.574594                NA</span>
+<span class="c1">## 356         3.686729         3.677354          3.614135          3.651825</span>
+<span class="c1">## 357         4.318820         3.945769          3.959001          3.887399</span>
+<span class="c1">## 379         4.259583         3.934495          4.042642          3.946607</span>
+<span class="c1">## 380         3.659541         3.736171          3.750000          3.757606</span>
+<span class="c1">## 381         3.743719         3.609775          3.569597          3.750270</span>
+<span class="c1">## 391         3.786741         3.417585          3.541873          3.598313</span>
+<span class="c1">## 396         3.307081         3.247506          3.201906          3.310960</span>
+<span class="c1">## 404         3.640390         3.660740          3.666667          3.641921</span>
+<span class="c1">## 409         4.051701         3.864687          3.897893          3.906178</span>
+<span class="c1">## 410         3.185437         3.154045          3.168670          3.178490</span>
+<span class="c1">## 428         4.492538         4.500000          4.505900          4.500000</span>
+<span class="c1">## 437         3.163682         3.046623          3.016246          3.109037</span>
+<span class="c1">## 445         1.785159         1.645848          1.630869          1.699021</span>
+<span class="c1">## 447         3.544904         3.373493          3.445247          3.327320</span>
+<span class="c1">## 448         3.385320         3.316556          3.263134          3.386167</span>
+<span class="c1">## 454         3.423612         3.094043          3.064652          3.194893</span>
+<span class="c1">## 457         4.227903         3.975448          3.814544          4.156500</span>
+<span class="c1">## 476         3.406993         3.234772          3.226912          3.237005</span>
+<span class="c1">## 482         3.417870         3.333333          3.333333          3.334018</span>
+<span class="c1">## 488         3.530775         3.285775          3.250205          3.237218</span>
+<span class="c1">## 493         4.113215         4.058984          4.075187          4.040324</span>
+<span class="c1">## 494         4.462195         4.138111          4.151412          4.302865</span>
+<span class="c1">## 497         3.687607         3.196707          3.254281          3.232400</span>
+<span class="c1">## 506         4.081485               NA          3.707885          3.712408</span>
+<span class="c1">## 522         4.169110         4.150476          4.174633          4.081425</span>
+<span class="c1">## 529         3.936662         3.928018          3.848747          3.942050</span>
+<span class="c1">## 530         4.111370         3.878635          3.884378          3.817576</span>
+<span class="c1">## 544         2.772268         2.750000          2.750000          2.733676</span>
+<span class="c1">## 547         3.610305         3.582395          3.590027          3.576489</span>
+<span class="c1">## 548         3.839451         3.542633          3.546385          3.627520</span>
+<span class="c1">## 558         4.515969         4.236132          4.190858          4.280905</span>
+<span class="c1">## 583         4.512440         4.496981          4.448377          4.459553</span>
+<span class="c1">## 596         3.479272         3.404228          3.408611          3.416667</span>
+<span class="c1">## 597         4.371617         4.250100          4.214995          4.265026</span>
+<span class="c1">## 599         3.321265         3.204270          3.166667          3.186756</span>
+<span class="c1">## 601         3.179556         2.919252          2.986829          3.006350</span>
+<span class="c1">## 656         2.351673         2.280497          2.338155          2.358080</span>
+<span class="c1">## 663         3.533815         3.510499          3.494117          3.546157</span>
+<span class="c1">## 672         3.366210         3.153478          3.112639          3.228239</span>
+<span class="c1">## 680         4.635366         4.295543          4.366697          4.347775</span>
+<span class="c1">## 685         2.175485         2.166667          2.151160          2.166667</span>
+<span class="c1">## 694         4.387524         3.953829          4.077882          4.091980</span>
+<span class="c1">## 702         2.881379         2.727640          2.700859          2.764000</span>
+<span class="c1">## 743         3.608690         3.591369          3.505860          3.575213</span>
+<span class="c1">## 762         2.982651         2.810421          2.784074          2.853868</span>
+<span class="c1">## 764         3.421090         3.349072          3.274665                NA</span>
+<span class="c1">## 775         3.780282         3.701606          3.750000          3.747973</span>
+<span class="c1">## 836         3.956130         3.906194          3.884871          3.914651</span>
+<span class="c1">## 861         4.604179         4.313583          4.333333          4.285423</span>
+<span class="c1">## 884         3.278944         3.234255          3.250000          3.247500</span>
+<span class="c1">## 892               NA         4.110925          4.128243          4.270527</span>
+<span class="c1">## 899         4.136189         3.527420          3.626439          3.810787</span>
+<span class="c1">## 902               NA         3.717717          3.790148          3.751735</span>
+<span class="c1">## 911         4.272261         3.955468          4.092492          4.036452</span>
+<span class="c1">## 915         3.028829         2.996028          2.992589          3.006817</span>
+<span class="c1">## 926         3.553952         3.500000          3.500000          3.505415</span>
+<span class="c1">## 932         4.145433         4.105183          4.092053          4.122045</span>
+<span class="c1">##     Copycat (1995)</span>
+<span class="c1">## 4         4.426313</span>
+<span class="c1">## 10        4.144196</span>
+<span class="c1">## 11        3.666667</span>
+<span class="c1">## 31        4.166667</span>
+<span class="c1">## 33        3.662628</span>
+<span class="c1">## 36        3.970813</span>
+<span class="c1">## 45        3.728947</span>
+<span class="c1">## 46        3.568813</span>
+<span class="c1">## 57        3.403259</span>
+<span class="c1">## 59        3.637915</span>
+<span class="c1">## 63        3.083333</span>
+<span class="c1">## 96        4.208555</span>
+<span class="c1">## 147       4.411374</span>
+<span class="c1">## 148       4.403140</span>
+<span class="c1">## 157       3.666667</span>
+<span class="c1">## 168       3.484905</span>
+<span class="c1">## 172       3.623445</span>
+<span class="c1">## 185       4.231078</span>
+<span class="c1">## 189       3.875460</span>
+<span class="c1">## 190       3.069484</span>
+<span class="c1">## 191       3.750000</span>
+<span class="c1">## 194       3.240270</span>
+<span class="c1">## 202       3.341292</span>
+<span class="c1">## 203       3.500995</span>
+<span class="c1">## 206       2.750000</span>
+<span class="c1">## 228       3.054865</span>
+<span class="c1">## 243       3.433316</span>
+<span class="c1">## 283       4.453989</span>
+<span class="c1">## 294       3.432212</span>
+<span class="c1">## 298       3.953042</span>
+<span class="c1">## 303       3.153972</span>
+<span class="c1">## 320       3.848457</span>
+<span class="c1">## 325       3.016766</span>
+<span class="c1">## 336       3.232369</span>
+<span class="c1">## 340       3.521269</span>
+<span class="c1">## 345       3.423285</span>
+<span class="c1">## 349       3.231314</span>
+<span class="c1">## 352       3.663718</span>
+<span class="c1">## 356       3.691886</span>
+<span class="c1">## 357       3.945058</span>
+<span class="c1">## 379       3.995460</span>
+<span class="c1">## 380       3.724620</span>
+<span class="c1">## 381       3.615732</span>
+<span class="c1">## 391       3.541482</span>
+<span class="c1">## 396       3.251382</span>
+<span class="c1">## 404       3.666667</span>
+<span class="c1">## 409       3.895246</span>
+<span class="c1">## 410       3.174569</span>
+<span class="c1">## 428       4.500000</span>
+<span class="c1">## 437       3.027523</span>
+<span class="c1">## 445       1.634370</span>
+<span class="c1">## 447       3.403772</span>
+<span class="c1">## 448       3.333333</span>
+<span class="c1">## 454       3.172592</span>
+<span class="c1">## 457       4.023719</span>
+<span class="c1">## 476       3.260005</span>
+<span class="c1">## 482       3.333333</span>
+<span class="c1">## 488       3.263776</span>
+<span class="c1">## 493       4.080609</span>
+<span class="c1">## 494       4.276698</span>
+<span class="c1">## 497       3.249245</span>
+<span class="c1">## 506       3.708058</span>
+<span class="c1">## 522       4.170016</span>
+<span class="c1">## 529       3.882665</span>
+<span class="c1">## 530       3.913959</span>
+<span class="c1">## 544       2.750000</span>
+<span class="c1">## 547       3.583333</span>
+<span class="c1">## 548       3.556005</span>
+<span class="c1">## 558       4.226618</span>
+<span class="c1">## 583       4.465414</span>
+<span class="c1">## 596       3.416667</span>
+<span class="c1">## 597       4.244800</span>
+<span class="c1">## 599       3.175642</span>
+<span class="c1">## 601       2.989184</span>
+<span class="c1">## 656       2.291794</span>
+<span class="c1">## 663       3.475169</span>
+<span class="c1">## 672       3.163281</span>
+<span class="c1">## 680       4.311907</span>
+<span class="c1">## 685       2.164329</span>
+<span class="c1">## 694       4.041241</span>
+<span class="c1">## 702       2.740292</span>
+<span class="c1">## 743       3.583333</span>
+<span class="c1">## 762       2.833333</span>
+<span class="c1">## 764       3.365283</span>
+<span class="c1">## 775       3.738197</span>
+<span class="c1">## 836       3.894848</span>
+<span class="c1">## 861       4.368685</span>
+<span class="c1">## 884       3.224997</span>
+<span class="c1">## 892       4.228859</span>
+<span class="c1">## 899       3.751624</span>
+<span class="c1">## 902       3.742559</span>
+<span class="c1">## 911       4.096225</span>
+<span class="c1">## 915       3.000000</span>
+<span class="c1">## 926       3.500000</span>
+<span class="c1">## 932       4.131351</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>Bước 3</strong>: Kiểm định mô hình trên tập Test_unknown</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">acc_ubcf</span> <span class="o">&lt;-</span> <span class="nf">calcPredictionAccuracy</span><span class="p">(</span><span class="n">pred_ubcf</span><span class="p">,</span> <span class="n">test_unknown</span><span class="p">)</span>
+<span class="nf">as</span><span class="p">(</span><span class="n">acc_ubcf</span><span class="p">,</span><span class="s">&quot;matrix&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##          [,1]</span>
+<span class="c1">## RMSE 1.031062</span>
+<span class="c1">## MSE  1.063088</span>
+<span class="c1">## MAE  0.817224</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>Bước 4</strong>: Tiếp theo ta sẽ sử dựng mô hình Item based CF để tính
+toán các chỉ số accuracy</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">ibcf_model</span> <span class="o">&lt;-</span> <span class="nf">Recommender</span><span class="p">(</span><span class="n">train</span><span class="p">,</span>
+                        <span class="s">&quot;IBCF&quot;</span><span class="p">,</span>
+                        <span class="n">param</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">method</span> <span class="o">=</span> <span class="s">&quot;Cosine&quot;</span><span class="p">,</span> <span class="n">nn</span> <span class="o">=</span> <span class="m">50</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Available parameter (with default values):</span>
+<span class="c1">## k     =  30</span>
+<span class="c1">## method    =  Cosine</span>
+<span class="c1">## normalize     =  center</span>
+<span class="c1">## normalize_sim_matrix  =  FALSE</span>
+<span class="c1">## alpha     =  0.5</span>
+<span class="c1">## na_as_zero    =  FALSE</span>
+<span class="c1">## verbose   =  FALSE</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">pred_ibcf</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">ibcf_model</span><span class="p">,</span> <span class="n">test_known</span><span class="p">,</span> <span class="n">type</span><span class="o">=</span><span class="s">&quot;ratings&quot;</span><span class="p">)</span>
+<span class="n">acc_ibcf</span> <span class="o">&lt;-</span> <span class="nf">calcPredictionAccuracy</span><span class="p">(</span><span class="n">pred_ibcf</span><span class="p">,</span> <span class="n">test_unknown</span><span class="p">)</span>
+<span class="nf">as</span><span class="p">(</span><span class="n">acc_ibcf</span><span class="p">,</span><span class="s">&quot;matrix&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##           [,1]</span>
+<span class="c1">## RMSE 1.0697308</span>
+<span class="c1">## MSE  1.1443241</span>
+<span class="c1">## MAE  0.7573085</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">acc</span> <span class="o">&lt;-</span> <span class="nf">rbind</span><span class="p">(</span><span class="n">UBCF</span> <span class="o">=</span> <span class="n">acc_ubcf</span><span class="p">,</span> <span class="n">IBCF</span> <span class="o">=</span> <span class="n">acc_ibcf</span><span class="p">)</span>
+<span class="n">acc</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##          RMSE      MSE       MAE</span>
+<span class="c1">## UBCF 1.031062 1.063088 0.8172240</span>
+<span class="c1">## IBCF 1.069731 1.144324 0.7573085</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>Bước 5</strong>: Sau khi thấy được mô hình User basd CF có chất lượng tốt
+hơn ta sẽ áp dụng mô hình này để đưa gợi ý khách hàng xem 5 bộ phim
+khác</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">recommended_next_film</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">ibcf_model</span><span class="p">,</span> <span class="n">MovieLense[1</span><span class="o">:</span><span class="m">10</span><span class="p">,</span><span class="n">]</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="m">5</span><span class="p">)</span>
+<span class="nf">as</span><span class="p">(</span><span class="n">recommended_next_film</span><span class="p">,</span> <span class="s">&quot;list&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## $`1`</span>
+<span class="c1">## [1] &quot;Ulee&#39;s Gold (1997)&quot;          &quot;Deconstructing Harry (1997)&quot;</span>
+<span class="c1">## [3] &quot;Wag the Dog (1997)&quot;          &quot;Incognito (1997)&quot;</span>
+<span class="c1">## [5] &quot;Bananas (1971)&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## $`2`</span>
+<span class="c1">## [1] &quot;Babe (1995)&quot;                &quot;Usual Suspects, The (1995)&quot;</span>
+<span class="c1">## [3] &quot;Braveheart (1995)&quot;          &quot;Taxi Driver (1976)&quot;</span>
+<span class="c1">## [5] &quot;Hoop Dreams (1994)&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## $`3`</span>
+<span class="c1">## [1] &quot;Outbreak (1995)&quot;</span>
+<span class="c1">## [2] &quot;Faster Pussycat! Kill! Kill! (1965)&quot;</span>
+<span class="c1">## [3] &quot;Welcome to the Dollhouse (1995)&quot;</span>
+<span class="c1">## [4] &quot;Frighteners, The (1996)&quot;</span>
+<span class="c1">## [5] &quot;Phenomenon (1996)&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## $`4`</span>
+<span class="c1">## [1] &quot;Crow, The (1994)&quot;</span>
+<span class="c1">## [2] &quot;Searching for Bobby Fischer (1993)&quot;</span>
+<span class="c1">## [3] &quot;Blade Runner (1982)&quot;</span>
+<span class="c1">## [4] &quot;Flipper (1996)&quot;</span>
+<span class="c1">## [5] &quot;Lone Star (1996)&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## $`5`</span>
+<span class="c1">## [1] &quot;Entertaining Angels: The Dorothy Day Story (1996)&quot;</span>
+<span class="c1">## [2] &quot;Richard III (1995)&quot;</span>
+<span class="c1">## [3] &quot;Postino, Il (1994)&quot;</span>
+<span class="c1">## [4] &quot;Horseman on the Roof, The (Hussard sur le toit, Le) (1995)&quot;</span>
+<span class="c1">## [5] &quot;Cold Comfort Farm (1995)&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## $`6`</span>
+<span class="c1">## [1] &quot;Heavy Metal (1981)&quot;</span>
+<span class="c1">## [2] &quot;Black Beauty (1994)&quot;</span>
+<span class="c1">## [3] &quot;Night of the Living Dead (1968)&quot;</span>
+<span class="c1">## [4] &quot;Seventh Seal, The (Sjunde inseglet, Det) (1957)&quot;</span>
+<span class="c1">## [5] &quot;Bride of Frankenstein (1935)&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## $`7`</span>
+<span class="c1">## [1] &quot;Disclosure (1994)&quot;         &quot;Breaking the Waves (1996)&quot;</span>
+<span class="c1">## [3] &quot;Gattaca (1997)&quot;            &quot;Leaving Las Vegas (1995)&quot;</span>
+<span class="c1">## [5] &quot;Ulee&#39;s Gold (1997)&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## $`8`</span>
+<span class="c1">## [1] &quot;Very Natural Thing, A (1974)&quot; &quot;Walk in the Sun, A (1945)&quot;</span>
+<span class="c1">## [3] &quot;Get Shorty (1995)&quot;            &quot;Postino, Il (1994)&quot;</span>
+<span class="c1">## [5] &quot;Hoop Dreams (1994)&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## $`9`</span>
+<span class="c1">## [1] &quot;King of New York (1990)&quot;    &quot;Toy Story (1995)&quot;</span>
+<span class="c1">## [3] &quot;GoldenEye (1995)&quot;           &quot;Usual Suspects, The (1995)&quot;</span>
+<span class="c1">## [5] &quot;Braveheart (1995)&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## $`10`</span>
+<span class="c1">## [1] &quot;Breakfast at Tiffany&#39;s (1961)&quot;</span>
+<span class="c1">## [2] &quot;Ulee&#39;s Gold (1997)&quot;</span>
+<span class="c1">## [3] &quot;Man Who Knew Too Little, The (1997)&quot;</span>
+<span class="c1">## [4] &quot;Night of the Living Dead (1968)&quot;</span>
+<span class="c1">## [5] &quot;Nosferatu (Nosferatu, eine Symphonie des Grauens) (1922)&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="p07-07-spatial-data.html" class="btn btn-neutral float-right" title="4. Spatial data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="p07-02-causal-impact.html" class="btn btn-neutral float-left" title="2. Causal Impact" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anh Hoang Duc
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

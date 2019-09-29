@@ -1,0 +1,632 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="vi" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="vi" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1. Xây dựng Data warehouse &amp; Data Mart &mdash; Tài liệu Khai thác dữ liệu với SQL 2019</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'2019',
+              LANGUAGE:'vi',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript" src="_static/copybutton.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Tìm Kiếm" href="search.html" />
+    <link rel="next" title="Tài liệu tham khảo" href="p09-79-tai-lieu-tham-khao.html" />
+    <link rel="prev" title="3. SQL RServer" href="p03-08-r-server.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Khai thác dữ liệu với SQL
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">SQL cơ bản</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html">1. Giới thiệu về SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#cac-nhom-cau-lenh-truy-van-tong-hop">2. Các nhóm câu lệnh truy vấn, tổng hợp</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#cac-nhom-cau-lenh-thay-doi-du-lieu-trong-csdl">3. Các nhóm câu lệnh thay đổi dữ liệu trong CSDL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#sub-query">4. Sub Query</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#cac-nhom-cau-lenh-co-ban-khac">5. Các nhóm câu lệnh cơ bản khác</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#sql-dong-voi-exec">6. SQL động với Exec</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#ham-va-thu-tuc">7. Hàm và thủ tục</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#cac-nhom-cau-lenh-nang-cao">8. Các nhóm câu lệnh nâng cao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#dat-job-trong-sql">9. Đặt job trong SQL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-sql-co-ban.html#cac-nhom-cau-lenh-quan-tri">10. Các nhóm câu lệnh quản trị</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-02-tricks-sql.html">11. Tricks khi dùng với SQL</a></li>
+</ul>
+<p class="caption"><span class="caption-text">SQL nâng cao</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p02-03-sql-nang-cao.html">1. Pivot - Unpivot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-03-sql-nang-cao.html#chia-mot-cot-thanh-nhieu-cot">2. Chia một cột thành nhiều cột</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-04-sqlcmd.html">3. SQLCMD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-05-sql-project.html">4. SQL prọject</a></li>
+</ul>
+<p class="caption"><span class="caption-text">SQL &amp; Analytics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p03-06-sql-va-excel.html">1. Kết nối SQL với Excel phục vụ báo cáo tự động</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-r-va-sql.html">2. R &amp; SQL Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-r-server.html">3. SQL RServer</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Xây dựng DataMart</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Xây dựng Data warehouse &amp; Data Mart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#xay-dung-bang">1.1. Xây dựng bảng</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#atomic-data">1.1.1. Atomic data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#primary-key">1.1.2. Primary key</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#xay-dung-database">1.2. Xây dựng database</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Tài liệu tham khảo:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p09-79-tai-lieu-tham-khao.html">Tài liệu tham khảo</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Khai thác dữ liệu với SQL</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>1. Xây dựng Data warehouse &amp; Data Mart</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/p04-11-xay-dung-database.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="xay-dung-data-warehouse-data-mart">
+<h1>1. Xây dựng Data warehouse &amp; Data Mart<a class="headerlink" href="#xay-dung-data-warehouse-data-mart" title="Permalink to this headline">¶</a></h1>
+<p>Khi xây dựng Data Model, có 2 loại bảng chính: Dim &amp; Fact</p>
+<ul>
+<li><p class="first">Fact table: Ghi nhận kết quả như bán hàng, tồn kho,… Fact table có
+các tính chất:</p>
+<ul class="simple">
+<li>Additive - như số lượng đơn hàng. Tổng số hàng cả nước là tổng số
+hàng mỗi đơn vị</li>
+<li>Semi-additive - Số lượng khách hàng trong cả nước ko hẳn là tổng
+số khách hàng mỗi đơn vị do 1 khách hàng có thể thuộc nhiều đơn vị</li>
+<li>Non-additive - Tỷ lệ phần trăm lợi nhuận của toàn hàng không phải
+là tổng tỷ lệ phần trăm lợi nhuận mỗi đơn vị</li>
+</ul>
+</li>
+<li><p class="first">Dimension: Là chiều để tổng hợp fact - Granularity: Là độ chi tiết
+của dimension. VD: Chi nhánh &lt; Thành phố &lt; Vùng - Slow changing
+dimension: Các dimension có thể thay đổi theo thời gian. VD: Khi mở
+thêm chi nhánh, sẽ có thêm dimension Branch_name. Đối với loại này,
+cần có thểm thông tin effective date - Time dimension: Loại dimension
+rất đặc biệt, có thể có các dạng sau: - Theo lịch: Year &gt; Month &gt;
+Date hoặc Year &gt; Month &gt; Week &gt; Weekday &gt; Date - Theo năm tài chính:
+Fiscal year</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Time</span> <span class="n">dimension</span> <span class="n">có</span> <span class="n">thể</span> <span class="n">làm</span> <span class="n">như</span> <span class="n">sau</span><span class="p">:</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">lubridate</span><span class="p">)</span>
+<span class="n">datekey</span> <span class="o">&lt;-</span> <span class="m">20160101</span><span class="o">:</span><span class="m">20160130</span>
+<span class="n">data</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">datekey</span> <span class="o">=</span> <span class="n">datekey</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">date</span> <span class="o">=</span> <span class="nf">ymd</span><span class="p">(</span><span class="n">datekey</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">year</span> <span class="o">=</span> <span class="nf">year</span><span class="p">(</span><span class="n">date</span><span class="p">),</span>
+         <span class="n">quarter</span> <span class="o">=</span> <span class="nf">quarter</span><span class="p">(</span><span class="n">date</span><span class="p">),</span>
+         <span class="n">month</span> <span class="o">=</span> <span class="nf">month</span><span class="p">(</span><span class="n">date</span><span class="p">),</span>
+         <span class="n">month_name</span> <span class="o">=</span> <span class="nf">month</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="bp">T</span><span class="p">,</span> <span class="n">abbr</span> <span class="o">=</span> <span class="bp">F</span><span class="p">),</span>
+         <span class="n">day_of_month</span> <span class="o">=</span> <span class="nf">day</span><span class="p">(</span><span class="n">date</span><span class="p">),</span>
+         <span class="n">day_of_week</span> <span class="o">=</span> <span class="nf">wday</span><span class="p">(</span><span class="n">date</span><span class="p">),</span>
+         <span class="n">day_name</span> <span class="o">=</span> <span class="nf">wday</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="bp">T</span><span class="p">,</span> <span class="n">abbr</span> <span class="o">=</span> <span class="bp">F</span><span class="p">)</span>
+         <span class="p">)</span>
+<span class="n">DT</span><span class="o">::</span><span class="nf">datatable</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Script tạo thông tin bảng</strong>:</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">drop</span> <span class="k">table</span> <span class="k">if</span> <span class="k">exists</span> <span class="n">dimDate</span>
+<span class="c1">--Step1: Tạo DimDate table</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">DimDate</span><span class="p">](</span>
+<span class="p">[</span><span class="n">DateKey</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">DateFullName</span><span class="p">]</span> <span class="p">[</span><span class="nb">varchar</span><span class="p">](</span><span class="mi">50</span><span class="p">)</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">DateFull</span><span class="p">]</span> <span class="p">[</span><span class="nb">date</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="k">Year</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">Quarter</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">QuarterName</span><span class="p">]</span> <span class="p">[</span><span class="nb">varchar</span><span class="p">](</span><span class="mi">50</span><span class="p">)</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">QuarterKey</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="k">Month</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">MonthKey</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">MonthName</span><span class="p">]</span> <span class="p">[</span><span class="nb">varchar</span><span class="p">](</span><span class="mi">50</span><span class="p">)</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">DayOfMonth</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">NumberOfDaysInTheMonth</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">DayOfYear</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">WeekOfYear</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">WeekOfYearKey</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">ISOWeek</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">ISOWeekKey</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">WeekDay</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">WeekDayName</span><span class="p">]</span> <span class="p">[</span><span class="nb">varchar</span><span class="p">](</span><span class="mi">50</span><span class="p">)</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">FiscalYear</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">FiscalQuarter</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">FiscalQuarterKey</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">FiscalMonth</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">FiscalMonthKey</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">IsWorkDayKey</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">IsWorkDayDescription</span><span class="p">]</span> <span class="p">[</span><span class="nb">varchar</span><span class="p">](</span><span class="mi">50</span><span class="p">)</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">IsPublicHolidayKey</span><span class="p">]</span> <span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">[</span><span class="n">IsPublicHolidayDescription</span><span class="p">]</span> <span class="p">[</span><span class="nb">varchar</span><span class="p">](</span><span class="mi">50</span><span class="p">)</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="k">CONSTRAINT</span> <span class="p">[</span><span class="n">PK_DimDate</span><span class="p">]</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="n">CLUSTERED</span>
+<span class="p">(</span>
+<span class="p">[</span><span class="n">DateKey</span><span class="p">]</span> <span class="k">ASC</span>
+<span class="p">)</span><span class="k">WITH</span> <span class="p">(</span><span class="n">PAD_INDEX</span> <span class="o">=</span> <span class="k">OFF</span><span class="p">,</span> <span class="n">STATISTICS_NORECOMPUTE</span> <span class="o">=</span> <span class="k">OFF</span><span class="p">,</span> <span class="n">IGNORE_DUP_KEY</span> <span class="o">=</span> <span class="k">OFF</span><span class="p">,</span> <span class="n">ALLOW_ROW_LOCKS</span> <span class="o">=</span> <span class="k">ON</span><span class="p">,</span> <span class="n">ALLOW_PAGE_LOCKS</span> <span class="o">=</span> <span class="k">ON</span><span class="p">)</span> <span class="k">ON</span> <span class="p">[</span><span class="k">PRIMARY</span><span class="p">]</span>
+<span class="p">)</span> <span class="k">ON</span> <span class="p">[</span><span class="k">PRIMARY</span><span class="p">]</span>
+
+
+<span class="c1">--Step 2: Tạo các biến date</span>
+
+<span class="k">declare</span> <span class="o">@</span><span class="n">CurrentDate</span> <span class="nb">date</span>
+<span class="k">declare</span> <span class="o">@</span><span class="n">FiscalYearStartMonth</span> <span class="nb">int</span>
+<span class="k">declare</span> <span class="o">@</span><span class="n">WeeklyHolidays</span> <span class="k">table</span> <span class="p">([</span><span class="n">WeekDay</span><span class="p">]</span> <span class="nb">int</span><span class="p">)</span> <span class="c1">-- weekday, sunday is 1 and saturday is 7</span>
+<span class="k">declare</span> <span class="o">@</span><span class="n">AnnulPublicHolidays</span> <span class="k">table</span><span class="p">([</span><span class="nb">Date</span><span class="p">]</span> <span class="nb">int</span><span class="p">)</span> <span class="c1">-- int in YYYYMMDD format</span>
+<span class="k">declare</span> <span class="o">@</span><span class="n">FirstDate</span> <span class="nb">date</span>
+<span class="k">declare</span> <span class="o">@</span><span class="n">NumberOfYearsToGenerate</span> <span class="nb">int</span>
+<span class="k">declare</span> <span class="o">@</span><span class="n">LastDate</span> <span class="nb">date</span>
+
+
+<span class="k">set</span> <span class="o">@</span><span class="n">FirstDate</span><span class="o">=</span><span class="s1">&#39;1990-01-01&#39;</span>
+<span class="k">set</span> <span class="o">@</span><span class="n">NumberOfYearsToGenerate</span><span class="o">=</span><span class="mi">40</span>
+
+<span class="c1">-- do not change line below</span>
+<span class="k">set</span> <span class="o">@</span><span class="n">LastDate</span><span class="o">=</span><span class="n">DATEADD</span><span class="p">(</span><span class="k">YEAR</span><span class="p">,</span><span class="o">@</span><span class="n">NumberOfYearsToGenerate</span><span class="p">,</span><span class="o">@</span><span class="n">FirstDate</span><span class="p">)</span>
+
+<span class="k">set</span> <span class="o">@</span><span class="n">CurrentDate</span><span class="o">=@</span><span class="n">FirstDate</span>
+<span class="k">set</span> <span class="o">@</span><span class="n">FiscalYearStartMonth</span><span class="o">=</span><span class="mi">7</span>
+
+<span class="c1">-- insert weekly holidays</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="o">@</span><span class="n">WeeklyHolidays</span><span class="p">([</span><span class="n">WeekDay</span><span class="p">])</span> <span class="k">values</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1">-- sunday</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="o">@</span><span class="n">WeeklyHolidays</span><span class="p">([</span><span class="n">WeekDay</span><span class="p">])</span> <span class="k">values</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span> <span class="c1">-- saturday</span>
+
+<span class="c1">-- insert annual public holidays</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="o">@</span><span class="n">AnnulPublicHolidays</span><span class="p">([</span><span class="nb">Date</span><span class="p">])</span> <span class="k">values</span><span class="p">(</span><span class="mi">20130101</span><span class="p">)</span> <span class="c1">-- New Year&#39;s Day</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="o">@</span><span class="n">AnnulPublicHolidays</span><span class="p">([</span><span class="nb">Date</span><span class="p">])</span> <span class="k">values</span><span class="p">(</span><span class="mi">20130102</span><span class="p">)</span> <span class="c1">-- Day after New Year&#39;s Day</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="o">@</span><span class="n">AnnulPublicHolidays</span><span class="p">([</span><span class="nb">Date</span><span class="p">])</span> <span class="k">values</span><span class="p">(</span><span class="mi">20130430</span><span class="p">)</span> <span class="c1">-- Day after New Year&#39;s Day</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="o">@</span><span class="n">AnnulPublicHolidays</span><span class="p">([</span><span class="nb">Date</span><span class="p">])</span> <span class="k">values</span><span class="p">(</span><span class="mi">20130501</span><span class="p">)</span> <span class="c1">-- Day after New Year&#39;s Day</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="o">@</span><span class="n">AnnulPublicHolidays</span><span class="p">([</span><span class="nb">Date</span><span class="p">])</span> <span class="k">values</span><span class="p">(</span><span class="mi">20130902</span><span class="p">)</span> <span class="c1">-- Day after New Year&#39;s Day</span>
+
+<span class="c1">-- Step 3: Chạy vòng lặp</span>
+
+<span class="n">while</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="o">&lt;@</span><span class="n">LastDate</span><span class="p">)</span>
+<span class="k">begin</span>
+
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="p">[</span><span class="n">dbo</span><span class="p">].[</span><span class="n">DimDate</span><span class="p">]</span>
+           <span class="p">([</span><span class="n">DateKey</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">DateFullName</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">DateFull</span><span class="p">]</span>
+           <span class="p">,[</span><span class="k">Year</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">Quarter</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">QuarterName</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">QuarterKey</span><span class="p">]</span>
+           <span class="p">,[</span><span class="k">Month</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">MonthKey</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">MonthName</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">DayOfMonth</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">NumberOfDaysInTheMonth</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">DayOfYear</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">WeekOfYear</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">WeekOfYearKey</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">ISOWeek</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">ISOWeekKey</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">WeekDay</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">WeekDayName</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">FiscalYear</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">FiscalQuarter</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">FiscalQuarterKey</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">FiscalMonth</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">FiscalMonthKey</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">IsWorkDayKey</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">IsWorkDayDescription</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">IsPublicHolidayKey</span><span class="p">]</span>
+           <span class="p">,[</span><span class="n">IsPublicHolidayDescription</span><span class="p">])</span>
+
+
+<span class="k">select</span>
+<span class="k">convert</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="k">convert</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">,</span><span class="mi">112</span><span class="p">))</span> <span class="k">as</span> <span class="p">[</span><span class="n">DateKey</span><span class="p">],</span>
+<span class="k">convert</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="k">max</span><span class="p">),</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">,</span><span class="mi">106</span><span class="p">)</span> <span class="k">as</span> <span class="p">[</span><span class="n">DateFullName</span><span class="p">],</span>
+<span class="o">@</span><span class="n">CurrentDate</span> <span class="k">as</span> <span class="p">[</span><span class="n">DateFull</span><span class="p">],</span>
+<span class="n">datepart</span><span class="p">(</span><span class="k">year</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span> <span class="k">as</span> <span class="p">[</span><span class="k">Year</span><span class="p">],</span>
+<span class="n">datepart</span><span class="p">(</span><span class="n">QUARTER</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span> <span class="k">as</span> <span class="p">[</span><span class="n">Quarter</span><span class="p">],</span>
+<span class="s1">&#39;QTR &#39;</span><span class="o">+</span><span class="n">datename</span><span class="p">(</span><span class="n">QUARTER</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span> <span class="k">as</span> <span class="p">[</span><span class="n">QuarterName</span><span class="p">],</span>
+<span class="k">convert</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="n">datename</span><span class="p">(</span><span class="k">year</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span><span class="o">+</span><span class="n">datename</span><span class="p">(</span><span class="n">QUARTER</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">))</span> <span class="k">as</span> <span class="p">[</span><span class="n">QuarterKey</span><span class="p">],</span>
+<span class="n">datepart</span><span class="p">(</span><span class="k">month</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span> <span class="k">as</span> <span class="p">[</span><span class="k">Month</span><span class="p">],</span>
+<span class="k">convert</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="n">datename</span><span class="p">(</span><span class="k">year</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span><span class="o">+</span><span class="k">right</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="o">+</span><span class="k">convert</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">datepart</span><span class="p">(</span><span class="k">month</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)),</span><span class="mi">2</span><span class="p">))</span> <span class="k">as</span> <span class="p">[</span><span class="n">MonthKey</span><span class="p">],</span>
+<span class="n">datename</span><span class="p">(</span><span class="k">month</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span> <span class="k">as</span> <span class="p">[</span><span class="n">MonthName</span><span class="p">],</span>
+<span class="n">datepart</span><span class="p">(</span><span class="k">day</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span> <span class="k">as</span> <span class="p">[</span><span class="n">DayOfMonth</span><span class="p">],</span>
+<span class="n">datepart</span><span class="p">(</span><span class="k">day</span><span class="p">,</span><span class="n">EOMONTH</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">))</span> <span class="k">as</span> <span class="p">[</span><span class="n">NumberOfDaysInTheMonth</span><span class="p">],</span>
+<span class="n">datepart</span><span class="p">(</span><span class="n">DAYOFYEAR</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span> <span class="k">as</span> <span class="p">[</span><span class="n">DayOfYear</span><span class="p">],</span>
+<span class="n">datepart</span><span class="p">(</span><span class="n">WEEK</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span> <span class="k">as</span> <span class="p">[</span><span class="n">WeekOfYear</span><span class="p">],</span>
+<span class="n">datename</span><span class="p">(</span><span class="k">year</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span><span class="o">+</span><span class="k">right</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="o">+</span><span class="n">datename</span><span class="p">(</span><span class="n">week</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="p">[</span><span class="n">WeekOfYearKey</span><span class="p">],</span>
+<span class="n">datepart</span><span class="p">(</span><span class="n">ISO_WEEK</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span> <span class="k">as</span> <span class="p">[</span><span class="n">ISOWeek</span><span class="p">],</span>
+<span class="n">datename</span><span class="p">(</span><span class="k">year</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span><span class="o">+</span><span class="k">right</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="o">+</span><span class="k">convert</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">datepart</span><span class="p">(</span><span class="n">ISO_WEEK</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)),</span><span class="mi">2</span><span class="p">)</span> <span class="k">as</span> <span class="p">[</span><span class="n">ISOWeekKey</span><span class="p">],</span>
+<span class="n">datepart</span><span class="p">(</span><span class="n">WEEKDAY</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span> <span class="k">as</span> <span class="p">[</span><span class="n">WeekDay</span><span class="p">],</span>
+<span class="n">datename</span><span class="p">(</span><span class="n">WEEKDAY</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span> <span class="k">as</span> <span class="p">[</span><span class="n">WeekDayName</span><span class="p">],</span>
+<span class="k">case</span> <span class="k">when</span> <span class="k">month</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span><span class="o">&lt;@</span><span class="n">FiscalYearStartMonth</span> <span class="k">then</span> <span class="k">year</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span> <span class="k">else</span> <span class="k">year</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span> <span class="k">end</span> <span class="k">as</span> <span class="p">[</span><span class="n">FiscalYear</span><span class="p">],</span>
+<span class="n">ceiling</span><span class="p">(</span><span class="k">convert</span><span class="p">(</span><span class="nb">float</span><span class="p">,(</span><span class="k">case</span> <span class="k">when</span> <span class="k">month</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span><span class="o">=</span><span class="mi">13</span><span class="o">-@</span><span class="n">FiscalYearStartMonth</span> <span class="k">then</span> <span class="mi">12</span> <span class="k">else</span> <span class="p">((</span><span class="o">@</span><span class="n">FiscalYearStartMonth</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="k">month</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">))</span><span class="o">%</span><span class="mi">12</span> <span class="k">end</span><span class="p">))</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span> <span class="k">as</span> <span class="p">[</span><span class="n">FiscalQuarter</span><span class="p">],</span>
+<span class="k">convert</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="k">case</span> <span class="k">when</span> <span class="k">month</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span><span class="o">&lt;@</span><span class="n">FiscalYearStartMonth</span> <span class="k">then</span> <span class="k">year</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span> <span class="k">else</span> <span class="k">year</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span> <span class="k">end</span><span class="p">)</span>
+<span class="o">+</span>
+<span class="k">convert</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="n">ceiling</span><span class="p">(</span><span class="k">convert</span><span class="p">(</span><span class="nb">float</span><span class="p">,(</span><span class="k">case</span> <span class="k">when</span> <span class="k">month</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span><span class="o">=</span><span class="mi">13</span><span class="o">-@</span><span class="n">FiscalYearStartMonth</span> <span class="k">then</span> <span class="mi">12</span> <span class="k">else</span> <span class="p">((</span><span class="o">@</span><span class="n">FiscalYearStartMonth</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="k">month</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">))</span><span class="o">%</span><span class="mi">12</span> <span class="k">end</span><span class="p">))</span><span class="o">/</span><span class="mi">3</span><span class="p">))</span>
+<span class="k">as</span> <span class="p">[</span><span class="n">FiscalQuarterKey</span><span class="p">],</span>
+<span class="k">case</span> <span class="k">when</span> <span class="k">month</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span><span class="o">=</span><span class="mi">13</span><span class="o">-@</span><span class="n">FiscalYearStartMonth</span> <span class="k">then</span> <span class="mi">12</span> <span class="k">else</span> <span class="p">((</span><span class="o">@</span><span class="n">FiscalYearStartMonth</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="k">month</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">))</span><span class="o">%</span><span class="mi">12</span> <span class="k">end</span> <span class="k">as</span> <span class="p">[</span><span class="n">FiscalMonth</span><span class="p">],</span>
+<span class="k">convert</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="k">case</span> <span class="k">when</span> <span class="k">month</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span><span class="o">&lt;@</span><span class="n">FiscalYearStartMonth</span> <span class="k">then</span> <span class="k">year</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span> <span class="k">else</span> <span class="k">year</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span> <span class="k">end</span><span class="p">)</span>
+<span class="o">+</span>
+<span class="k">right</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="o">+</span><span class="k">convert</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="k">case</span> <span class="k">when</span> <span class="k">month</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span><span class="o">=</span><span class="mi">13</span><span class="o">-@</span><span class="n">FiscalYearStartMonth</span> <span class="k">then</span> <span class="mi">12</span> <span class="k">else</span> <span class="p">((</span><span class="o">@</span><span class="n">FiscalYearStartMonth</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="k">month</span><span class="p">(</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">))</span><span class="o">%</span><span class="mi">12</span> <span class="k">end</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">as</span> <span class="p">[</span><span class="n">FiscalMonthKey</span><span class="p">],</span>
+<span class="k">case</span> <span class="k">when</span> <span class="n">datepart</span><span class="p">(</span><span class="n">WEEKDAY</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="p">[</span><span class="n">weekday</span><span class="p">]</span> <span class="k">from</span> <span class="o">@</span><span class="n">WeeklyHolidays</span><span class="p">)</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">end</span> <span class="k">as</span> <span class="p">[</span><span class="n">IsWorkDayKey</span><span class="p">],</span>
+<span class="k">case</span> <span class="k">when</span> <span class="n">datepart</span><span class="p">(</span><span class="n">WEEKDAY</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="p">[</span><span class="n">weekday</span><span class="p">]</span> <span class="k">from</span> <span class="o">@</span><span class="n">WeeklyHolidays</span><span class="p">)</span> <span class="k">then</span> <span class="s1">&#39;Weekend&#39;</span> <span class="k">else</span> <span class="s1">&#39;Workday&#39;</span> <span class="k">end</span> <span class="k">as</span> <span class="p">[</span><span class="n">IsWorkDayDescription</span><span class="p">],</span>
+<span class="k">case</span> <span class="k">when</span> <span class="k">convert</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="k">convert</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">,</span><span class="mi">112</span><span class="p">))</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="p">[</span><span class="nb">Date</span><span class="p">]</span> <span class="k">from</span> <span class="o">@</span><span class="n">AnnulPublicHolidays</span><span class="p">)</span> <span class="k">then</span> <span class="mi">1</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">end</span> <span class="k">as</span> <span class="p">[</span><span class="n">IsPublicHolidayKey</span><span class="p">],</span>
+<span class="k">case</span> <span class="k">when</span> <span class="k">convert</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="k">convert</span><span class="p">(</span><span class="nb">varchar</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">,</span><span class="mi">112</span><span class="p">))</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="p">[</span><span class="nb">Date</span><span class="p">]</span> <span class="k">from</span> <span class="o">@</span><span class="n">AnnulPublicHolidays</span><span class="p">)</span> <span class="k">then</span> <span class="s1">&#39;Holiday&#39;</span> <span class="k">else</span> <span class="s1">&#39;Non Holiday&#39;</span> <span class="k">end</span> <span class="k">as</span> <span class="p">[</span><span class="n">IsPublicHolidayDescription</span><span class="p">]</span>
+
+<span class="k">set</span> <span class="o">@</span><span class="n">CurrentDate</span><span class="o">=</span><span class="n">dateadd</span><span class="p">(</span><span class="k">day</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">@</span><span class="n">CurrentDate</span><span class="p">)</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+<p>Cấu trúc xây dựng có 2 dạng chính: Star schema hoặc Snow schema. Việc
+lựa chọn cấu trúc tùy thuộc vào performance</p>
+<div class="section" id="xay-dung-bang">
+<h2>1.1. Xây dựng bảng<a class="headerlink" href="#xay-dung-bang" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="atomic-data">
+<h3>1.1.1. Atomic data<a class="headerlink" href="#atomic-data" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>Atomic data</strong>: Là một thông tin không thể/hoặc không nên chia nhỏ
+hơn. VD</li>
+</ul>
+<p><strong>Non-atomic</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="85%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">ID</th>
+<th class="head">Street</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>123</td>
+<td>89 Lang Ha, Dong Da, Ha Noi</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Atomic</strong></p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="20%" />
+<col width="20%" />
+<col width="38%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">ID</th>
+<th class="head">No</th>
+<th class="head">Street</th>
+<th class="head">District City</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>123 89</td>
+<td>Lang Ha</td>
+<td>Dong Da</td>
+<td>Hanoi</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Phương pháp xác định Atomic Data</strong></p>
+<ul class="simple">
+<li>Một bảng atomic không thể có nhiều giá trị thuộc cùng 1 loại trong
+cột</li>
+</ul>
+<p>VD:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">food_name</th>
+<th class="head">ingredients</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>bread</td>
+<td>flour, milk, egg</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>Một bảng atomic không thể có nhiều column thuộc cùng 1 loại</li>
+</ul>
+<table border="1" class="docutils">
+<colgroup>
+<col width="29%" />
+<col width="35%" />
+<col width="35%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">teacher</th>
+<th class="head">student_1</th>
+<th class="head">student_2</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>D.Anh</td>
+<td>Trang</td>
+<td>Ha</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="primary-key">
+<h3>1.1.2. Primary key<a class="headerlink" href="#primary-key" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Primary key là cột khiến mỗi bản ghi (record) duy nhất</li>
+<li>Quy tắc:<ul>
+<li>Không được NULL</li>
+<li>Mỗi khi ghi thêm một record, phải có thêm một giá trị của primary
+key</li>
+<li>Là duy nhất</li>
+<li>Không được thay đổi</li>
+</ul>
+</li>
+<li>Bảng chứa primary key được sử dụng làm foreign key ở bảng khác được
+gọi là bảng mẹ (parent table), bảng kia được gọi là bảng con (child
+table)</li>
+<li>Các bảng được xây dựng dựa trên nguyên tắc Atomic Datađược gọi là NF1
+(First Normal Form)</li>
+</ul>
+</div>
+</div>
+<div class="section" id="xay-dung-database">
+<h2>1.2. Xây dựng database<a class="headerlink" href="#xay-dung-database" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Tạo constraint để join các bảng: Việc này sẽ cho phép đảm bảo tính
+toàn vẹn của cơ sở dữ liệu</li>
+</ul>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">use</span> <span class="n">tempdb</span>
+<span class="k">drop</span> <span class="k">table</span> <span class="k">if</span> <span class="k">exists</span> <span class="n">test1</span>
+<span class="k">create</span> <span class="k">table</span> <span class="n">test1</span>
+<span class="p">(</span><span class="n">id</span> <span class="nb">int</span> <span class="k">not</span> <span class="k">null</span> <span class="k">primary</span> <span class="k">key</span><span class="p">,</span>
+ <span class="n">name</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+
+ <span class="k">create</span> <span class="k">table</span> <span class="n">test2</span>
+ <span class="p">(</span><span class="n">id_new</span> <span class="nb">int</span> <span class="k">not</span> <span class="k">null</span><span class="p">,</span>
+  <span class="n">CIF</span> <span class="nb">int</span> <span class="k">not</span> <span class="k">null</span> <span class="p">,</span>
+  <span class="n">job</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+  <span class="k">constraint</span> <span class="n">id_key</span>
+  <span class="k">foreign</span> <span class="k">key</span> <span class="p">(</span><span class="n">id_new</span><span class="p">)</span>
+  <span class="k">references</span> <span class="n">test1</span><span class="p">(</span><span class="n">id</span><span class="p">))</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Các kiểu quan hệ:<ul>
+<li>Quan hệ 1-1: Một dòng trong bảng join với 1 dòng trong bảng khác.
+VD: Customer vs.&nbsp;Customer_contact, nguyên tắc 1-1, join với nhau
+bằng Customer_ID</li>
+<li>Quan hệ 1-n: Một dòng join với nhiều dòng khác. VD: 1 khách hàng
+có thể có nhiều giao dịch</li>
+<li>Quan hệ n-n: Một dòng có thể join với nhiều dòng và ngược lại. VD:
+Một phụ nữ có thể mua nhiều loại giày và một loại giày (shoes_id)
+có thể được mua bởi nhiều người phụ nữ</li>
+</ul>
+</li>
+</ul>
+<p><strong>Trick</strong>: Sử dụng <em>junction table</em> để làm proxy với mối quan hệ n-n.&nbsp;Ví
+dụ:</p>
+<p><img alt="image0" src="Images/junction_table.png" /></p>
+<ul class="simple">
+<li>Nguyên tắc ATOMIC data đặc biệt quan trọng khi xây dựng bảng. Nếu 1
+bảng không tuân thủ nguyên tắc đó thì phải chia nhỏ thành nhiều bảng.</li>
+</ul>
+<p><img alt="image1" src="Images/nf_1.png" /> <img alt="image2" src="Images/nf_2.png" /></p>
+<p><strong>Composite key</strong>: Key được tạo từ 2 hoặc nhiều cột</p>
+<p><strong>2NF</strong>: 1NF là 2NF nếu tất cả các cột trong bảng là MỘT PHẦN của
+Primary key hoặc có một cột primary key duy nhất</p>
+<p><img alt="image3" src="Images/2nf.png" /></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="p09-79-tai-lieu-tham-khao.html" class="btn btn-neutral float-right" title="Tài liệu tham khảo" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="p03-08-r-server.html" class="btn btn-neutral float-left" title="3. SQL RServer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anh Hoang Duc
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

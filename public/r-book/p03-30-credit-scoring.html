@@ -1,0 +1,1230 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="vi" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="vi" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>10. Credit Scoring &mdash; Tài liệu Phân tích dữ liệu với R 2019</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'2019',
+              LANGUAGE:'vi',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript" src="_static/copybutton.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Tìm Kiếm" href="search.html" />
+    <link rel="next" title="11. Xây dựng mô hình dự báo với caret" href="p03-35-caret.html" />
+    <link rel="prev" title="9. Mô hình phi tuyến tính" href="p03-17-nonlinear.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Phân tích dữ liệu với R
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Giới thiệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-gioi-thieu.html">Khoa học dữ liệu và nghề phân tích dữ liệu</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Phân tích khám phá dữ liệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p02-03-bien-doi-du-lieu-dplyr.html">1. Ngữ pháp của biến đổi dữ liệu với DPLYR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-04-phan-ra-va-xoay-chieu-du-lieu.html">2. Phân rã và xoay chiều dữ liệu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-05-cac-chi-so-thong-ke.html">3. Các chỉ số thống kê mô tả cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-06-lap-trinh-ham.html">4. Lập trình hàm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-07-lap-trinh-ham-voi-purrr.html">5. Lập trình chức năng hàm với purrr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-08-bien-doi-du-lieu-text.html">6. Biến đổi dữ liệu text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-11-quan-ly-nhieu-mo-hinh.html">7. Quản lý kết quả phân tích từ nhiều mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-15-thong-ke-co-ban.html">8. Xác suất và phân phối thống kê cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-16-power-analysis.html">9. Power analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-20-sampling-methods.html">10. Phương pháp ước lượng lấy mẫu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-50-datatable.html">11. Biến đổi dữ liệu với <code class="docutils literal notranslate"><span class="pre">data.table</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-60-thu-thap-du-lieu-tu-website.html">12. Thu thập dữ liệu từ website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-99-meo-trong-r.html">13. Các mẹo trong R</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Supervised learning</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p03-01-nguyen-ly-du-bao.html">1. Các nguyên lý dự báo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-02-mo-hinh-ols.html">2. Mô hình OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">10. Credit Scoring</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#score-card">10.1. Score card</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cac-buoc-xay-dung-score-card">10.2. Các bước xây dựng score card</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cac-tinh-score">10.3. Các tính score</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#xay-dung-score-card">10.4. Xây dựng score card</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dien-them-missing-value">10.4.1. Điền thêm missing value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#do-luong-do-on-dinh-mo-hinh">10.4.2. Đo lường độ ổn định mô hình</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tai-lieu-tham-khao">10.5. Tài liệu tham khảo</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Unsupervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p04-01-unsupervised-learning.html">1. Unsupervised learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-02-kmeans.html">2. k-means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-03-hierarchical-clustering.html">3. Hierachical clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-04-basket-analysis.html">4. Phân tích giỏ hàng</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-05-pca.html">5. Principal component analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-06-factor-analysis.html">6. Phân tích nhân tố ẩn (factor analysis)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Chuỗi thời gian</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p05-01-chuoi-thoi-gian.html">1. Giới thiệu về chuỗi thời gian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-02-arima.html">2. Mô hình ARIMA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html">3. Phân tích chuỗi thời gian với tidyquant và timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-06-du-bao-ts-voi-prophet.html">4. Dự báo chuỗi thời gian với prophet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-07-du-bao-ts-voi-timetk.html">5. Dự báo chuỗi thời gian với timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-08-abnomaly-detection.html">6. Abnomaly detection trong times series</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ngôn ngữ tự nghiên</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p06-01-nlp-co-ban.html">1. Xử lý ngôn ngữ tự nhiên cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-04-text-classification.html">2. Phân loại text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-07-nlp-api.html">3. Sử dụng API từ các dịch vụ đám mây</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-10-ocr-tesseract.html">4. OCR với <code class="docutils literal notranslate"><span class="pre">tesseract</span></code></a></li>
+</ul>
+<p class="caption"><span class="caption-text">Các phương pháp khác</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p07-01-survival-analysis.html">1. Survival analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-02-causal-impact.html">2. Causal Impact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-03-collaborative-filtering.html">3. Collaborative Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-07-spatial-data.html">4. Spatial data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-10-shiny.html">5. Shiny apps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p09-01-gioi-thieu-deep-learning.html">1. Giới thiệu cơ bản về Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-02-co-ban-kien-thuc-toan.html">2. Kiến thức cơ bản toán học cho deep learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-03-mo-hinh-deep-learning-co-ban.html">3. Mô hình deep learning cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-04-convolution-neural-network.html">4. Convolution neural networks</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cloud Computing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p10-01-cai-dat-rstudio-server-tren-amazon.html">1. Cài đặt server RStudio trên Amazon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-03-web-service-azure.html">2. Xây dựng web service với Azure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-09-apis-voi-plumber.html">3. API với Plumber</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Kiến thức bổ trợ</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p11-01-git.html">1. Sử dụng GIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-02-cmd.html">2. CMD và Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-03-docker.html">3. Sử dụng docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-04-apis.html">4. API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-05-html-css.html">5. Cơ bản về HTML và CSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-09-other.html">6. Các tricks khác</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Case studies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p13-01-casestudy-truc-quan-hoa.html">1. Trực quan hóa dữ liệu</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Phân tích dữ liệu với R</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>10. Credit Scoring</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/p03-30-credit-scoring.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="credit-scoring">
+<h1>10. Credit Scoring<a class="headerlink" href="#credit-scoring" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="score-card">
+<h2>10.1. Score card<a class="headerlink" href="#score-card" title="Permalink to this headline">¶</a></h2>
+<p>Khi xây dựng scorecard, cần chia bucket để dễ dàng hơn trong việc tính
+điểm</p>
+<p><strong>Các định nghĩa quan trọng</strong>:</p>
+<ul class="simple">
+<li>WOE (Weight of Evidence): Đo lường độ mạnh của việc phân loại good
+vs.&nbsp;bad giữa một nhóm (VD: age 27-29). Nếu WOE có giá trị âm càng
+lớn, càng thể hiện khả năng phân nhóm khoản vay xấu.</li>
+</ul>
+<div class="math notranslate">
+\[WOE = ln(\frac{Distr\:Good}{Distr\: Bad})\]</div>
+<ul class="simple">
+<li>IV (Informatio Value): Đo lường độ mạnh dự báo của biến dự báo với
+biến cần được dự báo (response). Các đặc tính như sau:<ul>
+<li>IV &lt; 0.02: Không có giá trị dự báo</li>
+<li>0.02 - 0.1: thấp</li>
+<li>0.1 - 0.3: trung bình</li>
+<li>0.3 - 0.5: cao</li>
+<li>Trên 0.5: Cần kiểm tra lại</li>
+</ul>
+</li>
+</ul>
+<div class="math notranslate">
+\[IV = \sum_{i = 1}^{n}(Distr\:Good - Distr\:Bad)*ln(\frac{Distr\:Good}{Distr\:Bad})\]</div>
+<center><p><a class="reference internal" href="Images/credit-scoring-01.png"><img alt="image0" src="Images/credit-scoring-01.png" style="width: 100.0%;" /></a></p>
+</center><center><p><a class="reference internal" href="Images/credit-scoring-02.png"><img alt="image1" src="Images/credit-scoring-02.png" style="width: 60.0%;" /></a></p>
+</center><p><strong>Các quy tắc khi xây dựng</strong>:</p>
+<ul class="simple">
+<li>Mỗi bucket có tối thiểu 5%</li>
+<li>Khi nhóm các biến, cần đảm báo quy tắc WOE sau khi nhóm là tuyến tính
+(đồng biến hoặc nghịch biến)</li>
+</ul>
+<p><strong>Lưu ý</strong>: Xem thêm file excel (<code class="docutils literal notranslate"><span class="pre">data/woe-example.xlsx</span></code>)để hiểu rõ hơn
+cách tính WOE và IV</p>
+</div>
+<div class="section" id="cac-buoc-xay-dung-score-card">
+<h2>10.2. Các bước xây dựng score card<a class="headerlink" href="#cac-buoc-xay-dung-score-card" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Bổ sung các thông tin dữ liệu bị thiếu</li>
+<li>Tính toán WOE và IV, loại các biến có IV quá thấp, kiểm tra lại các
+biến có IV quá cao</li>
+<li>Tạo tập mới là tập <code class="docutils literal notranslate"><span class="pre">df_woe</span></code>, các biến đã được nhóm lại để tối ưu
+hóa WOE</li>
+<li>Xây dựng mô hình <code class="docutils literal notranslate"><span class="pre">logistic</span></code> đơn giản trên tập <code class="docutils literal notranslate"><span class="pre">df_woe</span></code></li>
+<li>Score dữ liệu mới, việc xây dựng score card cần thực hiện hai việc:<ul>
+<li>Xác định odds tại mốc điểm scorecard nhất định</li>
+<li>Xác định điểm score card giúp tăng gấp đôi odds</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="cac-tinh-score">
+<h2>10.3. Các tính score<a class="headerlink" href="#cac-tinh-score" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Điểm mặc định (<code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">0</span></code>) thường được dùng là 600. Mốc điểm này
+phản ánh một tỷ lệ odd cho trước (ví dụ: 30)</li>
+<li>Điểm tăng gấp đôi odd (<code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">double</span> <span class="pre">ood</span> <span class="pre">-</span> <span class="pre">pdo</span></code>): Là số điểm mà cứ
+tăng thêm pdo, odd sẽ tăng gấp đôi - thường là 20. Xem minh họa dưới
+đây</li>
+</ul>
+<center><table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Score</th>
+<th class="head">Odd</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>600</td>
+<td>30</td>
+</tr>
+<tr class="row-odd"><td>601</td>
+<td>31</td>
+</tr>
+<tr class="row-even"><td>…</td>
+<td>….</td>
+</tr>
+<tr class="row-odd"><td>620</td>
+<td>60</td>
+</tr>
+</tbody>
+</table>
+</center></div>
+<div class="section" id="xay-dung-score-card">
+<h2>10.4. Xây dựng score card<a class="headerlink" href="#xay-dung-score-card" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">&lt;-</span> <span class="nf">read.csv</span><span class="p">(</span><span class="s">&quot;http://www.creditriskanalytics.net/uploads/1/9/5/1/19511601/hmeq.csv&quot;</span><span class="p">)</span>
+<span class="nf">save</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="s">&quot;data/hmeq.rda&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">scorecard</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">VPBank</span><span class="p">)</span>
+<span class="nf">load</span><span class="p">(</span><span class="s">&quot;data/hmeq.rda&quot;</span><span class="p">)</span>
+<span class="nf">names</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;-</span> <span class="nf">names</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">tolower</span>
+<span class="n">data</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   bad loan mortdue  value  reason    job  yoj derog delinq     clage ninq</span>
+<span class="c1">## 1   1 1100   25860  39025 HomeImp  Other 10.5     0      0  94.36667    1</span>
+<span class="c1">## 2   1 1300   70053  68400 HomeImp  Other  7.0     0      2 121.83333    0</span>
+<span class="c1">## 3   1 1500   13500  16700 HomeImp  Other  4.0     0      0 149.46667    1</span>
+<span class="c1">## 4   1 1500      NA     NA                  NA    NA     NA        NA   NA</span>
+<span class="c1">## 5   0 1700   97800 112000 HomeImp Office  3.0     0      0  93.33333    0</span>
+<span class="c1">## 6   1 1700   30548  40320 HomeImp  Other  9.0     0      0 101.46600    1</span>
+<span class="c1">##   clno  debtinc</span>
+<span class="c1">## 1    9       NA</span>
+<span class="c1">## 2   14       NA</span>
+<span class="c1">## 3   10       NA</span>
+<span class="c1">## 4   NA       NA</span>
+<span class="c1">## 5   14       NA</span>
+<span class="c1">## 6    8 37.11361</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Kiểm tra dữ liệu missing</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">check_na</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">(</span><span class="n">x</span> <span class="o">%&gt;%</span> <span class="n">is.na</span> <span class="o">%&gt;%</span> <span class="n">sum</span><span class="p">)</span><span class="o">/</span><span class="nf">length</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">data</span> <span class="o">%&gt;%</span> <span class="nf">map_df</span><span class="p">(</span><span class="n">check_na</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 1 x 13</span>
+<span class="c1">##     bad  loan mortdue  value reason   job    yoj derog delinq  clage   ninq</span>
+<span class="c1">##   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span>
+<span class="c1">## 1     0     0  0.0869 0.0188      0     0 0.0864 0.119 0.0973 0.0517 0.0856</span>
+<span class="c1">## # ... with 2 more variables: clno &lt;dbl&gt;, debtinc &lt;dbl&gt;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##       bad              loan          mortdue           value</span>
+<span class="c1">##  Min.   :0.0000   Min.   : 1100   Min.   :  2063   Min.   :  8000</span>
+<span class="c1">##  1st Qu.:0.0000   1st Qu.:11100   1st Qu.: 46276   1st Qu.: 66076</span>
+<span class="c1">##  Median :0.0000   Median :16300   Median : 65019   Median : 89236</span>
+<span class="c1">##  Mean   :0.1995   Mean   :18608   Mean   : 73761   Mean   :101776</span>
+<span class="c1">##  3rd Qu.:0.0000   3rd Qu.:23300   3rd Qu.: 91488   3rd Qu.:119824</span>
+<span class="c1">##  Max.   :1.0000   Max.   :89900   Max.   :399550   Max.   :855909</span>
+<span class="c1">##                                   NA&#39;s   :518      NA&#39;s   :112</span>
+<span class="c1">##      reason          job            yoj             derog</span>
+<span class="c1">##         : 252          : 279   Min.   : 0.000   Min.   : 0.0000</span>
+<span class="c1">##  DebtCon:3928   Mgr    : 767   1st Qu.: 3.000   1st Qu.: 0.0000</span>
+<span class="c1">##  HomeImp:1780   Office : 948   Median : 7.000   Median : 0.0000</span>
+<span class="c1">##                 Other  :2388   Mean   : 8.922   Mean   : 0.2546</span>
+<span class="c1">##                 ProfExe:1276   3rd Qu.:13.000   3rd Qu.: 0.0000</span>
+<span class="c1">##                 Sales  : 109   Max.   :41.000   Max.   :10.0000</span>
+<span class="c1">##                 Self   : 193   NA&#39;s   :515      NA&#39;s   :708</span>
+<span class="c1">##      delinq            clage             ninq             clno</span>
+<span class="c1">##  Min.   : 0.0000   Min.   :   0.0   Min.   : 0.000   Min.   : 0.0</span>
+<span class="c1">##  1st Qu.: 0.0000   1st Qu.: 115.1   1st Qu.: 0.000   1st Qu.:15.0</span>
+<span class="c1">##  Median : 0.0000   Median : 173.5   Median : 1.000   Median :20.0</span>
+<span class="c1">##  Mean   : 0.4494   Mean   : 179.8   Mean   : 1.186   Mean   :21.3</span>
+<span class="c1">##  3rd Qu.: 0.0000   3rd Qu.: 231.6   3rd Qu.: 2.000   3rd Qu.:26.0</span>
+<span class="c1">##  Max.   :15.0000   Max.   :1168.2   Max.   :17.000   Max.   :71.0</span>
+<span class="c1">##  NA&#39;s   :580       NA&#39;s   :308      NA&#39;s   :510      NA&#39;s   :222</span>
+<span class="c1">##     debtinc</span>
+<span class="c1">##  Min.   :  0.5245</span>
+<span class="c1">##  1st Qu.: 29.1400</span>
+<span class="c1">##  Median : 34.8183</span>
+<span class="c1">##  Mean   : 33.7799</span>
+<span class="c1">##  3rd Qu.: 39.0031</span>
+<span class="c1">##  Max.   :203.3121</span>
+<span class="c1">##  NA&#39;s   :1267</span>
+</pre></div>
+</div>
+<div class="section" id="dien-them-missing-value">
+<h3>10.4.1. Điền thêm missing value<a class="headerlink" href="#dien-them-missing-value" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Thay NA bằng mean</span>
+<span class="n">replace_by_mean</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">x</span><span class="nf">[is.na</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="n">]</span> <span class="o">&lt;-</span> <span class="nf">mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">na.rm</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+  <span class="nf">return</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># Thay NA bằng category</span>
+
+<span class="n">replace_na_categorical</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">x</span> <span class="o">%&gt;%</span>
+    <span class="nf">table</span><span class="p">()</span> <span class="o">%&gt;%</span>
+    <span class="nf">as.data.frame</span><span class="p">()</span> <span class="o">%&gt;%</span>
+    <span class="nf">arrange</span><span class="p">(</span><span class="o">-</span><span class="n">Freq</span><span class="p">)</span> <span class="o">-&gt;&gt;</span> <span class="n">my_df</span>
+
+  <span class="n">n_obs</span> <span class="o">&lt;-</span> <span class="nf">sum</span><span class="p">(</span><span class="n">my_df</span><span class="o">$</span><span class="n">Freq</span><span class="p">)</span>
+  <span class="n">pop</span> <span class="o">&lt;-</span> <span class="n">my_df</span><span class="o">$</span><span class="n">. </span><span class="o">%&gt;%</span> <span class="nf">as.character</span><span class="p">()</span>
+  <span class="nf">set.seed</span><span class="p">(</span><span class="m">129</span><span class="p">)</span>
+  <span class="n">x</span><span class="nf">[is.na</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="n">]</span> <span class="o">&lt;-</span> <span class="nf">sample</span><span class="p">(</span><span class="n">pop</span><span class="p">,</span> <span class="nf">sum</span><span class="p">(</span><span class="nf">is.na</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
+                        <span class="n">replace</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
+                        <span class="n">prob</span> <span class="o">=</span> <span class="n">my_df</span><span class="o">$</span><span class="n">Freq</span><span class="p">)</span>
+  <span class="nf">return</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="p">}</span>
+
+
+<span class="n">df</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate_if</span><span class="p">(</span><span class="n">is.factor</span><span class="p">,</span> <span class="n">as.character</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">reason</span> <span class="o">=</span> <span class="nf">case_when</span><span class="p">(</span><span class="n">reason</span> <span class="o">==</span> <span class="s">&quot;&quot;</span> <span class="o">~</span> <span class="kc">NA_character_</span><span class="p">,</span>
+                            <span class="kc">TRUE</span> <span class="o">~</span> <span class="n">reason</span><span class="p">),</span>
+         <span class="n">job</span> <span class="o">=</span> <span class="nf">case_when</span><span class="p">(</span><span class="n">job</span> <span class="o">==</span> <span class="s">&quot;&quot;</span> <span class="o">~</span> <span class="kc">NA_character_</span><span class="p">,</span>
+                         <span class="kc">TRUE</span> <span class="o">~</span> <span class="n">job</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate_if</span><span class="p">(</span><span class="n">is_character</span><span class="p">,</span> <span class="n">as.factor</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate_if</span><span class="p">(</span><span class="n">is.numeric</span><span class="p">,</span> <span class="n">replace_by_mean</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate_if</span><span class="p">(</span><span class="n">is.factor</span><span class="p">,</span> <span class="n">replace_na_categorical</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Phân chia train/test</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">train</span> <span class="o">&lt;-</span> <span class="n">df</span> <span class="o">%&gt;%</span>
+  <span class="nf">group_by</span><span class="p">(</span><span class="n">bad</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">sample_frac</span><span class="p">(</span><span class="m">0.5</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">ungroup</span><span class="p">()</span>
+
+<span class="n">test</span> <span class="o">&lt;-</span> <span class="nf">setdiff</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">train</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Xây dựng WOE</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">scorecard</span><span class="p">)</span>
+<span class="n">bins_var</span> <span class="o">&lt;-</span> <span class="nf">woebin</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="s">&quot;bad&quot;</span><span class="p">,</span> <span class="n">no_cores</span> <span class="o">=</span> <span class="m">20</span><span class="p">,</span> <span class="n">positive</span> <span class="o">=</span> <span class="s">&quot;bad|1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Binning on 2980 rows and 13 columns in  0: 0:13</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">bins_var</span><span class="o">$</span><span class="n">derog</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    variable      bin count count_distr good bad   badprob        woe</span>
+<span class="c1">## 1:    derog [-Inf,1)  2611  0.87617450 2206 405 0.1551130 -0.3045548</span>
+<span class="c1">## 2:    derog    [1,2)   212  0.07114094  122  90 0.4245283  1.0862829</span>
+<span class="c1">## 3:    derog [2, Inf)   157  0.05268456   58  99 0.6305732  1.9251711</span>
+<span class="c1">##        bin_iv total_iv breaks is_special_values</span>
+<span class="c1">## 1: 0.07392818 0.457037      1             FALSE</span>
+<span class="c1">## 2: 0.10904494 0.457037      2             FALSE</span>
+<span class="c1">## 3: 0.27406390 0.457037    Inf             FALSE</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lọc các biến có woe cao</span>
+<span class="n">bins_var</span><span class="o">$</span><span class="n">loan</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="n">total_iv</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="nf">head</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##     total_iv</span>
+<span class="c1">## 1: 0.1658007</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kiểm tra IV cho tất cả các biến</span>
+<span class="n">bins_var</span> <span class="o">%&gt;%</span> <span class="nf">map_df</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">df</span><span class="p">){</span><span class="n">df</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="n">total_iv</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="nf">head</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">pull</span><span class="p">})</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 1 x 12</span>
+<span class="c1">##    loan mortdue value reason   job    yoj derog delinq clage  ninq  clno</span>
+<span class="c1">##   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="c1">## 1 0.166  0.0682 0.188 0.0145 0.116 0.0562 0.457  0.566 0.218 0.196 0.124</span>
+<span class="c1">## # ... with 1 more variable: debtinc &lt;dbl&gt;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Biểu đồ WOE cho biến</span>
+<span class="n">bins_var</span><span class="o">$</span><span class="n">loan</span> <span class="o">%&gt;%</span> <span class="nf">mutate</span><span class="p">(</span><span class="n">bad_prc</span> <span class="o">=</span> <span class="n">bad</span><span class="o">/</span><span class="nf">sum</span><span class="p">(</span><span class="n">bad</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   variable           bin count count_distr good bad    badprob         woe</span>
+<span class="c1">## 1     loan   [-Inf,8000)   317  0.10637584  207 110 0.34700315  0.75825586</span>
+<span class="c1">## 2     loan  [8000,15000)   946  0.31744966  755 191 0.20190275  0.01604996</span>
+<span class="c1">## 3     loan [15000,16000)   170  0.05704698  121  49 0.28823529  0.48652404</span>
+<span class="c1">## 4     loan [16000,21000)   596  0.20000000  502  94 0.15771812 -0.28481105</span>
+<span class="c1">## 5     loan [21000,24000)   278  0.09328859  253  25 0.08992806 -0.92401938</span>
+<span class="c1">## 6     loan  [24000, Inf)   673  0.22583893  548 125 0.18573551 -0.08746727</span>
+<span class="c1">##         bin_iv  total_iv breaks is_special_values    bad_prc</span>
+<span class="c1">## 1 7.463445e-02 0.1658007   8000             FALSE 0.18518519</span>
+<span class="c1">## 2 8.217021e-05 0.1658007  15000             FALSE 0.32154882</span>
+<span class="c1">## 3 1.546129e-02 0.1658007  16000             FALSE 0.08249158</span>
+<span class="c1">## 4 1.485142e-02 0.1658007  21000             FALSE 0.15824916</span>
+<span class="c1">## 5 5.908888e-02 0.1658007  24000             FALSE 0.04208754</span>
+<span class="c1">## 6 1.682466e-03 0.1658007    Inf             FALSE 0.21043771</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">&lt;-</span> <span class="nf">woebin_plot</span><span class="p">(</span><span class="n">bins_var</span><span class="o">$</span><span class="n">derog</span><span class="p">)</span>
+<span class="n">p</span><span class="o">$</span><span class="n">derog</span> <span class="o">+</span> <span class="n">VPBank</span><span class="o">::</span><span class="nf">theme_vpbank</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><img alt="image2" src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-6-1.png" /></p>
+<p><strong>Lưu ý</strong>: Trong package <code class="docutils literal notranslate"><span class="pre">scorecard</span></code>, WOE được tính đảo ngược lại,
+nghĩa là <span class="math notranslate">\(WOE = ln(\frac{Distr\:Bad}{Distr\:Good})\)</span>. Do đó, với
+bucket nào có hệ số dương, nhóm đó có xu hướng laf</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tạo dataframe woe</span>
+<span class="n">train_woe</span> <span class="o">&lt;-</span> <span class="nf">woebin_ply</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">bins_var</span><span class="p">)</span>
+
+<span class="c1"># Logistic Regression:</span>
+<span class="n">my_logistic</span> <span class="o">&lt;-</span> <span class="nf">glm</span><span class="p">(</span><span class="n">bad</span> <span class="o">~</span> <span class="n">.,</span> <span class="n">family</span> <span class="o">=</span> <span class="n">binomial</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">train_woe</span><span class="p">)</span>
+
+<span class="c1"># Kết quả</span>
+<span class="n">my_logistic</span> <span class="o">%&gt;%</span> <span class="nf">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+<span class="c1">## Call:</span>
+<span class="c1">## glm(formula = bad ~ ., family = binomial, data = train_woe)</span>
+<span class="c1">##</span>
+<span class="c1">## Deviance Residuals:</span>
+<span class="c1">##     Min       1Q   Median       3Q      Max</span>
+<span class="c1">## -2.5892  -0.4355  -0.2326  -0.1361   3.1373</span>
+<span class="c1">##</span>
+<span class="c1">## Coefficients:</span>
+<span class="c1">##             Estimate Std. Error z value Pr(&gt;|z|)</span>
+<span class="c1">## (Intercept) -1.35272    0.06466 -20.921  &lt; 2e-16 ***</span>
+<span class="c1">## loan_woe     0.45196    0.16064   2.813   0.0049 **</span>
+<span class="c1">## mortdue_woe  0.46867    0.24500   1.913   0.0558 .</span>
+<span class="c1">## value_woe    0.67544    0.14872   4.542 5.58e-06 ***</span>
+<span class="c1">## reason_woe   0.92480    0.53922   1.715   0.0863 .</span>
+<span class="c1">## job_woe      0.80220    0.18491   4.338 1.44e-05 ***</span>
+<span class="c1">## yoj_woe      1.10888    0.27497   4.033 5.51e-05 ***</span>
+<span class="c1">## derog_woe    0.73581    0.09294   7.917 2.43e-15 ***</span>
+<span class="c1">## delinq_woe   0.94512    0.08184  11.549  &lt; 2e-16 ***</span>
+<span class="c1">## clage_woe    0.83135    0.13442   6.185 6.22e-10 ***</span>
+<span class="c1">## ninq_woe     0.57143    0.14086   4.057 4.98e-05 ***</span>
+<span class="c1">## clno_woe     0.92343    0.17495   5.278 1.30e-07 ***</span>
+<span class="c1">## debtinc_woe  0.92502    0.04584  20.179  &lt; 2e-16 ***</span>
+<span class="c1">## ---</span>
+<span class="c1">## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
+<span class="c1">##</span>
+<span class="c1">## (Dispersion parameter for binomial family taken to be 1)</span>
+<span class="c1">##</span>
+<span class="c1">##     Null deviance: 2976.8  on 2979  degrees of freedom</span>
+<span class="c1">## Residual deviance: 1714.6  on 2967  degrees of freedom</span>
+<span class="c1">## AIC: 1740.6</span>
+<span class="c1">##</span>
+<span class="c1">## Number of Fisher Scoring iterations: 6</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Xây dựng scorecard</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate scorecard scores for variables based on the results from woebin and glm:</span>
+<span class="n">my_card</span> <span class="o">&lt;-</span> <span class="nf">scorecard</span><span class="p">(</span><span class="n">bins_var</span><span class="p">,</span> <span class="n">my_logistic</span><span class="p">,</span> <span class="n">points0</span> <span class="o">=</span> <span class="m">600</span><span class="p">,</span> <span class="n">odds0</span> <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">19</span><span class="p">,</span> <span class="n">pdo</span> <span class="o">=</span> <span class="m">50</span><span class="p">)</span>
+<span class="n">my_card</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## $basepoints</span>
+<span class="c1">##      variable bin woe points</span>
+<span class="c1">## 1: basepoints  NA  NA    485</span>
+<span class="c1">##</span>
+<span class="c1">## $loan</span>
+<span class="c1">##    variable           bin count count_distr good bad    badprob</span>
+<span class="c1">## 1:     loan   [-Inf,8000)   317  0.10637584  207 110 0.34700315</span>
+<span class="c1">## 2:     loan  [8000,15000)   946  0.31744966  755 191 0.20190275</span>
+<span class="c1">## 3:     loan [15000,16000)   170  0.05704698  121  49 0.28823529</span>
+<span class="c1">## 4:     loan [16000,21000)   596  0.20000000  502  94 0.15771812</span>
+<span class="c1">## 5:     loan [21000,24000)   278  0.09328859  253  25 0.08992806</span>
+<span class="c1">## 6:     loan  [24000, Inf)   673  0.22583893  548 125 0.18573551</span>
+<span class="c1">##            woe       bin_iv  total_iv breaks is_special_values points</span>
+<span class="c1">## 1:  0.75825586 7.463445e-02 0.1658007   8000             FALSE    -25</span>
+<span class="c1">## 2:  0.01604996 8.217021e-05 0.1658007  15000             FALSE     -1</span>
+<span class="c1">## 3:  0.48652404 1.546129e-02 0.1658007  16000             FALSE    -16</span>
+<span class="c1">## 4: -0.28481105 1.485142e-02 0.1658007  21000             FALSE      9</span>
+<span class="c1">## 5: -0.92401938 5.908888e-02 0.1658007  24000             FALSE     30</span>
+<span class="c1">## 6: -0.08746727 1.682466e-03 0.1658007    Inf             FALSE      3</span>
+<span class="c1">##</span>
+<span class="c1">## $mortdue</span>
+<span class="c1">##    variable            bin count count_distr good bad   badprob</span>
+<span class="c1">## 1:  mortdue   [-Inf,45000)   624  0.20939597  458 166 0.2660256</span>
+<span class="c1">## 2:  mortdue  [45000,75000)  1302  0.43691275 1047 255 0.1958525</span>
+<span class="c1">## 3:  mortdue  [75000,85000)   264  0.08859060  230  34 0.1287879</span>
+<span class="c1">## 4:  mortdue [85000,145000)   620  0.20805369  520 100 0.1612903</span>
+<span class="c1">## 5:  mortdue  [145000, Inf)   170  0.05704698  131  39 0.2294118</span>
+<span class="c1">##            woe       bin_iv   total_iv breaks is_special_values points</span>
+<span class="c1">## 1:  0.37561289 0.0328692152 0.06821232  45000             FALSE    -13</span>
+<span class="c1">## 2: -0.02192638 0.0002086689 0.06821232  75000             FALSE      1</span>
+<span class="c1">## 3: -0.52122450 0.0204093710 0.06821232  85000             FALSE     18</span>
+<span class="c1">## 4: -0.25816434 0.0128018026 0.06821232 145000             FALSE      9</span>
+<span class="c1">## 5:  0.17885861 0.0019232597 0.06821232    Inf             FALSE     -6</span>
+<span class="c1">##</span>
+<span class="c1">## $value</span>
+<span class="c1">##    variable             bin count count_distr good bad   badprob</span>
+<span class="c1">## 1:    value    [-Inf,50000)   298  0.10000000  200  98 0.3288591</span>
+<span class="c1">## 2:    value   [50000,85000)  1026  0.34429530  835 191 0.1861598</span>
+<span class="c1">## 3:    value  [85000,100000)   450  0.15100671  390  60 0.1333333</span>
+<span class="c1">## 4:    value [100000,105000)   182  0.06107383  107  75 0.4120879</span>
+<span class="c1">## 5:    value   [105000, Inf)  1024  0.34362416  854 170 0.1660156</span>
+<span class="c1">##            woe      bin_iv  total_iv breaks is_special_values points</span>
+<span class="c1">## 1:  0.67714440 0.054957627 0.1877379  50000             FALSE    -33</span>
+<span class="c1">## 2: -0.08466401 0.002405243 0.1877379  85000             FALSE      4</span>
+<span class="c1">## 3: -0.48130789 0.030054491 0.1877379 100000             FALSE     23</span>
+<span class="c1">## 4:  1.03515356 0.084279820 0.1877379 105000             FALSE    -50</span>
+<span class="c1">## 5: -0.22363847 0.016040675 0.1877379    Inf             FALSE     11</span>
+<span class="c1">##</span>
+<span class="c1">## $reason</span>
+<span class="c1">##    variable     bin count count_distr good bad  badprob         woe</span>
+<span class="c1">## 1:   reason DebtCon  2056   0.6899329 1673 383 0.186284 -0.08384443</span>
+<span class="c1">## 2:   reason HomeImp   924   0.3100671  713 211 0.228355  0.17287100</span>
+<span class="c1">##         bin_iv   total_iv  breaks is_special_values points</span>
+<span class="c1">## 1: 0.004728186 0.01447679 DebtCon             FALSE      6</span>
+<span class="c1">## 2: 0.009748605 0.01447679 HomeImp             FALSE    -12</span>
+<span class="c1">##</span>
+<span class="c1">## $job</span>
+<span class="c1">##    variable          bin count count_distr good bad   badprob        woe</span>
+<span class="c1">## 1:      job          Mgr   436  0.14630872  329 107 0.2454128  0.2672654</span>
+<span class="c1">## 2:      job       Office   483  0.16208054  426  57 0.1180124 -0.6208938</span>
+<span class="c1">## 3:      job        Other  1251  0.41979866  968 283 0.2262190  0.1607091</span>
+<span class="c1">## 4:      job      ProfExe   653  0.21912752  554  99 0.1516080 -0.3315506</span>
+<span class="c1">## 5:      job Sales%,%Self   157  0.05268456  109  48 0.3057325  0.5703474</span>
+<span class="c1">##        bin_iv  total_iv       breaks is_special_values points</span>
+<span class="c1">## 1: 0.01129116 0.1156898          Mgr             FALSE    -15</span>
+<span class="c1">## 2: 0.05127459 0.1156898       Office             FALSE     36</span>
+<span class="c1">## 3: 0.01136712 0.1156898        Other             FALSE     -9</span>
+<span class="c1">## 4: 0.02172356 0.1156898      ProfExe             FALSE     19</span>
+<span class="c1">## 5: 0.02003341 0.1156898 Sales%,%Self             FALSE    -33</span>
+<span class="c1">##</span>
+<span class="c1">## $yoj</span>
+<span class="c1">##    variable       bin count count_distr good bad   badprob         woe</span>
+<span class="c1">## 1:      yoj  [-Inf,6)  1094  0.36711409  836 258 0.2358318  0.21482526</span>
+<span class="c1">## 2:      yoj     [6,8)   310  0.10402685  264  46 0.1483871 -0.35681342</span>
+<span class="c1">## 3:      yoj    [8,15)   985  0.33053691  801 184 0.1868020 -0.08043091</span>
+<span class="c1">## 4:      yoj   [15,23)   384  0.12885906  302  82 0.2135417  0.08678651</span>
+<span class="c1">## 5:      yoj [23, Inf)   207  0.06946309  183  24 0.1159420 -0.64093804</span>
+<span class="c1">##         bin_iv   total_iv breaks is_special_values points</span>
+<span class="c1">## 1: 0.018038068 0.05623024      6             FALSE    -17</span>
+<span class="c1">## 2: 0.011847759 0.05623024      8             FALSE     29</span>
+<span class="c1">## 3: 0.002086699 0.05623024     15             FALSE      6</span>
+<span class="c1">## 4: 0.000995916 0.05623024     23             FALSE     -7</span>
+<span class="c1">## 5: 0.023261796 0.05623024    Inf             FALSE     51</span>
+<span class="c1">##</span>
+<span class="c1">## $derog</span>
+<span class="c1">##    variable      bin count count_distr good bad   badprob        woe</span>
+<span class="c1">## 1:    derog [-Inf,1)  2611  0.87617450 2206 405 0.1551130 -0.3045548</span>
+<span class="c1">## 2:    derog    [1,2)   212  0.07114094  122  90 0.4245283  1.0862829</span>
+<span class="c1">## 3:    derog [2, Inf)   157  0.05268456   58  99 0.6305732  1.9251711</span>
+<span class="c1">##        bin_iv total_iv breaks is_special_values points</span>
+<span class="c1">## 1: 0.07392818 0.457037      1             FALSE     16</span>
+<span class="c1">## 2: 0.10904494 0.457037      2             FALSE    -58</span>
+<span class="c1">## 3: 0.27406390 0.457037    Inf             FALSE   -102</span>
+<span class="c1">##</span>
+<span class="c1">## $delinq</span>
+<span class="c1">##    variable                 bin count count_distr good bad   badprob</span>
+<span class="c1">## 1:   delinq [-Inf,0.4494423792)  2114  0.70939597 1831 283 0.1338694</span>
+<span class="c1">## 2:   delinq    [0.4494423792,1)   268  0.08993289  233  35 0.1305970</span>
+<span class="c1">## 3:   delinq            [1, Inf)   598  0.20067114  322 276 0.4615385</span>
+<span class="c1">##           woe     bin_iv  total_iv       breaks is_special_values points</span>
+<span class="c1">## 1: -0.4766764 0.13869478 0.5658745 0.4494423792             FALSE     32</span>
+<span class="c1">## 2: -0.5051961 0.01956646 0.5658745            1             FALSE     34</span>
+<span class="c1">## 3:  1.2363436 0.40761330 0.5658745          Inf             FALSE    -84</span>
+<span class="c1">##</span>
+<span class="c1">## $clage</span>
+<span class="c1">##    variable        bin count count_distr good bad   badprob         woe</span>
+<span class="c1">## 1:    clage  [-Inf,70)   154  0.05167785   92  62 0.4025974  0.99584009</span>
+<span class="c1">## 2:    clage   [70,150)  1034  0.34697987  768 266 0.2572534  0.33020086</span>
+<span class="c1">## 3:    clage  [150,190)   620  0.20805369  502 118 0.1903226 -0.05742121</span>
+<span class="c1">## 4:    clage  [190,220)   353  0.11845638  297  56 0.1586402 -0.27788616</span>
+<span class="c1">## 5:    clage [220, Inf)   819  0.27483221  727  92 0.1123321 -0.67664362</span>
+<span class="c1">##         bin_iv  total_iv breaks is_special_values points</span>
+<span class="c1">## 1: 0.065545047 0.2175641     70             FALSE    -60</span>
+<span class="c1">## 2: 0.041583458 0.2175641    150             FALSE    -20</span>
+<span class="c1">## 3: 0.000674169 0.2175641    190             FALSE      3</span>
+<span class="c1">## 4: 0.008392167 0.2175641    220             FALSE     17</span>
+<span class="c1">## 5: 0.101369262 0.2175641    Inf             FALSE     41</span>
+<span class="c1">##</span>
+<span class="c1">## $ninq</span>
+<span class="c1">##    variable      bin count count_distr good bad   badprob        woe</span>
+<span class="c1">## 1:     ninq [-Inf,1)  1253  0.42046980 1057 196 0.1564246 -0.2945810</span>
+<span class="c1">## 2:     ninq    [1,2)   906  0.30402685  748 158 0.1743929 -0.1643137</span>
+<span class="c1">## 3:     ninq    [2,4)   607  0.20369128  466 141 0.2322900  0.1950685</span>
+<span class="c1">## 4:     ninq [4, Inf)   214  0.07181208  115  99 0.4626168  1.2406820</span>
+<span class="c1">##         bin_iv  total_iv breaks is_special_values points</span>
+<span class="c1">## 1: 0.033297823 0.1962913      1             FALSE     12</span>
+<span class="c1">## 2: 0.007805248 0.1962913      2             FALSE      7</span>
+<span class="c1">## 3: 0.008206102 0.1962913      4             FALSE     -8</span>
+<span class="c1">## 4: 0.146982165 0.1962913    Inf             FALSE    -51</span>
+<span class="c1">##</span>
+<span class="c1">## $clno</span>
+<span class="c1">##    variable       bin count count_distr good bad   badprob         woe</span>
+<span class="c1">## 1:     clno [-Inf,10)   277  0.09295302  183  94 0.3393502  0.72430291</span>
+<span class="c1">## 2:     clno   [10,14)   342  0.11476510  297  45 0.1315789 -0.49657537</span>
+<span class="c1">## 3:     clno   [14,24)  1305  0.43791946 1057 248 0.1900383 -0.05926696</span>
+<span class="c1">## 4:     clno   [24,33)   688  0.23087248  580 108 0.1569767 -0.29040259</span>
+<span class="c1">## 5:     clno [33, Inf)   368  0.12348993  269  99 0.2690217  0.39090275</span>
+<span class="c1">##         bin_iv  total_iv breaks is_special_values points</span>
+<span class="c1">## 1: 0.059068175 0.1236431     10             FALSE    -48</span>
+<span class="c1">## 2: 0.024192424 0.1236431     14             FALSE     33</span>
+<span class="c1">## 3: 0.001510858 0.1236431     24             FALSE      4</span>
+<span class="c1">## 4: 0.017791944 0.1236431     33             FALSE     19</span>
+<span class="c1">## 5: 0.021079696 0.1236431    Inf             FALSE    -26</span>
+<span class="c1">##</span>
+<span class="c1">## $debtinc</span>
+<span class="c1">##    variable       bin count count_distr good bad    badprob       woe</span>
+<span class="c1">## 1:  debtinc [-Inf,22)   153  0.05134228  141  12 0.07843137 -1.073359</span>
+<span class="c1">## 2:  debtinc   [22,33)   788  0.26442953  751  37 0.04695431 -1.619993</span>
+<span class="c1">## 3:  debtinc   [33,34)   727  0.24395973  317 410 0.56396149  1.647750</span>
+<span class="c1">## 4:  debtinc   [34,42)  1127  0.37818792 1047  80 0.07098492 -1.181163</span>
+<span class="c1">## 5:  debtinc [42, Inf)   185  0.06208054  130  55 0.29729730  0.530293</span>
+<span class="c1">##        bin_iv total_iv breaks is_special_values points</span>
+<span class="c1">## 1: 0.04174583 1.748588     22             FALSE     72</span>
+<span class="c1">## 2: 0.40898867 1.748588     33             FALSE    108</span>
+<span class="c1">## 3: 0.91841834 1.748588     34             FALSE   -110</span>
+<span class="c1">## 4: 0.35922671 1.748588     42             FALSE     79</span>
+<span class="c1">## 5: 0.02020846 1.748588    Inf             FALSE    -35</span>
+</pre></div>
+</div>
+<p><strong>Lưu ý</strong>:</p>
+<ul class="simple">
+<li>Default là 600 điểm tương ứng với odd là 19</li>
+<li>pdo là 50</li>
+<li>Basepoint là điểm offset 485 điểm</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># So sánh điểm score tương ứng với prob trên train</span>
+<span class="n">score</span> <span class="o">&lt;-</span>  <span class="nf">scorecard_ply</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">my_card</span><span class="p">)</span><span class="o">$</span><span class="n">score</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  1/12 loan</span>
+<span class="c1">##  2/12 mortdue</span>
+<span class="c1">##  3/12 value</span>
+<span class="c1">##  4/12 reason</span>
+<span class="c1">##  5/12 job</span>
+<span class="c1">##  6/12 yoj</span>
+<span class="c1">##  7/12 derog</span>
+<span class="c1">##  8/12 delinq</span>
+<span class="c1">##  9/12 clage</span>
+<span class="c1">## 10/12 ninq</span>
+<span class="c1">## 11/12 clno</span>
+<span class="c1">## 12/12 debtinc</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">pred</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">my_logistic</span><span class="p">,</span> <span class="n">train_woe</span><span class="p">,</span> <span class="n">type</span> <span class="o">=</span> <span class="s">&quot;response&quot;</span><span class="p">)</span>
+<span class="nf">data.frame</span><span class="p">(</span><span class="n">score</span> <span class="o">=</span> <span class="n">score</span><span class="p">,</span>
+           <span class="n">pred</span> <span class="o">=</span> <span class="n">pred</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">odds</span> <span class="o">=</span> <span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">pred</span><span class="p">)</span><span class="o">/</span><span class="n">pred</span> <span class="o">%&gt;%</span> <span class="nf">round</span><span class="p">(</span><span class="m">2</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">filter</span><span class="p">(</span><span class="n">score</span> <span class="o">%in%</span> <span class="nf">c</span><span class="p">(</span><span class="m">600</span><span class="p">,</span> <span class="m">650</span><span class="p">,</span> <span class="m">700</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">arrange</span><span class="p">(</span><span class="n">score</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    score       pred     odds</span>
+<span class="c1">## 1    600 0.04979769 19.00405</span>
+<span class="c1">## 2    600 0.04859356 19.02813</span>
+<span class="c1">## 3    600 0.04941065 19.01179</span>
+<span class="c1">## 4    600 0.04979769 19.00405</span>
+<span class="c1">## 5    600 0.04866348 19.02673</span>
+<span class="c1">## 6    600 0.04936754 19.01265</span>
+<span class="c1">## 7    650 0.02589589 32.47014</span>
+<span class="c1">## 8    650 0.02559376 32.48021</span>
+<span class="c1">## 9    650 0.02526199 32.49127</span>
+<span class="c1">## 10   650 0.02550378 32.48321</span>
+<span class="c1">## 11   650 0.02568369 32.47721</span>
+<span class="c1">## 12   650 0.02529731 32.49009</span>
+<span class="c1">## 13   650 0.02517935 32.49402</span>
+<span class="c1">## 14   650 0.02484469 48.75777</span>
+<span class="c1">## 15   650 0.02517935 32.49402</span>
+<span class="c1">## 16   650 0.02589589 32.47014</span>
+<span class="c1">## 17   650 0.02557656 32.48078</span>
+<span class="c1">## 18   700 0.01256995 98.74300</span>
+<span class="c1">## 19   700 0.01303556 98.69644</span>
+<span class="c1">## 20   700 0.01267630 98.73237</span>
+<span class="c1">## 21   700 0.01288107 98.71189</span>
+<span class="c1">## 22   700 0.01262504 98.73750</span>
+<span class="c1">## 23   700 0.01282582 98.71742</span>
+<span class="c1">## 24   700 0.01303556 98.69644</span>
+<span class="c1">## 25   700 0.01288107 98.71189</span>
+<span class="c1">## 26   700 0.01284368 98.71563</span>
+<span class="c1">## 27   700 0.01298347 98.70165</span>
+<span class="c1">## 28   700 0.01276645 98.72335</span>
+<span class="c1">## 29   700 0.01256995 98.74300</span>
+</pre></div>
+</div>
+<p><strong>Dự báo với tập mới</strong>:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">test_woe</span> <span class="o">&lt;-</span> <span class="nf">woebin_ply</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">bins_var</span><span class="p">)</span>
+<span class="n">test_pred</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">my_logistic</span><span class="p">,</span> <span class="n">test_woe</span><span class="p">,</span> <span class="n">type</span> <span class="o">=</span> <span class="s">&quot;response&quot;</span><span class="p">)</span>
+
+<span class="nf">perf_eva</span><span class="p">(</span><span class="n">test</span><span class="o">$</span><span class="n">bad</span><span class="p">,</span> <span class="n">test_pred</span><span class="p">,</span>
+         <span class="n">type</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;ks&quot;</span><span class="p">,</span> <span class="s">&quot;lift&quot;</span><span class="p">,</span> <span class="s">&quot;roc&quot;</span><span class="p">,</span> <span class="s">&quot;pr&quot;</span><span class="p">),</span>
+         <span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Test Data&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="image3" src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-10-1.png" /></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## $KS</span>
+<span class="c1">## [1] 0.6104</span>
+<span class="c1">##</span>
+<span class="c1">## $AUC</span>
+<span class="c1">## [1] 0.8898</span>
+<span class="c1">##</span>
+<span class="c1">## $Gini</span>
+<span class="c1">## [1] 0.7795</span>
+<span class="c1">##</span>
+<span class="c1">## $pic</span>
+<span class="c1">## TableGrob (2 x 2) &quot;arrange&quot;: 4 grobs</span>
+<span class="c1">##       z     cells    name           grob</span>
+<span class="c1">## pks   1 (1-1,1-1) arrange gtable[layout]</span>
+<span class="c1">## plift 2 (1-1,2-2) arrange gtable[layout]</span>
+<span class="c1">## proc  3 (2-2,1-1) arrange gtable[layout]</span>
+<span class="c1">## ppr   4 (2-2,2-2) arrange gtable[layout]</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">test_woe</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    bad  loan_woe mortdue_woe   value_woe  reason_woe    job_woe</span>
+<span class="c1">## 1:   1 0.7582559  0.37561289  0.67714440  0.17287100  0.1607091</span>
+<span class="c1">## 2:   1 0.7582559 -0.02192638 -0.08466401  0.17287100  0.1607091</span>
+<span class="c1">## 3:   1 0.7582559  0.37561289  0.67714440  0.17287100  0.1607091</span>
+<span class="c1">## 4:   1 0.7582559 -0.02192638  1.03515356 -0.08384443  0.1607091</span>
+<span class="c1">## 5:   0 0.7582559 -0.25816434 -0.22363847  0.17287100 -0.6208938</span>
+<span class="c1">## 6:   1 0.7582559  0.37561289  0.67714440  0.17287100  0.1607091</span>
+<span class="c1">##        yoj_woe  derog_woe delinq_woe   clage_woe   ninq_woe    clno_woe</span>
+<span class="c1">## 1: -0.08043091 -0.3045548 -0.4766764  0.33020086 -0.1643137  0.72430291</span>
+<span class="c1">## 2: -0.35681342 -0.3045548  1.2363436  0.33020086 -0.2945810 -0.05926696</span>
+<span class="c1">## 3:  0.21482526 -0.3045548 -0.4766764  0.33020086 -0.1643137 -0.49657537</span>
+<span class="c1">## 4: -0.08043091 -0.3045548 -0.4766764 -0.05742121 -0.1643137 -0.05926696</span>
+<span class="c1">## 5:  0.21482526 -0.3045548 -0.4766764  0.33020086 -0.2945810 -0.05926696</span>
+<span class="c1">## 6: -0.08043091 -0.3045548 -0.4766764  0.33020086 -0.1643137  0.72430291</span>
+<span class="c1">##    debtinc_woe</span>
+<span class="c1">## 1:    1.647750</span>
+<span class="c1">## 2:    1.647750</span>
+<span class="c1">## 3:    1.647750</span>
+<span class="c1">## 4:    1.647750</span>
+<span class="c1">## 5:    1.647750</span>
+<span class="c1">## 6:   -1.181163</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">score_result</span> <span class="o">&lt;-</span> <span class="nf">scorecard_ply</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">my_card</span><span class="p">,</span> <span class="n">only_total_score</span> <span class="o">=</span> <span class="bp">F</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  1/12 loan</span>
+<span class="c1">##  2/12 mortdue</span>
+<span class="c1">##  3/12 value</span>
+<span class="c1">##  4/12 reason</span>
+<span class="c1">##  5/12 job</span>
+<span class="c1">##  6/12 yoj</span>
+<span class="c1">##  7/12 derog</span>
+<span class="c1">##  8/12 delinq</span>
+<span class="c1">##  9/12 clage</span>
+<span class="c1">## 10/12 ninq</span>
+<span class="c1">## 11/12 clno</span>
+<span class="c1">## 12/12 debtinc</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">score_result</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    loan_points mortdue_points value_points reason_points job_points</span>
+<span class="c1">## 1:         -25            -13          -33           -12         -9</span>
+<span class="c1">## 2:         -25              1            4           -12         -9</span>
+<span class="c1">## 3:         -25            -13          -33           -12         -9</span>
+<span class="c1">## 4:         -25              1          -50             6         -9</span>
+<span class="c1">## 5:         -25              9           11           -12         36</span>
+<span class="c1">## 6:         -25            -13          -33           -12         -9</span>
+<span class="c1">##    yoj_points derog_points delinq_points clage_points ninq_points</span>
+<span class="c1">## 1:          6           16            32          -20           7</span>
+<span class="c1">## 2:         29           16           -84          -20          12</span>
+<span class="c1">## 3:        -17           16            32          -20           7</span>
+<span class="c1">## 4:          6           16            32            3           7</span>
+<span class="c1">## 5:        -17           16            32          -20          12</span>
+<span class="c1">## 6:          6           16            32          -20           7</span>
+<span class="c1">##    clno_points debtinc_points score</span>
+<span class="c1">## 1:         -48           -110   276</span>
+<span class="c1">## 2:           4           -110   291</span>
+<span class="c1">## 3:          33           -110   334</span>
+<span class="c1">## 4:           4           -110   366</span>
+<span class="c1">## 5:           4           -110   421</span>
+<span class="c1">## 6:         -48             79   465</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">predict</span> <span class="o">=</span> <span class="n">test_pred</span><span class="p">,</span> <span class="n">actual</span> <span class="o">=</span> <span class="n">test</span><span class="o">$</span><span class="n">bad</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">%&gt;%</span> <span class="n">VPBank</span><span class="o">::</span><span class="nf">model_performance</span><span class="p">(</span><span class="n">predict</span><span class="p">,</span> <span class="n">actual</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## $decile_table</span>
+<span class="c1">##    decile total positives response_rate cummulative_positives</span>
+<span class="c1">## 1       1   596       477         0.800                 0.401</span>
+<span class="c1">## 2       2   596       317         0.532                 0.668</span>
+<span class="c1">## 3       3   596       140         0.235                 0.786</span>
+<span class="c1">## 4       4   596        94         0.158                 0.865</span>
+<span class="c1">## 5       5   596        72         0.121                 0.925</span>
+<span class="c1">## 6       6   596        33         0.055                 0.953</span>
+<span class="c1">## 7       7   596        36         0.060                 0.983</span>
+<span class="c1">## 8       8   596        13         0.022                 0.994</span>
+<span class="c1">## 9       9   596         2         0.003                 0.996</span>
+<span class="c1">## 10     10   596         5         0.008                 1.000</span>
+<span class="c1">##    cummulative_response_rate lift</span>
+<span class="c1">## 1                      0.800 4.01</span>
+<span class="c1">## 2                      0.666 3.34</span>
+<span class="c1">## 3                      0.522 2.62</span>
+<span class="c1">## 4                      0.431 2.16</span>
+<span class="c1">## 5                      0.369 1.85</span>
+<span class="c1">## 6                      0.317 1.59</span>
+<span class="c1">## 7                      0.280 1.40</span>
+<span class="c1">## 8                      0.248 1.24</span>
+<span class="c1">## 9                      0.221 1.11</span>
+<span class="c1">## 10                     0.199 1.00</span>
+<span class="c1">##</span>
+<span class="c1">## $gain_chart</span>
+</pre></div>
+</div>
+<p><img alt="image4" src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-11-1.png" /></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+<span class="c1">## $roc_curve</span>
+</pre></div>
+</div>
+<p><img alt="image5" src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-11-2.png" /></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+<span class="c1">## $model_performance</span>
+</pre></div>
+</div>
+<p><img alt="image6" src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-11-3.png" /></p>
+</div>
+<div class="section" id="do-luong-do-on-dinh-mo-hinh">
+<h3>10.4.2. Đo lường độ ổn định mô hình<a class="headerlink" href="#do-luong-do-on-dinh-mo-hinh" title="Permalink to this headline">¶</a></h3>
+<p>Độ ổn định</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">index</span> <span class="o">&lt;-</span> <span class="nf">read.table</span><span class="p">(</span><span class="nf">textConnection</span><span class="p">(</span>
+  <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Score_bands    Actual  Expected    Diff    log_Ac_Ex   Index</span>
+<span class="s">&lt; 251   5%  8%  -3% -0.47   0.014</span>
+<span class="s">251–290 6%  9%  -3% -0.41   0.012</span>
+<span class="s">291–320 6%  10% -4% -0.51   0.020</span>
+<span class="s">321–350 8%  13% -5% -0.49   0.024</span>
+<span class="s">351–380 10% 12% -2% -0.18   0.004</span>
+<span class="s">381–410 12% 11% 1%  0.09    0.001</span>
+<span class="s">411–440 14% 10% 4%  0.34    0.013</span>
+<span class="s">441–470 14% 9%  5%  0.44    0.022</span>
+<span class="s">471–520 13% 9%  4%  0.37    0.015</span>
+<span class="s">520 &lt;   9%  8%  1%  0.12    0.001&quot;</span><span class="p">)</span>
+<span class="p">),</span> <span class="n">header</span> <span class="o">=</span> <span class="bp">T</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s">&quot;\t&quot;</span><span class="p">)</span>
+<span class="n">index</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    Score_bands Actual Expected Diff log_Ac_Ex Index</span>
+<span class="c1">## 1        &lt; 251     5%       8%  -3%     -0.47 0.014</span>
+<span class="c1">## 2      251290     6%       9%  -3%     -0.41 0.012</span>
+<span class="c1">## 3      291320     6%      10%  -4%     -0.51 0.020</span>
+<span class="c1">## 4      321350     8%      13%  -5%     -0.49 0.024</span>
+<span class="c1">## 5      351380    10%      12%  -2%     -0.18 0.004</span>
+<span class="c1">## 6      381410    12%      11%   1%      0.09 0.001</span>
+<span class="c1">## 7      411440    14%      10%   4%      0.34 0.013</span>
+<span class="c1">## 8      441470    14%       9%   5%      0.44 0.022</span>
+<span class="c1">## 9      471520    13%       9%   4%      0.37 0.015</span>
+<span class="c1">## 10       520 &lt;     9%       8%   1%      0.12 0.001</span>
+</pre></div>
+</div>
+<div class="math notranslate">
+\[log_Ac_Ex = log(\frac{AC}{Ec})\]</div>
+<div class="math notranslate">
+\[Diff = AC - EC\]</div>
+<div class="math notranslate">
+\[Index = (AC - EC)*log(\frac{AC}{EC})\]</div>
+<div class="math notranslate">
+\[Population\:Stability\:Index\:(PSI) ==  \sum(Index) = 0.1269\]</div>
+<p><strong>Quy tắc</strong>:</p>
+<ul class="simple">
+<li>PSI &lt; 0.1: Mô hình ổn định</li>
+<li>0.1 &lt;= PSI &lt;= 0.25: Kiểm tra lại mô hình</li>
+<li>PSI &gt;= 0.25: Mô hình cần phải xây lại</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">train_score</span> <span class="o">&lt;-</span> <span class="nf">scorecard_ply</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">my_card</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  1/12 loan</span>
+<span class="c1">##  2/12 mortdue</span>
+<span class="c1">##  3/12 value</span>
+<span class="c1">##  4/12 reason</span>
+<span class="c1">##  5/12 job</span>
+<span class="c1">##  6/12 yoj</span>
+<span class="c1">##  7/12 derog</span>
+<span class="c1">##  8/12 delinq</span>
+<span class="c1">##  9/12 clage</span>
+<span class="c1">## 10/12 ninq</span>
+<span class="c1">## 11/12 clno</span>
+<span class="c1">## 12/12 debtinc</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">test_score</span> <span class="o">&lt;-</span> <span class="nf">scorecard_ply</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">my_card</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  1/12 loan</span>
+<span class="c1">##  2/12 mortdue</span>
+<span class="c1">##  3/12 value</span>
+<span class="c1">##  4/12 reason</span>
+<span class="c1">##  5/12 job</span>
+<span class="c1">##  6/12 yoj</span>
+<span class="c1">##  7/12 derog</span>
+<span class="c1">##  8/12 delinq</span>
+<span class="c1">##  9/12 clage</span>
+<span class="c1">## 10/12 ninq</span>
+<span class="c1">## 11/12 clno</span>
+<span class="c1">## 12/12 debtinc</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">psi</span> <span class="o">&lt;-</span> <span class="nf">perf_psi</span><span class="p">(</span>
+  <span class="n">score</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">train</span> <span class="o">=</span> <span class="n">train_score</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">test_score</span><span class="p">),</span>
+  <span class="n">label</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">train</span> <span class="o">=</span> <span class="n">train</span><span class="o">$</span><span class="n">bad</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">test</span><span class="o">$</span><span class="n">bad</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">psi</span><span class="o">$</span><span class="n">psi</span>  <span class="c1"># psi dataframe</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    variable         PSI</span>
+<span class="c1">## 1:    score 0.003897603</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">&lt;-</span> <span class="n">psi</span><span class="o">$</span><span class="n">pic</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">scales</span><span class="p">)</span>
+<span class="n">p</span><span class="o">$</span><span class="n">score</span> <span class="o">+</span> <span class="n">VPBank</span><span class="o">::</span><span class="nf">theme_vpbank</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><img alt="image7" src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-13-1.png" /></p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">&lt;-</span> <span class="n">train_score</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">class</span> <span class="o">=</span> <span class="s">&quot;train&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">actual</span> <span class="o">=</span> <span class="n">train</span><span class="o">$</span><span class="n">bad</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">bind_rows</span><span class="p">(</span><span class="n">test_score</span> <span class="o">%&gt;%</span>
+              <span class="nf">mutate</span><span class="p">(</span><span class="n">class</span> <span class="o">=</span> <span class="s">&quot;test&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+              <span class="nf">mutate</span><span class="p">(</span><span class="n">actual</span> <span class="o">=</span> <span class="n">test</span><span class="o">$</span><span class="n">bad</span><span class="p">))</span>
+<span class="n">df</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##      score          class               actual</span>
+<span class="c1">##  Min.   :-15.0   Length:8940        Min.   :0.0000</span>
+<span class="c1">##  1st Qu.:458.0   Class :character   1st Qu.:0.0000</span>
+<span class="c1">##  Median :583.0   Mode  :character   Median :0.0000</span>
+<span class="c1">##  Mean   :547.4                      Mean   :0.1994</span>
+<span class="c1">##  3rd Qu.:660.0                      3rd Qu.:0.0000</span>
+<span class="c1">##  Max.   :821.0                      Max.   :1.0000</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">&lt;-</span> <span class="n">df</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">bucket</span> <span class="o">=</span> <span class="nf">cut</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="n">breaks</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">150</span><span class="p">,</span> <span class="m">850</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="m">50</span><span class="p">)))</span>  <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">bucket</span> <span class="o">=</span> <span class="nf">as.character</span><span class="p">(</span><span class="n">bucket</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">bucket</span> <span class="o">=</span> <span class="nf">case_when</span><span class="p">(</span>
+    <span class="n">score</span> <span class="o">&lt;</span> <span class="m">200</span> <span class="o">~</span> <span class="s">&quot;(-50,200]&quot;</span><span class="p">,</span>
+    <span class="n">score</span> <span class="o">&gt;</span> <span class="m">750</span> <span class="o">~</span> <span class="s">&quot;[750, 850)&quot;</span><span class="p">,</span>
+    <span class="kc">TRUE</span> <span class="o">~</span> <span class="n">bucket</span>
+  <span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span>
+    <span class="n">class</span> <span class="o">=</span> <span class="nf">as.factor</span><span class="p">(</span><span class="n">class</span><span class="p">),</span>
+    <span class="n">actual</span> <span class="o">=</span> <span class="nf">as.factor</span><span class="p">(</span><span class="n">actual</span><span class="p">),</span>
+    <span class="n">bucket</span> <span class="o">=</span> <span class="nf">as.factor</span><span class="p">(</span><span class="n">bucket</span><span class="p">)</span>
+  <span class="p">)</span>
+
+<span class="n">df</span> <span class="o">%&gt;%</span>
+  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">bucket</span><span class="p">))</span> <span class="o">+</span>
+  <span class="nf">geom_bar</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="n">class</span><span class="p">),</span>
+           <span class="n">stat</span> <span class="o">=</span> <span class="s">&quot;count&quot;</span><span class="p">,</span>
+           <span class="n">position</span> <span class="o">=</span> <span class="s">&quot;dodge&quot;</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">theme_vpbank</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><img alt="image8" src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-13-2.png" /></p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">VPBank</span><span class="p">)</span>
+<span class="n">p</span><span class="o">$</span><span class="n">score</span> <span class="o">+</span>
+  <span class="nf">theme_vpbank</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><img alt="image9" src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-13-3.png" /></p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">$</span><span class="n">bucket</span> <span class="o">%&gt;%</span> <span class="n">levels</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  [1] &quot;(-50,200]&quot;  &quot;(150,200]&quot;  &quot;(200,250]&quot;  &quot;(250,300]&quot;  &quot;(300,350]&quot;</span>
+<span class="c1">##  [6] &quot;(350,400]&quot;  &quot;(400,450]&quot;  &quot;(450,500]&quot;  &quot;(500,550]&quot;  &quot;(550,600]&quot;</span>
+<span class="c1">## [11] &quot;(600,650]&quot;  &quot;(650,700]&quot;  &quot;(700,750]&quot;  &quot;[750, 850)&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">%&gt;%</span>
+  <span class="nf">filter</span><span class="p">(</span><span class="n">bucket</span> <span class="o">==</span> <span class="s">&quot;(300,350]&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">group_by</span><span class="p">(</span><span class="n">class</span><span class="p">,</span> <span class="n">actual</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">summarise</span><span class="p">(</span><span class="n">no</span> <span class="o">=</span> <span class="nf">n</span><span class="p">())</span> <span class="o">%&gt;%</span>
+  <span class="n">ungroup</span> <span class="o">%&gt;%</span>
+  <span class="nf">group_by</span><span class="p">(</span><span class="n">class</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">perc</span> <span class="o">=</span> <span class="n">no</span><span class="o">/</span><span class="nf">sum</span><span class="p">(</span><span class="n">no</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 4 x 4</span>
+<span class="c1">## # Groups:   class [2]</span>
+<span class="c1">##   class actual    no  perc</span>
+<span class="c1">##   &lt;fct&gt; &lt;fct&gt;  &lt;int&gt; &lt;dbl&gt;</span>
+<span class="c1">## 1 test  0         88 0.371</span>
+<span class="c1">## 2 test  1        149 0.629</span>
+<span class="c1">## 3 train 0         43 0.364</span>
+<span class="c1">## 4 train 1         75 0.636</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="tai-lieu-tham-khao">
+<h2>10.5. Tài liệu tham khảo<a class="headerlink" href="#tai-lieu-tham-khao" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="http://ucanalytics.com/blogs/information-value-and-weight-of-evidencebanking-case/">http://ucanalytics.com/blogs/information-value-and-weight-of-evidencebanking-case/</a></li>
+<li>IFRS 9 and CECL Credit Risk Modelling and ValidationA Practical Guide
+with Examples Worked in R and SAS</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="p03-35-caret.html" class="btn btn-neutral float-right" title="11. Xây dựng mô hình dự báo với caret" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="p03-17-nonlinear.html" class="btn btn-neutral float-left" title="9. Mô hình phi tuyến tính" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anh Hoang Duc
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,187 @@
+Chất lượng mô hình
+==================
+
+.. code:: r
+
+   library(tidyverse)
+
+::
+
+   ## Loading tidyverse: ggplot2
+   ## Loading tidyverse: tibble
+   ## Loading tidyverse: tidyr
+   ## Loading tidyverse: readr
+   ## Loading tidyverse: purrr
+   ## Loading tidyverse: dplyr
+
+::
+
+   ## Warning: package 'ggplot2' was built under R version 3.4.4
+
+::
+
+   ## Warning: package 'tibble' was built under R version 3.4.4
+
+::
+
+   ## Warning: package 'tidyr' was built under R version 3.4.4
+
+::
+
+   ## Warning: package 'readr' was built under R version 3.4.4
+
+::
+
+   ## Warning: package 'purrr' was built under R version 3.4.4
+
+::
+
+   ## Warning: package 'dplyr' was built under R version 3.4.4
+
+::
+
+   ## Conflicts with tidy packages ----------------------------------------------
+
+::
+
+   ## filter(): dplyr, stats
+   ## lag():    dplyr, stats
+
+.. code:: r
+
+   library(tidymodels)
+
+::
+
+   ## -- Attaching packages --------------------------------------------------------------------------------------------------------- tidymodels 0.0.2 --
+
+::
+
+   ## v broom     0.5.1     v recipes   0.1.4
+   ## v dials     0.0.2     v rsample   0.0.4
+   ## v infer     0.4.0     v yardstick 0.0.2
+   ## v parsnip   0.0.1
+
+::
+
+   ## Warning: package 'broom' was built under R version 3.4.4
+
+::
+
+   ## Warning: package 'dials' was built under R version 3.4.4
+
+::
+
+   ## Warning: package 'scales' was built under R version 3.4.4
+
+::
+
+   ## Warning: package 'infer' was built under R version 3.4.4
+
+::
+
+   ## Warning: package 'parsnip' was built under R version 3.4.4
+
+::
+
+   ## Warning: package 'recipes' was built under R version 3.4.4
+
+::
+
+   ## Warning: package 'rsample' was built under R version 3.4.4
+
+::
+
+   ## Warning: package 'yardstick' was built under R version 3.4.4
+
+::
+
+   ## -- Conflicts ------------------------------------------------------------------------------------------------------------ tidymodels_conflicts() --
+   ## x scales::discard() masks purrr::discard()
+   ## x dplyr::filter()   masks stats::filter()
+   ## x dplyr::lag()      masks stats::lag()
+   ## x yardstick::spec() masks readr::spec()
+   ## x recipes::step()   masks stats::step()
+
+**Trường hợp 1**: Xác suất ``TRUE`` phân phối đều trong khoảng từ 0 đến
+1
+
+.. code:: r
+
+   prob <- seq(0.1,1, by = 0.1)
+   class <- c(0,1,0,0,0,0,1,1,0,1) %>% as.factor
+   df1 <- data.frame(prob = prob,
+                    class = class %>% as.factor)
+   df1
+
+::
+
+   ##    prob class
+   ## 1   0.1     0
+   ## 2   0.2     1
+   ## 3   0.3     0
+   ## 4   0.4     0
+   ## 5   0.5     0
+   ## 6   0.6     0
+   ## 7   0.7     1
+   ## 8   0.8     1
+   ## 9   0.9     0
+   ## 10  1.0     1
+
+.. code:: r
+
+   roc_auc(df1, class, prob)
+
+::
+
+   ## Warning: The `printer` argument is deprecated as of rlang 0.3.0.
+   ## This warning is displayed once per session.
+
+::
+
+   ## Warning: package 'bindrcpp' was built under R version 3.4.4
+
+::
+
+   ## # A tibble: 1 x 3
+   ##   .metric .estimator .estimate
+   ##   <chr>   <chr>          <dbl>
+   ## 1 roc_auc binary         0.708
+
+**Trường hợp 2**: Xác xuất ``TRUE`` phân phối trong khoảng từ 0.55 đến 1
+
+.. code:: r
+
+   prob <- seq(0.55,1, by = 0.05)
+   class <- c(0,1,0,0,0,0,1,1,0,1) %>% as.factor
+   df2 <- data.frame(prob = prob,
+                    class = class %>% as.factor)
+   df2
+
+::
+
+   ##    prob class
+   ## 1  0.55     0
+   ## 2  0.60     1
+   ## 3  0.65     0
+   ## 4  0.70     0
+   ## 5  0.75     0
+   ## 6  0.80     0
+   ## 7  0.85     1
+   ## 8  0.90     1
+   ## 9  0.95     0
+   ## 10 1.00     1
+
+.. code:: r
+
+   roc_auc(df2, class, prob)
+
+::
+
+   ## # A tibble: 1 x 3
+   ##   .metric .estimator .estimate
+   ##   <chr>   <chr>          <dbl>
+   ## 1 roc_auc binary         0.708
+
+Trong cả hai trường hợp trên, ta thấy ``AUC`` của cả 2 mô hình đều không
+đổi

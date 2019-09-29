@@ -1,0 +1,746 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="vi" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="vi" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1. Các nguyên lý dự báo &mdash; Tài liệu Phân tích dữ liệu với R 2019</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'2019',
+              LANGUAGE:'vi',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript" src="_static/copybutton.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Tìm Kiếm" href="search.html" />
+    <link rel="next" title="2. Mô hình OLS" href="p03-02-mo-hinh-ols.html" />
+    <link rel="prev" title="13. Các mẹo trong R" href="p02-99-meo-trong-r.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Phân tích dữ liệu với R
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Giới thiệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-gioi-thieu.html">Khoa học dữ liệu và nghề phân tích dữ liệu</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Phân tích khám phá dữ liệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p02-03-bien-doi-du-lieu-dplyr.html">1. Ngữ pháp của biến đổi dữ liệu với DPLYR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-04-phan-ra-va-xoay-chieu-du-lieu.html">2. Phân rã và xoay chiều dữ liệu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-05-cac-chi-so-thong-ke.html">3. Các chỉ số thống kê mô tả cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-06-lap-trinh-ham.html">4. Lập trình hàm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-07-lap-trinh-ham-voi-purrr.html">5. Lập trình chức năng hàm với purrr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-08-bien-doi-du-lieu-text.html">6. Biến đổi dữ liệu text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-11-quan-ly-nhieu-mo-hinh.html">7. Quản lý kết quả phân tích từ nhiều mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-15-thong-ke-co-ban.html">8. Xác suất và phân phối thống kê cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-16-power-analysis.html">9. Power analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-20-sampling-methods.html">10. Phương pháp ước lượng lấy mẫu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-50-datatable.html">11. Biến đổi dữ liệu với <code class="docutils literal notranslate"><span class="pre">data.table</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-60-thu-thap-du-lieu-tu-website.html">12. Thu thập dữ liệu từ website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-99-meo-trong-r.html">13. Các mẹo trong R</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Supervised learning</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Các nguyên lý dự báo</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gioi-thieu">1.1. Giới thiệu</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cac-nhanh-trong-hoc-may-machine-learning">1.1.1. Các nhánh trong học máy (machine learning)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cach-xay-dung-mo-hinh">1.1.2. Cách xây dựng mô hình</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#su-dung-mo-hinh">1.1.3. Sử dụng mô hình</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#cac-nguyen-ly-trong-du-bao">1.2. Các nguyên lý trong dự báo</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#reducible-vs-irreducible-error">1.2.1. Reducible vs.&nbsp;irreducible error</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kha-nang-giai-thich-va-kha-nang-du-bao">1.2.2. Khả năng giải thích và khả năng dự báo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mo-hinh-co-tham-so-cho-truoc-hoac-khong-co-tham-so-cho-truoc-parametric-vs-nonparametric">1.2.3. Mô hình có tham số cho trước hoặc không có tham số cho trước (Parametric vs.&nbsp;Nonparametric)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nguyen-ly-chu-u">1.2.4. Nguyên lý chữ U</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bias-variance-trade-off">1.2.5. Bias Variance Trade-Off</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#overfitting-regularization">1.2.6. Overfitting &amp; regularization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#quy-trinh-xay-dung-mo-hinh-du-bao">1.3. Quy trình xây dựng mô hình dự báo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ensemble-methods">1.4. Ensemble methods</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#luu-y">1.5. Lưu ý</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="p03-02-mo-hinh-ols.html">2. Mô hình OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Unsupervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p04-01-unsupervised-learning.html">1. Unsupervised learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-02-kmeans.html">2. k-means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-03-hierarchical-clustering.html">3. Hierachical clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-04-basket-analysis.html">4. Phân tích giỏ hàng</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-05-pca.html">5. Principal component analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-06-factor-analysis.html">6. Phân tích nhân tố ẩn (factor analysis)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Chuỗi thời gian</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p05-01-chuoi-thoi-gian.html">1. Giới thiệu về chuỗi thời gian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-02-arima.html">2. Mô hình ARIMA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html">3. Phân tích chuỗi thời gian với tidyquant và timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-06-du-bao-ts-voi-prophet.html">4. Dự báo chuỗi thời gian với prophet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-07-du-bao-ts-voi-timetk.html">5. Dự báo chuỗi thời gian với timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-08-abnomaly-detection.html">6. Abnomaly detection trong times series</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ngôn ngữ tự nghiên</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p06-01-nlp-co-ban.html">1. Xử lý ngôn ngữ tự nhiên cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-04-text-classification.html">2. Phân loại text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-07-nlp-api.html">3. Sử dụng API từ các dịch vụ đám mây</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-10-ocr-tesseract.html">4. OCR với <code class="docutils literal notranslate"><span class="pre">tesseract</span></code></a></li>
+</ul>
+<p class="caption"><span class="caption-text">Các phương pháp khác</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p07-01-survival-analysis.html">1. Survival analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-02-causal-impact.html">2. Causal Impact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-03-collaborative-filtering.html">3. Collaborative Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-07-spatial-data.html">4. Spatial data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-10-shiny.html">5. Shiny apps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p09-01-gioi-thieu-deep-learning.html">1. Giới thiệu cơ bản về Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-02-co-ban-kien-thuc-toan.html">2. Kiến thức cơ bản toán học cho deep learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-03-mo-hinh-deep-learning-co-ban.html">3. Mô hình deep learning cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-04-convolution-neural-network.html">4. Convolution neural networks</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cloud Computing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p10-01-cai-dat-rstudio-server-tren-amazon.html">1. Cài đặt server RStudio trên Amazon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-03-web-service-azure.html">2. Xây dựng web service với Azure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-09-apis-voi-plumber.html">3. API với Plumber</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Kiến thức bổ trợ</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p11-01-git.html">1. Sử dụng GIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-02-cmd.html">2. CMD và Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-03-docker.html">3. Sử dụng docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-04-apis.html">4. API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-05-html-css.html">5. Cơ bản về HTML và CSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-09-other.html">6. Các tricks khác</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Case studies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p13-01-casestudy-truc-quan-hoa.html">1. Trực quan hóa dữ liệu</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Phân tích dữ liệu với R</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>1. Các nguyên lý dự báo</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/p03-01-nguyen-ly-du-bao.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="cac-nguyen-ly-du-bao">
+<h1>1. Các nguyên lý dự báo<a class="headerlink" href="#cac-nguyen-ly-du-bao" title="Permalink to this headline">¶</a></h1>
+<p>Trong chương này, chúng ta sẽ tìm hiểu những khái niệm và nguyên lý cơ
+bản nhất của học máy (<code class="docutils literal notranslate"><span class="pre">machine</span> <span class="pre">learning</span> <span class="pre">hay</span> <span class="pre">statistical</span> <span class="pre">learning</span></code>).
+Các nguyên lý này sẽ giúp ta nắm vững để có thể phát triển nhanh chóng
+trong lĩnh vực dự báo. Khi đã nắm vững các nguyên lý này, việc xây dựng
+mô hình với các thuật toán khác nhau sẽ không còn quan trọng nữa bởi tất
+cả sẽ đều phải đi qua các nguyên lý giống nhau.</p>
+<div class="section" id="gioi-thieu">
+<h2>1.1. Giới thiệu<a class="headerlink" href="#gioi-thieu" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cac-nhanh-trong-hoc-may-machine-learning">
+<h3>1.1.1. Các nhánh trong học máy (machine learning)<a class="headerlink" href="#cac-nhanh-trong-hoc-may-machine-learning" title="Permalink to this headline">¶</a></h3>
+<p><strong>Statistical Learning</strong> (SL) hay <strong>Machine Learning</strong> là nghành học sử
+dụng nhiều phương pháp và công cụ toán học khác nhau để <em>tìm hiểu</em> về
+cấu trúc của dữ liệu. ML có thể được chia thành 2 dạng: Định hướng &amp;
+không định hướng:</p>
+<ul class="simple">
+<li><strong>Phân tích có định hướng trước</strong> (Supervised learning): Xây dựng các
+mô hình giữa biến phụ thuộc với một hoặc nhiều biến độc lập. Trong
+đó, kết quả đầu ra y đã được xác định trước. Ví dụ: Dự báo khách hàng
+vỡ nợ dựa vào các đặc trưng về nhân khẩu học và hành vi giao dịch của
+khách hàng. Các thuật toán như cây quyết định, logistics, mô hình hồi
+quy tuyến tính đều thuộc loại này. Tuy nhiên, tùy thuộc vào biến cần
+dự báo, ta lại có hai nhóm nhỏ sau:<ul>
+<li><strong>Bài toán phân loại</strong> (classification): Khi biến phụ thuộc là các
+biến định dạng nhóm (category). Ví dụ, khách hàng tốt hay xấu,
+khách hàng mua hay không mua sản phẩm,…</li>
+<li><strong>Bài toán dự báo</strong> (regression): Khi biến phụ thuộc là biến số
+cần dự báo giá trị. Ví dụ, giá trị của tổng các giao dịch một
+khách hàng có trong 1 tháng…</li>
+</ul>
+</li>
+<li><strong>Phân tích không định hướng trước</strong>(Unsupervised learning): Biến
+phụ thuộc chưa biết trước và mục tiêu của mô hình là tìm ra các mối
+qua hệ ẩn giữa các nhóm. . Ví dụ, phân nhóm khách hàng thành 5 nhóm
+các hành vi tương tự nhau. Các thuật toán như apriori, k-means, PCA,
+FA thuộc nhóm này. Các bài toán loại này có thể chia làm 2 nhóm lớn
+như sau:<ul>
+<li><strong>Bài toán phân nhóm</strong> (clustering): Bài toán loại này giúp ta
+chia tập dữ liệu sẵn có thành nhiều nhóm khác nhau để sao cho đặc
+trưng của mỗi nhóm là gần nhau nhất</li>
+<li><strong>Bài toán tìm thành phần chính</strong> (PCA): Bài toán này giúp ta giảm
+số lượng các biến có sẵn trong dữ liệu gốc nhưng vẫn đảm bảo thể
+hiện được cấu trúc của toàn bộ dữ liệu</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="cach-xay-dung-mo-hinh">
+<h3>1.1.2. Cách xây dựng mô hình<a class="headerlink" href="#cach-xay-dung-mo-hinh" title="Permalink to this headline">¶</a></h3>
+<p>Khi bắt đầu tìm hiểu về học máy hoặc kinh tế lượng, ta sẽ thường xuyên
+gặp khái niệm <em>mô hình</em>. Mô hình là cách thức thể hiện mối quan hệ giữa
+các biến thông quan các công cụ toán học. Do mô hình là cách thức đơn
+giản hóa mối quan hệ giữa các biến trên thực tế, do đó, mô hình còn được
+nhiều nhà phân tích gọi là <em>giả thuyết</em>. Khi xây dựng một mô hình dự
+báo, bản chất là ta dựa vào tập dữ liệu cho trước, áp dụng một thuật
+toán để đưa ra một mô hình (giả thuyết) về mối quan hệ giữa biến đầu vào
+và đầu ra.</p>
+<p>Khi xây dựng mô hình, ta thường có ba tập dữ liệu</p>
+<ul class="simple">
+<li>Train: Tập dữ liệu được sử dụng khi xây dựng mô hình</li>
+<li>Validation: tập dữ liệu dùng để đánh giá chất lượng mô hình được xây
+trên tập train, cập nhật lại các hyper-parameters mô hình để đưa ra
+mô hình cuối cùng.</li>
+<li>Test: Tập dữ liệu độc lập dùng để đánh giá chất lượng mô hình cuối
+cùng</li>
+</ul>
+<p>Mô hình (hay giả thuyết h) giữa biến đầu vào và đầu ra được thể hiện như
+sau.</p>
+<div class="math notranslate">
+\[h_{\theta} = \theta_0 + \theta_1 \times X\]</div>
+<ul class="simple">
+<li><span class="math notranslate">\(h_{\theta}\)</span> được gọi là giả thuyết hay mô hình.</li>
+<li><span class="math notranslate">\(\theta\)</span> là tham số của mô hình.</li>
+</ul>
+<p>Với các bài toán (supervised vs.&nbsp;nonsupervised) khác nhau, phương trình
+trên sẽ được thay đổi để phù hợp với bài toán thực tế.</p>
+<p>Khi xây dựng mô hình, tất cả các thuật toán của ML đều trải qua ba bước
+cơ bản theo sơ đồ sau.</p>
+<p><img alt="image0" src="Images/40-build-measure-learn.png" /></p>
+<ul class="simple">
+<li><strong>Bước 1</strong>: Xây dựng mô hình với tham số bất kỳ. Với mỗi mô hình, sẽ
+có các tham số khác nhau. Ví dụ, mô hình OLS, tham số là hệ số
+<span class="math notranslate">\(\beta\)</span> trong mô hình <span class="math notranslate">\(y = \beta*X\)</span>.</li>
+<li><strong>Bước 2</strong>: Đo lường sai số mô hình so với thực tế.</li>
+<li><strong>Bước 3</strong>: Update lại tham số của mô hình để giảm thiểu sai số giữa
+mô hình và thực tế.</li>
+</ul>
+<p>Thuật toán sẽ tiếp tục diễn ra cho đến khi sai số của mô hình nhỏ hơn 1
+mức sai số định trước.</p>
+<p>Với mô hình phân tích có định hướng (tồn tại biến Y cần dự báo), phương
+trình của mô hình dự báo có thể biểu diễn dưới dạng.</p>
+<div class="math notranslate">
+\[Y = f(X)\]</div>
+<p>Trong đó:</p>
+<ul class="simple">
+<li>Y được gọi là biến phụ thuộc (dependent variables)</li>
+<li>X được gọi là biến độc lập (independent variables) hay biến dự báo
+(predictors)</li>
+</ul>
+</div>
+<div class="section" id="su-dung-mo-hinh">
+<h3>1.1.3. Sử dụng mô hình<a class="headerlink" href="#su-dung-mo-hinh" title="Permalink to this headline">¶</a></h3>
+<p>Sau khi xây dựng, bước tiếp theo là sử dụng mô hình trong việc dự báo
+thực tế.</p>
+<p><strong>Quy trình xây dựng phân tích dữ liệu thực tế</strong></p>
+<p><img alt="image1" src="Images/51-supervised-ml-process.png" /></p>
+</div>
+</div>
+<div class="section" id="cac-nguyen-ly-trong-du-bao">
+<h2>1.2. Các nguyên lý trong dự báo<a class="headerlink" href="#cac-nguyen-ly-trong-du-bao" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="reducible-vs-irreducible-error">
+<h3>1.2.1. Reducible vs.&nbsp;irreducible error<a class="headerlink" href="#reducible-vs-irreducible-error" title="Permalink to this headline">¶</a></h3>
+<p>Trong thực tế, mối quan hệ giữa X &amp; Y được biểu diễn qua hàm sau:</p>
+<div class="math notranslate">
+\[Y = f(X) + \epsilon\]</div>
+<p>Khi phân tích dữ liệu, ta tìm hàm <span class="math notranslate">\(\hat(Y)=\hat{f}(X)\)</span> gần nhất
+với <span class="math notranslate">\(f(X)\)</span>. Sai số giữa thực tế và mô hình sẽ là:</p>
+<div class="math notranslate">
+\[\begin{split}E(Y-\hat{Y})^2 = E[f(X) - \hat{f}(X) - \epsilon]^2
+\\=E[(f(x) - \hat{f}(X))^2 - 2*\epsilon*(f(x) - \hat{f}(X)) + \epsilon^2)]
+\\=E[(f(x) - \hat{f}(X))^2] - \underbrace{2*E(\epsilon)}_{= 0}*E(f(x) - \hat{f}(X))) + E(\epsilon^2)
+\\=E[(f(x) - \hat{f}(X))^2] + [E(\epsilon^2) - \underbrace{E(\epsilon)^2}_{=0}]
+\\= E\underbrace{[f(X) - \hat{f}(X)]^2}_{reducible} +
+\underbrace{Var(\epsilon)}_{irreducible}\end{split}\]</div>
+<p>Lưu ý: <span class="math notranslate">\(Var(\epsilon) = E(\epsilon^2) - E(\epsilon)^2\)</span></p>
+<p>Khi xây dựng mô hình, ta chỉ có thể giảm bớt phần <em>reducible error</em> mà
+không thể giảm được phần variance của sai số. Do đó, mô hình sẽ không
+thể đạt được độ chính xác 100% mà luôn tồn tại một mức sai số nhất định.</p>
+</div>
+<div class="section" id="kha-nang-giai-thich-va-kha-nang-du-bao">
+<h3>1.2.2. Khả năng giải thích và khả năng dự báo<a class="headerlink" href="#kha-nang-giai-thich-va-kha-nang-du-bao" title="Permalink to this headline">¶</a></h3>
+<p>Khi xây dựng mô hình, có hai khía cạnh cần phải xử lý:</p>
+<ul class="simple">
+<li>Khả năng giải thích hay khả năng rút ra kết luận từ mô hình
+(inference): Nhấn mạnh đến khả năng diễn đạt ý nghĩa các biến trong
+mô hình. Các câu hỏi thường dùng là:<ul>
+<li>Biến độc lập (predictors) nào có quan hệ chặt chẽ với biến cần dự
+báo (dependent variables)?</li>
+<li>Mối quan hệ giữa biến độc lập và biến dự báo là gì?</li>
+<li>Mối quan hệ này có thể biểu diễn một cách đơn giản dạng mô hình
+tuyến tính hay phải mô tả dưới dạng phức tạp hơn?</li>
+</ul>
+</li>
+</ul>
+<p>Ví dụ về khả năng giải thích của mô hình:</p>
+<ul class="simple">
+<li>Khách hàng trả nợ trễ hạn 3 lần sẽ làm tăng khả năng trốn nợ lên 20%</li>
+<li>Giá giảm 10% sẽ khiên doanh thu tăng thêm khoảng 6%.</li>
+</ul>
+<p>Các thuật toán như OLS, apriori, Logistics thuộc nhóm này.</p>
+<ul class="simple">
+<li>Khả năng dự báo của mô hình (Predictor): Ưu tiên hơn đến tính chính
+xác của mô hình dự báo, không quan tâm đến việc mô tả quan hệ giữa
+các biến. Ví dụ: Random Forest, Neuron Network, KNN</li>
+</ul>
+<p><strong>Nguyên lý</strong>: Khi xây dựng mô hình, ta buộc phải dánh đổi giữa độ chính
+xác của mô hình vs.&nbsp;khả năng diễn giải mô hình và không tồn tại một mô
+hình tốt nhất cho mọi trường hợp. Do đó, ta cần phải lựa chọn mô hình
+theo từng đối tượng. Mô hình có độ chính xác cao thường khó mô tả mối
+quan hệ giữa các biến (VD: decision tree) và ngược lại (VD: OLS)</p>
+<p><img alt="image2" src="Images/50-accuracy-inference.png" /></p>
+</div>
+<div class="section" id="mo-hinh-co-tham-so-cho-truoc-hoac-khong-co-tham-so-cho-truoc-parametric-vs-nonparametric">
+<h3>1.2.3. Mô hình có tham số cho trước hoặc không có tham số cho trước (Parametric vs.&nbsp;Nonparametric)<a class="headerlink" href="#mo-hinh-co-tham-so-cho-truoc-hoac-khong-co-tham-so-cho-truoc-parametric-vs-nonparametric" title="Permalink to this headline">¶</a></h3>
+<p>Đây là hai loại hai trường phái được sử dụng khi xây dựng các mô hình
+thống kê.</p>
+<ul class="simple">
+<li><strong>Parametric</strong>: Đưa ra mô hình biểu diễn mối quan hệ trước rồi sau đó
+ước lượng mô hình đưa ra. VD: OLS, Logistic Regression</li>
+<li><strong>Nonparametric</strong>: Không đưa ra mô hình, chỉ đưa ra phương pháp và để
+thuật toán tự động tìm kết quả. VD: Association rule, decision tree…</li>
+</ul>
+</div>
+<div class="section" id="nguyen-ly-chu-u">
+<h3>1.2.4. Nguyên lý chữ U<a class="headerlink" href="#nguyen-ly-chu-u" title="Permalink to this headline">¶</a></h3>
+<p>Khi xây dựng mô hình, để đánh giá chất lượng, ta sẽ đo lường sai số trên
+tập train và tập test. Sai số của mô hình được tính như sau (với trường
+hợp regression)</p>
+<div class="math notranslate">
+\[MSE = \frac{1}{n} \sum^n_{i=1}(y_i - \hat{f}(x_i))^2\]</div>
+<p>Khi đánh giá chất lượng mô hình, ta cần đánh giá trên cả tập train và
+tập test. Thông thường, mô hình sẽ được xây trên tập train và được đánh
+giá trên tập test. Các tham số trên tập train sẽ được thay đổi để sai số
+mô hình được tối ưu. Số lượng tham số cần tối ưu càng nhiều, mô hình
+càng phức tạp.</p>
+<p>Ví dụ: Ta cần dự báo <span class="math notranslate">\(income\)</span>, ta có hai mô hình sau.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="92%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">STT</th>
+<th class="head">Phương trình</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>1</td>
+<td><span class="math notranslate">\(income = \beta_0 + \beta_1*age\)</span></td>
+</tr>
+<tr class="row-odd"><td>2</td>
+<td><span class="math notranslate">\(income = \beta_0 + \beta_1*age + \beta_2*exper
+ience\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Trong hai mô hình trên, mô hình 2 được gọi là phức tạp hơn mô hình 1
+(compexity level).</p>
+<p>Khi xây dựng mô hình, nguyên lý chữ U cho ta biết về sự thay đổi sai số
+trên hai tập train và test theo độ phức tạp của mô hình như sau.</p>
+<p><em>Khi mô hình có độ phức tạp càng cao thì sai số của tập train sẽ ngày
+càng giảm trong khi sai số của tập test sẽ có dạng chữ U</em></p>
+<p><img alt="image3" src="Images/50-u-principal.png" /></p>
+<p><strong>Lưu ý</strong>:</p>
+<ul class="simple">
+<li>Nguyên lý chữ U cho ta thấy, việc tăng thêm biến vào mô hình (#
+variables) không phải lúc nào cũng làm tăng chất lượng mô hình</li>
+<li>Khi xây dựng mô hình, cần phải tìm được điểm cân bằng giữa độ phức
+tạp mô hình và độ chính xác. Điểm này chính là điểm thấp nhất trên
+đường chữ U của sai số trên tập test</li>
+</ul>
+</div>
+<div class="section" id="bias-variance-trade-off">
+<h3>1.2.5. Bias Variance Trade-Off<a class="headerlink" href="#bias-variance-trade-off" title="Permalink to this headline">¶</a></h3>
+<p>Người ta chứng minh được rằng:</p>
+<div class="math notranslate">
+\[E(y_0 - \hat{f}(x_0))^2 = Var(\hat{f}(x_0)) +
+[Bias(\hat{f}(x_0))]^2 + Var(\epsilon)\]</div>
+<p>Trong đó:</p>
+<ul class="simple">
+<li><span class="math notranslate">\(E(y_0 - \hat{f}(x_0))^2\)</span>: Kỳ vọng của MSE</li>
+<li><span class="math notranslate">\(Var(\hat{f}(x_0))\)</span>: Phương sai của MSE trong tập test khi ta
+thay đổi tập training</li>
+<li><span class="math notranslate">\([Bias(\hat{f}(x_0))]^2\)</span>: Sai số của mô hình ước lượng
+<span class="math notranslate">\(\hat{f}(x)\)</span> so với mô hình <em>thực tế</em> <span class="math notranslate">\(f(x)\)</span>. VD: Mô hình
+thực tế là <span class="math notranslate">\(y=x^2\)</span>, mô hình ước lượng là <span class="math notranslate">\(y=0.9*x^2\)</span></li>
+<li><span class="math notranslate">\(Var(\epsilon)\)</span>: Phương sai của nhiễu</li>
+</ul>
+<p><strong>Nguyên lý</strong>:</p>
+<ul class="simple">
+<li>Variance của mô hình tăng thì Bias sẽ giảm và ngược lại.</li>
+<li><strong>Độ biến động (variance)</strong> vs.&nbsp;<strong>độ chuẩn xác (bias)</strong>:<ul>
+<li><code class="docutils literal notranslate"><span class="pre">variance</span></code> là độ biến động của mô hình so với dữ liệu, đo độ
+nhạy cảm của các tham số trong mô hình khi thay đổi dữ liệu. Nói
+cách khác, một mô hình được gọi là biến động lớn khi dữ liệu mô
+hình thay đổi sẽ dẫn đến một sự thay đổi lớn trong mô hình. Ví dụ,
+mô hình sử dụng trung vị làm biến dự báo sẽ ít biến động hơn khi
+sử dụng giá trị trung bình.</li>
+<li><code class="docutils literal notranslate"><span class="pre">bias</span></code> đo độ <code class="docutils literal notranslate"><span class="pre">chuẩn</span> <span class="pre">xác</span></code> của mô hình. Một mô hình được gọi là
+<code class="docutils literal notranslate"><span class="pre">bias</span></code> thấp khi kết quả dự báo gần với kết quả thực tế và ngược
+lại. Các mô hình có <code class="docutils literal notranslate"><span class="pre">bias</span></code> thấp có khả năng thích ứng với dữ
+liệu tốt, các mô hình như cây quyết đinh, neural network thuộc
+dạng này.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Phương pháp tính toán phân loại - The Classification Setting</strong></p>
+<div class="math notranslate">
+\[training\_error\_rate = \frac{1}{n}\sum_{i=1}^n I(y_i \neq \hat {y_i})\]</div>
+<p>Trong đó <span class="math notranslate">\(I(y_i \neq \hat{y_i}\)</span> là “indicator variable”, có giá
+trị bằng 1 nếu <span class="math notranslate">\(y_i \neq \hat{y_i}\)</span>, có giá trị bằng 0 nếu
+<span class="math notranslate">\(y_i= \hat{y_i}\)</span></p>
+</div>
+<div class="section" id="overfitting-regularization">
+<h3>1.2.6. Overfitting &amp; regularization<a class="headerlink" href="#overfitting-regularization" title="Permalink to this headline">¶</a></h3>
+<p>Khi xây dựng mô hình dự báo, có thể xảy ra 3 trường hợp:</p>
+<ul class="simple">
+<li>Underfiting: Hiện tượng mô hình quá đơn giản, tính khái quát hóa cao
+nhưng dự báo không tốt, dẫn đến sai số cả ở tập train &amp; test đều cao.
+Mô hình underfitting thường đi kèm với <em>bias</em> cao</li>
+<li>Overfitting là hiện tượng xảy ra khi mô hình hoạt động tốt trên tập
+train nhưng dự báo rất kém trên tập test. Mô hình loại này sẽ khiến
+sai số trên các tập dữ liệu khác nhau thường rất khác nhau. Do đó,
+overfitting còn đi kèm với <code class="docutils literal notranslate"><span class="pre">variance</span></code> lớn</li>
+<li>Mô hình được xây dựng tốt: Là loại mô hình hoạt động tốt trên cả tập
+train &amp; test.</li>
+</ul>
+<p>3 trường hợp xây dựng mô hình được thể hiện ở hình dưới đây.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">13</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span>
+<span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">good_model</span> <span class="o">=</span> <span class="m">10</span> <span class="o">+</span> <span class="m">2</span><span class="o">*</span><span class="n">x</span> <span class="o">-</span> <span class="m">1</span><span class="o">/</span><span class="m">10</span><span class="o">*</span><span class="n">x^2</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="n">good_model</span> <span class="o">+</span> <span class="nf">rnorm</span><span class="p">(</span><span class="nf">nrow</span><span class="p">(</span><span class="n">.)</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">underfit</span> <span class="o">=</span> <span class="m">10</span> <span class="o">+</span> <span class="m">1.2</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">overfit</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="nf">rnorm</span><span class="p">(</span><span class="nf">nrow</span><span class="p">(</span><span class="n">.)</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0.01</span><span class="p">))</span>
+
+<span class="nf">library</span><span class="p">(</span><span class="n">reshape2</span><span class="p">)</span>
+<span class="n">df2</span> <span class="o">&lt;-</span> <span class="n">df</span> <span class="o">%&gt;%</span>
+  <span class="nf">melt</span><span class="p">(</span><span class="n">id.vars</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">,</span> <span class="s">&quot;y&quot;</span><span class="p">))</span>
+<span class="n">df2</span> <span class="o">%&gt;%</span> <span class="nf">ggplot</span><span class="p">()</span> <span class="o">+</span>
+  <span class="nf">geom_line</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">variable</span><span class="p">))</span> <span class="o">+</span>
+  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.8</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
+  <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;top&quot;</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">scale_color_discrete</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Model&quot;</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">labs</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Different type of Model&quot;</span><span class="p">,</span>
+       <span class="n">y</span> <span class="o">=</span> <span class="s">&quot;y&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="image4" src="p03-01-nguyen-ly-du-bao_files/figure-html/unnamed-chunk-2-1.png" /></p>
+<p>Để giải quyết vấn đề overfiting, ta có thể làm như sau:</p>
+<ul class="simple">
+<li>Giảm biến bằng cách chọn biến thủ công hoặc áp dụng các kỹ thuật lựa
+chọn mô hình</li>
+<li>Regularization: Kỹ thuật cho phép giữ nguyên số lượng biến đầu vào
+nhưng giảm giá trị của các tham số <span class="math notranslate">\(\theta\)</span> trong mô hình</li>
+</ul>
+<p><strong>Regularization</strong>: Regularization cho phép tính toán giá trị của các
+tham số <span class="math notranslate">\(\theta\)</span> trong mô hình, sao cho các giá trị của
+<span class="math notranslate">\(\theta\)</span> càng nhỏ càng tốt. Hàm tối ưu hóa được thay đổi lại như
+sau.</p>
+<div class="math notranslate">
+\[J(\theta_0. \theta_1) = \underset{\theta_0, \theta_1}{\text{minimize}}\frac{1}{2m}\sum_{i=1}^m(h_\theta(x^{(i)}) - y^{(i)})^2 + \lambda\sum_{i=1}^n\theta_j^2\]</div>
+<p>Trong đó, <span class="math notranslate">\(\lambda\sum_{i=1}^n\theta_j^2\)</span> được gọi là tham số
+<code class="docutils literal notranslate"><span class="pre">regularization</span></code>. Hệ số, <span class="math notranslate">\(\lambda\)</span> sẽ quyết định vị độ mạnh của
+<code class="docutils literal notranslate"><span class="pre">regularization</span></code>. Nếu <span class="math notranslate">\(\lambda\)</span> càng lớn, yếu tố làm giảm thiểu
+overfitting càng mạnh. Tuy nhiên, nếu <span class="math notranslate">\(\lambda\)</span> quá lớn (ví dụ,
+<span class="math notranslate">\(10^{10}\)</span>) sẽ khiến cho toàn bộ các tham số <span class="math notranslate">\(\theta\)</span> trở về
+0, và mô hình sẽ thay đổi từ overfitting sang underfitting.</p>
+</div>
+</div>
+<div class="section" id="quy-trinh-xay-dung-mo-hinh-du-bao">
+<h2>1.3. Quy trình xây dựng mô hình dự báo<a class="headerlink" href="#quy-trinh-xay-dung-mo-hinh-du-bao" title="Permalink to this headline">¶</a></h2>
+<p><strong>Quá trình dự báo</strong>: Trong thực tế, quá trình dự báo diễn ra như sau</p>
+<p><img alt="image5" src="Images/50-modelling-process.png" /></p>
+</div>
+<div class="section" id="ensemble-methods">
+<h2>1.4. Ensemble methods<a class="headerlink" href="#ensemble-methods" title="Permalink to this headline">¶</a></h2>
+<p>Ensemble methods (tạm dịch: phương pháp kết hợp) là phương pháp tổng hợp
+nhiều kết quả khác nhau từ những mô hình riêng biệt để có thể xây dựng
+một mô hình có độ chính xác cao hơn.</p>
+<p>Có 3 loại như sau:</p>
+<ul class="simple">
+<li><strong>Bagging</strong>: Xây dựng cùng lúc nhiều mô hình cùng loại trên nhiều tập
+con của train, mô hình cuối là tổng của các mô hình con (VD: Random
+Forest)</li>
+<li><strong>Boosting</strong>: Nhiều mô hình cùng loại trên nhiều tập con, mô hình sau
+học và đánh trọng số trên những trường hợp phân loại sai của mô hình
+trước đó (VD: GBM, XGBoost)</li>
+<li><strong>Stacking</strong>: Là phương pháp sử dụng nhiều mô hình <strong>khác loại</strong>, kết
+hợp để tạo thành 1 mô hình tốt hơn từng mô hình riêng rẽ. Xem ví dụ
+sau:</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Dữ liệu thực tế</span>
+<span class="m">1111111111</span>
+
+<span class="c1">#Kết quả dự báo qua 3 classifier</span>
+<span class="m">1111111100</span>  <span class="p">(</span><span class="m">80</span><span class="o">%)</span>
+<span class="o">0111011101  (70%</span><span class="p">)</span>
+<span class="m">1000101111</span>  <span class="p">(</span><span class="m">60</span><span class="o">%)</span>
+
+<span class="o">#3 classifier theo số đông</span>
+<span class="o">1111111101  (90%</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Lưu ý</strong>: Phương pháp này thực hiện tốt với những mô hình phân loại ít
+tương quan với nhau. Với những mô hình tương quan với nhau nhiều, mô
+hình này sẽ không áp dụng tốt. Xem ví dụ sau:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Dữ liệu thực tế</span>
+<span class="m">1111111111</span>
+
+<span class="c1">#Kết quả dự báo qua 3 classifier</span>
+<span class="m">1111111100</span>  <span class="p">(</span><span class="m">80</span><span class="o">%)</span>
+<span class="o">1111011101  (80%</span><span class="p">)</span>
+<span class="m">1111011101</span>  <span class="p">(</span><span class="m">80</span><span class="o">%)</span>
+
+<span class="o">#3 classifier theo số đông</span>
+<span class="o">1111011101  (80%</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Các phương pháp stacking thông dụng:</p>
+<ul class="simple">
+<li><strong>Linear ensemble</strong>: trung bình có trọng số xác suất các dự báo của
+từng mô hình phân loại. VD: C1(A-80%, B-20%), C2(A-60%,B-40%) =&gt; Mô
+hình cuối C(70%, B-30%)</li>
+<li><strong>Max ensemble</strong>: Mỗi quan sát lấy xác suất lớn nhất trong tất cả các
+classifier. VD: C1(A-80%, B-20%), C2(A-60%,B-40%) =&gt; Mô hình cuối
+C(80%, B-40%)</li>
+<li><strong>Vote ensemble</strong>: Giá trị cuối được lấy vote theo từng classifier</li>
+<li><strong>Two step ensemble</strong>: Lấy điểm xác suất của mỗi mô hình làm biến đầu
+vào của data frame, sau đó áp dụng mô hình dự báo trên data frame
+mới.</li>
+</ul>
+</div>
+<div class="section" id="luu-y">
+<h2>1.5. Lưu ý<a class="headerlink" href="#luu-y" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Khi xây dựng mô hình, hiệu ứng của các biến dự báo (predictor) có thể
+lớn hơn thuật toán rất nhiều</li>
+<li>Với cùng một nhóm các biến dự báo đúng thực tế, các thuật toán khác
+nhau có thể đưa ra các kết quả tương tự nhau.</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="p03-02-mo-hinh-ols.html" class="btn btn-neutral float-right" title="2. Mô hình OLS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="p02-99-meo-trong-r.html" class="btn btn-neutral float-left" title="13. Các mẹo trong R" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anh Hoang Duc
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

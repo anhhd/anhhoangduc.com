@@ -1,0 +1,439 @@
+Biến đổi dữ liệu với ``data.table``
+===================================
+
+Giới thiệu
+----------
+
+``data.table`` và ``dplyr`` là hai packages được sử dụng nhiều nhất
+trong R dùng để tính toán, biến đổi dữ liệu. Cả hai packages đều có ưu
+nhược điểm khác nhau.
+
+| **Ngữ pháp:**
+| - Cấu trúc tổng quát của data.table: ``DT[i, j, by, ...]`` tức là: “Sử
+  dụng data table DT, lọc các dòng với ``i``, tính toán theo ``j``, nhóm
+  các biến theo ``by``”. Các options khác có thể dùng … - ``dplyr`` sử
+  dụng 3 nhóm câu lệnh cơ bản (``filter()``, ``arrange()``,
+  ``select()``, ``mutate()``, ``summarise()``) và ``group_by()``, tập
+  trung vào việc dễ đọc, dễ hiểu
+
+**Hệ sinh thái:**
+
+-  dplyr phụ thuộc vào các package trong hệ sinh thái của tidyverse,
+   ``chain operator`` phụ thuộc vào package ``magrittr``
+
+-  data.table là package đứng độc lập, có toán tử ``chain operator``
+   riêng
+
+**Tốc độ:**
+
+-  data.table có thể nhanh hơn ``dplyr`` nhiều lần khi làm việc với khối
+   lượng dữ liệu lớn (lớn hơn 3 triệu dòng)
+
+Các câu lệnh cơ bản
+-------------------
+
+.. code:: r
+
+   library(data.table)
+   library(dplyr)
+   data <- data.frame(
+                   v1 = 1:9,
+                   v2 = sample(c(1,2), 9, T),
+                   v3 = round(rnorm(3),2),
+                   v4 = letters[1:3])
+   data <- data %>% setDT(key = c("v1"))
+   data %>% class
+
+::
+
+   ## [1] "data.table" "data.frame"
+
+Lọc dữ liệu theo dòng
+~~~~~~~~~~~~~~~~~~~~~
+
+Lọc dữ liệu theo vị trí
+^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: r
+
+   # Theo vị trí
+   data[3:4,]
+
+::
+
+   ##    v1 v2    v3 v4
+   ## 1:  3  1 -0.07  c
+   ## 2:  4  1 -1.92  a
+
+.. code:: r
+
+   data[3:4] 
+
+::
+
+   ##    v1 v2    v3 v4
+   ## 1:  3  1 -0.07  c
+   ## 2:  4  1 -1.92  a
+
+Theo dấu ``-``
+^^^^^^^^^^^^^^
+
+.. code:: r
+
+   data[!3:7,]
+
+::
+
+   ##    v1 v2    v3 v4
+   ## 1:  1  2 -1.92  a
+   ## 2:  2  2  1.07  b
+   ## 3:  8  2  1.07  b
+   ## 4:  9  2 -0.07  c
+
+.. code:: r
+
+   data[-(3:7)] # same
+
+::
+
+   ##    v1 v2    v3 v4
+   ## 1:  1  2 -1.92  a
+   ## 2:  2  2  1.07  b
+   ## 3:  8  2  1.07  b
+   ## 4:  9  2 -0.07  c
+
+Lọc theo điều kiện logic
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: r
+
+   data[v1 > 5]
+
+::
+
+   ##    v1 v2    v3 v4
+   ## 1:  6  2 -0.07  c
+   ## 2:  7  1 -1.92  a
+   ## 3:  8  2  1.07  b
+   ## 4:  9  2 -0.07  c
+
+.. code:: r
+
+   data[v4 %in% c("a","c")] 
+
+::
+
+   ##    v1 v2    v3 v4
+   ## 1:  1  2 -1.92  a
+   ## 2:  3  1 -0.07  c
+   ## 3:  4  1 -1.92  a
+   ## 4:  6  2 -0.07  c
+   ## 5:  7  1 -1.92  a
+   ## 6:  9  2 -0.07  c
+
+Nhiều điều kiện
+^^^^^^^^^^^^^^^
+
+.. code:: r
+
+   data[v1 > 5 & v4 == "a"]
+
+::
+
+   ##    v1 v2    v3 v4
+   ## 1:  7  1 -1.92  a
+
+Lấy unique
+^^^^^^^^^^
+
+.. code:: r
+
+   unique(data)
+
+::
+
+   ##    v1 v2    v3 v4
+   ## 1:  1  2 -1.92  a
+   ## 2:  2  2  1.07  b
+   ## 3:  3  1 -0.07  c
+   ## 4:  4  1 -1.92  a
+   ## 5:  5  1  1.07  b
+   ## 6:  6  2 -0.07  c
+   ## 7:  7  1 -1.92  a
+   ## 8:  8  2  1.07  b
+   ## 9:  9  2 -0.07  c
+
+Sort
+^^^^
+
+.. code:: r
+
+   data[order(v3)]
+
+::
+
+   ##    v1 v2    v3 v4
+   ## 1:  1  2 -1.92  a
+   ## 2:  4  1 -1.92  a
+   ## 3:  7  1 -1.92  a
+   ## 4:  3  1 -0.07  c
+   ## 5:  6  2 -0.07  c
+   ## 6:  9  2 -0.07  c
+   ## 7:  2  2  1.07  b
+   ## 8:  5  1  1.07  b
+   ## 9:  8  2  1.07  b
+
+.. code:: r
+
+   data[order(desc(v3))]
+
+::
+
+   ##    v1 v2    v3 v4
+   ## 1:  2  2  1.07  b
+   ## 2:  5  1  1.07  b
+   ## 3:  8  2  1.07  b
+   ## 4:  3  1 -0.07  c
+   ## 5:  6  2 -0.07  c
+   ## 6:  9  2 -0.07  c
+   ## 7:  1  2 -1.92  a
+   ## 8:  4  1 -1.92  a
+   ## 9:  7  1 -1.92  a
+
+Select cột
+~~~~~~~~~~
+
+Một cột
+^^^^^^^
+
+.. code:: r
+
+   data[,"v3"]  # Trả ra DT
+
+::
+
+   ##       v3
+   ## 1: -1.92
+   ## 2:  1.07
+   ## 3: -0.07
+   ## 4: -1.92
+   ## 5:  1.07
+   ## 6: -0.07
+   ## 7: -1.92
+   ## 8:  1.07
+   ## 9: -0.07
+
+.. code:: r
+
+   data[["v3"]] # Trả ra vector
+
+::
+
+   ## [1] -1.92  1.07 -0.07 -1.92  1.07 -0.07 -1.92  1.07 -0.07
+
+Nhiều cột
+^^^^^^^^^
+
+.. code:: r
+
+   data[, c("v3", "v2")]
+
+::
+
+   ##       v3 v2
+   ## 1: -1.92  2
+   ## 2:  1.07  2
+   ## 3: -0.07  1
+   ## 4: -1.92  1
+   ## 5:  1.07  1
+   ## 6: -0.07  2
+   ## 7: -1.92  1
+   ## 8:  1.07  2
+   ## 9: -0.07  2
+
+.. code:: r
+
+   data[, .(v2, v3)]
+
+::
+
+   ##    v2    v3
+   ## 1:  2 -1.92
+   ## 2:  2  1.07
+   ## 3:  1 -0.07
+   ## 4:  1 -1.92
+   ## 5:  1  1.07
+   ## 6:  2 -0.07
+   ## 7:  1 -1.92
+   ## 8:  2  1.07
+   ## 9:  2 -0.07
+
+.. code:: r
+
+   data[, list(v2, v3)]
+
+::
+
+   ##    v2    v3
+   ## 1:  2 -1.92
+   ## 2:  2  1.07
+   ## 3:  1 -0.07
+   ## 4:  1 -1.92
+   ## 5:  1  1.07
+   ## 6:  2 -0.07
+   ## 7:  1 -1.92
+   ## 8:  2  1.07
+   ## 9:  2 -0.07
+
+.. code:: r
+
+   data[, !c("v3", "v2")]
+
+::
+
+   ##    v1 v4
+   ## 1:  1  a
+   ## 2:  2  b
+   ## 3:  3  c
+   ## 4:  4  a
+   ## 5:  5  b
+   ## 6:  6  c
+   ## 7:  7  a
+   ## 8:  8  b
+   ## 9:  9  c
+
+Theo variable của biến
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. code:: r
+
+   cols <- c("v2", "v3")
+   data[, ..cols]
+
+::
+
+   ##    v2    v3
+   ## 1:  2 -1.92
+   ## 2:  2  1.07
+   ## 3:  1 -0.07
+   ## 4:  1 -1.92
+   ## 5:  1  1.07
+   ## 6:  2 -0.07
+   ## 7:  1 -1.92
+   ## 8:  2  1.07
+   ## 9:  2 -0.07
+
+Tổng hợp dữ liệu
+~~~~~~~~~~~~~~~~
+
+Tổng hợp đơn giản
+^^^^^^^^^^^^^^^^^
+
+.. code:: r
+
+   data[, .(sum_v2 = sum(v2),
+            sd_v2 = sd(v2)), by = v4]
+
+::
+
+   ##    v4 sum_v2     sd_v2
+   ## 1:  a      4 0.5773503
+   ## 2:  b      5 0.5773503
+   ## 3:  c      5 0.5773503
+
+.. code:: r
+
+   data[1:7, .(sum_v2 = sum(v1),
+            sd_v2 = sd(v1)), by = .(v2, v4)]
+
+::
+
+   ##    v2 v4 sum_v2   sd_v2
+   ## 1:  2  a      1      NA
+   ## 2:  2  b      2      NA
+   ## 3:  1  c      3      NA
+   ## 4:  1  a     11 2.12132
+   ## 5:  1  b      5      NA
+   ## 6:  2  c      6      NA
+
+Update dữ liệu
+~~~~~~~~~~~~~~
+
+.. code:: r
+
+   data[, v2_new := v2^2]
+   data
+
+::
+
+   ##    v1 v2    v3 v4 v2_new
+   ## 1:  1  2 -1.92  a      4
+   ## 2:  2  2  1.07  b      4
+   ## 3:  3  1 -0.07  c      1
+   ## 4:  4  1 -1.92  a      1
+   ## 5:  5  1  1.07  b      1
+   ## 6:  6  2 -0.07  c      4
+   ## 7:  7  1 -1.92  a      1
+   ## 8:  8  2  1.07  b      4
+   ## 9:  9  2 -0.07  c      4
+
+.SD, SDcols
+~~~~~~~~~~~
+
+-  Hàm ``.SD`` cho phép tính toán nhanh 1 hàm nhất định vào nhiều cột
+-  ``.SDcols`` cho phép liệt kê các cột cần được tính toán
+
+.. code:: r
+
+   data[, lapply(.SD, mean)]
+
+::
+
+   ##    v1       v2         v3 v4   v2_new
+   ## 1:  5 1.555556 -0.3066667 NA 2.666667
+
+.. code:: r
+
+   data[, lapply(.SD, mean), .SDcols = c("v1", "v2")]
+
+::
+
+   ##    v1       v2
+   ## 1:  5 1.555556
+
+-  Tổng hợp nhiều hàm với nhiều cột
+
+.. code:: r
+
+   data[, 
+        c(lapply(.SD, mean),
+          max = lapply(.SD, max)),
+        by = v4,
+        .SDcols = c("v1", "v2")]
+
+::
+
+   ##    v4 v1       v2 v1 v2
+   ## 1:  a  4 1.333333  7  2
+   ## 2:  b  5 1.666667  8  2
+   ## 3:  c  6 1.666667  9  2
+
+Chain operator
+~~~~~~~~~~~~~~
+
+.. code:: r
+
+   data[1:5][
+     , .(sum_v3 = sum(v3)), by = v4][
+       sum_v3 > 0
+     ]
+
+::
+
+   ##    v4 sum_v3
+   ## 1:  b   2.14
+
+Tài liệu tham khảo
+------------------
+
+-  https://atrebas.github.io/post/2019-03-03-datatable-dplyr/

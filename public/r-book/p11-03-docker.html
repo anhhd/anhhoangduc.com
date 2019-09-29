@@ -1,0 +1,540 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="vi" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="vi" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. Sử dụng docker &mdash; Tài liệu Phân tích dữ liệu với R 2019</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'2019',
+              LANGUAGE:'vi',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript" src="_static/copybutton.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Tìm Kiếm" href="search.html" />
+    <link rel="next" title="4. API" href="p11-04-apis.html" />
+    <link rel="prev" title="2. CMD và Bash" href="p11-02-cmd.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Phân tích dữ liệu với R
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Giới thiệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-gioi-thieu.html">Khoa học dữ liệu và nghề phân tích dữ liệu</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Phân tích khám phá dữ liệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p02-03-bien-doi-du-lieu-dplyr.html">1. Ngữ pháp của biến đổi dữ liệu với DPLYR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-04-phan-ra-va-xoay-chieu-du-lieu.html">2. Phân rã và xoay chiều dữ liệu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-05-cac-chi-so-thong-ke.html">3. Các chỉ số thống kê mô tả cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-06-lap-trinh-ham.html">4. Lập trình hàm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-07-lap-trinh-ham-voi-purrr.html">5. Lập trình chức năng hàm với purrr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-08-bien-doi-du-lieu-text.html">6. Biến đổi dữ liệu text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-11-quan-ly-nhieu-mo-hinh.html">7. Quản lý kết quả phân tích từ nhiều mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-15-thong-ke-co-ban.html">8. Xác suất và phân phối thống kê cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-16-power-analysis.html">9. Power analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-20-sampling-methods.html">10. Phương pháp ước lượng lấy mẫu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-50-datatable.html">11. Biến đổi dữ liệu với <code class="docutils literal notranslate"><span class="pre">data.table</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-60-thu-thap-du-lieu-tu-website.html">12. Thu thập dữ liệu từ website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-99-meo-trong-r.html">13. Các mẹo trong R</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Supervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p03-01-nguyen-ly-du-bao.html">1. Các nguyên lý dự báo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-02-mo-hinh-ols.html">2. Mô hình OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Unsupervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p04-01-unsupervised-learning.html">1. Unsupervised learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-02-kmeans.html">2. k-means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-03-hierarchical-clustering.html">3. Hierachical clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-04-basket-analysis.html">4. Phân tích giỏ hàng</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-05-pca.html">5. Principal component analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-06-factor-analysis.html">6. Phân tích nhân tố ẩn (factor analysis)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Chuỗi thời gian</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p05-01-chuoi-thoi-gian.html">1. Giới thiệu về chuỗi thời gian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-02-arima.html">2. Mô hình ARIMA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html">3. Phân tích chuỗi thời gian với tidyquant và timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-06-du-bao-ts-voi-prophet.html">4. Dự báo chuỗi thời gian với prophet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-07-du-bao-ts-voi-timetk.html">5. Dự báo chuỗi thời gian với timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-08-abnomaly-detection.html">6. Abnomaly detection trong times series</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ngôn ngữ tự nghiên</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p06-01-nlp-co-ban.html">1. Xử lý ngôn ngữ tự nhiên cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-04-text-classification.html">2. Phân loại text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-07-nlp-api.html">3. Sử dụng API từ các dịch vụ đám mây</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-10-ocr-tesseract.html">4. OCR với <code class="docutils literal notranslate"><span class="pre">tesseract</span></code></a></li>
+</ul>
+<p class="caption"><span class="caption-text">Các phương pháp khác</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p07-01-survival-analysis.html">1. Survival analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-02-causal-impact.html">2. Causal Impact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-03-collaborative-filtering.html">3. Collaborative Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-07-spatial-data.html">4. Spatial data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-10-shiny.html">5. Shiny apps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p09-01-gioi-thieu-deep-learning.html">1. Giới thiệu cơ bản về Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-02-co-ban-kien-thuc-toan.html">2. Kiến thức cơ bản toán học cho deep learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-03-mo-hinh-deep-learning-co-ban.html">3. Mô hình deep learning cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-04-convolution-neural-network.html">4. Convolution neural networks</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cloud Computing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p10-01-cai-dat-rstudio-server-tren-amazon.html">1. Cài đặt server RStudio trên Amazon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-03-web-service-azure.html">2. Xây dựng web service với Azure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-09-apis-voi-plumber.html">3. API với Plumber</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Kiến thức bổ trợ</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p11-01-git.html">1. Sử dụng GIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-02-cmd.html">2. CMD và Bash</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Sử dụng docker</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gioi-thieu">3.1. Giới thiệu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cac-cai-dat">3.2. Các cài đặt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cai-dat-r-va-rstudio-tren-docker">3.3. Cài đặt R và RStudio trên docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cac-cau-lenh-co-ban">3.4. Các câu lệnh cơ bản</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#luu-y">3.5. Lưu ý</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#luu-package-trong-rocker">3.5.1. Lưu package trong rocker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#copy-images-sang-may-khac">3.5.2. Copy images sang máy khác</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cai-dat-java-h2o-trong-ubuntu">3.5.3. Cài đặt Java/H2O trong ubuntu</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#publish-image-vao-docker-hub">3.6. Publish image vào docker hub</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tao-mot-image-de-tao-rest-api-tu-r-model">3.7. Tạo một IMAGE để tạo REST API từ R model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tai-lieu-tham-khao">3.8. Tài liệu tham khảo</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="p11-04-apis.html">4. API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-05-html-css.html">5. Cơ bản về HTML và CSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-09-other.html">6. Các tricks khác</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Case studies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p13-01-casestudy-truc-quan-hoa.html">1. Trực quan hóa dữ liệu</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Phân tích dữ liệu với R</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>3. Sử dụng docker</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/p11-03-docker.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="su-dung-docker">
+<h1>3. Sử dụng docker<a class="headerlink" href="#su-dung-docker" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gioi-thieu">
+<h2>3.1. Giới thiệu<a class="headerlink" href="#gioi-thieu" title="Permalink to this headline">¶</a></h2>
+<p>Docker cho phép tạo một hệ điều hành con (Linux) trong hệ điều hành đang
+chạy. Phục vụ các công việc:</p>
+<ul class="simple">
+<li>Đảm bảo tính tái sử dụng</li>
+<li>Khắc phục các nhược điểm của Windows</li>
+<li>Cho phép scale-up khi đưa vào triển khai diện rộng. VD: Đưa các API
+dự báo từ R vào hoạt động</li>
+</ul>
+</div>
+<div class="section" id="cac-cai-dat">
+<h2>3.2. Các cài đặt<a class="headerlink" href="#cac-cai-dat" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Các bước cài đặt:<ul>
+<li>Cài đặt
+<a class="reference external" href="https://docs.docker.com/docker-for-windows/install/">docker-for-windows</a></li>
+<li>Cài đặt
+<a class="reference external" href="https://docs.docker.com/toolbox/toolbox_install_windows/">docker-toolbox-for-windows</a>.
+Lưu ý: chỉ cài đặt phần Git cho Ubuntu</li>
+</ul>
+</li>
+<li>Sau khi cài đặt xong kiểm tra:<ul>
+<li><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">version</span></code></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="cai-dat-r-va-rstudio-tren-docker">
+<h2>3.3. Cài đặt R và RStudio trên docker<a class="headerlink" href="#cai-dat-r-va-rstudio-tren-docker" title="Permalink to this headline">¶</a></h2>
+<p>Sử dụng câu lệnh sau</p>
+<p><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span> <span class="pre">--rm</span> <span class="pre">-p</span> <span class="pre">8787:8787</span> <span class="pre">rocker/verse</span></code></p>
+<p><strong>Giải thích</strong>:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">--rm</span></code>: Khi quit container, sẽ quit container. Nếu không, mỗi lần
+sẽ lưu một version của container</li>
+<li><code class="docutils literal notranslate"><span class="pre">-p</span></code>: Để Rstudio chạy trên port 8787</li>
+<li>RStudio Server sẽ chạy trên web với thông tin như sau:<ul>
+<li>Link: <code class="docutils literal notranslate"><span class="pre">http://localhost:8787</span></code></li>
+<li>Password: rstudio</li>
+<li>Username: rstudio</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="cac-cau-lenh-co-ban">
+<h2>3.4. Các câu lệnh cơ bản<a class="headerlink" href="#cac-cau-lenh-co-ban" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="46%" />
+<col width="54%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Câu lệnh</th>
+<th class="head">Ý nghĩa</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">info</span></code></td>
+<td>Thông tin docker</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">images</span></code></td>
+<td>Liệt kê các images đang có trong
+docker</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">ps</span></code></td>
+<td>Danh sách các docker đang chạy</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">stop</span> <span class="pre">image_name</span></code></td>
+<td>Dừng image đang chạy</td>
+</tr>
+<tr class="row-even"><td>docker exec -it
+<code class="docutils literal notranslate"><span class="pre">container_id</span></code> bash</td>
+<td>Chạy bash (ubuntu) trong docker</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">rmi</span> <span class="pre">container_name</span></code></td>
+<td>Remove images in docker</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Kiểm tra java đã cài</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker <span class="nb">exec</span> -it &lt;container_id&gt; bash
+java -version
+</pre></div>
+</div>
+</div>
+<div class="section" id="luu-y">
+<h2>3.5. Lưu ý<a class="headerlink" href="#luu-y" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="luu-package-trong-rocker">
+<h3>3.5.1. Lưu package trong rocker<a class="headerlink" href="#luu-package-trong-rocker" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Lưu các packages đã cài trong R trong image:<ul>
+<li>Khởi động powershell khác</li>
+<li><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">commit</span> <span class="pre">-m</span> <span class="pre">&quot;some_comment&quot;</span> <span class="pre">&lt;container_id&gt;</span> <span class="pre">&lt;&lt;new_container_name&gt;&gt;</span></code></li>
+</ul>
+</li>
+</ul>
+<p>VD: <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">commit</span> <span class="pre">-m</span> <span class="pre">&quot;install</span> <span class="pre">h2o</span> <span class="pre">&amp;</span> <span class="pre">dplyr&quot;</span> <span class="pre">4a6a528b35da</span> <span class="pre">h2o_dplyr</span></code></p>
+<ul>
+<li><p class="first">Container ID phải được kiểm tra từ <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">ps</span></code></p>
+</li>
+<li><p class="first">Share Drive trong Docker:</p>
+<ul class="simple">
+<li>Bước 1: Tạo User mới: Computer Management &gt;&gt; System Tools &gt;&gt; Local
+Users and Groups &gt;&gt; Users &gt;&gt; Create new user (docker/123456) (set
+pasword never expired)</li>
+<li>Bước 2: Chọn ổ cần share &gt;&gt; Give Access to &gt;&gt; Advanced Sharing &gt;&gt;
+Advanced Sharing &gt;&gt; Permission &gt;&gt; Add &gt;&gt;&gt; Add thêm user docker &gt;&gt;
+Full Access</li>
+<li>Bước 3: Khởi động lại máy tính</li>
+<li>Bước 4: Chạy câu lệnh sau &amp; login bằng user/pwd vừa tạo</li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span> <span class="pre">--rm</span> <span class="pre">-p</span> <span class="pre">8787:8787</span> <span class="pre">-v</span> <span class="pre">//d/docker:/home/rstudio</span> <span class="pre">h2o_dplyr</span></code></p>
+</li>
+</ul>
+</div>
+<div class="section" id="copy-images-sang-may-khac">
+<h3>3.5.2. Copy images sang máy khác<a class="headerlink" href="#copy-images-sang-may-khac" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Bước 1: Chọn ổ muốn lưu <code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">D:\docker</span></code></li>
+<li>Bước 2: Lưu image:
+<code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">save</span> <span class="pre">-o</span> <span class="pre">**image_name.tar**</span> <span class="pre">**image_name**</span></code></li>
+<li>Bước 3: Load image: <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">load</span> <span class="pre">--input</span> <span class="pre">**image_name.tar**</span></code></li>
+</ul>
+<p>Ta có thể nén lại dạng zip</p>
+<p><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">save</span> <span class="pre">&lt;docker</span> <span class="pre">image</span> <span class="pre">name&gt;</span> <span class="pre">|</span> <span class="pre">gzip</span> <span class="pre">&gt;</span> <span class="pre">&lt;docker</span> <span class="pre">image</span> <span class="pre">name&gt;.tar.gz</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">zcat</span> <span class="pre">&lt;docker</span> <span class="pre">image</span> <span class="pre">name&gt;.tar.gz</span> <span class="pre">|</span> <span class="pre">docker</span> <span class="pre">load</span></code></p>
+<p>Ví dụ:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">#Load về ổ D</span>
+d:
+<span class="c1">#Lưu lại dạng tar</span>
+docker save -o rstudio_ds.tar anhhd/rstudio_ds
+<span class="c1">#Load images</span>
+d:
+docker load -i rstudio_ds.tar
+<span class="c1">#Hoặc</span>
+docker load --input rstudio_ds.tar
+</pre></div>
+</div>
+</div>
+<div class="section" id="cai-dat-java-h2o-trong-ubuntu">
+<h3>3.5.3. Cài đặt Java/H2O trong ubuntu<a class="headerlink" href="#cai-dat-java-h2o-trong-ubuntu" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Install plumber: <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">pull</span> <span class="pre">trestletech/plumber</span></code></li>
+<li>Chạy chế độ bash trong Ubuntu:
+<code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">exec</span> <span class="pre">-it</span> <span class="pre">&lt;container_id&gt;</span> <span class="pre">bash</span></code></li>
+<li>Cài đặt Java: <code class="docutils literal notranslate"><span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">default-jre</span></code></li>
+<li>Khởi động R: <code class="docutils literal notranslate"><span class="pre">R</span></code></li>
+<li>Install package H2O như bình thường</li>
+</ul>
+</div>
+</div>
+<div class="section" id="publish-image-vao-docker-hub">
+<h2>3.6. Publish image vào docker hub<a class="headerlink" href="#publish-image-vao-docker-hub" title="Permalink to this headline">¶</a></h2>
+<p><strong>Tạo tài khoản trên docker</strong></p>
+<ul class="simple">
+<li>Bước 1: <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">login</span></code> - điền thông tin login</li>
+<li>Bước 2: Tag thông tin image
+<code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">tag</span> <span class="pre">my_image</span> <span class="pre">$DOCKER_ID_USER/my_image</span></code></li>
+</ul>
+<p>VD: Tạo image là <code class="docutils literal notranslate"><span class="pre">rstudio_ds</span></code>, cần làm như sau
+<code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">tag</span> <span class="pre">rstudio_ds</span> <span class="pre">anhhd/rstudio_ds</span></code></p>
+<ul class="simple">
+<li>Bước 3: Publish lên dockerhub
+<code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">push</span> <span class="pre">$DOCKER_ID_USER/my_image</span></code>. VD
+<code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">push</span> <span class="pre">anhhd/rstudio_ds</span></code></li>
+</ul>
+</div>
+<div class="section" id="tao-mot-image-de-tao-rest-api-tu-r-model">
+<h2>3.7. Tạo một IMAGE để tạo REST API từ R model<a class="headerlink" href="#tao-mot-image-de-tao-rest-api-tu-r-model" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Bước 1: Tạo và lưu model dạng RDA vào folder/ hoặc mojo với H2O</li>
+<li>Bước 2: Tạo Function dự báo từ dữ liệu input đầu vào</li>
+<li>Bước 3: Sửa lại Dockerfile</li>
+<li>Bước 4: Sử dụng powershell hoặc cmd, đổi cd vào thư mục chứa các file
+vừa tạo. Chạy câu lệnh sau.</li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">build</span> <span class="pre">.</span></code></p>
+<p><strong>Lưu ý</strong>: Có dấu chấm</p>
+<ul class="simple">
+<li>Bước 5: tag tên image vào container/image vừa tạo</li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">tag</span> <span class="pre">&lt;contaniner_id&gt;</span> <span class="pre">&lt;new</span> <span class="pre">tag</span> <span class="pre">name&gt;</span></code></p>
+<p><strong>Ví dụ</strong>: Tham khảo thư mục <code class="docutils literal notranslate"><span class="pre">test_plumber</span></code> trong <strong>docker</strong></p>
+</div>
+<div class="section" id="tai-lieu-tham-khao">
+<h2>3.8. Tài liệu tham khảo<a class="headerlink" href="#tai-lieu-tham-khao" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="https://ropenscilabs.github.io/r-docker-tutorial/">R docker
+tutorial</a></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="p11-04-apis.html" class="btn btn-neutral float-right" title="4. API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="p11-02-cmd.html" class="btn btn-neutral float-left" title="2. CMD và Bash" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anh Hoang Duc
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

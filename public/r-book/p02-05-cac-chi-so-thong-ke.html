@@ -1,0 +1,756 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="vi" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="vi" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. Các chỉ số thống kê mô tả cơ bản &mdash; Tài liệu Phân tích dữ liệu với R 2019</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'2019',
+              LANGUAGE:'vi',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript" src="_static/copybutton.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Tìm Kiếm" href="search.html" />
+    <link rel="next" title="4. Lập trình hàm" href="p02-06-lap-trinh-ham.html" />
+    <link rel="prev" title="2. Phân rã và xoay chiều dữ liệu" href="p02-04-phan-ra-va-xoay-chieu-du-lieu.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Phân tích dữ liệu với R
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Giới thiệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-gioi-thieu.html">Khoa học dữ liệu và nghề phân tích dữ liệu</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Phân tích khám phá dữ liệu</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p02-03-bien-doi-du-lieu-dplyr.html">1. Ngữ pháp của biến đổi dữ liệu với DPLYR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-04-phan-ra-va-xoay-chieu-du-lieu.html">2. Phân rã và xoay chiều dữ liệu</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Các chỉ số thống kê mô tả cơ bản</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#correlation">3.1. Correlation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#anova">3.2. ANOVA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kiem-dinh-quan-he-chi-binh-phuong">3.3. Kiểm định quan hệ Chi-bình phương</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="p02-06-lap-trinh-ham.html">4. Lập trình hàm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-07-lap-trinh-ham-voi-purrr.html">5. Lập trình chức năng hàm với purrr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-08-bien-doi-du-lieu-text.html">6. Biến đổi dữ liệu text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-11-quan-ly-nhieu-mo-hinh.html">7. Quản lý kết quả phân tích từ nhiều mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-15-thong-ke-co-ban.html">8. Xác suất và phân phối thống kê cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-16-power-analysis.html">9. Power analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-20-sampling-methods.html">10. Phương pháp ước lượng lấy mẫu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-50-datatable.html">11. Biến đổi dữ liệu với <code class="docutils literal notranslate"><span class="pre">data.table</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-60-thu-thap-du-lieu-tu-website.html">12. Thu thập dữ liệu từ website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-99-meo-trong-r.html">13. Các mẹo trong R</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Supervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p03-01-nguyen-ly-du-bao.html">1. Các nguyên lý dự báo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-02-mo-hinh-ols.html">2. Mô hình OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Unsupervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p04-01-unsupervised-learning.html">1. Unsupervised learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-02-kmeans.html">2. k-means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-03-hierarchical-clustering.html">3. Hierachical clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-04-basket-analysis.html">4. Phân tích giỏ hàng</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-05-pca.html">5. Principal component analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-06-factor-analysis.html">6. Phân tích nhân tố ẩn (factor analysis)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Chuỗi thời gian</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p05-01-chuoi-thoi-gian.html">1. Giới thiệu về chuỗi thời gian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-02-arima.html">2. Mô hình ARIMA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html">3. Phân tích chuỗi thời gian với tidyquant và timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-06-du-bao-ts-voi-prophet.html">4. Dự báo chuỗi thời gian với prophet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-07-du-bao-ts-voi-timetk.html">5. Dự báo chuỗi thời gian với timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-08-abnomaly-detection.html">6. Abnomaly detection trong times series</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ngôn ngữ tự nghiên</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p06-01-nlp-co-ban.html">1. Xử lý ngôn ngữ tự nhiên cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-04-text-classification.html">2. Phân loại text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-07-nlp-api.html">3. Sử dụng API từ các dịch vụ đám mây</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-10-ocr-tesseract.html">4. OCR với <code class="docutils literal notranslate"><span class="pre">tesseract</span></code></a></li>
+</ul>
+<p class="caption"><span class="caption-text">Các phương pháp khác</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p07-01-survival-analysis.html">1. Survival analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-02-causal-impact.html">2. Causal Impact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-03-collaborative-filtering.html">3. Collaborative Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-07-spatial-data.html">4. Spatial data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-10-shiny.html">5. Shiny apps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p09-01-gioi-thieu-deep-learning.html">1. Giới thiệu cơ bản về Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-02-co-ban-kien-thuc-toan.html">2. Kiến thức cơ bản toán học cho deep learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-03-mo-hinh-deep-learning-co-ban.html">3. Mô hình deep learning cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-04-convolution-neural-network.html">4. Convolution neural networks</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cloud Computing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p10-01-cai-dat-rstudio-server-tren-amazon.html">1. Cài đặt server RStudio trên Amazon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-03-web-service-azure.html">2. Xây dựng web service với Azure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-09-apis-voi-plumber.html">3. API với Plumber</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Kiến thức bổ trợ</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p11-01-git.html">1. Sử dụng GIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-02-cmd.html">2. CMD và Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-03-docker.html">3. Sử dụng docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-04-apis.html">4. API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-05-html-css.html">5. Cơ bản về HTML và CSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-09-other.html">6. Các tricks khác</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Case studies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p13-01-casestudy-truc-quan-hoa.html">1. Trực quan hóa dữ liệu</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Phân tích dữ liệu với R</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>3. Các chỉ số thống kê mô tả cơ bản</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/p02-05-cac-chi-so-thong-ke.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="cac-chi-so-thong-ke-mo-ta-co-ban">
+<h1>3. Các chỉ số thống kê mô tả cơ bản<a class="headerlink" href="#cac-chi-so-thong-ke-mo-ta-co-ban" title="Permalink to this headline">¶</a></h1>
+<p>Trong quá trình phân tích dữ liệu, việc làm phân tích khám phá dữ liệu
+(exploratory data analysis) rất quan trọng, vì nó giúp chúng ta có cái
+nhìn tổng quan về tập dữ liệu mà chúng ta đang có. Để làm được điều đó
+thì chúng ta cần phải biết đọc hiểu những chỉ số thống kê cơ bản như:
+<strong>min</strong>, <strong>max</strong>, <strong>median</strong>, <strong>mean</strong>, <strong>quantile 25%</strong>, <strong>quantile
+75%</strong>.</p>
+<p>Ngoài ra, chúng ta cũng cần phải biết những phương pháp kiểm định phổ
+biến thường hay sử dụng trong thực tế như: <strong>Chi-square</strong>,
+<strong>correlation</strong>, <strong>ANOVA</strong>… Trong chương này, tác giả muốn giới thiệu
+với các bạn lần lượt những chỉ số thống kê cơ bản cũng như các phương
+pháp kiểm định quan trọng nói trên.</p>
+<hr class="docutils" />
+<p>Trước hết, chúng ta sẽ cùng nhau tìm hiểu cách đọc hiểu những chỉ số
+thống kê cơ bản như: min, max, median, mean, quantile 25%, quantile 75%.</p>
+<p>Trong chương này, chúng ta sẽ sử dụng dữ liệu <code class="docutils literal notranslate"><span class="pre">iris</span></code> có sẵn trong R,
+dữ liệu bao gồm kích thước chiều dài, chiều rộng cánh hoa và đài hoa của
+3 loài hoa khác nhau: setosa, versicolor, virginica (đơn vị đo: cm). Mỗi
+loài hoa có 50 bông hoa với kích thước khác nhau.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<span class="nf">data</span><span class="p">(</span><span class="s">&quot;iris&quot;</span><span class="p">)</span>
+<span class="n">iris</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   Sepal.Length    Sepal.Width     Petal.Length    Petal.Width</span>
+<span class="c1">##  Min.   :4.300   Min.   :2.000   Min.   :1.000   Min.   :0.100</span>
+<span class="c1">##  1st Qu.:5.100   1st Qu.:2.800   1st Qu.:1.600   1st Qu.:0.300</span>
+<span class="c1">##  Median :5.800   Median :3.000   Median :4.350   Median :1.300</span>
+<span class="c1">##  Mean   :5.843   Mean   :3.057   Mean   :3.758   Mean   :1.199</span>
+<span class="c1">##  3rd Qu.:6.400   3rd Qu.:3.300   3rd Qu.:5.100   3rd Qu.:1.800</span>
+<span class="c1">##  Max.   :7.900   Max.   :4.400   Max.   :6.900   Max.   :2.500</span>
+<span class="c1">##        Species</span>
+<span class="c1">##  setosa    :50</span>
+<span class="c1">##  versicolor:50</span>
+<span class="c1">##  virginica :50</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+</pre></div>
+</div>
+<p>Câu lệnh <code class="docutils literal notranslate"><span class="pre">summary()</span></code> cho ta biết các chỉ số thống kê cơ bản của một
+hoặc nhiều biến số trong tập dữ liệu như:</p>
+<ul class="simple">
+<li>Min: giá trị nhỏ nhất</li>
+<li>Max: giá trị lớn nhất</li>
+<li>First quantile: quantile 25%</li>
+<li>Median: giá trị trung vị</li>
+<li>Third quantile: quantile 75%</li>
+<li>Mean: giá trị trung bình</li>
+</ul>
+<p>Để giải thích cách đọc hiểu các chỉ số thống kê nói trên, chúng ta sẽ
+cùng xem tổng quan kích thước chiều dài cánh hoa (biến <code class="docutils literal notranslate"><span class="pre">Petal.Length</span></code>)
+của các loài hoa trên.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span> <span class="o">%&gt;%</span>
+  <span class="nf">select</span><span class="p">(</span><span class="n">Petal.Length</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="n">summary</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   Petal.Length</span>
+<span class="c1">##  Min.   :1.000</span>
+<span class="c1">##  1st Qu.:1.600</span>
+<span class="c1">##  Median :4.350</span>
+<span class="c1">##  Mean   :3.758</span>
+<span class="c1">##  3rd Qu.:5.100</span>
+<span class="c1">##  Max.   :6.900</span>
+</pre></div>
+</div>
+<p>Thông qua kết quả trên, chúng ta có thể biết một số thông tin sau:</p>
+<ul class="simple">
+<li>Cánh hoa ngắn nhất có chiều dài 1cm</li>
+<li>25% trên tổng số 150 bông hoa có chiều dài cánh hoa nhỏ hơn 1.6 cm</li>
+<li>50% trên tổng số 150 bông hoa có chiều dài cánh hoa nhỏ hơn 4.35 cm</li>
+<li>Chiều dài trung bình của tất cả 150 bông hoa là 3.758 cm</li>
+<li>75% trên tổng số 150 bông hoa có chiều dài cánh hoa nhỏ hơn 5.1 cm</li>
+<li>Cánh hoa dài nhất có chiều dài 6.9 cm</li>
+</ul>
+<p>Như vậy, chúng ta đã có thể đọc hiểu những chỉ số thống kê cơ bản như:
+giá trị nhỏ nhất/lớn nhất, giá trị trung bình/trung vị, giá trị quantile
+25%, 75% với việc sử dụng một câu lệnh <code class="docutils literal notranslate"><span class="pre">summary()</span></code> đơn giản trong
+<code class="docutils literal notranslate"><span class="pre">R</span></code>.</p>
+<div class="section" id="correlation">
+<h2>3.1. Correlation<a class="headerlink" href="#correlation" title="Permalink to this headline">¶</a></h2>
+<p><strong>Hệ số tương quan</strong></p>
+<p>Hệ số tương quan (correlation coefficient) là một chỉ số thống kê, được
+sử dụng để đo lường mối liên hệ tương quan tuyến tính giữa 2 biến định
+lượng hay còn gọi là biến liên tục (quantitative/continuous variables).
+Hay nói một cách dễ hiểu hơn, hệ số tương quan cho ta biết rằng giữa 2
+biến liên tục có mối liên hệ nào hay không.</p>
+<p>Hệ số tương quan có giá trị từ -1 đến 1. Dấu “+” hoặc “-” của hệ số
+tương quan cho ta biết 2 biến có mối liên hệ tương quan tuyến tính cùng
+chiều hoặc ngược chiều tương ứng. Nếu hệ số tương quan của 2 biến mang
+dấu “+” có nghĩa là khi biến này tăng thì biến kia cũng tăng, còn nếu hệ
+số tương quan của 2 biến mang dấu “-” thì có nghĩa là khi biến này tăng
+thì biến kia sẽ giảm.</p>
+<p>Hệ số tương quan của 2 biến bằng 0 có nghĩa là 2 biến không có mối liên
+hệ tương quan tuyến tính (no relationships), hệ số tương quan bằng -1
+hoặc 1 có nghĩa là 2 biến có mối liên hệ tương quan tuyến tính tuyệt
+đối.</p>
+<p>Tiếp tục sử dụng dữ liệu <code class="docutils literal notranslate"><span class="pre">iris</span></code>, chúng ta tính toán hệ số tương quan
+của từng cặp biến chiều dài, chiều rộng cánh hoa và đài hoa của các loài
+hoa để xem 4 biến trên có mối liên hệ với nhau như thế nào. Để tính hệ
+số tương quan trong <code class="docutils literal notranslate"><span class="pre">R</span></code>, chúng ta có thể sử dụng hàm <code class="docutils literal notranslate"><span class="pre">cor()</span></code>.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">cor</span><span class="p">(</span><span class="n">iris</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##              Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
+<span class="c1">## Sepal.Length    1.0000000  -0.1175698    0.8717538   0.8179411</span>
+<span class="c1">## Sepal.Width    -0.1175698   1.0000000   -0.4284401  -0.3661259</span>
+<span class="c1">## Petal.Length    0.8717538  -0.4284401    1.0000000   0.9628654</span>
+<span class="c1">## Petal.Width     0.8179411  -0.3661259    0.9628654   1.0000000</span>
+</pre></div>
+</div>
+<p>Kết quả cho ta thấy <code class="docutils literal notranslate"><span class="pre">Sepal.Length</span></code> và <code class="docutils literal notranslate"><span class="pre">Petal.Length</span></code> có mối liên hệ
+tương quan tuyến tính cùng chiều (hệ số tương quan 0.87), trong khi đó,
+<code class="docutils literal notranslate"><span class="pre">Sepal.Length</span></code> và <code class="docutils literal notranslate"><span class="pre">Sepal.Width</span></code> có mối liên hệ tương quan tuyến tính
+ngược chiều (hệ số tương quan -0.11).</p>
+<p><strong>Kiểm định hệ số tương quan</strong></p>
+<p>Như vậy, chúng ta đã hiểu bản chất của hệ số tương quan và biết cách
+tính hệ số tương quan trong <code class="docutils literal notranslate"><span class="pre">R</span></code>. Câu hỏi đặt ra lúc này là làm thế nào
+để biết được thực sự hệ số tương quan được tính toán có ý nghĩa về mặt
+thống kê hay không, hay nói cách khác, giữa 2 biến có thực sự có mối
+liên hệ hay không. Vì vậy, chúng ta cần kiểm định hệ số tương quan.</p>
+<p>Giả sử, chúng ta muốn biết xem 2 biến <code class="docutils literal notranslate"><span class="pre">Sepal.Length</span></code> và
+<code class="docutils literal notranslate"><span class="pre">Petal.Length</span></code> có mối liên hệ hay không. Như đã tính toán ở phần
+trước, hệ số tương quan của 2 biến này là 0.87, chúng ta sẽ kiểm định
+xem hệ số tương quan này có ý nghĩa về mặt thống kê hay không, tức chúng
+ta cần kiểm định xem hệ số tương quan của 2 biến này có khác 0 hay
+không. Chúng ta có cặp giả thuyết sau:</p>
+<ul class="simple">
+<li>Ho: 2 biến không có mối liên hệ (hệ số tương quan = 0)</li>
+<li>H1: 2 biến có mối liên hệ (hệ số tương quan khác 0)</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">cor.test</span><span class="p">(</span><span class="n">iris</span><span class="o">$</span><span class="n">Sepal.Length</span><span class="p">,</span><span class="n">iris</span><span class="o">$</span><span class="n">Petal.Length</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+<span class="c1">##  Pearson&#39;s product-moment correlation</span>
+<span class="c1">##</span>
+<span class="c1">## data:  iris$Sepal.Length and iris$Petal.Length</span>
+<span class="c1">## t = 21.646, df = 148, p-value &lt; 2.2e-16</span>
+<span class="c1">## alternative hypothesis: true correlation is not equal to 0</span>
+<span class="c1">## 95 percent confidence interval:</span>
+<span class="c1">##  0.8270363 0.9055080</span>
+<span class="c1">## sample estimates:</span>
+<span class="c1">##       cor</span>
+<span class="c1">## 0.8717538</span>
+</pre></div>
+</div>
+<p>Kết quả cho ta thấy p-value &lt; 2.2e-16, như vậy, chúng ta bác bỏ giả
+thuyết Ho, thừa nhận H1, tức 2 biến trên có mối liên hệ với nhau, cụ thể
+hơn là tương quan tuyến tính cùng chiều (hệ số tương quan 0.87).</p>
+</div>
+<div class="section" id="anova">
+<h2>3.2. ANOVA<a class="headerlink" href="#anova" title="Permalink to this headline">¶</a></h2>
+<p><strong>ANOVA</strong> viết tắt của từ <em>analysis of variance</em>, tức phân tích phương
+sai. Phương pháp ANOVA được sử dụng khi chúng ta muốn so sánh giữa 2
+hoặc nhiều nhóm đối tượng khác nhau dựa vào 1 tiêu chí nhất định nào đó,
+ví dụ như so sánh <em>độ tuổi của nhóm khách hàng thường và khách VIP</em>, hay
+so sánh <em>thu nhập của nhóm khách hàng nam và khách hàng nữ</em>… Để giải
+thích một cách dễ hiểu hơn, chúng ta sẽ làm ví dụ sau.</p>
+<p>Giả sử chúng ta muốn so sánh chiều dài đài hoa của 3 loài hoa trong tập
+dữ liệu <code class="docutils literal notranslate"><span class="pre">iris</span></code>.</p>
+<p>Chúng ta sẽ vẽ biểu đồ boxplot so sánh <code class="docutils literal notranslate"><span class="pre">Sepal.Length</span></code> giữa các loài
+hoa (<code class="docutils literal notranslate"><span class="pre">Species</span></code>).</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span>
+<span class="n">iris</span> <span class="o">%&gt;%</span>
+  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">Species</span><span class="p">,</span> <span class="n">Sepal.Length</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="n">Species</span><span class="p">))</span> <span class="o">+</span>
+  <span class="nf">geom_boxplot</span><span class="p">()</span> <span class="o">+</span>
+  <span class="nf">labs</span><span class="p">(</span>
+   <span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Overview of Iris Sepal Length by Species&quot;</span><span class="p">,</span>
+       <span class="n">x</span> <span class="o">=</span> <span class="s">&quot;Species&quot;</span><span class="p">,</span>
+       <span class="n">y</span> <span class="o">=</span> <span class="s">&quot;Sepal Length (cm)&quot;</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">scale_y_continuous</span><span class="p">(</span><span class="n">breaks</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">10</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">))</span> <span class="o">+</span>
+  <span class="nf">theme_bw</span><span class="p">()</span> <span class="o">+</span>  <span class="c1"># Background đen trắng</span>
+  <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span>  <span class="c1"># Bỏ legend</span>
+</pre></div>
+</div>
+<p><img alt="image0" src="p02-05-cac-chi-so-thong-ke_files/figure-html/unnamed-chunk-6-1.png" /></p>
+<p>Nhìn vào biểu đồ boxplot trên, ta thấy chiều dài đài hoa của loài hoa
+<code class="docutils literal notranslate"><span class="pre">virginica</span></code> lớn hơn so với 2 loài hoa còn lại ở cả giá trị median,
+quantile 25% và quantile 75%. Trong khi đó, <code class="docutils literal notranslate"><span class="pre">setosa</span></code> có chiều dài đài
+hoa ngắn nhất trong 3 loài hoa.</p>
+<p>Tuy nhiên, để chắc chắn khẳng định rằng thực sự có sự khác biệt chiều
+dài đài hoa giữa các loài hoa hay không thì chúng ta cần phải sử dụng
+kiểm định ANOVA.</p>
+<p>Kiểm định ANOVA sẽ giúp chung ta so sánh chiều dài đài hoa trung bình
+giữa các loài hoa, sau đó tính toán chênh lệch chiều dài đài hoa trung
+bình giữa các loài hoa, và cuối cùng sẽ kiểm định xem những sự chênh
+lệch đó thực sự có ý nghĩa về mặt thống kê hay không. Hay nói cách khác,
+phương pháp ANOVA kiểm định cặp giả thuyết sau:</p>
+<ul class="simple">
+<li>Ho: Không có sự khác biệt giữa chiều dài đài hoa của các loài hoa
+(tức chênh lệch chiều dài đài hoa trung bình = 0)</li>
+<li>H1: Có sự khác biệt giữa chiều dài đài hoa của các loài hoa (chênh
+lệch chiều dài đài hoa trung bình khác 0)</li>
+</ul>
+<p>Trước tiên chúng ta sẽ so sánh chiều dài đài hoa trung bình của các loài
+hoa.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<span class="n">iris</span> <span class="o">%&gt;%</span>
+  <span class="nf">group_by</span><span class="p">(</span><span class="n">Species</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">summarise</span><span class="p">(</span><span class="n">mean</span> <span class="o">=</span> <span class="nf">mean</span><span class="p">(</span><span class="n">Sepal.Length</span><span class="p">),</span>
+            <span class="n">sd</span> <span class="o">=</span> <span class="nf">sd</span><span class="p">(</span><span class="n">Sepal.Length</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 3 x 3</span>
+<span class="c1">##   Species     mean    sd</span>
+<span class="c1">##   &lt;fct&gt;      &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="c1">## 1 setosa      5.01 0.352</span>
+<span class="c1">## 2 versicolor  5.94 0.516</span>
+<span class="c1">## 3 virginica   6.59 0.636</span>
+</pre></div>
+</div>
+<p>Kết quả cho ta thấy rằng chiều dài đài hoa trung bình của loài hoa
+<code class="docutils literal notranslate"><span class="pre">sentosa</span></code> là 5.01 cm, của <code class="docutils literal notranslate"><span class="pre">versicolor</span></code> là 5.94 cm, của <code class="docutils literal notranslate"><span class="pre">virginica</span></code>
+là 6.59 cm.</p>
+<p>Tiếp theo chúng ta sẽ sử dụng phương pháp ANOVA để kiểm định xem thực sự
+có sự khác biệt giữa chiều dài đài hoa trung bình giữa các loài hoa hay
+không bằng việc sử dụng hàm <code class="docutils literal notranslate"><span class="pre">aov()</span></code></p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#ANOVA</span>
+<span class="n">model</span> <span class="o">&lt;-</span> <span class="nf">aov</span><span class="p">(</span><span class="n">Sepal.Length</span> <span class="o">~</span> <span class="n">Species</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">iris</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##              Df Sum Sq Mean Sq F value Pr(&gt;F)</span>
+<span class="c1">## Species       2  63.21  31.606   119.3 &lt;2e-16 ***</span>
+<span class="c1">## Residuals   147  38.96   0.265</span>
+<span class="c1">## ---</span>
+<span class="c1">## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
+</pre></div>
+</div>
+<p>Kết quả trên mô hình cho thấy chỉ số <code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">value</span></code> rất nhỏ, điều này cho
+phép chúng ta bác bỏ <span class="math notranslate">\(H_0\)</span> và chấp nhận <span class="math notranslate">\(H_1\)</span>, tức là có sự
+khác biệt của giá trị trung bình của <code class="docutils literal notranslate"><span class="pre">Sepal.Length</span></code> giữa các loài hoa.</p>
+<p>Tuy nhiên, trong thực tế, câu hỏi <em>có khác biệt hay không</em> chưa đủ, mà
+ta còn phải trả lời câu hỏi: “Sự khác biệt là bao nhiêu?”</p>
+<p>Để trả lời cho câu hỏi trên, ta có thể sử dụng kiểm định <code class="docutils literal notranslate"><span class="pre">TukeyHSD</span></code> để
+tìm ra sự khác biệt giữa các nhóm.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">%&gt;%</span> <span class="n">TukeyHSD</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   Tukey multiple comparisons of means</span>
+<span class="c1">##     95% family-wise confidence level</span>
+<span class="c1">##</span>
+<span class="c1">## Fit: aov(formula = Sepal.Length ~ Species, data = iris)</span>
+<span class="c1">##</span>
+<span class="c1">## $Species</span>
+<span class="c1">##                       diff       lwr       upr p adj</span>
+<span class="c1">## versicolor-setosa    0.930 0.6862273 1.1737727     0</span>
+<span class="c1">## virginica-setosa     1.582 1.3382273 1.8257727     0</span>
+<span class="c1">## virginica-versicolor 0.652 0.4082273 0.8957727     0</span>
+</pre></div>
+</div>
+<p>Giải thích ý nghĩa của bảng kết quả:</p>
+<ul class="simple">
+<li>Cột <code class="docutils literal notranslate"><span class="pre">diff</span></code>: chênh lệch giá trị trung bình chiều dài đài hoa giữa
+các loài hoa</li>
+<li><code class="docutils literal notranslate"><span class="pre">lwr</span></code> và <code class="docutils literal notranslate"><span class="pre">upr</span></code>: khoảng tin cậy 95% (lwr &lt; diff &lt; upr)</li>
+<li><code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">adj</span></code>: giá trị p-value, nếu p-value &lt; 0.05 thì chúng ta đủ cơ sở
+để bác bỏ giả thuyết Ho, chấp nhận H1.</li>
+</ul>
+<p>Kết quả trong trường hợp này cho ta thấy thực sự có sự khác biệt giữa
+chiều dài đài hoa của các loài hoa (các giá trị p-value = 0).</p>
+<hr class="docutils" />
+<p>Như vậy, trong chương này, chúng ta đã cùng nhau tìm hiểu cách đọc hiểu
+những chỉ số thống kê cơ bản như: <strong>min/max</strong> (giá trị nhỏ nhất/lớn
+nhất), <strong>median</strong> (giá trị trung vị), <strong>mean</strong> (giá trị trung bình),
+<strong>quantile 25%</strong> và <strong>quantile 75%</strong>.</p>
+<p>Ngoài ra, chúng ta cũng đã biết những kiểm định quan trọng và phổ biến
+như:</p>
+<ul class="simple">
+<li><strong>Chi-square test</strong>: sử dụng để xem giữa các biến rời rạc
+(discrete/categorical variables) có mối quan hệ độc lập hay phụ thuộc
+lẫn nhau</li>
+<li><strong>Correlation test</strong>: sử dụng để xem giữa các biến liên tục
+(continuous/numeric variables) có mối liên hệ hay không (tương quan
+tuyến tính)</li>
+<li><strong>ANOVA test</strong>: sử dụng để so sánh giữa các nhóm đối tượng khác nhau
+dựa vào giá trị trung bình của 1 biến nhất định nào đó</li>
+</ul>
+</div>
+<div class="section" id="kiem-dinh-quan-he-chi-binh-phuong">
+<h2>3.3. Kiểm định quan hệ Chi-bình phương<a class="headerlink" href="#kiem-dinh-quan-he-chi-binh-phuong" title="Permalink to this headline">¶</a></h2>
+<p>Một trong những câu hỏi ta thường xuyên phải giải quyết trong quá trình
+phân tích dữ liệu là tìm kiếm mối quan hệ giữa các biến rời rạc. Một
+trong những kỹ thuật phổ biến để tìm kiếm mối quan hệ này là sử dụng
+kiểm định Chi-square (Khi bình phương).</p>
+<p>Để thực hiện phân tích mối quan hệ này, ta cần thực hiện ba bước:</p>
+<ul class="simple">
+<li>Bước một, xây dựng bảng phân phối tần xuất hai chiều.</li>
+<li>Bước hai, tính toán chỉ số <span class="math notranslate">\(\chi^2\)</span> để kiểm định giả thuyết độc
+lập giữa hai biến</li>
+<li>Bước ba, đưa ra kết luận về mối quan hệ vừa được kiểm định</li>
+</ul>
+<p>Để hiểu hơn về kiểm định <span class="math notranslate">\(\chi^2\)</span>, ta xem xét ví dụ dưới đây.</p>
+<p><strong>Ví dụ</strong>: Một trang web quảng cáo muốn phân tích về mối quan hệ giữa
+<strong>phương thức quảng cáo</strong> và <strong>thiết bị sử dụng</strong>. Dữ liệu trong một
+tháng về số lượt người dùng truy cập website được thể hiện như bảng dưới
+đây (đơn vị <em>nghìn user</em>)</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">order_dc</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Total&quot;</span><span class="p">,</span> <span class="s">&quot;Phone&quot;</span><span class="p">,</span> <span class="s">&quot;Tablet&quot;</span><span class="p">,</span> <span class="s">&quot;Desktop&quot;</span><span class="p">)</span>
+<span class="n">order_ch</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Organic Search&quot;</span><span class="p">,</span> <span class="s">&quot;Paid Search&quot;</span><span class="p">,</span> <span class="s">&quot;Email&quot;</span><span class="p">,</span> <span class="s">&quot;Display&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">device_category</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Desktop&quot;</span><span class="p">,</span> <span class="s">&quot;Tablet&quot;</span><span class="p">,</span> <span class="s">&quot;Phone&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">),</span>
+                 <span class="n">organic_search</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">25</span><span class="p">,</span><span class="m">20</span><span class="p">,</span><span class="m">35</span><span class="p">,</span><span class="m">80</span><span class="p">),</span>
+                 <span class="n">paid_search</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">20</span><span class="p">,</span><span class="m">30</span><span class="p">,</span><span class="m">15</span><span class="p">,</span><span class="m">65</span><span class="p">),</span>
+                 <span class="n">email</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">35</span><span class="p">,</span><span class="m">25</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">80</span><span class="p">),</span>
+                 <span class="n">display</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">20</span><span class="p">,</span><span class="m">25</span><span class="p">,</span><span class="m">40</span><span class="p">,</span><span class="m">85</span><span class="p">),</span>
+                 <span class="n">total</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">100</span><span class="p">,</span><span class="m">100</span><span class="p">,</span><span class="m">100</span><span class="p">,</span><span class="m">300</span><span class="p">))</span>
+<span class="n">df</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   device_category organic_search paid_search email display total</span>
+<span class="c1">## 1         Desktop             25          20    35      20   100</span>
+<span class="c1">## 2          Tablet             20          30    25      25   100</span>
+<span class="c1">## 3           Phone             35          15    10      40   100</span>
+<span class="c1">## 4           Total             80          65    80      85   300</span>
+</pre></div>
+</div>
+<p>Để phân tích mối quan hệ giữa hai biến, ta có giả thuyết như sau:</p>
+<ul class="simple">
+<li><span class="math notranslate">\(H_0\)</span>: Phương thức quảng cáo và thiết bị sử dụng không có mối
+liên hệ với nhau (hai biến độc lập)</li>
+<li><span class="math notranslate">\(H_1\)</span>: Phương thức quảng cáo và thiết bị sử dụng có mối liên hệ
+với nhau (tồn tại mối quan hệ giữa hai biến)</li>
+</ul>
+<p>Chỉ số <span class="math notranslate">\(\chi^2\)</span> được tính như sau:</p>
+<div class="math notranslate">
+\[\chi^2 = \sum\frac{(O_i - E_i)^2}{E_i}\]</div>
+<p>Trong đó:</p>
+<ul class="simple">
+<li><span class="math notranslate">\(O\)</span> là giá trị quan sát được thực tế (ví dụ: Desktop/Organic
+Search có 25 ngàn user)</li>
+<li><span class="math notranslate">\(E\)</span> là giá trị kỳ vọng của mỗi cặp giá trị.</li>
+</ul>
+<p>Ta tính giá trị <em>kỳ vọng</em> như sau:</p>
+<ul class="simple">
+<li>Tính tổng từng cột và từng dòng (giá trị &quot; <em>Total</em> &quot;)</li>
+<li>Nhân từng dòng với từng hàng và chia cho tổng số quan sát</li>
+</ul>
+<p><strong>Ví dụ</strong>: Giá trị kỳ vọng của <em>Desktop</em> và <em>Organic Search</em> có thể được
+tính như sau:</p>
+<div class="math notranslate">
+\[\begin{split}\begin{aligned}
+Users_{expected} &amp;= \frac{r_1}{T} \times \frac{c_1}{T} \times T \\
+&amp;= \frac{100}{300} \times \frac{80}{300} \times 300 \\
+&amp;= .33 \times .27 \times 300 \\
+&amp;= 26.67 \\
+&amp;= 27
+\end{aligned}\end{split}\]</div>
+<p>Giá trị kỳ vọng của tất cả các giá trị có kết quả như sau</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   device_category organic_search paid_search email display</span>
+<span class="c1">## 1         Desktop          26.67       21.67 23.33   28.33</span>
+<span class="c1">## 2          Tablet          26.67       21.67 23.33   28.33</span>
+<span class="c1">## 3           Phone          26.67       21.67 23.33   28.33</span>
+</pre></div>
+</div>
+<p>Tiếp đó, ta tính toán sự khác biệt giữa giá trị kỳ vọng và giá trị thực
+tế. Sau đó tính <span class="math notranslate">\(\chi^2\)</span> như sau:</p>
+<ul class="simple">
+<li>Tính độ sai lệch</li>
+</ul>
+<div class="math notranslate">
+\[\begin{split}\begin{aligned}
+&amp;= Users_o - Users_e \\
+&amp;= 25 - 26.67 \\
+&amp;= -1.67
+\end{aligned}\end{split}\]</div>
+<ul class="simple">
+<li>Tính giá trị bình phương</li>
+</ul>
+<div class="math notranslate">
+\[-1.67^2=2.78\]</div>
+<ul class="simple">
+<li>Chia giá trị vừa tính được cho giá trị kỳ vọng:</li>
+</ul>
+<div class="math notranslate">
+\[\frac{2.78}{27} = 0.10\]</div>
+<p>Tương tự, ta tính được cho tất cả các biến như sau:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df3</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">device_category</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Desktop&quot;</span><span class="p">,</span> <span class="s">&quot;Tablet&quot;</span><span class="p">,</span> <span class="s">&quot;Phone&quot;</span><span class="p">),</span>
+                 <span class="n">organic_search</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.1</span><span class="p">,</span> <span class="m">1.67</span><span class="p">,</span> <span class="m">2.6</span><span class="p">),</span>
+                 <span class="n">paid_search</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.13</span><span class="p">,</span> <span class="m">3.2</span><span class="p">,</span> <span class="m">2.05</span><span class="p">),</span>
+                 <span class="n">email</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">5.83</span><span class="p">,</span> <span class="m">0.12</span><span class="p">,</span> <span class="m">7.62</span><span class="p">),</span>
+                 <span class="n">display</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">2.45</span><span class="p">,</span> <span class="m">0.39</span><span class="p">,</span> <span class="m">4.8</span><span class="p">))</span>
+<span class="n">df3</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   device_category organic_search paid_search email display</span>
+<span class="c1">## 1         Desktop           0.10        0.13  5.83    2.45</span>
+<span class="c1">## 2          Tablet           1.67        3.20  0.12    0.39</span>
+<span class="c1">## 3           Phone           2.60        2.05  7.62    4.80</span>
+</pre></div>
+</div>
+<p><span class="math notranslate">\(\chi^2\)</span> thực tế được tính bằng tổng các giá trị trên
+<span class="math notranslate">\(\chi^2 = 30.96\)</span></p>
+<p>Với dữ liệu trên, ta có 4 cột và 3 hàng. Như vậy, bậc tự do trong phân
+phôi <span class="math notranslate">\(\chi^2\)</span> là <span class="math notranslate">\((4-1)*(3-1) = 6\)</span>. Ta có thể so sánh giá
+trị vừa tìm được với giá trị <span class="math notranslate">\(\chi^2\)</span> tại
+<a class="reference external" href="http://www.danielsoper.com/statcalc/calculator.aspx?id=12">đây</a>. Với
+<span class="math notranslate">\(\alpha\)</span> bằng .1 và 6 bậc tự do, giá trị của
+<span class="math notranslate">\(\chi\)</span><sup>2</sup> là 10.64. Với giá trị thực tế lớn hơn giá trị lý
+thuyết, ta bác bỏ <span class="math notranslate">\(H_0\)</span>. Như vậy, về mặt thống kê, tồn tại mối
+quan hệ giữa phương thức marketing và thiết bị sử dụng.</p>
+<hr class="docutils" />
+<p><strong>Ví dụ với R</strong></p>
+<p>Trong thực tế, khi phân tích dữ liệu, ta có thể ra quyết định nhanh
+chóng về mối quan hệ giữa hai biến rời rạc thông qua <code class="docutils literal notranslate"><span class="pre">p-value</span></code>.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="m">-1</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="nf">as.matrix</span><span class="p">()</span> <span class="o">%&gt;%</span> <span class="nf">chisq.test</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+<span class="c1">##  Pearson&#39;s Chi-squared test</span>
+<span class="c1">##</span>
+<span class="c1">## data:  .</span>
+<span class="c1">## X-squared = 30.908, df = 12, p-value = 0.002035</span>
+</pre></div>
+</div>
+<p>Với <span class="math notranslate">\(p-value = 0.002035\)</span>, ta bác bỏ <span class="math notranslate">\(H_0\)</span>, chấp nhận
+<span class="math notranslate">\(H_1\)</span>. Nghĩa là tồn tại mối quan hệ giữa phương thức quảng cáo và
+thiết bị sử dụng.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="p02-06-lap-trinh-ham.html" class="btn btn-neutral float-right" title="4. Lập trình hàm" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="p02-04-phan-ra-va-xoay-chieu-du-lieu.html" class="btn btn-neutral float-left" title="2. Phân rã và xoay chiều dữ liệu" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anh Hoang Duc
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

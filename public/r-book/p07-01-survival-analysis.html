@@ -1,0 +1,728 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="vi" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="vi" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1. Survival analysis &mdash; Tài liệu Phân tích dữ liệu với R 2019</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'2019',
+              LANGUAGE:'vi',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript" src="_static/copybutton.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Tìm Kiếm" href="search.html" />
+    <link rel="next" title="2. Causal Impact" href="p07-02-causal-impact.html" />
+    <link rel="prev" title="4. OCR với tesseract" href="p06-10-ocr-tesseract.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Phân tích dữ liệu với R
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Giới thiệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-gioi-thieu.html">Khoa học dữ liệu và nghề phân tích dữ liệu</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Phân tích khám phá dữ liệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p02-03-bien-doi-du-lieu-dplyr.html">1. Ngữ pháp của biến đổi dữ liệu với DPLYR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-04-phan-ra-va-xoay-chieu-du-lieu.html">2. Phân rã và xoay chiều dữ liệu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-05-cac-chi-so-thong-ke.html">3. Các chỉ số thống kê mô tả cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-06-lap-trinh-ham.html">4. Lập trình hàm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-07-lap-trinh-ham-voi-purrr.html">5. Lập trình chức năng hàm với purrr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-08-bien-doi-du-lieu-text.html">6. Biến đổi dữ liệu text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-11-quan-ly-nhieu-mo-hinh.html">7. Quản lý kết quả phân tích từ nhiều mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-15-thong-ke-co-ban.html">8. Xác suất và phân phối thống kê cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-16-power-analysis.html">9. Power analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-20-sampling-methods.html">10. Phương pháp ước lượng lấy mẫu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-50-datatable.html">11. Biến đổi dữ liệu với <code class="docutils literal notranslate"><span class="pre">data.table</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-60-thu-thap-du-lieu-tu-website.html">12. Thu thập dữ liệu từ website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-99-meo-trong-r.html">13. Các mẹo trong R</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Supervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p03-01-nguyen-ly-du-bao.html">1. Các nguyên lý dự báo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-02-mo-hinh-ols.html">2. Mô hình OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Unsupervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p04-01-unsupervised-learning.html">1. Unsupervised learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-02-kmeans.html">2. k-means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-03-hierarchical-clustering.html">3. Hierachical clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-04-basket-analysis.html">4. Phân tích giỏ hàng</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-05-pca.html">5. Principal component analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-06-factor-analysis.html">6. Phân tích nhân tố ẩn (factor analysis)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Chuỗi thời gian</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p05-01-chuoi-thoi-gian.html">1. Giới thiệu về chuỗi thời gian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-02-arima.html">2. Mô hình ARIMA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html">3. Phân tích chuỗi thời gian với tidyquant và timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-06-du-bao-ts-voi-prophet.html">4. Dự báo chuỗi thời gian với prophet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-07-du-bao-ts-voi-timetk.html">5. Dự báo chuỗi thời gian với timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-08-abnomaly-detection.html">6. Abnomaly detection trong times series</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ngôn ngữ tự nghiên</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p06-01-nlp-co-ban.html">1. Xử lý ngôn ngữ tự nhiên cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-04-text-classification.html">2. Phân loại text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-07-nlp-api.html">3. Sử dụng API từ các dịch vụ đám mây</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-10-ocr-tesseract.html">4. OCR với <code class="docutils literal notranslate"><span class="pre">tesseract</span></code></a></li>
+</ul>
+<p class="caption"><span class="caption-text">Các phương pháp khác</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Survival analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gioi-thieu">1.1. Giới thiệu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ly-thuyet">1.2. Lý thuyết</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#uoc-luong-kaplan-meier-cho-f-t">1.2.1. Ước lượng Kaplan-Meier cho F(t)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#uoc-luong-ham-nguy-co">1.2.2. Ước lượng hàm nguy cơ</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#vi-du">1.3. Ví dụ</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#survival-function-theo-gioi-tinh">1.4. Survival function theo giới tính</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#so-sanh-ham-song-sot-cua-2-nhom">1.5. So sánh hàm sống sót của 2 nhóm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#phuong-phap-parametric">1.6. Phương pháp parametric</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="p07-02-causal-impact.html">2. Causal Impact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-03-collaborative-filtering.html">3. Collaborative Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-07-spatial-data.html">4. Spatial data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-10-shiny.html">5. Shiny apps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p09-01-gioi-thieu-deep-learning.html">1. Giới thiệu cơ bản về Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-02-co-ban-kien-thuc-toan.html">2. Kiến thức cơ bản toán học cho deep learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-03-mo-hinh-deep-learning-co-ban.html">3. Mô hình deep learning cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-04-convolution-neural-network.html">4. Convolution neural networks</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cloud Computing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p10-01-cai-dat-rstudio-server-tren-amazon.html">1. Cài đặt server RStudio trên Amazon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-03-web-service-azure.html">2. Xây dựng web service với Azure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-09-apis-voi-plumber.html">3. API với Plumber</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Kiến thức bổ trợ</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p11-01-git.html">1. Sử dụng GIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-02-cmd.html">2. CMD và Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-03-docker.html">3. Sử dụng docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-04-apis.html">4. API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-05-html-css.html">5. Cơ bản về HTML và CSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-09-other.html">6. Các tricks khác</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Case studies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p13-01-casestudy-truc-quan-hoa.html">1. Trực quan hóa dữ liệu</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Phân tích dữ liệu với R</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>1. Survival analysis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/p07-01-survival-analysis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="survival-analysis">
+<h1>1. Survival analysis<a class="headerlink" href="#survival-analysis" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gioi-thieu">
+<h2>1.1. Giới thiệu<a class="headerlink" href="#gioi-thieu" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Survival</span> <span class="pre">analysis</span></code> là kỹ thuật được sử dụng trong việc phân tích thời
+gian xảy ra sự kiện nhất định. Ví dụ:</p>
+<ul class="simple">
+<li>Thời gian chuyển sang giai đoạn AIDS của bệnh nhân HIV</li>
+<li>Thời gian khách hàng ngưng sử dụng dịch vụ sau khi đăng ký</li>
+</ul>
+<p>Trong các ví dụ trên, biến được sử dụng trong phân tích, dự báo là
+<strong>thời gian</strong>.</p>
+<p>Đối với <code class="docutils literal notranslate"><span class="pre">survival</span> <span class="pre">analysis</span></code>, dữ liệu có các đặc trưng sau:</p>
+<ul class="simple">
+<li>Biến phụ thuộc là biến <strong>thời gian</strong></li>
+<li>Dữ liệu có đặc trưng <code class="docutils literal notranslate"><span class="pre">censor</span></code> (chặn 1 bên):<ul>
+<li><code class="docutils literal notranslate"><span class="pre">Right</span> <span class="pre">censoring</span></code> là thuật ngữ mô tả sự kiện diễn ra sau khoảng
+thời gian phân tích. Ví dụ, nghiên cứ 100 bệnh nhân HIV trong
+khoảng thời gian 1 năm. Trong thời gian đó, có 10 bệnh nhân chuyển
+qua AIDS, 90 bệnh nhân còn lại chưa qua AIDS trong một năm đó
+nhưng ta đều biết rằng họ <strong>SẼ</strong> chuyển thành AIDS. Dữ liệu kiểu
+vậy được gọi là <em>right censoring</em>. Thời gian bệnh nhân CHÍNH XÁC
+chuyển qua AIDS nằm ngoài khoảng thời gian quan sát.</li>
+<li><code class="docutils literal notranslate"><span class="pre">Left</span> <span class="pre">censoring</span></code>: Thời gian diễn ra sự kiện trước khoảng thời
+gian diễn ra quan sát</li>
+</ul>
+</li>
+</ul>
+<p>Đối với các vấn đề như trên, việc dự báo họ chuyển thành AIDS hay không
+không quan trọng. Quan trọng là <strong>KHI NÀO</strong> họ chuyển thành AIDS.</p>
+<p><strong>Lưu ý</strong>:</p>
+<ul class="simple">
+<li>Đối với survival analysis, ta thường không có đủ dữ liệu về đối
+tượng. Ví dụ, trong 100 bệnh nhân tham gia, có bệnh nhân vào nghiên
+cứu từ tháng 6, tức là khi kết thúc nghiên cứu, bệnh nhân đó chỉ có
+dữ liệu 6 tháng</li>
+<li>Nếu ta có đầy đủ dữ liệu vè thời gian khách hàng/bệnh nhân từ khi
+quan sát đến khi xảy ra sự kiện, ta có thể dùng regression thông
+thường</li>
+</ul>
+</div>
+<div class="section" id="ly-thuyet">
+<h2>1.2. Lý thuyết<a class="headerlink" href="#ly-thuyet" title="Permalink to this headline">¶</a></h2>
+<p>Gọi T là thời gian xảy ra sự kiện từ khi quan sát, với cdf <code class="docutils literal notranslate"><span class="pre">F(.)</span></code> và
+<code class="docutils literal notranslate"><span class="pre">pdf</span> <span class="pre">f(.)</span></code>, ta có:</p>
+<p><span class="math notranslate">\(F(t) = P(T \leq t) = \int_0^tf(x)dx\)</span> và
+<span class="math notranslate">\(f(t) = \frac{dF(t)}{dt}\)</span></p>
+<div class="math notranslate">
+\[f(t)=\lim_{dt \to 0^+} \frac{F(t + dt) - F(t)}{dt} =
+\lim_{dt \to 0^+} \frac{P(t &lt; t \leq t + dt)}{dt}\]</div>
+<p><strong>Survival function S(t)</strong>:</p>
+<div class="math notranslate">
+\[S(t) = P(T &gt; t) = 1 - F(t) = \int_t^{\infty}f(x)dx\]</div>
+<p>Với t = 0, S(t) = 1. Với t tiến đến <span class="math notranslate">\(\infty\)</span>, S(t) tiến đến 0</p>
+<p>Bởi vì:</p>
+<div class="math notranslate">
+\[F(x) = 1 - S(x)\]</div>
+<p>Đạo hàm hai vế, ta được:</p>
+<div class="math notranslate">
+\[f(t) = -\frac{dS}{dt}\]</div>
+<p>**Hàm nguy cơ <span class="math notranslate">\(h(t)\)</span> hay <span class="math notranslate">\(\lambda(t)\)</span> (<code class="docutils literal notranslate"><span class="pre">hazard</span> <span class="pre">function</span></code>)
+cho ta biết xác suất xảy ra sự kiện tại ngay thời điểm t.</p>
+<div class="math notranslate">
+\[h(t) = \lim_{dt \to 0}\frac{(t &lt; T \leq t + dt | T &gt; t)}{dt} =
+\lim_{dt \to 0}\frac{F(t+dt)}{S(t)dt}=\frac{f(t)}{S(t)} =
+\frac{-dS(t)/dt}{S(t)} = -\frac{dlog(S(t))}{dt}\]</div>
+<p>Hàm nguy cơ tích lũy (cumulative hazard function):</p>
+<div class="math notranslate">
+\[H(t) = \int_0^th(u)du = -log(S(t))\]</div>
+<p>Từ đó ta có:</p>
+<div class="math notranslate">
+\[S(t) = e^{-H(t)} = exp(-H(t))\]</div>
+<p><strong>Lưu ý</strong>:</p>
+<ul class="simple">
+<li>Hàm survival S(t) cho ta biết xác suất tích lũy sống qua thời điểm
+xảy ra sự kiện T</li>
+<li>Hàm F(t) cho ta biết xác suất tích lũy <strong>chỉ sống đến</strong> thời điểm T</li>
+<li>Hàm nguy cơ h(t) cho ta biết xác suất xảy ra sự kiện <strong>NGAY</strong> tại
+thời điểm T.</li>
+</ul>
+<p>VD: Xác suất người chết ở tuối 100 rất thấp vì rất ít người sống đến 100
+(F(t)). Tuy nhiên, xác suất người chết ở tuổi 100 với điều kiện người đó
+ĐÃ bước sang tuổi 100 sẽ cao hơn rất nhiều</p>
+<div class="section" id="uoc-luong-kaplan-meier-cho-f-t">
+<h3>1.2.1. Ước lượng Kaplan-Meier cho F(t)<a class="headerlink" href="#uoc-luong-kaplan-meier-cho-f-t" title="Permalink to this headline">¶</a></h3>
+<p>Xác suất xảy ra hai sự kiện A1 và A2 đồng thời như sau:</p>
+<div class="math notranslate">
+\[P(A_1 \cap A_2) = P(A_2|A_1)*P(A_1)\]</div>
+<p>Do đó, hàm survival (S) cho ta biết xác suất các đối tượng <strong>sống sót</strong>
+qua thời gian t. Bản chất của hàm Survival là xác suất có điều kiện như
+sau:</p>
+<p><strong>P(sống qua t + 1) = P(sống qua t)*P(sống qua t+1| sống qua t)</strong></p>
+<p><span class="math notranslate">\(\hat{S}_t=\prod_{k=1}^{t}{p_k}\)</span></p>
+<div class="math notranslate">
+\[\hat{p_i} = 1 - \hat{q_i} =
+1 - \frac{d_i}{n_i} =
+\frac{n_i-d_i}{n_i}\]</div>
+<p>Trong đó:</p>
+<ul class="simple">
+<li><span class="math notranslate">\(\hat{p_i}\)</span> là xác suất sống sót sau thời điểm i</li>
+<li><span class="math notranslate">\(n_i\)</span> là số đối tượng quan sát tại khung thời gian i</li>
+<li><span class="math notranslate">\(d_i\)</span> là số đối tượng trải qua sự kiện tại thời điểm i</li>
+<li><span class="math notranslate">\(\hat{q_i}\)</span> là xác suất các đối tượng trải qua sự kiện tại thời
+điểm i</li>
+</ul>
+<p>Ví dụ:</p>
+<p><img alt="image0" src="Images/67-survival-03.png" /></p>
+<p><strong>Lưu ý</strong>:</p>
+<ul class="simple">
+<li>Đường ước lượng KM chỉ dốc xuống khi có sự kiện xảy ra</li>
+<li>Sau thời điểm t = 48, ta không thể ước lượng S(t) được nữa, đường
+<span class="math notranslate">\(\hat{S}(t)\)</span> này được gọi là <strong>defective survival function</strong></li>
+</ul>
+</div>
+<div class="section" id="uoc-luong-ham-nguy-co">
+<h3>1.2.2. Ước lượng hàm nguy cơ<a class="headerlink" href="#uoc-luong-ham-nguy-co" title="Permalink to this headline">¶</a></h3>
+<div class="math notranslate">
+\[\tilde{h}(t_i) = \frac{d_i}{n_i}\]</div>
+<p>Trong khoảng thời gian từ <span class="math notranslate">\(t_i \leq T \leq t_{i+1}\)</span>, với i là
+khoảng thời gian xảy ra sự kiện, ta có:</p>
+<div class="math notranslate">
+\[\hat{h}_t = \frac{d_i}{n_i(t_{i+1}-t_i)}\]</div>
+<p>Với ví dụ AML, ta có:</p>
+<div class="math notranslate">
+\[\hat{h}_{23} = \frac{1}{7}\]</div>
+<div class="math notranslate">
+\[\hat{h}_{28} = \hat{h}_{30}=\frac{1}{7 * (31-23)} = \frac{1}{56}\]</div>
+<p><strong>Hàm nguy cơ tích lũy</strong></p>
+<div class="math notranslate">
+\[\hat{H}(t) = -log(\hat{S}(t))\]</div>
+<p>Với ví dụ AML:</p>
+<div class="math notranslate">
+\[\hat{H}_{26} = -log(\hat{S}(26)) = -log(0.614) = 0.488\]</div>
+<div class="math notranslate">
+\[\tilde{H}(26) = \frac{1}{11} + \frac{1}{10} + \frac{1}{8} +
+\frac{1}{7} = 0.4588\]</div>
+<p><strong>Lưu ý</strong>:</p>
+<ul class="simple">
+<li>Trong survival analysis, các sự kiện được gọi là death, nhưng có thể
+có rất nhiều cách tiếp cận khác nhau: thời gian mua sản phẩm thứ 2
+sau sản phẩm thứ nhất, thời gian KH rời bỏ doanh nghiệp…</li>
+</ul>
+<p>Ước lượng này được gọi là ước lượng <em>Kaplan-Meier</em> hay <em>product limit
+estimate</em></p>
+<ul class="simple">
+<li>Hàm nguy cơ (h hay <a href="#id1"><span class="problematic" id="id2">:raw-latex:`\lamda`</span></a>) cho ta biết xác suất xảy ra
+biến cố tại thời điểm t.</li>
+</ul>
+<p>Giả sử có 18 bệnh nhân như sau:</p>
+<p><img alt="image1" src="Images/67-survival-01.png" /></p>
+<p>Dấu * cho biết bệnh nhân vẫn tiếp tục sử dụng thiết bị</p>
+<p><img alt="image2" src="Images/67-survival-02.png" /></p>
+<p><strong>Giải thích</strong>:</p>
+<ul class="simple">
+<li>Ở thời gian t=2 (tuần 10-18), có một người ngưng sử dụng, xác suất
+ngưng sử dụng là <span class="math notranslate">\(\frac{1}{18}\)</span>. Xác suất còn sử dụng p là
+<span class="math notranslate">\(\frac{17}{18}\)</span>. Xác suất sống sót t = 2 là
+<span class="math notranslate">\(1*\frac{17}{18}=\frac{17}{18}=0.9445\)</span></li>
+<li>Ở thời gian t=3 (tuần 19-29), có một người ngưng sử dụng, xác suất
+ngưng sử dụng là <span class="math notranslate">\(\frac{1}{15}\)</span>. Xác suất còn sử dụng là
+<span class="math notranslate">\(\frac{14}{15}\)</span>. Xác suất sống sót của tất cả sample qua t = 3
+là <span class="math notranslate">\(\frac{14}{15} * \frac{17}{18}\)</span></li>
+</ul>
+</div>
+</div>
+<div class="section" id="vi-du">
+<h2>1.3. Ví dụ<a class="headerlink" href="#vi-du" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">survival</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">KMsurv</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">ggfortify</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">ISwR</span><span class="p">)</span>
+
+<span class="nf">library</span><span class="p">(</span><span class="n">ISwR</span><span class="p">)</span>
+<span class="nf">data</span><span class="p">(</span><span class="n">melanom</span><span class="p">)</span>
+<span class="n">melanom</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    no status days ulc thick sex</span>
+<span class="c1">## 1 789      3   10   1   676   2</span>
+<span class="c1">## 2  13      3   30   2    65   2</span>
+<span class="c1">## 3  97      2   35   2   134   2</span>
+<span class="c1">## 4  16      3   99   2   290   1</span>
+<span class="c1">## 5  21      1  185   1  1208   2</span>
+<span class="c1">## 6 469      1  204   1   484   2</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tạo status == 1 là death</span>
+<span class="n">msurv</span> <span class="o">&lt;-</span> <span class="nf">with</span><span class="p">(</span><span class="n">melanom</span><span class="p">,</span> <span class="nf">Surv</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">status</span> <span class="o">==</span> <span class="m">1</span><span class="p">))</span>
+
+<span class="c1">#Lưu ý: Các status là 2 và 3 được coi như uncensored</span>
+<span class="n">melanom</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    no status days ulc thick sex</span>
+<span class="c1">## 1 789      3   10   1   676   2</span>
+<span class="c1">## 2  13      3   30   2    65   2</span>
+<span class="c1">## 3  97      2   35   2   134   2</span>
+<span class="c1">## 4  16      3   99   2   290   1</span>
+<span class="c1">## 5  21      1  185   1  1208   2</span>
+<span class="c1">## 6 469      1  204   1   484   2</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">msurv</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1]  10+  30+  35+  99+ 185  204</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Phân tích</span>
+<span class="n">mfit</span> <span class="o">&lt;-</span> <span class="nf">survfit</span><span class="p">(</span><span class="nf">Surv</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">status</span> <span class="o">==</span> <span class="m">1</span><span class="p">)</span> <span class="o">~</span> <span class="m">1</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">melanom</span><span class="p">)</span>
+<span class="n">mfit</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Call: survfit(formula = Surv(days, status == 1) ~ 1, data = melanom)</span>
+<span class="c1">##</span>
+<span class="c1">##  time n.risk n.event survival std.err lower 95% CI upper 95% CI</span>
+<span class="c1">##   185    201       1    0.995 0.00496        0.985        1.000</span>
+<span class="c1">##   204    200       1    0.990 0.00700        0.976        1.000</span>
+<span class="c1">##   210    199       1    0.985 0.00855        0.968        1.000</span>
+<span class="c1">##   232    198       1    0.980 0.00985        0.961        1.000</span>
+<span class="c1">##   279    196       1    0.975 0.01100        0.954        0.997</span>
+<span class="c1">##   295    195       1    0.970 0.01202        0.947        0.994</span>
+<span class="c1">##   386    193       1    0.965 0.01297        0.940        0.991</span>
+<span class="c1">##   426    192       1    0.960 0.01384        0.933        0.988</span>
+<span class="c1">##   469    191       1    0.955 0.01465        0.927        0.984</span>
+<span class="c1">##   529    189       1    0.950 0.01542        0.920        0.981</span>
+<span class="c1">##   621    188       1    0.945 0.01615        0.914        0.977</span>
+<span class="c1">##   629    187       1    0.940 0.01683        0.907        0.973</span>
+<span class="c1">##   659    186       1    0.935 0.01748        0.901        0.970</span>
+<span class="c1">##   667    185       1    0.930 0.01811        0.895        0.966</span>
+<span class="c1">##   718    184       1    0.925 0.01870        0.889        0.962</span>
+<span class="c1">##   752    183       1    0.920 0.01927        0.883        0.958</span>
+<span class="c1">##   779    182       1    0.915 0.01981        0.877        0.954</span>
+<span class="c1">##   793    181       1    0.910 0.02034        0.871        0.950</span>
+<span class="c1">##   817    180       1    0.904 0.02084        0.865        0.946</span>
+<span class="c1">##   833    178       1    0.899 0.02134        0.859        0.942</span>
+<span class="c1">##   858    177       1    0.894 0.02181        0.853        0.938</span>
+<span class="c1">##   869    176       1    0.889 0.02227        0.847        0.934</span>
+<span class="c1">##   872    175       1    0.884 0.02272        0.841        0.930</span>
+<span class="c1">##   967    174       1    0.879 0.02315        0.835        0.926</span>
+<span class="c1">##   977    173       1    0.874 0.02357        0.829        0.921</span>
+<span class="c1">##   982    172       1    0.869 0.02397        0.823        0.917</span>
+<span class="c1">##  1041    171       1    0.864 0.02436        0.817        0.913</span>
+<span class="c1">##  1055    170       1    0.859 0.02474        0.812        0.909</span>
+<span class="c1">##  1062    169       1    0.854 0.02511        0.806        0.904</span>
+<span class="c1">##  1075    168       1    0.849 0.02547        0.800        0.900</span>
+<span class="c1">##  1156    167       1    0.844 0.02582        0.794        0.896</span>
+<span class="c1">##  1228    166       1    0.838 0.02616        0.789        0.891</span>
+<span class="c1">##  1252    165       1    0.833 0.02649        0.783        0.887</span>
+<span class="c1">##  1271    164       1    0.828 0.02681        0.777        0.883</span>
+<span class="c1">##  1312    163       1    0.823 0.02713        0.772        0.878</span>
+<span class="c1">##  1435    161       1    0.818 0.02744        0.766        0.874</span>
+<span class="c1">##  1506    159       1    0.813 0.02774        0.760        0.869</span>
+<span class="c1">##  1516    155       1    0.808 0.02805        0.755        0.865</span>
+<span class="c1">##  1548    152       1    0.802 0.02837        0.749        0.860</span>
+<span class="c1">##  1560    150       1    0.797 0.02868        0.743        0.855</span>
+<span class="c1">##  1584    148       1    0.792 0.02899        0.737        0.851</span>
+<span class="c1">##  1621    146       1    0.786 0.02929        0.731        0.846</span>
+<span class="c1">##  1667    137       1    0.780 0.02963        0.725        0.841</span>
+<span class="c1">##  1690    134       1    0.775 0.02998        0.718        0.836</span>
+<span class="c1">##  1726    131       1    0.769 0.03033        0.712        0.831</span>
+<span class="c1">##  1933    110       1    0.762 0.03085        0.704        0.825</span>
+<span class="c1">##  2061     95       1    0.754 0.03155        0.694        0.818</span>
+<span class="c1">##  2062     94       1    0.746 0.03221        0.685        0.812</span>
+<span class="c1">##  2103     90       1    0.737 0.03290        0.676        0.805</span>
+<span class="c1">##  2108     88       1    0.729 0.03358        0.666        0.798</span>
+<span class="c1">##  2256     80       1    0.720 0.03438        0.656        0.791</span>
+<span class="c1">##  2388     75       1    0.710 0.03523        0.645        0.783</span>
+<span class="c1">##  2467     69       1    0.700 0.03619        0.633        0.775</span>
+<span class="c1">##  2565     63       1    0.689 0.03729        0.620        0.766</span>
+<span class="c1">##  2782     57       1    0.677 0.03854        0.605        0.757</span>
+<span class="c1">##  3042     52       1    0.664 0.03994        0.590        0.747</span>
+<span class="c1">##  3338     35       1    0.645 0.04307        0.566        0.735</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mfit</span> <span class="o">%&gt;%</span> <span class="n">autoplot</span> <span class="o">+</span>
+  <span class="nf">theme_bw</span><span class="p">()</span> <span class="o">+</span>
+  <span class="nf">scale_x_continuous</span><span class="p">(</span><span class="n">breaks</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">6000</span><span class="p">,</span> <span class="m">1000</span><span class="p">))</span>
+</pre></div>
+</div>
+<p><img alt="image3" src="p07-01-survival-analysis_files/figure-html/unnamed-chunk-2-1.png" /></p>
+</div>
+<div class="section" id="survival-function-theo-gioi-tinh">
+<h2>1.4. Survival function theo giới tính<a class="headerlink" href="#survival-function-theo-gioi-tinh" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mfit.bysex</span> <span class="o">&lt;-</span> <span class="nf">survfit</span><span class="p">(</span><span class="nf">Surv</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">status</span> <span class="o">==</span> <span class="m">1</span><span class="p">)</span> <span class="o">~</span> <span class="n">sex</span><span class="p">,</span>
+                      <span class="n">data</span> <span class="o">=</span> <span class="n">melanom</span><span class="p">)</span>
+<span class="n">mfit.bysex</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Call: survfit(formula = Surv(days, status == 1) ~ sex, data = melanom)</span>
+<span class="c1">##</span>
+<span class="c1">##         n events median 0.95LCL 0.95UCL</span>
+<span class="c1">## sex=1 126     28     NA      NA      NA</span>
+<span class="c1">## sex=2  79     29     NA    2388      NA</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mfit.bysex</span> <span class="o">%&gt;%</span> <span class="nf">autoplot</span><span class="p">()</span> <span class="o">+</span>
+  <span class="nf">theme_bw</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><img alt="image4" src="p07-01-survival-analysis_files/figure-html/unnamed-chunk-3-1.png" /></p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mfit.bysex</span> <span class="o">%&gt;%</span> <span class="nf">autoplot</span><span class="p">(</span><span class="n">fun</span> <span class="o">=</span> <span class="s">&quot;cloglog&quot;</span><span class="p">)</span> <span class="o">+</span>
+  <span class="nf">theme_bw</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><img alt="image5" src="p07-01-survival-analysis_files/figure-html/unnamed-chunk-3-2.png" /></p>
+<p><strong>Lưu ý</strong>: Các điểm * trên đồ thị là các sự kiện xảy ra thực tế</p>
+</div>
+<div class="section" id="so-sanh-ham-song-sot-cua-2-nhom">
+<h2>1.5. So sánh hàm sống sót của 2 nhóm<a class="headerlink" href="#so-sanh-ham-song-sot-cua-2-nhom" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><span class="math notranslate">\(H_0\)</span>: <span class="math notranslate">\(S_1(.) = S_2(.)\)</span></li>
+<li><span class="math notranslate">\(H_1\)</span>: <span class="math notranslate">\(S_1(.) \neq S_2(.)\)</span></li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">survdiff</span><span class="p">(</span><span class="nf">Surv</span><span class="p">(</span><span class="n">time</span><span class="p">,</span><span class="n">status</span><span class="p">)</span> <span class="o">~</span> <span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">aml</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Call:</span>
+<span class="c1">## survdiff(formula = Surv(time, status) ~ x, data = aml)</span>
+<span class="c1">##</span>
+<span class="c1">##                  N Observed Expected (O-E)^2/E (O-E)^2/V</span>
+<span class="c1">## x=Maintained    11        7    10.69      1.27       3.4</span>
+<span class="c1">## x=Nonmaintained 12       11     7.31      1.86       3.4</span>
+<span class="c1">##</span>
+<span class="c1">##  Chisq= 3.4  on 1 degrees of freedom, p= 0.0653</span>
+</pre></div>
+</div>
+<p>Với p &lt; 0.05, ta giữ lại <span class="math notranslate">\(H_0\)</span></p>
+</div>
+<div class="section" id="phuong-phap-parametric">
+<h2>1.6. Phương pháp parametric<a class="headerlink" href="#phuong-phap-parametric" title="Permalink to this headline">¶</a></h2>
+<p>Phương trình Cox:</p>
+<div class="math notranslate">
+\[h(t) = \lambda(t)e^{\beta_1x_1 + ... + \beta_nx_n}\]</div>
+<p>Trong đó:</p>
+<ul class="simple">
+<li><span class="math notranslate">\(\lambda(t)\)</span> là hàm nguy cơ nếu không tính đến các ảnh hưởng
+của x (còn được gọi là baseline hazard function)</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">melanom</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    no status days ulc thick sex</span>
+<span class="c1">## 1 789      3   10   1   676   2</span>
+<span class="c1">## 2  13      3   30   2    65   2</span>
+<span class="c1">## 3  97      2   35   2   134   2</span>
+<span class="c1">## 4  16      3   99   2   290   1</span>
+<span class="c1">## 5  21      1  185   1  1208   2</span>
+<span class="c1">## 6 469      1  204   1   484   2</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">cox.model</span> <span class="o">&lt;-</span> <span class="nf">coxph</span><span class="p">(</span><span class="nf">Surv</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">status</span> <span class="o">==</span> <span class="m">1</span><span class="p">)</span> <span class="o">~</span> <span class="n">sex</span> <span class="o">+</span> <span class="n">ulc</span><span class="p">,</span>
+                   <span class="n">data</span> <span class="o">=</span> <span class="n">melanom</span><span class="p">)</span>
+<span class="n">cox.model</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Call:</span>
+<span class="c1">## coxph(formula = Surv(days, status == 1) ~ sex + ulc, data = melanom)</span>
+<span class="c1">##</span>
+<span class="c1">##   n= 205, number of events= 57</span>
+<span class="c1">##</span>
+<span class="c1">##        coef exp(coef) se(coef)      z Pr(&gt;|z|)</span>
+<span class="c1">## sex  0.5165    1.6761   0.2667  1.937   0.0528 .</span>
+<span class="c1">## ulc -1.4180    0.2422   0.2969 -4.775 1.79e-06 ***</span>
+<span class="c1">## ---</span>
+<span class="c1">## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
+<span class="c1">##</span>
+<span class="c1">##     exp(coef) exp(-coef) lower .95 upper .95</span>
+<span class="c1">## sex    1.6761     0.5966    0.9938    2.8268</span>
+<span class="c1">## ulc    0.2422     4.1289    0.1353    0.4334</span>
+<span class="c1">##</span>
+<span class="c1">## Concordance= 0.719  (se = 0.038 )</span>
+<span class="c1">## Rsquare= 0.145   (max possible= 0.937 )</span>
+<span class="c1">## Likelihood ratio test= 32.16  on 2 df,   p=1.039e-07</span>
+<span class="c1">## Wald test            = 28.59  on 2 df,   p=6.206e-07</span>
+<span class="c1">## Score (logrank) test = 33.51  on 2 df,   p=5.277e-08</span>
+</pre></div>
+</div>
+<p><strong>Giải thích</strong>:</p>
+<ul class="simple">
+<li>Khi sex tăng thêm 1 đơn vị (chuyển sang nhóm 1 sang 2) thì nguy cơ
+trải qua sự kiện tăng thêm 0.939 lần</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="p07-02-causal-impact.html" class="btn btn-neutral float-right" title="2. Causal Impact" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="p06-10-ocr-tesseract.html" class="btn btn-neutral float-left" title="4. OCR với tesseract" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anh Hoang Duc
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

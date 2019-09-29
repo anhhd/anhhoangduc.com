@@ -1,0 +1,773 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="vi" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="vi" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. Mô hình deep learning cơ bản &mdash; Tài liệu Phân tích dữ liệu với R 2019</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'2019',
+              LANGUAGE:'vi',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript" src="_static/copybutton.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Tìm Kiếm" href="search.html" />
+    <link rel="next" title="4. Convolution neural networks" href="p09-04-convolution-neural-network.html" />
+    <link rel="prev" title="2. Kiến thức cơ bản toán học cho deep learning" href="p09-02-co-ban-kien-thuc-toan.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Phân tích dữ liệu với R
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Giới thiệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-gioi-thieu.html">Khoa học dữ liệu và nghề phân tích dữ liệu</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Phân tích khám phá dữ liệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p02-03-bien-doi-du-lieu-dplyr.html">1. Ngữ pháp của biến đổi dữ liệu với DPLYR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-04-phan-ra-va-xoay-chieu-du-lieu.html">2. Phân rã và xoay chiều dữ liệu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-05-cac-chi-so-thong-ke.html">3. Các chỉ số thống kê mô tả cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-06-lap-trinh-ham.html">4. Lập trình hàm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-07-lap-trinh-ham-voi-purrr.html">5. Lập trình chức năng hàm với purrr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-08-bien-doi-du-lieu-text.html">6. Biến đổi dữ liệu text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-11-quan-ly-nhieu-mo-hinh.html">7. Quản lý kết quả phân tích từ nhiều mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-15-thong-ke-co-ban.html">8. Xác suất và phân phối thống kê cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-16-power-analysis.html">9. Power analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-20-sampling-methods.html">10. Phương pháp ước lượng lấy mẫu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-50-datatable.html">11. Biến đổi dữ liệu với <code class="docutils literal notranslate"><span class="pre">data.table</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-60-thu-thap-du-lieu-tu-website.html">12. Thu thập dữ liệu từ website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-99-meo-trong-r.html">13. Các mẹo trong R</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Supervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p03-01-nguyen-ly-du-bao.html">1. Các nguyên lý dự báo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-02-mo-hinh-ols.html">2. Mô hình OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Unsupervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p04-01-unsupervised-learning.html">1. Unsupervised learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-02-kmeans.html">2. k-means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-03-hierarchical-clustering.html">3. Hierachical clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-04-basket-analysis.html">4. Phân tích giỏ hàng</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-05-pca.html">5. Principal component analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-06-factor-analysis.html">6. Phân tích nhân tố ẩn (factor analysis)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Chuỗi thời gian</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p05-01-chuoi-thoi-gian.html">1. Giới thiệu về chuỗi thời gian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-02-arima.html">2. Mô hình ARIMA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html">3. Phân tích chuỗi thời gian với tidyquant và timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-06-du-bao-ts-voi-prophet.html">4. Dự báo chuỗi thời gian với prophet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-07-du-bao-ts-voi-timetk.html">5. Dự báo chuỗi thời gian với timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-08-abnomaly-detection.html">6. Abnomaly detection trong times series</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ngôn ngữ tự nghiên</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p06-01-nlp-co-ban.html">1. Xử lý ngôn ngữ tự nhiên cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-04-text-classification.html">2. Phân loại text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-07-nlp-api.html">3. Sử dụng API từ các dịch vụ đám mây</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-10-ocr-tesseract.html">4. OCR với <code class="docutils literal notranslate"><span class="pre">tesseract</span></code></a></li>
+</ul>
+<p class="caption"><span class="caption-text">Các phương pháp khác</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p07-01-survival-analysis.html">1. Survival analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-02-causal-impact.html">2. Causal Impact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-03-collaborative-filtering.html">3. Collaborative Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-07-spatial-data.html">4. Spatial data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-10-shiny.html">5. Shiny apps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Learning</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p09-01-gioi-thieu-deep-learning.html">1. Giới thiệu cơ bản về Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-02-co-ban-kien-thuc-toan.html">2. Kiến thức cơ bản toán học cho deep learning</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Mô hình deep learning cơ bản</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gioi-thieu">3.1. Giới thiệu</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#layers">3.1.1. Layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#loss-functions-optimizer">3.1.2. Loss functions &amp; Optimizer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#keras">3.2. Keras</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cac-mo-hinh-thuong-dung">3.3. Các mô hình thường dùng</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mo-hinh-multiclass">3.3.1. Mô hình multiclass</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mo-hinh-regression">3.3.2. Mô hình regression</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#cac-luu-y-khi-xay-dung-mo-hinh">3.4. Các lưu ý khi xây dựng mô hình</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#feature-engineering">3.4.1. Feature Engineering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#overfiting">3.4.2. Overfiting</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gioi-han-deep-learning">3.4.2.1. Giới hạn deep-learning</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#do-lon-cua-mang-neural">3.4.2.2. Độ lớn của mạng neural</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#regularization">3.4.2.3. Regularization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dropout">3.4.2.4. Dropout</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#kien-truc-layer-trong-cac-bai-toan-khac-nhau">3.4.3. Kiến trúc layer trong các bài toán khác nhau</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="p09-04-convolution-neural-network.html">4. Convolution neural networks</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cloud Computing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p10-01-cai-dat-rstudio-server-tren-amazon.html">1. Cài đặt server RStudio trên Amazon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-03-web-service-azure.html">2. Xây dựng web service với Azure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-09-apis-voi-plumber.html">3. API với Plumber</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Kiến thức bổ trợ</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p11-01-git.html">1. Sử dụng GIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-02-cmd.html">2. CMD và Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-03-docker.html">3. Sử dụng docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-04-apis.html">4. API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-05-html-css.html">5. Cơ bản về HTML và CSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-09-other.html">6. Các tricks khác</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Case studies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p13-01-casestudy-truc-quan-hoa.html">1. Trực quan hóa dữ liệu</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Phân tích dữ liệu với R</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>3. Mô hình deep learning cơ bản</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/p09-03-mo-hinh-deep-learning-co-ban.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="mo-hinh-deep-learning-co-ban">
+<h1>3. Mô hình deep learning cơ bản<a class="headerlink" href="#mo-hinh-deep-learning-co-ban" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gioi-thieu">
+<h2>3.1. Giới thiệu<a class="headerlink" href="#gioi-thieu" title="Permalink to this headline">¶</a></h2>
+<p>Một mạng neurals network bao gồm 4 thành phần cơ bản:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">Layers</span></code>, các layers này được kết hợp lại trở thành <code class="docutils literal notranslate"><span class="pre">network</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">Input</span> <span class="pre">data</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">output</span> <span class="pre">target</span></code>: Dữ liệu đầu vào và kết quả đầu ra</li>
+<li><code class="docutils literal notranslate"><span class="pre">Loss</span> <span class="pre">function</span></code>: Xác định <code class="docutils literal notranslate"><span class="pre">feedback</span> <span class="pre">signal</span></code> để mô hình tự điều
+chỉnh</li>
+<li><code class="docutils literal notranslate"><span class="pre">Optimizer</span></code>: Thuật toán sử dụng để tối ưu hóa</li>
+</ul>
+<p><img alt="image0" src="Images/nn-08.png" /></p>
+<div class="section" id="layers">
+<h3>3.1.1. Layers<a class="headerlink" href="#layers" title="Permalink to this headline">¶</a></h3>
+<p>Mỗi layers sẽ chứa nhiều <code class="docutils literal notranslate"><span class="pre">neural</span></code> và quy định về cấu trúc dữ liệu đầu
+vào và hàm <code class="docutils literal notranslate"><span class="pre">activation</span></code>.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">layer</span> <span class="o">&lt;-</span> <span class="nf">layer_dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="m">32</span><span class="p">,</span> <span class="n">input_shape</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">784</span><span class="p">),</span> <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Ở ví dụ trên, <code class="docutils literal notranslate"><span class="pre">layer</span></code> trên yêu cầu dữ liệu có shape 784 và 32 neural.</p>
+<p>Đối với <code class="docutils literal notranslate"><span class="pre">keras</span></code>, input của các layer sau được tự động điều chỉnh để
+phù hợp với output từ layer trước đó.</p>
+<p><strong>Hàm kích hoạt (``activation function``)</strong></p>
+<p>Gọi {<span class="math notranslate">\(x_1\)</span>,…,<span class="math notranslate">\(x_n\)</span>} là các biến đầu vào tại 1 node j, ta
+có hàm kích hoạt:</p>
+<div class="math notranslate">
+\[f(u)=\sum_{i=1}^nw_{ij}x_j + b_j\]</div>
+<p>Trong đó, <span class="math notranslate">\(w_{ij}\)</span> là trọng số của biến <span class="math notranslate">\(x_i\)</span> tại neuron j,
+<span class="math notranslate">\(b_j\)</span> còn được gọi là bias</p>
+<p>Hàm kích hoạt trong <code class="docutils literal notranslate"><span class="pre">neural</span> <span class="pre">network</span></code> thường có giá trị trong khoảng
+(0,1) hoặc (-1,1). Hàm kích hoạt có 1 số dạng thường gặp sau:</p>
+<ul>
+<li><p class="first">Sigmoid function: <span class="math notranslate">\(f(u)=\frac{1}{1+exp(-cu)}\)</span></p>
+</li>
+<li><p class="first">Linear function: <span class="math notranslate">\(f(u)=u\)</span></p>
+</li>
+<li><p class="first">Hyperbolic function:</p>
+<div class="math notranslate">
+\[f(u)=tanh(cu)=\frac{sinh(cu)}{cosh(cu)}=
+\frac{(e^{cu}-e^{-cu})/2}{(e^{cu}+e^{-cu})/2}=\frac{e^{2cu}-1}{e^{2cu}+1}\]</div>
+</li>
+<li><p class="first">Rectified linear unit (ReLU): $f(u) = max(0, u) $</p>
+</li>
+</ul>
+<p>Hàm này rất hay được sử dụng trong Deep Learning do tốc độ xử lý nhanh.</p>
+</div>
+<div class="section" id="loss-functions-optimizer">
+<h3>3.1.2. Loss functions &amp; Optimizer<a class="headerlink" href="#loss-functions-optimizer" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Loss</span> <span class="pre">function</span></code> sẽ quy định về hàm tính toán sai số trong mô hình và
+sẽ sử dụng kết quả này để thuật toán tối ưu (<code class="docutils literal notranslate"><span class="pre">optimizer</span></code>) tối ưu hóa
+lại các weights</p>
+<p><strong>Lưu ý</strong>: Một mạng neural có thể có nhiều output, do đó có thể có cùng
+lúc nhiều <code class="docutils literal notranslate"><span class="pre">loss</span> <span class="pre">function</span></code> cho từng output khác nhau. Tuy nhiên, để
+thuật toán hoạt động được, các loss function này cần phải được convert
+về một hàm duy nhất (<code class="docutils literal notranslate"><span class="pre">scalar</span> <span class="pre">function</span></code>)</p>
+<p><strong>Thuật toán backpropagation</strong>:</p>
+<ul class="simple">
+<li>Step 1: Tạo các trong số ngẫu nhiên cho các input</li>
+<li>Step 2: Tính toán các giá trị output trong network</li>
+<li>Step 3: Tính toán sai số</li>
+<li>Step 4: Tính toán đạo hàm riêng phần của sai số theo trọng số
+<span class="math notranslate">\(w_{ij}\)</span>: <span class="math notranslate">\(\frac{d \epsilon}{d w_{ij}}\)</span></li>
+<li>Step 5: Điều chỉnh lại trọng số của từng input trong neuron để tối
+thiểu hóa sai số</li>
+</ul>
+</div>
+</div>
+<div class="section" id="keras">
+<h2>3.2. Keras<a class="headerlink" href="#keras" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Keras</span></code> là high level framework của <code class="docutils literal notranslate"><span class="pre">deep</span> <span class="pre">learning</span></code>, giúp việc xây
+dựng kiến trúc mạng neural trở nên đơn giản và dễ dàng. Ở tầng thấp hơn,
+<code class="docutils literal notranslate"><span class="pre">keras</span></code> tận dụng các <code class="docutils literal notranslate"><span class="pre">low</span> <span class="pre">level</span> <span class="pre">framework</span></code> khác của deep learning
+như <code class="docutils literal notranslate"><span class="pre">Tensor</span> <span class="pre">Flow</span></code>, <code class="docutils literal notranslate"><span class="pre">Theano</span></code> để xây dựng mô hình.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">keras</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">tensorflow</span><span class="p">)</span>
+<span class="nf">install_keras</span><span class="p">(</span><span class="n">method</span> <span class="o">=</span> <span class="s">&quot;conda&quot;</span><span class="p">)</span>
+<span class="nf">install_tensorflow</span><span class="p">(</span><span class="n">method</span> <span class="o">=</span> <span class="s">&quot;conda&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Lưu ý</strong>: Cần phải cài đặt <code class="docutils literal notranslate"><span class="pre">anaconda</span></code> trước khi sử dụng <code class="docutils literal notranslate"><span class="pre">keras</span></code></p>
+</div>
+<div class="section" id="cac-mo-hinh-thuong-dung">
+<h2>3.3. Các mô hình thường dùng<a class="headerlink" href="#cac-mo-hinh-thuong-dung" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mo-hinh-multiclass">
+<h3>3.3.1. Mô hình multiclass<a class="headerlink" href="#mo-hinh-multiclass" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">### Ví dụ mô hình deep learning</span>
+<span class="n">mnist</span> <span class="o">&lt;-</span> <span class="nf">dataset_mnist</span><span class="p">()</span>
+<span class="nf">save</span><span class="p">(</span><span class="n">mnist</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="s">&quot;data/mnist.rda&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">keras</span><span class="p">)</span>
+
+<span class="c1">#Bước 1: Load dữ liệu</span>
+<span class="nf">load</span><span class="p">(</span><span class="s">&quot;data/mnist.rda&quot;</span><span class="p">)</span>
+<span class="n">train_images</span> <span class="o">&lt;-</span> <span class="n">mnist</span><span class="o">$</span><span class="n">train</span><span class="o">$</span><span class="n">x</span>
+<span class="n">train_labels</span> <span class="o">&lt;-</span> <span class="n">mnist</span><span class="o">$</span><span class="n">train</span><span class="o">$</span><span class="n">y</span>
+<span class="n">test_images</span> <span class="o">&lt;-</span> <span class="n">mnist</span><span class="o">$</span><span class="n">test</span><span class="o">$</span><span class="n">x</span>
+<span class="n">test_labels</span> <span class="o">&lt;-</span> <span class="n">mnist</span><span class="o">$</span><span class="n">test</span><span class="o">$</span><span class="n">y</span>
+
+<span class="c1">#Bước 2: Tạo network 2 layer</span>
+<span class="n">network</span> <span class="o">&lt;-</span> <span class="nf">keras_model_sequential</span><span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="nf">layer_dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="m">512</span><span class="p">,</span> <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">,</span> <span class="n">input_shape</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">28</span> <span class="o">*</span> <span class="m">28</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">layer_dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="m">10</span><span class="p">,</span> <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;softmax&quot;</span><span class="p">)</span>
+
+<span class="c1">#Bước 3: Tạo cơ chế optimize network</span>
+<span class="n">network</span> <span class="o">%&gt;%</span> <span class="nf">compile</span><span class="p">(</span>
+  <span class="n">optimizer</span> <span class="o">=</span> <span class="s">&quot;rmsprop&quot;</span><span class="p">,</span>
+  <span class="n">loss</span> <span class="o">=</span> <span class="s">&quot;categorical_crossentropy&quot;</span><span class="p">,</span>
+  <span class="n">metrics</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;accuracy&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1">#Bước 4: Reshape lại dữ liệu về dạng tensor 2-2</span>
+<span class="n">train_images</span> <span class="o">&lt;-</span> <span class="nf">array_reshape</span><span class="p">(</span><span class="n">train_images</span><span class="p">,</span> <span class="nf">c</span><span class="p">(</span><span class="m">60000</span><span class="p">,</span> <span class="m">28</span> <span class="o">*</span> <span class="m">28</span><span class="p">))</span>
+<span class="n">train_images</span> <span class="o">&lt;-</span> <span class="n">train_images</span> <span class="o">/</span> <span class="m">255</span>
+<span class="n">test_images</span> <span class="o">&lt;-</span> <span class="nf">array_reshape</span><span class="p">(</span><span class="n">test_images</span><span class="p">,</span> <span class="nf">c</span><span class="p">(</span><span class="m">10000</span><span class="p">,</span> <span class="m">28</span> <span class="o">*</span> <span class="m">28</span><span class="p">))</span>
+<span class="n">test_images</span> <span class="o">&lt;-</span> <span class="n">test_images</span> <span class="o">/</span> <span class="m">255</span>
+
+<span class="n">train_labels</span> <span class="o">&lt;-</span> <span class="nf">to_categorical</span><span class="p">(</span><span class="n">train_labels</span><span class="p">)</span>
+<span class="n">test_labels</span> <span class="o">&lt;-</span> <span class="nf">to_categorical</span><span class="p">(</span><span class="n">test_labels</span><span class="p">)</span>
+
+<span class="c1">#Bước 5: Train mô hình</span>
+<span class="n">history</span> <span class="o">&lt;-</span> <span class="n">network</span> <span class="o">%&gt;%</span> <span class="nf">fit</span><span class="p">(</span><span class="n">train_images</span><span class="p">,</span>
+                <span class="n">train_labels</span><span class="p">,</span>
+                <span class="n">epochs</span> <span class="o">=</span> <span class="m">5</span><span class="p">,</span>
+                <span class="n">batch_size</span> <span class="o">=</span> <span class="m">128</span><span class="p">)</span>
+
+<span class="c1">#Bước 6: Đánh giá mô hình</span>
+<span class="n">metrics</span> <span class="o">&lt;-</span> <span class="n">network</span> <span class="o">%&gt;%</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">test_images</span><span class="p">,</span> <span class="n">test_labels</span><span class="p">)</span>
+<span class="n">metrics</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## $loss</span>
+<span class="c1">## [1] 0.06472096</span>
+<span class="c1">##</span>
+<span class="c1">## $acc</span>
+<span class="c1">## [1] 0.98</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mo-hinh-regression">
+<h3>3.3.2. Mô hình regression<a class="headerlink" href="#mo-hinh-regression" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">keras</span><span class="p">)</span>
+<span class="n">boston_house</span> <span class="o">&lt;-</span> <span class="n">keras</span><span class="o">::</span><span class="nf">dataset_boston_housing</span><span class="p">()</span>
+<span class="nf">save</span><span class="p">(</span><span class="n">boston_house</span><span class="p">,</span> <span class="n">file</span> <span class="o">=</span> <span class="s">&quot;data/boston_house.Rda&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">load</span><span class="p">(</span><span class="s">&quot;data/boston_house.Rda&quot;</span><span class="p">)</span>
+
+<span class="n">train_data</span> <span class="o">&lt;-</span> <span class="n">boston_house</span><span class="o">$</span><span class="n">train</span><span class="o">$</span><span class="n">x</span>
+<span class="n">train_targets</span> <span class="o">&lt;-</span> <span class="n">boston_house</span><span class="o">$</span><span class="n">train</span><span class="o">$</span><span class="n">y</span>
+<span class="n">test_data</span> <span class="o">&lt;-</span> <span class="n">boston_house</span><span class="o">$</span><span class="n">test</span><span class="o">$</span><span class="n">x</span>
+<span class="n">test_targets</span> <span class="o">&lt;-</span> <span class="n">boston_house</span><span class="o">$</span><span class="n">test</span><span class="o">$</span><span class="n">y</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Feature Engineering</span>
+<span class="n">mean</span> <span class="o">&lt;-</span> <span class="nf">apply</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="n">mean</span><span class="p">)</span>
+<span class="n">std</span> <span class="o">&lt;-</span> <span class="nf">apply</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="n">sd</span><span class="p">)</span>
+<span class="n">train_data</span> <span class="o">&lt;-</span> <span class="nf">scale</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span> <span class="n">center</span> <span class="o">=</span> <span class="n">mean</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">std</span><span class="p">)</span>
+<span class="n">test_data</span> <span class="o">&lt;-</span> <span class="nf">scale</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span> <span class="n">center</span> <span class="o">=</span> <span class="n">mean</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="n">std</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">&lt;-</span> <span class="nf">keras_model_sequential</span><span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="nf">layer_dense</span><span class="p">(</span>
+    <span class="n">units</span> <span class="o">=</span> <span class="m">64</span><span class="p">,</span>
+    <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">,</span>
+    <span class="n">input_shape</span> <span class="o">=</span> <span class="nf">dim</span><span class="p">(</span><span class="n">train_data</span><span class="p">)</span><span class="n">[[2]]</span>
+  <span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">layer_dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="m">64</span><span class="p">,</span> <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">layer_dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">%&gt;%</span> <span class="nf">compile</span><span class="p">(</span><span class="n">optimizer</span> <span class="o">=</span> <span class="s">&quot;rmsprop&quot;</span><span class="p">,</span>
+                  <span class="n">loss</span> <span class="o">=</span> <span class="s">&quot;mse&quot;</span><span class="p">,</span>
+                  <span class="n">metrics</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;mae&quot;</span><span class="p">))</span>
+
+<span class="n">history</span> <span class="o">&lt;-</span> <span class="n">model</span> <span class="o">%&gt;%</span> <span class="nf">fit</span><span class="p">(</span><span class="n">train_data</span><span class="p">,</span>
+                <span class="n">train_targets</span><span class="p">,</span>
+                <span class="n">epochs</span> <span class="o">=</span> <span class="m">10</span><span class="p">,</span>
+                <span class="n">batch_size</span> <span class="o">=</span> <span class="m">128</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">%&gt;%</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">test_data</span><span class="p">,</span> <span class="n">test_targets</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## $loss</span>
+<span class="c1">## [1] 313.8693</span>
+<span class="c1">##</span>
+<span class="c1">## $mean_absolute_error</span>
+<span class="c1">## [1] 15.69079</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="cac-luu-y-khi-xay-dung-mo-hinh">
+<h2>3.4. Các lưu ý khi xây dựng mô hình<a class="headerlink" href="#cac-luu-y-khi-xay-dung-mo-hinh" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="feature-engineering">
+<h3>3.4.1. Feature Engineering<a class="headerlink" href="#feature-engineering" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Mô hình deep learning hoạt động tốt với scale nhỏ - trong khoảng 0-1</li>
+<li>Dữ liệu cần thể hiện dưới dạng số</li>
+<li>Dữ liệu đầu vào cần có cùng khoảng</li>
+<li>Dữ liệu train và test không khác biệt nhau quá nhiều</li>
+<li>Missing value có thể chuyển về giá trị 0</li>
+</ul>
+</div>
+<div class="section" id="overfiting">
+<h3>3.4.2. Overfiting<a class="headerlink" href="#overfiting" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="gioi-han-deep-learning">
+<h4>3.4.2.1. Giới hạn deep-learning<a class="headerlink" href="#gioi-han-deep-learning" title="Permalink to this headline">¶</a></h4>
+<p>Mô hình deep-learning sẽ gặp giới hạn khi làm việc với dữ liệu hoàn toàn
+mới (new data space). Khi đó, mô hình sẽ có xu hướng dự báo biến
+<code class="docutils literal notranslate"><span class="pre">target</span></code> trong vùng <code class="docutils literal notranslate"><span class="pre">target</span></code> của tập train</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span>
+
+<span class="nf">rm</span><span class="p">(</span><span class="n">list</span><span class="o">=</span><span class="nf">ls</span><span class="p">())</span>
+<span class="nf">set.seed</span><span class="p">(</span><span class="m">2016</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">attribute</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">-2</span><span class="p">,</span><span class="m">2</span><span class="p">,</span> <span class="n">by</span><span class="o">=</span><span class="m">0.01</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">mutate</span><span class="p">(</span><span class="n">response</span> <span class="o">=</span> <span class="n">attribute^2</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   attribute response</span>
+<span class="c1">## 1     -2.00   4.0000</span>
+<span class="c1">## 2     -1.99   3.9601</span>
+<span class="c1">## 3     -1.98   3.9204</span>
+<span class="c1">## 4     -1.97   3.8809</span>
+<span class="c1">## 5     -1.96   3.8416</span>
+<span class="c1">## 6     -1.95   3.8025</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Build mô hình keras</span>
+
+<span class="n">model</span> <span class="o">&lt;-</span> <span class="nf">keras_model_sequential</span><span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="nf">layer_dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="m">128</span><span class="p">,</span>
+              <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">,</span>
+              <span class="n">input_shape</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">layer_dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="m">128</span><span class="p">,</span>
+              <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">,</span>
+              <span class="n">input_shape</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">layer_dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="m">128</span><span class="p">,</span>
+              <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">,</span>
+              <span class="n">input_shape</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">layer_dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">%&gt;%</span>
+  <span class="nf">compile</span><span class="p">(</span><span class="n">optimizer</span> <span class="o">=</span> <span class="s">&quot;rmsprop&quot;</span><span class="p">,</span>
+          <span class="n">loss</span> <span class="o">=</span> <span class="s">&quot;mse&quot;</span><span class="p">,</span>
+          <span class="n">metrics</span> <span class="o">=</span> <span class="s">&quot;mae&quot;</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">%&gt;%</span>
+  <span class="nf">fit</span><span class="p">(</span><span class="n">data</span><span class="o">$</span><span class="n">attribute</span><span class="p">,</span>
+      <span class="n">data</span><span class="o">$</span><span class="n">response</span><span class="p">,</span>
+      <span class="n">batch_size</span> <span class="o">=</span> <span class="m">128</span><span class="p">,</span>
+      <span class="n">epochs</span> <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## ___________________________________________________________________________</span>
+<span class="c1">## Layer (type)                     Output Shape                  Param #</span>
+<span class="c1">## ===========================================================================</span>
+<span class="c1">## dense_6 (Dense)                  (None, 128)                   256</span>
+<span class="c1">## ___________________________________________________________________________</span>
+<span class="c1">## dense_7 (Dense)                  (None, 128)                   16512</span>
+<span class="c1">## ___________________________________________________________________________</span>
+<span class="c1">## dense_8 (Dense)                  (None, 128)                   16512</span>
+<span class="c1">## ___________________________________________________________________________</span>
+<span class="c1">## dense_9 (Dense)                  (None, 1)                     129</span>
+<span class="c1">## ===========================================================================</span>
+<span class="c1">## Total params: 33,409</span>
+<span class="c1">## Trainable params: 33,409</span>
+<span class="c1">## Non-trainable params: 0</span>
+<span class="c1">## ___________________________________________________________________________</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Test dữ liệu</span>
+<span class="n">test_data</span> <span class="o">&lt;-</span> <span class="nf">data_frame</span><span class="p">(</span><span class="n">attribute</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">-4</span><span class="p">,</span><span class="m">4</span><span class="p">,</span><span class="n">by</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span>
+<span class="n">predict</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">test_data</span><span class="o">$</span><span class="n">attribute</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">&lt;-</span> <span class="nf">data_frame</span><span class="p">(</span><span class="n">predict</span> <span class="o">=</span> <span class="n">predict[</span><span class="p">,</span><span class="m">1</span><span class="n">]</span><span class="p">,</span>
+                     <span class="n">actual</span> <span class="o">=</span> <span class="n">test_data</span><span class="o">$</span><span class="n">attribute^2</span><span class="p">,</span>
+                     <span class="n">attribute</span> <span class="o">=</span> <span class="n">test_data</span><span class="o">$</span><span class="n">attribute</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 6 x 3</span>
+<span class="c1">##   predict actual attribute</span>
+<span class="c1">##     &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;</span>
+<span class="c1">## 1    5.22   16        -4</span>
+<span class="c1">## 2    5.10   15.2      -3.9</span>
+<span class="c1">## 3    4.97   14.4      -3.8</span>
+<span class="c1">## 4    4.84   13.7      -3.7</span>
+<span class="c1">## 5    4.72   13.0      -3.6</span>
+<span class="c1">## 6    4.59   12.2      -3.5</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">%&gt;%</span>
+  <span class="n">reshape2</span><span class="o">::</span><span class="nf">melt</span><span class="p">(</span><span class="n">id.vars</span> <span class="o">=</span> <span class="s">&quot;attribute&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">attribute</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span> <span class="o">+</span>
+  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">col</span> <span class="o">=</span> <span class="n">variable</span><span class="p">))</span> <span class="o">+</span>
+  <span class="nf">geom_line</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">col</span> <span class="o">=</span> <span class="n">variable</span><span class="p">))</span> <span class="o">+</span>
+  <span class="nf">theme_bw</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">p</span>
+
+<span class="n">p</span> <span class="o">+</span> <span class="nf">labs</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Deep learning &amp; overfitting problem&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="image1" src="p09-03-mo-hinh-deep-learning-co-ban_files/figure-html/unnamed-chunk-11-1.png" /></p>
+</div>
+<div class="section" id="do-lon-cua-mang-neural">
+<h4>3.4.2.2. Độ lớn của mạng neural<a class="headerlink" href="#do-lon-cua-mang-neural" title="Permalink to this headline">¶</a></h4>
+<p>Để xác định cấu trúc mô hình khi nào sẽ bắt đầu bị <code class="docutils literal notranslate"><span class="pre">overfit</span></code>, ta cần
+tăng kích thước cho mạng neural ở 3 khía cạnh sau</p>
+<ul class="simple">
+<li>Số lượng layer</li>
+<li>Số lượng node trong 1 layer</li>
+<li>Số lượng epochs</li>
+</ul>
+</div>
+<div class="section" id="regularization">
+<h4>3.4.2.3. Regularization<a class="headerlink" href="#regularization" title="Permalink to this headline">¶</a></h4>
+<ul class="simple">
+<li>Occam’s razor: Khi đưa ra 2 lời giải thích cho 1 vấn đề, lời giải
+thích đơn giản hơn thường sẽ là lời giải thích chính xác hơn.</li>
+</ul>
+<p>Regularization - thêm trọng số cho các parameters</p>
+<ul class="simple">
+<li>L1: Absolute value of weights</li>
+<li>L2: Square of the value of the weights</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">&lt;-</span> <span class="nf">keras_model_sequential</span><span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="nf">layer_dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="m">16</span><span class="p">,</span> <span class="n">kernel_regularizer</span> <span class="o">=</span> <span class="nf">regularizer_l1</span><span class="p">(</span><span class="m">0.001</span><span class="p">),</span>
+  <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">,</span> <span class="n">input_shape</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">10000</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="nf">layer_dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="m">16</span><span class="p">,</span> <span class="n">kernel_regularizer</span> <span class="o">=</span> <span class="nf">regularizer_l2</span><span class="p">(</span><span class="m">0.001</span><span class="p">),</span>
+  <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="nf">layer_dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;sigmoid&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Lưu ý</strong>:</p>
+<ul class="simple">
+<li>regularizer_l2(0.001) nghĩa là với mỗi giá trị trong ma trận trọng số
+sẽ thêm 0.001 * weight_coefficient (<span class="math notranslate">\(weight^2\)</span>)vào tổng giá
+trị loss của network</li>
+<li>Nếu muốn thêm cả L1 và L2</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">regularizer_l1_l2</span><span class="p">(</span><span class="n">l1</span> <span class="o">=</span> <span class="m">0.001</span><span class="p">,</span> <span class="n">l2</span> <span class="o">=</span> <span class="m">0.001</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dropout">
+<h4>3.4.2.4. Dropout<a class="headerlink" href="#dropout" title="Permalink to this headline">¶</a></h4>
+<p>Dropout là kỹ thuật loại bỏ ngẫu nhiên các output (đặt bằng 0) trong quá
+trình training. Ví dụ vector output là <code class="docutils literal notranslate"><span class="pre">[0.2,</span> <span class="pre">0.5,</span> <span class="pre">0.1,</span> <span class="pre">0.7]</span></code>, sau khi
+dropout với tỷ lệ 0.5 sẽ là <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">0.5,</span> <span class="pre">0,</span> <span class="pre">0.7]</span></code></p>
+<p><img alt="image2" src="Images/nn-03.png" /></p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">&lt;-</span> <span class="nf">keras_model_sequential</span><span class="p">()</span> <span class="o">%&gt;%</span>
+<span class="nf">layer_dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="m">16</span><span class="p">,</span> <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">,</span> <span class="n">input_shape</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">10000</span><span class="p">))</span> <span class="o">%&gt;%</span>
+<span class="nf">layer_dropout</span><span class="p">(</span><span class="n">rate</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span> <span class="o">%&gt;%</span>
+<span class="nf">layer_dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="m">16</span><span class="p">,</span> <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+<span class="nf">layer_dropout</span><span class="p">(</span><span class="n">rate</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span> <span class="o">%&gt;%</span>
+<span class="nf">layer_dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;sigmoid&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="kien-truc-layer-trong-cac-bai-toan-khac-nhau">
+<h3>3.4.3. Kiến trúc layer trong các bài toán khác nhau<a class="headerlink" href="#kien-truc-layer-trong-cac-bai-toan-khac-nhau" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Khi xây dựng các loại mô hình, cần lưu ý layer cuối như sau:</li>
+</ul>
+<table border="1" class="docutils">
+<colgroup>
+<col width="43%" />
+<col width="24%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Problem type</th>
+<th class="head">Last-layer
+activation</th>
+<th class="head">Loss function</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Binary classification</td>
+<td><code class="docutils literal notranslate"><span class="pre">sigmoid</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">binary_crossentrop</span>
+<span class="pre">y</span></code></td>
+</tr>
+<tr class="row-odd"><td>Multiclass, single-label
+classification</td>
+<td><code class="docutils literal notranslate"><span class="pre">softmax</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">categorical_crosse</span>
+<span class="pre">ntropy</span></code></td>
+</tr>
+<tr class="row-even"><td>Multiclass, multilabel
+classification</td>
+<td><code class="docutils literal notranslate"><span class="pre">sigmoid</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">binary_crossentrop</span>
+<span class="pre">y</span></code></td>
+</tr>
+<tr class="row-odd"><td>Regression to arbitrary
+values</td>
+<td>None</td>
+<td><code class="docutils literal notranslate"><span class="pre">mse</span></code></td>
+</tr>
+<tr class="row-even"><td>Regression to values
+between 0 and 1</td>
+<td><code class="docutils literal notranslate"><span class="pre">sigmoid</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">mse</span></code> or
+<code class="docutils literal notranslate"><span class="pre">binary_crossentrop</span>
+<span class="pre">y</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="p09-04-convolution-neural-network.html" class="btn btn-neutral float-right" title="4. Convolution neural networks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="p09-02-co-ban-kien-thuc-toan.html" class="btn btn-neutral float-left" title="2. Kiến thức cơ bản toán học cho deep learning" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anh Hoang Duc
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

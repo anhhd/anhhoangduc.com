@@ -1,0 +1,1249 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="vi" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="vi" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>6. Biến đổi dữ liệu text &mdash; Tài liệu Phân tích dữ liệu với R 2019</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'2019',
+              LANGUAGE:'vi',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript" src="_static/copybutton.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Tìm Kiếm" href="search.html" />
+    <link rel="next" title="7. Quản lý kết quả phân tích từ nhiều mô hình" href="p02-11-quan-ly-nhieu-mo-hinh.html" />
+    <link rel="prev" title="5. Lập trình chức năng hàm với purrr" href="p02-07-lap-trinh-ham-voi-purrr.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Phân tích dữ liệu với R
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Giới thiệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-gioi-thieu.html">Khoa học dữ liệu và nghề phân tích dữ liệu</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Phân tích khám phá dữ liệu</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p02-03-bien-doi-du-lieu-dplyr.html">1. Ngữ pháp của biến đổi dữ liệu với DPLYR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-04-phan-ra-va-xoay-chieu-du-lieu.html">2. Phân rã và xoay chiều dữ liệu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-05-cac-chi-so-thong-ke.html">3. Các chỉ số thống kê mô tả cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-06-lap-trinh-ham.html">4. Lập trình hàm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-07-lap-trinh-ham-voi-purrr.html">5. Lập trình chức năng hàm với purrr</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">6. Biến đổi dữ liệu text</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gioi-thieu">6.1. Giới thiệu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#regular-expression">6.2. Regular expression</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#metadata">6.2.1. Metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sequences">6.2.2. Sequences</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#character-class">6.2.3. Character class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#posix-class">6.2.4. POSIX class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#quantifiers">6.2.5. Quantifiers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#cac-vi-du-tong-hop">6.3. Các ví dụ tổng hợp</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#vi-du-1">6.3.1. Ví dụ 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vi-du-2">6.3.2. Ví dụ 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vi-du-3">6.3.3. Ví dụ 3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vi-du-4">6.3.4. Ví dụ 4</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tai-lieu-tham-khao">6.4. Tài liệu tham khảo</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="p02-11-quan-ly-nhieu-mo-hinh.html">7. Quản lý kết quả phân tích từ nhiều mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-15-thong-ke-co-ban.html">8. Xác suất và phân phối thống kê cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-16-power-analysis.html">9. Power analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-20-sampling-methods.html">10. Phương pháp ước lượng lấy mẫu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-50-datatable.html">11. Biến đổi dữ liệu với <code class="docutils literal notranslate"><span class="pre">data.table</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-60-thu-thap-du-lieu-tu-website.html">12. Thu thập dữ liệu từ website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-99-meo-trong-r.html">13. Các mẹo trong R</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Supervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p03-01-nguyen-ly-du-bao.html">1. Các nguyên lý dự báo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-02-mo-hinh-ols.html">2. Mô hình OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Unsupervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p04-01-unsupervised-learning.html">1. Unsupervised learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-02-kmeans.html">2. k-means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-03-hierarchical-clustering.html">3. Hierachical clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-04-basket-analysis.html">4. Phân tích giỏ hàng</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-05-pca.html">5. Principal component analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-06-factor-analysis.html">6. Phân tích nhân tố ẩn (factor analysis)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Chuỗi thời gian</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p05-01-chuoi-thoi-gian.html">1. Giới thiệu về chuỗi thời gian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-02-arima.html">2. Mô hình ARIMA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html">3. Phân tích chuỗi thời gian với tidyquant và timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-06-du-bao-ts-voi-prophet.html">4. Dự báo chuỗi thời gian với prophet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-07-du-bao-ts-voi-timetk.html">5. Dự báo chuỗi thời gian với timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-08-abnomaly-detection.html">6. Abnomaly detection trong times series</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ngôn ngữ tự nghiên</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p06-01-nlp-co-ban.html">1. Xử lý ngôn ngữ tự nhiên cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-04-text-classification.html">2. Phân loại text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-07-nlp-api.html">3. Sử dụng API từ các dịch vụ đám mây</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-10-ocr-tesseract.html">4. OCR với <code class="docutils literal notranslate"><span class="pre">tesseract</span></code></a></li>
+</ul>
+<p class="caption"><span class="caption-text">Các phương pháp khác</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p07-01-survival-analysis.html">1. Survival analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-02-causal-impact.html">2. Causal Impact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-03-collaborative-filtering.html">3. Collaborative Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-07-spatial-data.html">4. Spatial data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-10-shiny.html">5. Shiny apps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p09-01-gioi-thieu-deep-learning.html">1. Giới thiệu cơ bản về Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-02-co-ban-kien-thuc-toan.html">2. Kiến thức cơ bản toán học cho deep learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-03-mo-hinh-deep-learning-co-ban.html">3. Mô hình deep learning cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-04-convolution-neural-network.html">4. Convolution neural networks</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cloud Computing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p10-01-cai-dat-rstudio-server-tren-amazon.html">1. Cài đặt server RStudio trên Amazon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-03-web-service-azure.html">2. Xây dựng web service với Azure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-09-apis-voi-plumber.html">3. API với Plumber</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Kiến thức bổ trợ</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p11-01-git.html">1. Sử dụng GIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-02-cmd.html">2. CMD và Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-03-docker.html">3. Sử dụng docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-04-apis.html">4. API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-05-html-css.html">5. Cơ bản về HTML và CSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-09-other.html">6. Các tricks khác</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Case studies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p13-01-casestudy-truc-quan-hoa.html">1. Trực quan hóa dữ liệu</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Phân tích dữ liệu với R</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>6. Biến đổi dữ liệu text</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/p02-08-bien-doi-du-lieu-text.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="bien-doi-du-lieu-text">
+<h1>6. Biến đổi dữ liệu text<a class="headerlink" href="#bien-doi-du-lieu-text" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gioi-thieu">
+<h2>6.1. Giới thiệu<a class="headerlink" href="#gioi-thieu" title="Permalink to this headline">¶</a></h2>
+<p>Bên cạnh dữ liệu định dạng số, dữ liệu chứa rất nhiều định dạng
+character. Do đó, việc nắm vững các nguyên lý và biến đổi dữ liệu định
+dạng character trong R sẽ giúp rất nhiều trong việc xử lý dữ liệu.</p>
+<p>Để tạo chuỗi string, trong R có 3 cách cơ bản:</p>
+<ul class="simple">
+<li>Dùng dấu ngoặc kép</li>
+<li>Dùng dấu ngoặc đơn</li>
+<li>Dùng hàm <strong>character</strong></li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+<span class="nf">library</span><span class="p">(</span><span class="n">stringr</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">&lt;-</span> <span class="s">&quot;Chú mèo nằm trên lan can&quot;</span>
+<span class="n">y</span> <span class="o">&lt;-</span> <span class="s">&#39;Chú mèo nằm trên lan can&#39;</span>
+</pre></div>
+</div>
+<p><strong>Lưu ý</strong>: Ta có thể để dấu ngoặc đơn hoặc ngoặc kép trong character như
+sau:</p>
+<ul class="simple">
+<li>Ngoặc đơn trong ngoặc kép <em>hoặc</em></li>
+<li>Ngoặc kép trong ngoặc đơn</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;-</span> <span class="s">&quot;This is &#39;MY&#39; apple&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;This is &#39;MY&#39; apple&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">y</span> <span class="o">&lt;-</span>  <span class="s">&#39;This is &quot;HIS&quot; orange&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;This is \&quot;HIS\&quot; orange&quot;</span>
+</pre></div>
+</div>
+<p><strong>Lưu ý</strong>: <strong>Empty string</strong> là chuỗi không có ký tự, được viết <strong>&quot;&quot;</strong></p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">&lt;-</span> <span class="s">&quot;&quot;</span>
+<span class="n">a</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">%&gt;%</span> <span class="n">class</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;character&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">paste</span></code> và <code class="docutils literal notranslate"><span class="pre">paste0</span></code>: Đây là hai hàm cơ bản cho phép ghép các
+chuỗi lại với nhau</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Hàm paste mặc định có khoảng cách giữa các object</span>
+<span class="nf">paste</span><span class="p">(</span><span class="s">&quot;I love&quot;</span><span class="p">,</span> <span class="kc">pi</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;I love 3.14159265358979&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Hàm paste0 không có khoảng cách</span>
+<span class="nf">paste0</span><span class="p">(</span><span class="s">&quot;I love&quot;</span><span class="p">,</span> <span class="kc">pi</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;I love3.14159265358979&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Paste có sep</span>
+<span class="nf">paste</span><span class="p">(</span><span class="s">&quot;I love&quot;</span><span class="p">,</span> <span class="kc">pi</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s">&quot;___&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;I love___3.14159265358979&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Paste khi có length khác nhau</span>
+<span class="nf">paste</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span> <span class="s">&quot;a&quot;</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;1a&quot; &quot;2a&quot; &quot;3a&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Paste không có collapse</span>
+<span class="nf">paste</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span> <span class="s">&quot;a&quot;</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">collapse</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;1a2a3a&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Khi paste giá trị NA, R biến NA thành string</span>
+<span class="nf">paste</span><span class="p">(</span><span class="s">&quot;abc &quot;</span><span class="p">,</span> <span class="kc">NA</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;abc  NA&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">toString</span></code> cho phép biến đổi thành một vector thành chuối</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="kc">pi</span><span class="p">,</span> <span class="m">19</span><span class="p">)</span>
+<span class="n">a</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1]  3.141593 19.000000</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">%&gt;%</span> <span class="n">toString</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;3.14159265358979, 19&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Các hàm <code class="docutils literal notranslate"><span class="pre">toupper</span></code>, <code class="docutils literal notranslate"><span class="pre">tolower</span></code>, <code class="docutils literal notranslate"><span class="pre">casefold</span></code> cho phép biến đổi
+chuỗi thành các dạng in hoa và in thường</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Chuyển sang lower</span>
+<span class="nf">tolower</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;aLL ChaRacterS in LoweR caSe&quot;</span><span class="p">,</span> <span class="s">&quot;ABCDE&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;all characters in lower case&quot; &quot;abcde&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Chuyển sang upper</span>
+<span class="nf">toupper</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;aLL ChaRacterS in LoweR caSe&quot;</span><span class="p">,</span> <span class="s">&quot;ABCDE&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;ALL CHARACTERS IN LOWER CASE&quot; &quot;ABCDE&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Sử dụng với case fold</span>
+<span class="nf">casefold</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;aLL ChaRacterS in LoweR caSe&quot;</span><span class="p">,</span> <span class="s">&quot;ABCDE&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;all characters in lower case&quot; &quot;abcde&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">casefold</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;aLL ChaRacterS in LoweR caSe&quot;</span><span class="p">,</span> <span class="s">&quot;ABCDE&quot;</span><span class="p">),</span> <span class="n">upper</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;ALL CHARACTERS IN LOWER CASE&quot; &quot;ABCDE&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>str_c</strong>: Tương tự như paste, sử dụng <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> là ký tự phân tách
+chuỗi mặc định</li>
+<li><strong>str_length</strong>: Kiểm tra độ dài của ký tự</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">stringr</span><span class="p">)</span>
+<span class="nf">str_c</span><span class="p">(</span><span class="s">&quot;Ola&quot;</span><span class="p">,</span> <span class="s">&quot;ede&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;Olaede&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">str_c</span><span class="p">(</span><span class="s">&quot;Ola&quot;</span><span class="p">,</span> <span class="s">&quot;ede&quot;</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s">&quot;_&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;Ola_ede&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;olala&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="nf">str_length</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 5</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>str_sub</strong>: Lấy chuỗi con trong 1 chuỗi</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;English&quot;</span><span class="p">,</span> <span class="s">&quot;Polish&quot;</span><span class="p">,</span> <span class="s">&quot;Other language&quot;</span><span class="p">)</span>
+<span class="c1">#Lấy 2 ký tự đầu tiên</span>
+<span class="nf">str_sub</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="m">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;En&quot; &quot;Po&quot; &quot;Ot&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Lấy 2 ký tự cuối cùng</span>
+<span class="nf">str_sub</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="m">-2</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="m">-1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;sh&quot; &quot;sh&quot; &quot;ge&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Sử dụng str_sub để thay thế</span>
+<span class="nf">str_sub</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="m">-2</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="m">-1</span><span class="p">)</span> <span class="o">&lt;-</span> <span class="nf">str_sub</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="m">-2</span><span class="p">,</span> <span class="n">end</span> <span class="o">=</span> <span class="m">-1</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="nf">toupper</span><span class="p">()</span>
+<span class="n">x</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;EngliSH&quot;        &quot;PoliSH&quot;         &quot;Other languaGE&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>str_wrap</strong>: Wrap ký tự - hàm này rất hữu dụng khi sử dụng tên trong
+biểu đồ</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">some_quote</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span>
+  <span class="s">&quot;I may not have gone&quot;</span><span class="p">,</span>
+  <span class="s">&quot;where I intended to go,&quot;</span><span class="p">,</span>
+  <span class="s">&quot;but I think I have ended up&quot;</span><span class="p">,</span>
+  <span class="s">&quot;where I needed to be&quot;</span>
+  <span class="p">)</span>
+
+<span class="n">some_quote</span> <span class="o">&lt;-</span> <span class="nf">str_c</span><span class="p">(</span><span class="n">some_quote</span><span class="p">)</span>
+<span class="n">some_quote</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;I may not have gone&quot;         &quot;where I intended to go,&quot;</span>
+<span class="c1">## [3] &quot;but I think I have ended up&quot; &quot;where I needed to be&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">str_wrap</span><span class="p">(</span><span class="n">some_quote</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="m">30</span><span class="p">,</span> <span class="n">indent</span> <span class="o">=</span> <span class="m">2</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">cat</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   I may not have gone   where I intended to go,   but I think I have ended up   where I needed to be</span>
+</pre></div>
+</div>
+<p><strong>Lưu ý</strong>: Khi làm việc với chuỗi, hàm <code class="docutils literal notranslate"><span class="pre">cat</span></code> cho phép thể hiện được
+các ký tự đặc biệt trên R console</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Không dùng cat</span>
+<span class="n">x</span> <span class="o">&lt;-</span> <span class="s">&quot;Dòng 1 \nDòng 2&quot;</span>
+<span class="n">x</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;Dòng 1 \nDòng 2&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sử dụng cat</span>
+<span class="n">x</span> <span class="o">%&gt;%</span> <span class="n">cat</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Dòng 1</span>
+<span class="c1">## Dòng 2</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>str_trim</strong>: Sử dụng để cắt các đoạn text có ký tự trắng</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">bad_text</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;This&quot;</span><span class="p">,</span> <span class="s">&quot; example &quot;</span><span class="p">,</span> <span class="s">&quot;has several &quot;</span><span class="p">,</span> <span class="s">&quot; whitespaces &quot;</span><span class="p">)</span>
+<span class="n">bad_text</span> <span class="o">%&gt;%</span> <span class="nf">str_trim</span><span class="p">(</span><span class="n">side</span> <span class="o">=</span> <span class="s">&quot;left&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;This&quot;         &quot;example &quot;     &quot;has several &quot; &quot;whitespaces &quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">bad_text</span> <span class="o">%&gt;%</span> <span class="nf">str_trim</span><span class="p">(</span><span class="n">side</span> <span class="o">=</span> <span class="s">&quot;both&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;This&quot;        &quot;example&quot;     &quot;has several&quot; &quot;whitespaces&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>str_extract</strong>: Chiết xuất giá trị khỏi chuỗi</li>
+<li><strong>str_extract_all</strong>: Chiết xuất giá trị khỏi chuỗi, trả ra list</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">strings</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span>
+  <span class="s">&quot;apple&quot;</span><span class="p">,</span>
+  <span class="s">&quot;219 733 8965&quot;</span><span class="p">,</span>
+  <span class="s">&quot;329-293-8753&quot;</span><span class="p">,</span>
+  <span class="s">&quot;Work: 579-499-7527; Home: 543.355.3679&quot;</span>
+<span class="p">)</span>
+<span class="c1"># Chiết xuất giá trị 5 ra khỏi chuỗi</span>
+<span class="n">strings</span> <span class="o">%&gt;%</span> <span class="nf">str_extract</span><span class="p">(</span><span class="s">&quot;5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] NA  &quot;5&quot; &quot;5&quot; &quot;5&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">strings</span> <span class="o">%&gt;%</span> <span class="nf">str_extract_all</span><span class="p">(</span><span class="s">&quot;5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [[1]]</span>
+<span class="c1">## character(0)</span>
+<span class="c1">##</span>
+<span class="c1">## [[2]]</span>
+<span class="c1">## [1] &quot;5&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## [[3]]</span>
+<span class="c1">## [1] &quot;5&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## [[4]]</span>
+<span class="c1">## [1] &quot;5&quot; &quot;5&quot; &quot;5&quot; &quot;5&quot; &quot;5&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><strong>str_count</strong>: Kiểm tra số lần xuất hiện của chuỗi con trong chuỗi</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">states</span> <span class="o">&lt;-</span> <span class="nf">rownames</span><span class="p">(</span><span class="n">USArrests</span><span class="p">)</span>
+<span class="n">states</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  [1] &quot;Alabama&quot;        &quot;Alaska&quot;         &quot;Arizona&quot;        &quot;Arkansas&quot;</span>
+<span class="c1">##  [5] &quot;California&quot;     &quot;Colorado&quot;       &quot;Connecticut&quot;    &quot;Delaware&quot;</span>
+<span class="c1">##  [9] &quot;Florida&quot;        &quot;Georgia&quot;        &quot;Hawaii&quot;         &quot;Idaho&quot;</span>
+<span class="c1">## [13] &quot;Illinois&quot;       &quot;Indiana&quot;        &quot;Iowa&quot;           &quot;Kansas&quot;</span>
+<span class="c1">## [17] &quot;Kentucky&quot;       &quot;Louisiana&quot;      &quot;Maine&quot;          &quot;Maryland&quot;</span>
+<span class="c1">## [21] &quot;Massachusetts&quot;  &quot;Michigan&quot;       &quot;Minnesota&quot;      &quot;Mississippi&quot;</span>
+<span class="c1">## [25] &quot;Missouri&quot;       &quot;Montana&quot;        &quot;Nebraska&quot;       &quot;Nevada&quot;</span>
+<span class="c1">## [29] &quot;New Hampshire&quot;  &quot;New Jersey&quot;     &quot;New Mexico&quot;     &quot;New York&quot;</span>
+<span class="c1">## [33] &quot;North Carolina&quot; &quot;North Dakota&quot;   &quot;Ohio&quot;           &quot;Oklahoma&quot;</span>
+<span class="c1">## [37] &quot;Oregon&quot;         &quot;Pennsylvania&quot;   &quot;Rhode Island&quot;   &quot;South Carolina&quot;</span>
+<span class="c1">## [41] &quot;South Dakota&quot;   &quot;Tennessee&quot;      &quot;Texas&quot;          &quot;Utah&quot;</span>
+<span class="c1">## [45] &quot;Vermont&quot;        &quot;Virginia&quot;       &quot;Washington&quot;     &quot;West Virginia&quot;</span>
+<span class="c1">## [49] &quot;Wisconsin&quot;      &quot;Wyoming&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Kiểm tra độ dài ký tự trong vector</span>
+<span class="n">states</span> <span class="o">%&gt;%</span> <span class="nf">str_length</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  [1]  7  6  7  8 10  8 11  8  7  7  6  5  8  7  4  6  8  9  5  8 13  8  9</span>
+<span class="c1">## [24] 11  8  7  8  6 13 10 10  8 14 12  4  8  6 12 12 14 12  9  5  4  7  8</span>
+<span class="c1">## [47] 10 13  9  7</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Đếm số lần xuất hiện ký tự trong vector</span>
+<span class="nf">str_count</span><span class="p">(</span><span class="n">states</span> <span class="o">%&gt;%</span> <span class="nf">toupper</span><span class="p">(),</span> <span class="s">&quot;A&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  [1] 4 3 2 3 2 1 0 2 1 1 2 1 0 2 1 2 0 2 1 2 2 1 1 0 0 2 2 2 1 0 0 0 2 2 0</span>
+<span class="c1">## [36] 2 0 2 1 2 2 0 1 1 0 1 1 1 0 0</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">str_detect</span></code>: Kiểm tra tồn tại của ký tự trong chuỗi</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Hello&quot;</span><span class="p">,</span> <span class="s">&quot;Vietnam&quot;</span><span class="p">,</span> <span class="s">&quot;Apple&quot;</span><span class="p">)</span>
+<span class="nf">str_detect</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="s">&quot;l&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1]  TRUE FALSE  TRUE</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">str_replace</span></code>: Thay thế ký tự đầu tiên trong chuỗi,
+<code class="docutils literal notranslate"><span class="pre">str_replace_all</span></code> - thay thế tất cả ký tự trong chuỗi</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">string</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Hello&quot;</span><span class="p">,</span> <span class="s">&quot;Vietnam&quot;</span><span class="p">,</span> <span class="s">&quot;Apple&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="kc">NA</span><span class="p">)</span>
+<span class="c1"># Thay thế ký tự đầu tiên</span>
+<span class="n">string</span> <span class="o">%&gt;%</span> <span class="nf">str_replace</span><span class="p">(</span><span class="s">&quot;l&quot;</span><span class="p">,</span> <span class="s">&quot;99&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;He99lo&quot;  &quot;Vietnam&quot; &quot;App99e&quot;  &quot;&quot;        NA</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Thay thế tất cả ký tự</span>
+<span class="n">string</span> <span class="o">%&gt;%</span> <span class="nf">str_replace_all</span><span class="p">(</span><span class="s">&quot;l&quot;</span><span class="p">,</span> <span class="s">&quot;99&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;He9999o&quot; &quot;Vietnam&quot; &quot;App99e&quot;  &quot;&quot;        NA</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Thay thế NA</span>
+<span class="n">string</span> <span class="o">%&gt;%</span> <span class="nf">str_replace_na</span><span class="p">(</span><span class="s">&quot;9999&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;Hello&quot;   &quot;Vietnam&quot; &quot;Apple&quot;   &quot;&quot;        &quot;9999&quot;</span>
+</pre></div>
+</div>
+<p><strong>Lưu ý</strong>: <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> được coi là một ký tự vẫn có độ dài bằng 0</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;&quot;</span> <span class="o">%&gt;%</span> <span class="nf">str_length</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 0</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">str_locate</span></code>: Kiểm tra vị trí đầu tiên xuất hiện ký tự,
+<code class="docutils literal notranslate"><span class="pre">str_locate_all</span></code> - kiểm tra tất cả các vị trí xuất hiện ký tự</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;abbbbcab&quot;</span> <span class="o">%&gt;%</span> <span class="nf">str_locate</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##      start end</span>
+<span class="c1">## [1,]     1   1</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="s">&quot;abbbbcaab&quot;</span> <span class="o">%&gt;%</span> <span class="nf">str_locate_all</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [[1]]</span>
+<span class="c1">##      start end</span>
+<span class="c1">## [1,]     1   1</span>
+<span class="c1">## [2,]     7   7</span>
+<span class="c1">## [3,]     8   8</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="regular-expression">
+<h2>6.2. Regular expression<a class="headerlink" href="#regular-expression" title="Permalink to this headline">¶</a></h2>
+<p><strong>Regular expression</strong> (regex) là việc chỉ dẫn một hàm cách thức tìm,
+thay thế và xử lý dữ liệu dạng string. Cơ bản có 4 dạng:</p>
+<ul class="simple">
+<li><strong>Concetenation (chuỗi ký tự)</strong>: Tìm chuỗi ký tự: “abcd”</li>
+<li><strong>Logical (phép logic)</strong>: Tìm chuỗi chứa ab hoặc cd: “ab|cd”</li>
+<li><strong>Repetition (lặp lại ký tự)</strong>: Tìm chuỗi lặp lại một hoặc nhiều lần
+ký tự a: “a+”</li>
+<li><strong>Grouping (Nhóm ký tự)</strong>: Nhóm các ký tự muốn tìm, sử dụng dấu ngoặc
+đơn ()</li>
+</ul>
+<p>Khi phân tích <strong>regex</strong>, có hai khía cạnh cần quan tâm:</p>
+<ul class="simple">
+<li>Hàm sử dụng trên R</li>
+<li>Cách thức tương tác</li>
+</ul>
+<p>Đối với cách thức tương tác trong R, có các nhóm vấn đề sau:</p>
+<ul class="simple">
+<li>Metadata</li>
+<li>Sequennces</li>
+<li>Character class</li>
+</ul>
+<div class="section" id="metadata">
+<h3>6.2.1. Metadata<a class="headerlink" href="#metadata" title="Permalink to this headline">¶</a></h3>
+<p>Metadata là các ký hiệu đặc biệt được thể hiện trong R nhằm biểu đạt
+toán tử nhất định. Để làm việc với các ký tự có định dạng giống meta
+data, cần thêm dâu <code class="docutils literal notranslate"><span class="pre">\\</span></code>. Xem ví dụ dưới đây</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">&lt;-</span> <span class="s">&quot;Vietnam|HaNoi&quot;</span>
+<span class="c1"># Không đúng định dang</span>
+<span class="n">x</span> <span class="o">%&gt;%</span> <span class="nf">str_replace_all</span><span class="p">(</span><span class="s">&quot;|&quot;</span><span class="p">,</span> <span class="s">&quot;_&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;_V_i_e_t_n_a_m_|_H_a_N_o_i_&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sử dụng đúng metadata</span>
+<span class="n">x</span> <span class="o">%&gt;%</span> <span class="nf">str_replace_all</span><span class="p">(</span><span class="s">&quot;\\|&quot;</span><span class="p">,</span> <span class="s">&quot;_&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;Vietnam_HaNoi&quot;</span>
+</pre></div>
+</div>
+<p>Trong trường hợp trên, gsub xử lý ký tự <strong>$</strong> như <em>regular expression</em>
+cho các ký tự đặc biệt.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">gsub</span><span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s">&quot;\\$&quot;</span><span class="p">,</span> <span class="n">replacement</span> <span class="o">=</span> <span class="s">&quot;.&quot;</span><span class="p">,</span> <span class="s">&quot;Vietnam$Ha$Noi&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;Vietnam.Ha.Noi&quot;</span>
+</pre></div>
+</div>
+<p>Metadata trong regular expressions bao gồm các ký tự sau:</p>
+<blockquote>
+<div><div class="line-block">
+<div class="line">$ * + . ? [ ] ^ { } | ( )</div>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="88%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Ký tự</th>
+<th class="head">Ý nghĩa</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">.</span></code></td>
+<td>matches everything except for the empty sting ``.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">+</span></code></td>
+<td>the preceding item will be matched one or more times.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">*</span></code></td>
+<td>the preceding item will be matched zero or more times.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">^</span></code></td>
+<td>matches the empty string at the at the beginning of a line</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">$</span></code></td>
+<td>matches empty string at the end of a line.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">|</span></code></td>
+<td>infix operator: OR</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">()</span></code></td>
+<td>brackets for grouping.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[]</span></code></td>
+<td>character class brackets</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Lưu ý</strong>: Khi sử dụng dấu gạch ngoặc kép (\) là ký tự bình thưởng, sử
+dụng 4 gạch chéo. Xem các ví dụ dưới đây</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">meta_char</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;$&quot;</span><span class="p">,</span><span class="s">&quot;*&quot;</span><span class="p">,</span><span class="s">&quot;+&quot;</span><span class="p">,</span><span class="s">&quot;.&quot;</span><span class="p">,</span><span class="s">&quot;?&quot;</span><span class="p">,</span><span class="s">&quot;[&quot;</span><span class="p">,</span><span class="s">&quot;^&quot;</span><span class="p">,</span><span class="s">&quot;{&quot;</span><span class="p">,</span><span class="s">&quot;|&quot;</span><span class="p">,</span><span class="s">&quot;(&quot;</span><span class="p">,</span><span class="s">&quot;\\&quot;</span><span class="p">)</span>
+<span class="n">meta_char</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  [1] &quot;$&quot;  &quot;*&quot;  &quot;+&quot;  &quot;.&quot;  &quot;?&quot;  &quot;[&quot;  &quot;^&quot;  &quot;{&quot;  &quot;|&quot;  &quot;(&quot;  &quot;\\&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Không sử dụng chính xác</span>
+<span class="nf">str_locate</span><span class="p">(</span><span class="n">meta_char</span><span class="p">,</span> <span class="s">&quot;^&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##       start end</span>
+<span class="c1">##  [1,]     1   0</span>
+<span class="c1">##  [2,]     1   0</span>
+<span class="c1">##  [3,]     1   0</span>
+<span class="c1">##  [4,]     1   0</span>
+<span class="c1">##  [5,]     1   0</span>
+<span class="c1">##  [6,]     1   0</span>
+<span class="c1">##  [7,]     1   0</span>
+<span class="c1">##  [8,]     1   0</span>
+<span class="c1">##  [9,]     1   0</span>
+<span class="c1">## [10,]     1   0</span>
+<span class="c1">## [11,]     1   0</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Sử dụng chính xác</span>
+<span class="n">meta_char</span> <span class="o">%&gt;%</span> <span class="nf">str_locate</span><span class="p">(</span><span class="s">&quot;\\^&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##       start end</span>
+<span class="c1">##  [1,]    NA  NA</span>
+<span class="c1">##  [2,]    NA  NA</span>
+<span class="c1">##  [3,]    NA  NA</span>
+<span class="c1">##  [4,]    NA  NA</span>
+<span class="c1">##  [5,]    NA  NA</span>
+<span class="c1">##  [6,]    NA  NA</span>
+<span class="c1">##  [7,]     1   1</span>
+<span class="c1">##  [8,]    NA  NA</span>
+<span class="c1">##  [9,]    NA  NA</span>
+<span class="c1">## [10,]    NA  NA</span>
+<span class="c1">## [11,]    NA  NA</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Hai dâu gạch chéo</span>
+<span class="n">meta_char</span> <span class="o">%&gt;%</span> <span class="nf">str_locate</span><span class="p">(</span><span class="s">&quot;\\\\&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##       start end</span>
+<span class="c1">##  [1,]    NA  NA</span>
+<span class="c1">##  [2,]    NA  NA</span>
+<span class="c1">##  [3,]    NA  NA</span>
+<span class="c1">##  [4,]    NA  NA</span>
+<span class="c1">##  [5,]    NA  NA</span>
+<span class="c1">##  [6,]    NA  NA</span>
+<span class="c1">##  [7,]    NA  NA</span>
+<span class="c1">##  [8,]    NA  NA</span>
+<span class="c1">##  [9,]    NA  NA</span>
+<span class="c1">## [10,]    NA  NA</span>
+<span class="c1">## [11,]     1   1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="sequences">
+<h3>6.2.2. Sequences<a class="headerlink" href="#sequences" title="Permalink to this headline">¶</a></h3>
+<p>Sequence trong R có các nhóm sau:</p>
+<p><img alt="image0" src="Images/08-plot3.png" /></p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#sub thay thế giá trị phù hợp đầu tiên</span>
+<span class="nf">sub</span><span class="p">(</span><span class="s">&quot;\\d&quot;</span><span class="p">,</span><span class="s">&quot;*&quot;</span><span class="p">,</span> <span class="s">&quot;Y2K was in 2000&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;Y*K was in 2000&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#gsub thay thế tất cả các giá trị phù hợp</span>
+<span class="nf">gsub</span><span class="p">(</span><span class="s">&quot;\\d&quot;</span><span class="p">,</span><span class="s">&quot;*&quot;</span><span class="p">,</span> <span class="s">&quot;Y2K was in 2000&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;Y*K was in ****&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Thay thế những ký tự không phải là số</span>
+<span class="nf">gsub</span><span class="p">(</span><span class="s">&quot;\\D&quot;</span><span class="p">,</span><span class="s">&quot;*&quot;</span><span class="p">,</span> <span class="s">&quot;Y2K was in 2000&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;*2*********2000&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Thay thế space</span>
+<span class="nf">gsub</span><span class="p">(</span><span class="s">&quot;\\s&quot;</span><span class="p">,</span><span class="s">&quot;*&quot;</span><span class="p">,</span> <span class="s">&quot;Y2K was in 2000&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;Y2K*was*in*2000&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Non space</span>
+<span class="nf">gsub</span><span class="p">(</span><span class="s">&quot;\\S&quot;</span><span class="p">,</span><span class="s">&quot;*&quot;</span><span class="p">,</span> <span class="s">&quot;Y2K was in 2000&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;*** *** ** ****&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="character-class">
+<h3>6.2.3. Character class<a class="headerlink" href="#character-class" title="Permalink to this headline">¶</a></h3>
+<p>Character class sẽ tìm <strong>MỘT</strong> ký tự phù hợp trong bracket []</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tìm ký tự từ a-z</span>
+<span class="nf">gsub</span><span class="p">(</span><span class="s">&quot;[a-z]&quot;</span><span class="p">,</span> <span class="s">&quot;*&quot;</span><span class="p">,</span> <span class="s">&quot;Vietnam in 2016&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;V****** ** 2016&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tìm số từ 0-9</span>
+<span class="nf">gsub</span><span class="p">(</span><span class="s">&quot;[0-9]&quot;</span><span class="p">,</span> <span class="s">&quot;*&quot;</span><span class="p">,</span> <span class="s">&quot;Vietnam in 2016&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;Vietnam in ****&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tìm các ký tự trừ số</span>
+<span class="nf">grep</span><span class="p">(</span><span class="s">&quot;[^0-9]&quot;</span><span class="p">,</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Vietnam in&quot;</span><span class="p">,</span> <span class="s">&quot; $%^$&quot;</span><span class="p">,</span> <span class="s">&quot;2016&quot;</span><span class="p">),</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;Vietnam in&quot; &quot; $%^$&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="posix-class">
+<h3>6.2.4. POSIX class<a class="headerlink" href="#posix-class" title="Permalink to this headline">¶</a></h3>
+<p>Posix class được thể hiện trong 2 dấu ngoặc kép định dạng
+<code class="docutils literal notranslate"><span class="pre">[[:class:]]</span></code> như sau.</p>
+<p><img alt="image1" src="Images/08-plot4.png" /></p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">example</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Alo ala #^ 12,6.7&quot;</span><span class="p">)</span>
+<span class="c1">#Loại blank</span>
+<span class="nf">gsub</span><span class="p">(</span><span class="s">&quot;[[:blank:]]&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">example</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;Aloala#^12,6.7&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Loại dấu</span>
+<span class="nf">gsub</span><span class="p">(</span><span class="s">&quot;[[:punct:]]&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">example</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;Alo ala  1267&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="quantifiers">
+<h3>6.2.5. Quantifiers<a class="headerlink" href="#quantifiers" title="Permalink to this headline">¶</a></h3>
+<p>Quantifier là nhóm điều kiện đếm số lần lặp lại của 1 nhóm ký tự</p>
+<p><img alt="image2" src="Images/08-plot5.png" /></p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># people names</span>
+<span class="n">people</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;rori&quot;</span><span class="p">,</span> <span class="s">&quot;emilia&quot;</span><span class="p">,</span> <span class="s">&quot;matteo&quot;</span><span class="p">,</span> <span class="s">&quot;mehmet&quot;</span><span class="p">,</span> <span class="s">&quot;filipe&quot;</span><span class="p">,</span> <span class="s">&quot;anna&quot;</span><span class="p">,</span> <span class="s">&quot;tyler&quot;</span><span class="p">,</span>
+<span class="s">&quot;rasmus&quot;</span><span class="p">,</span> <span class="s">&quot;jacob&quot;</span><span class="p">,</span> <span class="s">&quot;youna&quot;</span><span class="p">,</span> <span class="s">&quot;flora&quot;</span><span class="p">,</span> <span class="s">&quot;adi&quot;</span><span class="p">)</span>
+<span class="c1"># Tìm tên có xuất hiện m nhiều nhất 1 lần</span>
+<span class="nf">grep</span><span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s">&quot;m?&quot;</span><span class="p">,</span> <span class="n">people</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  [1] &quot;rori&quot;   &quot;emilia&quot; &quot;matteo&quot; &quot;mehmet&quot; &quot;filipe&quot; &quot;anna&quot;   &quot;tyler&quot;</span>
+<span class="c1">##  [8] &quot;rasmus&quot; &quot;jacob&quot;  &quot;youna&quot;  &quot;flora&quot;  &quot;adi&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tên xuất hiện m chính xác 1 lần</span>
+<span class="nf">grep</span><span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s">&quot;m{1}&quot;</span><span class="p">,</span> <span class="n">people</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span> <span class="n">perl</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;emilia&quot; &quot;matteo&quot; &quot;mehmet&quot; &quot;rasmus&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tên có xuất hiện hoặc không có xuất hiện m rồi xuất hiện t</span>
+<span class="nf">grep</span><span class="p">(</span><span class="s">&quot;m*t&quot;</span><span class="p">,</span> <span class="n">people</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;matteo&quot; &quot;mehmet&quot; &quot;tyler&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tên có m một hoặc nhiều lần</span>
+<span class="nf">grep</span><span class="p">(</span><span class="s">&quot;m+t&quot;</span><span class="p">,</span> <span class="n">people</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## character(0)</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tên có m một hoặc nhiều lần rồi đến t</span>
+<span class="nf">grep</span><span class="p">(</span><span class="s">&quot;m+.t&quot;</span><span class="p">,</span> <span class="n">people</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;matteo&quot; &quot;mehmet&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">paris_tweets</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span>
+<span class="s">&quot;#Paris is chock-full of cultural and culinary attractions&quot;</span><span class="p">,</span>
+<span class="s">&quot;Some time in #Paris along Canal St.-Martin famous by #Amelie&quot;</span><span class="p">,</span>
+<span class="s">&quot;While you&#39;re in #Paris, stop at cafe: http://goo.gl/yaCbW&quot;</span><span class="p">,</span>
+<span class="s">&quot;Paris, the city of light&quot;</span><span class="p">)</span>
+<span class="c1"># match (all) hashtags in &#39;paris_tweets&#39;</span>
+<span class="nf">str_match_all</span><span class="p">(</span><span class="n">paris_tweets</span><span class="p">,</span> <span class="s">&quot;#[a-zA-Z]{1,}&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [[1]]</span>
+<span class="c1">##      [,1]</span>
+<span class="c1">## [1,] &quot;#Paris&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## [[2]]</span>
+<span class="c1">##      [,1]</span>
+<span class="c1">## [1,] &quot;#Paris&quot;</span>
+<span class="c1">## [2,] &quot;#Amelie&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## [[3]]</span>
+<span class="c1">##      [,1]</span>
+<span class="c1">## [1,] &quot;#Paris&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## [[4]]</span>
+<span class="c1">##      [,1]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="cac-vi-du-tong-hop">
+<h2>6.3. Các ví dụ tổng hợp<a class="headerlink" href="#cac-vi-du-tong-hop" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="vi-du-1">
+<h3>6.3.1. Ví dụ 1<a class="headerlink" href="#vi-du-1" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>Vấn đề</strong>: Thay thế các ký tự đặc biệt lặp đi lặp lại</li>
+<li><strong>Giải pháp</strong>: Sử dụng dấu <strong>+</strong></li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">d1</span> <span class="o">=</span> <span class="nf">data.frame</span><span class="p">(</span>
+  <span class="n">id...of....patient</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">),</span>
+  <span class="n">patient....age</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="o">+</span> <span class="m">2</span><span class="p">))</span>
+<span class="nf">names</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span> <span class="o">&lt;-</span> <span class="nf">gsub</span><span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s">&quot;\\.+&quot;</span><span class="p">,</span>
+                  <span class="n">replacement</span> <span class="o">=</span> <span class="s">&quot;_&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="nf">names</span><span class="p">(</span><span class="n">d1</span><span class="p">))</span>
+<span class="nf">names</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;id_of_patient&quot; &quot;patient_age&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="vi-du-2">
+<h3>6.3.2. Ví dụ 2<a class="headerlink" href="#vi-du-2" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><strong>Vấn đề</strong>: Lọc các ký tự trong 1 nhóm</li>
+<li><strong>Giải pháp</strong>:<ul>
+<li>Sử dụng ký tự []</li>
+<li>Có thể sử dụng dấu - để tìm trong khoảng</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tìm vị trí các ký tự</span>
+<span class="nf">grep</span><span class="p">(</span><span class="s">&quot;[abcAB]&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Con ca&quot;</span><span class="p">,</span> <span class="s">&quot;Boong&quot;</span><span class="p">,</span> <span class="s">&quot;Xoong&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 1 2</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">grep</span><span class="p">(</span><span class="s">&quot;[0-3]&quot;</span><span class="p">,</span>
+     <span class="nf">c</span><span class="p">(</span><span class="s">&quot;nose&quot;</span><span class="p">,</span> <span class="s">&quot;letter38&quot;</span><span class="p">,</span> <span class="s">&quot;window9&quot;</span><span class="p">,</span> <span class="s">&quot;apple0&quot;</span><span class="p">),</span> <span class="n">value</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;letter38&quot; &quot;apple0&quot;</span>
+</pre></div>
+</div>
+<p><strong>Chi tiết xem trong bảng dưới đây</strong></p>
+<p><img alt="image3" src="Images/08-plot2.png" /></p>
+</div>
+<div class="section" id="vi-du-3">
+<h3>6.3.3. Ví dụ 3<a class="headerlink" href="#vi-du-3" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span>
+  <span class="n">id</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">11</span><span class="p">,</span> <span class="m">22</span><span class="p">,</span> <span class="m">33</span><span class="p">,</span> <span class="m">44</span><span class="p">,</span> <span class="m">55</span><span class="p">,</span> <span class="m">66</span><span class="p">,</span> <span class="m">77</span><span class="p">,</span> <span class="m">88</span><span class="p">),</span>
+  <span class="n">drug</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;vitamin E&quot;</span><span class="p">,</span> <span class="s">&quot;vitamin ESTER-C&quot;</span><span class="p">,</span>
+           <span class="s">&quot; vitamin Eabc &quot;</span><span class="p">,</span> <span class="s">&quot;vitamin E(ointment)&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span>
+           <span class="s">&quot;vitamin E &quot;</span><span class="p">,</span> <span class="s">&quot;provitamin E\n&quot;</span><span class="p">,</span> <span class="s">&quot;vit E&quot;</span><span class="p">),</span>
+  <span class="n">text</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="s">&quot; &quot;</span><span class="p">,</span> <span class="s">&quot; 3 times a day after meal&quot;</span><span class="p">,</span>
+           <span class="s">&quot;once a day&quot;</span><span class="p">,</span> <span class="s">&quot; &quot;</span><span class="p">,</span>
+           <span class="s">&quot; one per day &quot;</span><span class="p">,</span> <span class="s">&quot;\t&quot;</span><span class="p">,</span> <span class="s">&quot;\n &quot;</span><span class="p">),</span>
+  <span class="n">stringsAsFactors</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
+<span class="p">(</span><span class="n">s</span> <span class="o">&lt;-</span>  <span class="n">d</span><span class="o">$</span><span class="n">text</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;&quot;                          &quot; &quot;</span>
+<span class="c1">## [3] &quot; 3 times a day after meal&quot; &quot;once a day&quot;</span>
+<span class="c1">## [5] &quot; &quot;                         &quot; one per day &quot;</span>
+<span class="c1">## [7] &quot;\t&quot;                         &quot;\n &quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Các giá trị riêng của s</span>
+<span class="nf">unique</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;&quot;                          &quot; &quot;</span>
+<span class="c1">## [3] &quot; 3 times a day after meal&quot; &quot;once a day&quot;</span>
+<span class="c1">## [5] &quot; one per day &quot;             &quot;\t&quot;</span>
+<span class="c1">## [7] &quot;\n &quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Xử lý ký tự</span>
+<span class="c1">#Các ký tự trong ngoặc vuông chuyển thành NA</span>
+<span class="nf">gsub</span><span class="p">(</span><span class="s">&quot;[\t\n\r\f\v]+&quot;</span><span class="p">,</span> <span class="kc">NA</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;&quot;                          &quot; &quot;</span>
+<span class="c1">## [3] &quot; 3 times a day after meal&quot; &quot;once a day&quot;</span>
+<span class="c1">## [5] &quot; &quot;                         &quot; one per day &quot;</span>
+<span class="c1">## [7] NA                          NA</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Chuyển tất cả các ký tự</span>
+<span class="nf">gsub</span><span class="p">(</span><span class="s">&quot;^$|^( +)$|[\t\n\r\f\v]+&quot;</span><span class="p">,</span> <span class="kc">NA</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] NA                          NA</span>
+<span class="c1">## [3] &quot; 3 times a day after meal&quot; &quot;once a day&quot;</span>
+<span class="c1">## [5] NA                          &quot; one per day &quot;</span>
+<span class="c1">## [7] NA                          NA</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Chuyển tất cả các khoảng trắng sang NULL</span>
+<span class="nf">gsub</span><span class="p">(</span><span class="s">&quot;^([ \t\n\r\f\v]+)|([ \t\n\r\f\v]+)$&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;&quot;                         &quot;&quot;</span>
+<span class="c1">## [3] &quot;3 times a day after meal&quot; &quot;once a day&quot;</span>
+<span class="c1">## [5] &quot;&quot;                         &quot;one per day&quot;</span>
+<span class="c1">## [7] &quot;&quot;                         &quot;&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">######</span>
+<span class="c1">#Tìm vitamin e</span>
+<span class="n">t</span> <span class="o">&lt;-</span> <span class="n">d</span><span class="o">$</span><span class="n">drug</span>
+<span class="nf">grep</span><span class="p">(</span><span class="s">&quot;vitamin e&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">ignore.case</span> <span class="o">=</span> <span class="bp">T</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;vitamin E&quot;           &quot;vitamin ESTER-C&quot;     &quot; vitamin Eabc &quot;</span>
+<span class="c1">## [4] &quot;vitamin E(ointment)&quot; &quot;vitamin E &quot;          &quot;provitamin E\n&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tìm vitamin e mà đi sau đi kèm ký tự alphabet</span>
+<span class="nf">grep</span><span class="p">(</span><span class="s">&quot;vitamin e([a-zA-Z])&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">ignore.case</span> <span class="o">=</span> <span class="bp">T</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;vitamin ESTER-C&quot; &quot; vitamin Eabc &quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tìm vitamin e mà đi sau không đi kèm gì</span>
+<span class="nf">grep</span><span class="p">(</span><span class="s">&quot;vitamin e($)&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">ignore.case</span> <span class="o">=</span> <span class="bp">T</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;vitamin E&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tìm vitamin e mà đi sau không phải là ký tự alphabet</span>
+<span class="nf">grep</span><span class="p">(</span><span class="s">&quot;vitamin e($|[^a-zA-Z])&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">ignore.case</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## character(0)</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tìm thêm vit e</span>
+<span class="nf">grep</span><span class="p">(</span><span class="s">&quot;vitamin e($|[^a-zA-Z])|vit e($|[^a-zA-Z])&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span>
+     <span class="n">ignore.case</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;vitamin E&quot;           &quot;vitamin E(ointment)&quot; &quot;vitamin E &quot;</span>
+<span class="c1">## [4] &quot;provitamin E\n&quot;      &quot;vit E&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tìm ký tự bắt đầu với _vit</span>
+<span class="nf">grep</span><span class="p">(</span><span class="s">&quot; vit&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">ignore.case</span> <span class="o">=</span> <span class="bp">T</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot; vitamin Eabc &quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Loại prodvitamin</span>
+<span class="nf">grep</span><span class="p">(</span><span class="s">&quot;([^a-z]+|^)vitamin e($|[^a-zA-Z])|([^a-z]+|^)vit e($|[^a-zA-Z])&quot;</span><span class="p">,</span>
+     <span class="n">t</span><span class="p">,</span> <span class="n">ignore.case</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;vitamin E&quot;           &quot;vitamin E(ointment)&quot; &quot;vitamin E &quot;</span>
+<span class="c1">## [4] &quot;vit E&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="vi-du-4">
+<h3>6.3.4. Ví dụ 4<a class="headerlink" href="#vi-du-4" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Vấn đề: Thay thế ký tự rỗng</li>
+<li>Giải pháp: Sử dụng <code class="docutils literal notranslate"><span class="pre">&quot;^$&quot;</span></code></li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;1&quot;</span><span class="p">,</span> <span class="s">&quot;viet&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">))</span>
+<span class="c1">#Không chạy</span>
+<span class="n">df</span><span class="o">$</span><span class="n">x</span> <span class="o">%&gt;%</span> <span class="n">as.character</span> <span class="o">%&gt;%</span> <span class="nf">str_replace_na</span><span class="p">(</span><span class="s">&quot;Missing&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;1&quot;    &quot;viet&quot; &quot;&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Chạy</span>
+<span class="n">df</span><span class="o">$</span><span class="n">x</span> <span class="o">%&gt;%</span> <span class="n">as.character</span> <span class="o">%&gt;%</span> <span class="nf">str_replace_all</span><span class="p">(</span><span class="s">&quot;^$&quot;</span><span class="p">,</span> <span class="s">&quot;Missing&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;1&quot;       &quot;viet&quot;    &quot;Missing&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="tai-lieu-tham-khao">
+<h2>6.4. Tài liệu tham khảo<a class="headerlink" href="#tai-lieu-tham-khao" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="http://www.endmemo.com/program/R/gsub.php">gsub</a></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="p02-11-quan-ly-nhieu-mo-hinh.html" class="btn btn-neutral float-right" title="7. Quản lý kết quả phân tích từ nhiều mô hình" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="p02-07-lap-trinh-ham-voi-purrr.html" class="btn btn-neutral float-left" title="5. Lập trình chức năng hàm với purrr" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anh Hoang Duc
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

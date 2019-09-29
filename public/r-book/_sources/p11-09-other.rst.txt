@@ -1,0 +1,47 @@
+Các tricks khác
+===============
+
+Biến local host thành website
+-----------------------------
+
+**Vấn đề**: Tạo website local tại ổ ``D:/website`` và muốn share để các
+thành viên khác có thể truy cập khi gõ địa chỉ IP máy tính trên browser
+
+**Giải quyết**: Sử dụng ``Internet Information Services Manager``
+
+-  B1: Bật ``IIS``
+-  B2: Chuột phải vào ``Sites`` >> Add Website >> Add physical path
+-  B3: Restart lại website
+
+**Lưu ý**: Có thể sửa port cho website trở thành port 8080
+
+Gửi email từ file vbs
+---------------------
+
+-  Mở notepad++, tạo file vbs (Visual Basic Script file)
+
+::
+
+   Dim olApp,olns,olMail,olMailItem 
+
+   Set olApp = CreateObject("Outlook.Application")
+   Set olns = olApp.GetNamespace("MAPI")
+
+   Set olMail = olApp.CreateItem(olMailItem)
+   olMail.To = "dbs_analytics@vpbank.com.vn;thanhnm3@vpbank.com.vn;truongnh3@vpbank.com.vn"
+   olMail.Subject = "Website updated"
+   olMail.Body = "Dear all," & vbCrLf & "Our website has updated!"  & vbCrLf & "Link: http://hon-bicc-pc0035/"
+   ' olMail.Attachments.Add("Add attachment location here")
+   olMail.Send
+       
+   Set olns = Nothing
+   Set olMail = Nothing
+   Set olApp = Nothing
+
+Đợt thời gian chờ trước khi tắt máy
+-----------------------------------
+
+.. code:: bat
+
+   REM 3000s
+   Shutdown -s -t 3000 

@@ -1,0 +1,140 @@
+Phân loại text
+==============
+
+Giới thiệu
+----------
+
+Khi xử lý dữ liệu ``text``, bên cạnh các bước cơ bản như tìm trực quan
+hóa tần suất, số lượng từ, xây dựng wordcloud, còn có nhiều kỹ thuật
+khác ứng dụng học máy trong xử lý ngôn ngữ. Trong chương này, ta sẽ tìm
+hiểu cách thức phân loại dữ liệu text.
+
+Khác với định dạng bảng thông thường, khi xây dựng mô hình dự báo trong
+text, ta cần phải biến dữ liệu từ dạng text sang dạng bảng. Dữ liệu mới
+(dạng bảng) sẽ được sử dụng trong việc xây dựng mô hình. Trong các kỹ
+thuật dạng này, ``word2vec`` của ``h2o`` là thuật toán vượt trội, biến
+dữ liệu ``text`` bản gốc thành dữ liệu mới giúp xây dựng mô hình dự báo
+hiệu quả.
+
+Khái quát hơn, các bước của việc dự báo dữ liệu text diễn ra như sau.
+
+-  Thực hiện ``word2vec``:
+
+   -  Tokenize words
+   -  Loại bỏ các từ thừa
+   -  Xây mô hình word2vec
+   -  Test thử mô hình với các từ gần nghĩa
+
+-  Sử dụng mô hình word2vec để biến đổi text thành vector
+-  Xây dựng mô hình dự báo như bình thường
+-  Sử dụng word2vec để biến đổi text (validation) thành vector và dự báo
+   với mô hình vừa xây
+
+Thực hành với R
+---------------
+
+.. code:: r
+
+   library(tidyverse)
+   library(h2o)
+   h2o.init()
+
+   #df <- read_csv("data/craigslistJobTitles.csv")
+
+   job.titles.path = "data/craigslistJobTitles.csv"
+
+   job.titles <- h2o.importFile(job.titles.path, 
+                                destination_frame = "jobtitles",
+                                col.names = c("category", "jobtitle"), 
+                                col.types = c("Enum", "String"), header = F)
+
+   STOP_WORDS = c("ax","i","you","edu","s","t","m","subject","can","lines","re","what",
+                  "there","all","we","one","the","a","an","of","or","in","for","by","on",
+                  "but","is","in","a","not","with","as","was","if","they","are","this","and","it","have",
+                  "from","at","my","be","by","not","that","to","from","com","org","like","likes","so")
+
+
+   # Hàm tokenize trong H2O
+
+   tokenize <- function(sentences, stop.words = STOP_WORDS) {
+     tokenized <- h2o.tokenize(sentences, "\\\\W+")
+     
+     # convert to lower case
+     tokenized.lower <- h2o.tolower(tokenized)
+     # remove short words (less than 2 characters)
+     tokenized.lengths <- h2o.nchar(tokenized.lower)
+     tokenized.filtered <- tokenized.lower[is.na(tokenized.lengths) || tokenized.lengths >= 2,]
+     # remove words that contain numbers
+     tokenized.words <- tokenized.filtered[h2o.grep("[0-9]", tokenized.filtered, invert = TRUE, output.logical = TRUE),]
+     
+     # remove stop words
+     tokenized.words[is.na(tokenized.words) || (! tokenized.words %in% STOP_WORDS),]
+   }
+
+   # Xây hàm mô hình dự báo với word2vec và GBM (mô hình phân loại)
+   predict <- function(job.title, w2v, gbm) {
+     words <- tokenize(as.character(as.h2o(job.title)))
+     job.title.vec <- h2o.transform(w2v, words, aggregate_method = "AVERAGE")
+     h2o.predict(gbm, job.title.vec)
+   }
+
+-  Xây dựng mô hình ``word2vec``
+
+.. code:: r
+
+   print("Break job titles into sequence of words")
+   words <- tokenize(job.titles$jobtitle)
+
+   print("Build word2vec model")
+   w2v.model <- h2o.word2vec(words, sent_sample_rate = 0, epochs = 10)
+
+   # Kiểm tra lại mô hình
+   print("Sanity check - find synonyms for the word 'teacher'")
+   h2o.findSynonyms(w2v.model, "supervisor", count = 5)
+
+-  Việc kiểm tra các từ gần nghĩa chỉ có tác dụng với các từ có trong mô
+   hình
+
+.. code:: r
+
+   word.df <- words %>% as.data.frame() %>% rename(word = C1)
+   print(word.df %>% filter(word == "hello"))
+
+-  Xây dựng mô hình phân loại công việc
+
+.. code:: r
+
+   print("Calculate a vector for each job title")
+   job.title.vecs <- h2o.transform(w2v.model, words, aggregate_method = "AVERAGE")
+
+   print("Prepare training&validation data (keep only job titles made of known words)")
+   job.title.vecs %>% dim
+   valid.job.titles <- !is.na(job.title.vecs$C1)
+
+   data <- h2o.cbind(job.titles[valid.job.titles, "category"], job.title.vecs[valid.job.titles, ])
+   data %>% names
+
+   # Chia train và test
+   data.split <- h2o.splitFrame(data, ratios = 0.8)
+
+   print("Build a basic GBM model")
+   gbm.model <- h2o.gbm(x = names(job.title.vecs), y = "category",
+                        training_frame = data.split[[1]], validation_frame = data.split[[2]])
+
+   # Dự báo với job description mới
+   print("Predict!")
+   print(predict("school teacher having holidays every month", w2v.model, gbm.model))
+   print(predict("developer with 3+ Java experience, jumping", w2v.model, gbm.model))
+   print(predict("Financial accountant CPA preferred", w2v.model, gbm.model))
+   print(predict("strong finance background", w2v.model, gbm.model))
+   print(predict("Need someone who can sell beer", w2v.model, gbm.model))
+   print(predict("answer customer based on their request", w2v.model, gbm.model))
+
+   # Dự báo được cả các word không có trong mô hình bằng cách lấy trung bình tất cả các category
+   print(predict("việt nam", w2v.model, gbm.model))
+
+Tài liệu tham khảo
+------------------
+
+-  https://www.slideshare.net/0xdata/nlp-with-h2o
+-  https://www.shanelynn.ie/get-busy-with-word-embeddings-introduction/
