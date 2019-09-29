@@ -144,14 +144,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -315,7 +316,7 @@ về những hàm cơ bản nhất của <code class="docutils literal notransla
 <p>Trước khi bắt đầu nội dung bài giảng, chúng ta có thể download và gọi
 gói dplyr.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#install.packages(&quot;dplyr&quot;)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
 </pre></div>
 </div>
 <div class="section" id="gioi-thieu-ve-pipe-operator">
@@ -339,15 +340,15 @@ lệch chuẩn sẽ là</p>
 cách.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cách 1</span>
 <span class="c1"># Tạo vector x</span>
-<span class="n">x</span> <span class="o">&lt;-</span> <span class="nf">seq</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">100</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span>
+x <span class="o">&lt;-</span> <span class="kp">seq</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">100</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span>
 <span class="c1"># Tính độ lệch chuẩn</span>
-<span class="nf">sqrt</span><span class="p">(</span><span class="nf">sum</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="nf">mean</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="n">^2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="nf">length</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="m">-1</span><span class="p">))</span>
+<span class="kp">sqrt</span><span class="p">(</span><span class="kp">sum</span><span class="p">((</span>x<span class="o">-</span><span class="kp">mean</span><span class="p">(</span>x<span class="p">))</span><span class="o">^</span><span class="m">2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="kp">length</span><span class="p">(</span>x<span class="p">)</span><span class="m">-1</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 29.15476</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">sd</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>sd<span class="p">(</span>x<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 29.15476</span>
@@ -355,13 +356,13 @@ cách.</p>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cách 2</span>
 <span class="c1"># Tạo vector x</span>
-<span class="n">x</span> <span class="o">&lt;-</span> <span class="nf">seq</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">100</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span>
+x <span class="o">&lt;-</span> <span class="kp">seq</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">100</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span>
 <span class="c1"># Tính tổng bình phương</span>
-<span class="n">sum_sqr</span> <span class="o">&lt;-</span> <span class="nf">sum</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="nf">mean</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="n">^2</span><span class="p">)</span>
-<span class="n">len_x</span> <span class="o">&lt;-</span> <span class="nf">length</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="n">var</span> <span class="o">&lt;-</span> <span class="n">sum_sqr</span><span class="o">/</span><span class="p">(</span><span class="n">len_x</span> <span class="o">-</span> <span class="m">1</span><span class="p">)</span>
-<span class="n">sd</span> <span class="o">&lt;-</span> <span class="n">var</span><span class="nf">^</span><span class="p">(</span><span class="m">1</span><span class="o">/</span><span class="m">2</span><span class="p">)</span>
-<span class="n">sd</span>
+sum_sqr <span class="o">&lt;-</span> <span class="kp">sum</span><span class="p">((</span>x<span class="o">-</span><span class="kp">mean</span><span class="p">(</span>x<span class="p">))</span><span class="o">^</span><span class="m">2</span><span class="p">)</span>
+len_x <span class="o">&lt;-</span> <span class="kp">length</span><span class="p">(</span>x<span class="p">)</span>
+var <span class="o">&lt;-</span> sum_sqr<span class="o">/</span><span class="p">(</span>len_x <span class="o">-</span> <span class="m">1</span><span class="p">)</span>
+sd <span class="o">&lt;-</span> var<span class="o">^</span><span class="p">(</span><span class="m">1</span><span class="o">/</span><span class="m">2</span><span class="p">)</span>
+sd
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 29.15476</span>
@@ -376,19 +377,19 @@ vận dụng linh hoạt trong từng trường hợp cụ thể.</p>
 cách đơn giản và dễ theo dõi giúp cho người đọc và người viết code trên
 R có thể theo dõi được code một cách dễ dàng nhất. Câu trúc của pipe như
 sau</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="n">x</span> <span class="o">%&gt;%</span> <span class="nf">f</span><span class="p">(</span><span class="n">.,</span> <span class="n">y</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>f<span class="p">(</span>x<span class="p">,</span> y<span class="p">)</span> <span class="o">=</span> x <span class="o">%&gt;%</span> f<span class="p">(</span><span class="m">.</span><span class="p">,</span> y<span class="p">)</span>
 </pre></div>
 </div>
 <p>Ví dụ của pipe.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cách 1</span>
-<span class="nf">mean</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="kp">mean</span><span class="p">(</span>x<span class="p">)</span>
 <span class="c1"># Cách 2</span>
-<span class="n">x</span> <span class="o">%&gt;%</span> <span class="n">mean</span>
+x <span class="o">%&gt;%</span> <span class="kp">mean</span>
 </pre></div>
 </div>
 <p>Ta có thể xem xét ví dụ phức tạp hơn.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cách 1 - dùng cách viết thường</span>
-<span class="nf">summary</span><span class="p">(</span><span class="nf">head</span><span class="p">(</span><span class="n">iris</span><span class="p">))</span>
+<span class="kp">summary</span><span class="p">(</span><span class="kp">head</span><span class="p">(</span>iris<span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   Sepal.Length    Sepal.Width     Petal.Length    Petal.Width</span>
@@ -408,7 +409,7 @@ sau</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cách 2 - dùng pipe</span>
-<span class="n">iris</span> <span class="o">%&gt;%</span> <span class="n">head</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+iris <span class="o">%&gt;%</span> head <span class="o">%&gt;%</span> <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   Sepal.Length    Sepal.Width     Petal.Length    Petal.Width</span>
@@ -445,14 +446,14 @@ thân. Điều này là một điểm rất mạnh mà hiện tại, mới chỉ
 <li>Theo mặc định, Phía tay trái (LHS) sẽ được chuyển tiếp thành yếu tố
 đầu tiên của hàm được sử dụng phía tay phải (RHS), ví dụ:</li>
 </ol>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">mean</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kp">mean</span><span class="p">(</span>x<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 51</span>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tương đương với:</span>
-<span class="n">x</span> <span class="o">%&gt;%</span> <span class="n">mean</span>
+x <span class="o">%&gt;%</span> <span class="kp">mean</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 51</span>
@@ -462,14 +463,14 @@ thân. Điều này là một điểm rất mạnh mà hiện tại, mới chỉ
 <li>Khi LHS không còn là yếu tố đầu tiên của một hàm RHS, thì dấu “.”
 được sử dụng để định vị cho LHS, ví dụ:</li>
 </ol>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
 <span class="c1"># Cách 1</span>
-<span class="nf">summary</span><span class="p">(</span><span class="nf">lm</span><span class="p">(</span><span class="n">mpg</span> <span class="o">~</span> <span class="n">cyl</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">mtcars</span><span class="p">))</span>
+<span class="kp">summary</span><span class="p">(</span>lm<span class="p">(</span>mpg <span class="o">~</span> cyl<span class="p">,</span> data <span class="o">=</span> mtcars<span class="p">))</span>
 
 <span class="c1"># Cách 2</span>
-<span class="n">mtcars</span> <span class="o">%&gt;%</span>
-  <span class="nf">lm</span><span class="p">(</span><span class="n">mpg</span> <span class="o">~</span> <span class="n">cyl</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">.)</span> <span class="o">%&gt;%</span>
-  <span class="n">summary</span>
+mtcars <span class="o">%&gt;%</span>
+  lm<span class="p">(</span>mpg <span class="o">~</span> cyl<span class="p">,</span> data <span class="o">=</span> <span class="m">.</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="kp">summary</span>
 </pre></div>
 </div>
 <p>Trong tình huống trên, tham số về dữ liệu trong hàm lm không phải là ở
@@ -506,15 +507,15 @@ loại này. Tuy nhiên, vì R lưu thứ tự của từng quan sát trong data
 nên việc phân biệt được hai loại truy vấn trên là cần thiết.</p>
 <div class="section" id="lay-cac-cot-trong-dataframe-voi-select">
 <h4>1.2.1.1. Lấy các cột trong dataframe với <code class="docutils literal notranslate"><span class="pre">select</span></code><a class="headerlink" href="#lay-cac-cot-trong-dataframe-voi-select" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="p">,</span> <span class="kc">...</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">%&gt;%</span> select<span class="p">(</span>var1<span class="p">,</span> var2<span class="p">,</span> <span class="kc">...</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Trong đó, <code class="docutils literal notranslate"><span class="pre">var1</span></code>, <code class="docutils literal notranslate"><span class="pre">var2</span></code> là tên các cột cần truy vấn. Đặc biệt, R
 rất linh hoạt trong việc lọc theo cột. Ta có thể truy vấn theo tên, theo
 thứ tự hoặc thậm chí theo các khoảng thứ tự các biến. Xem ví dụ sau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
 <span class="c1"># Xêm tên các biến trong mtcars</span>
-<span class="n">mtcars</span> <span class="o">%&gt;%</span> <span class="n">names</span>
+mtcars <span class="o">%&gt;%</span> <span class="kp">names</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  [1] &quot;mpg&quot;  &quot;cyl&quot;  &quot;disp&quot; &quot;hp&quot;   &quot;drat&quot; &quot;wt&quot;   &quot;qsec&quot; &quot;vs&quot;   &quot;am&quot;   &quot;gear&quot;</span>
@@ -522,7 +523,7 @@ thứ tự hoặc thậm chí theo các khoảng thứ tự các biến. Xem ví
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Chọn cột mpg và cyl</span>
-<span class="n">mtcars</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="n">mpg</span><span class="p">,</span> <span class="n">cyl</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+mtcars <span class="o">%&gt;%</span> select<span class="p">(</span>mpg<span class="p">,</span> cyl<span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##                    mpg cyl</span>
@@ -535,7 +536,7 @@ thứ tự hoặc thậm chí theo các khoảng thứ tự các biến. Xem ví
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Chọn cột thứ nhất và thứ hai</span>
-<span class="n">mtcars</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+mtcars <span class="o">%&gt;%</span> select<span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##                    mpg cyl</span>
@@ -548,7 +549,7 @@ thứ tự hoặc thậm chí theo các khoảng thứ tự các biến. Xem ví
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Chọn cột thứ 3 đến cột thứ 6</span>
-<span class="n">mtcars</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="m">3</span><span class="o">:</span><span class="m">6</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+mtcars <span class="o">%&gt;%</span> select<span class="p">(</span><span class="m">3</span><span class="o">:</span><span class="m">6</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##                   disp  hp drat    wt</span>
@@ -567,9 +568,9 @@ liệu được nhanh hơn:</p>
 <li><code class="docutils literal notranslate"><span class="pre">starts_with(&quot;Ký</span> <span class="pre">tự</span> <span class="pre">là</span> <span class="pre">thông</span> <span class="pre">tin</span> <span class="pre">mong</span> <span class="pre">muốn&quot;)</span></code>: các cột dữ liệu ccó
 tên hứa các ký tự mong muốn đứng ở đầu của tên, ví dụ:</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="nf">starts_with</span><span class="p">(</span><span class="s">&quot;Petal&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>iris <span class="o">%&gt;%</span>
+  select<span class="p">(</span>starts_with<span class="p">(</span><span class="s">&quot;Petal&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   Petal.Length Petal.Width</span>
@@ -585,9 +586,9 @@ tên hứa các ký tự mong muốn đứng ở đầu của tên, ví dụ:</l
 <li><code class="docutils literal notranslate"><span class="pre">ends_with(&quot;Ký</span> <span class="pre">tự</span> <span class="pre">là</span> <span class="pre">thông</span> <span class="pre">tin</span> <span class="pre">mong</span> <span class="pre">muốn&quot;)</span></code>: các cột dữ liệu có tên
 chứa các ký tự mong muốn ở cuối của tên, ví dụ:</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="nf">ends_with</span><span class="p">(</span><span class="s">&quot;Length&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>iris <span class="o">%&gt;%</span>
+  select<span class="p">(</span>ends_with<span class="p">(</span><span class="s">&quot;Length&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   Sepal.Length Petal.Length</span>
@@ -604,9 +605,9 @@ chứa các ký tự mong muốn ở cuối của tên, ví dụ:</li>
 chứa chính xác các ký tự mong muốn ở bất kỳ vị trí nào của tên, ví
 dụ:</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="nf">contains</span><span class="p">(</span><span class="s">&quot;etal&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>iris <span class="o">%&gt;%</span>
+  select<span class="p">(</span>contains<span class="p">(</span><span class="s">&quot;etal&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   Petal.Length Petal.Width</span>
@@ -623,9 +624,9 @@ dụ:</li>
 chứa các ký tự có dạng ký tự mong muốn ở bất kỳ vị trí nào của tên,
 ví dụ:</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="nf">matches</span><span class="p">(</span><span class="s">&quot;.t.&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>iris <span class="o">%&gt;%</span>
+  select<span class="p">(</span>matches<span class="p">(</span><span class="s">&quot;.t.&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
@@ -642,11 +643,11 @@ khác ở trước và sau (các ký tự chỉ chứa chữ t mà chữ t ở �
 tên sẽ không được tính vào)</p>
 <p>Thêm vào đó, ta có thể đổi tên biến ngay trong khi lựa chọn các biến với
 <code class="docutils literal notranslate"><span class="pre">select</span></code> như sau:</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mtcars</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="n">`miles per gallon`</span> <span class="o">=</span> <span class="n">mpg</span>
-         <span class="p">,</span> <span class="n">cylinder</span> <span class="o">=</span> <span class="n">cyl</span>
-         <span class="p">,</span> <span class="n">weight</span> <span class="o">=</span> <span class="n">wt</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>mtcars <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="sb">`miles per gallon`</span> <span class="o">=</span> mpg
+         <span class="p">,</span> cylinder <span class="o">=</span> cyl
+         <span class="p">,</span> weight <span class="o">=</span> wt<span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##                   miles per gallon cylinder weight</span>
@@ -661,14 +662,14 @@ tên sẽ không được tính vào)</p>
 </div>
 <div class="section" id="lay-cac-dong-trong-dataframe-voi-slice">
 <h4>1.2.1.2. Lấy các dòng trong dataframe với <code class="docutils literal notranslate"><span class="pre">slice</span></code><a class="headerlink" href="#lay-cac-dong-trong-dataframe-voi-slice" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span> <span class="nf">slice</span><span class="p">(</span><span class="n">observation</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">%&gt;%</span> slice<span class="p">(</span>observation<span class="p">)</span>
 </pre></div>
 </div>
 <p>Tương tự như lấy theo cột, ta có thể lấy các dòng trong một dataframe.
 Tuy nhiên, lưu ý hàm <code class="docutils literal notranslate"><span class="pre">slice</span></code> chỉ cho phép điều kiện lấy quan sát là
 một véc-tơ. Xem ví dụ sau.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lấy dòng đầu tiên</span>
-<span class="n">mtcars</span> <span class="o">%&gt;%</span> <span class="nf">slice</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+mtcars <span class="o">%&gt;%</span> slice<span class="p">(</span><span class="m">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   mpg cyl disp  hp drat   wt  qsec vs am gear carb</span>
@@ -676,7 +677,7 @@ một véc-tơ. Xem ví dụ sau.</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lấy dòng từ 1:3</span>
-<span class="n">mtcars</span> <span class="o">%&gt;%</span> <span class="nf">slice</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">)</span>
+mtcars <span class="o">%&gt;%</span> slice<span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
@@ -686,7 +687,7 @@ một véc-tơ. Xem ví dụ sau.</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lấy dòng 1:3 và 5</span>
-<span class="n">mtcars</span> <span class="o">%&gt;%</span> <span class="nf">slice</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span><span class="m">5</span><span class="p">))</span>
+mtcars <span class="o">%&gt;%</span> slice<span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span><span class="m">5</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
@@ -699,7 +700,7 @@ một véc-tơ. Xem ví dụ sau.</p>
 </div>
 <div class="section" id="loc-quan-sat-theo-dieu-kien-voi-filter">
 <h4>1.2.1.3. Lọc quan sát theo điều kiện với <code class="docutils literal notranslate"><span class="pre">filter</span></code><a class="headerlink" href="#loc-quan-sat-theo-dieu-kien-voi-filter" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span> <span class="nf">filter</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">%&gt;%</span> filter<span class="p">(</span>condition<span class="p">)</span>
 </pre></div>
 </div>
 <p>Hàm filter cho phép ta sử dụng các điều kiện phức tạp để truy xuất dữ
@@ -750,26 +751,26 @@ liệu từ dataframe. Các điều kiện thường dùng bao gồm.</p>
 </table>
 <p>Xem ví dụ sau.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lọc điều kiện mpg &gt; 20</span>
-<span class="n">mtcars</span> <span class="o">%&gt;%</span>
-  <span class="nf">filter</span><span class="p">(</span><span class="n">mpg</span> <span class="o">&gt;</span> <span class="m">20</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">dim</span>
+mtcars <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>mpg <span class="o">&gt;</span> <span class="m">20</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="kp">dim</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 14 11</span>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lọc điều kiện mpg &gt;20 hoặc mpg &lt;18</span>
-<span class="n">mtcars</span> <span class="o">%&gt;%</span>
-  <span class="nf">filter</span><span class="p">(</span><span class="n">mpg</span> <span class="o">&gt;</span> <span class="m">20</span> <span class="o">|</span> <span class="n">mpg</span> <span class="o">&lt;</span> <span class="m">18</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">dim</span>
+mtcars <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>mpg <span class="o">&gt;</span> <span class="m">20</span> <span class="o">|</span> mpg <span class="o">&lt;</span> <span class="m">18</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="kp">dim</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 27 11</span>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lọc điều kiện mpg &gt;=20 và cyl = 6</span>
-<span class="n">mtcars</span> <span class="o">%&gt;%</span>
-  <span class="nf">filter</span><span class="p">(</span><span class="n">mpg</span> <span class="o">&gt;</span> <span class="m">20</span> <span class="o">&amp;</span> <span class="n">cyl</span> <span class="o">==</span> <span class="m">6</span><span class="p">)</span>
+mtcars <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>mpg <span class="o">&gt;</span> <span class="m">20</span> <span class="o">&amp;</span> cyl <span class="o">==</span> <span class="m">6</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
@@ -782,8 +783,8 @@ liệu từ dataframe. Các điều kiện thường dùng bao gồm.</p>
 cùng một trường, chúng ta có thể làm ngắn gọn hơn với cấu trúc “%in%”
 thay vì cấu phải liệt kê tất cả các điều kiện đơn lẻ và ngăn cách nhau
 bởi dấu “|”:</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mtcars</span> <span class="o">%&gt;%</span>
- <span class="nf">filter</span><span class="p">(</span><span class="n">carb</span> <span class="o">==</span> <span class="m">4</span> <span class="o">|</span> <span class="n">carb</span> <span class="o">==</span> <span class="m">3</span> <span class="o">|</span> <span class="n">carb</span> <span class="o">==</span> <span class="m">1</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>mtcars <span class="o">%&gt;%</span>
+ filter<span class="p">(</span>carb <span class="o">==</span> <span class="m">4</span> <span class="o">|</span> carb <span class="o">==</span> <span class="m">3</span> <span class="o">|</span> carb <span class="o">==</span> <span class="m">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##     mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
@@ -810,23 +811,23 @@ bởi dấu “|”:</p>
 </pre></div>
 </div>
 <p>Câu lệnh trên tương đương với:</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mtcars</span> <span class="o">%&gt;%</span>
-  <span class="nf">filter</span><span class="p">(</span><span class="n">carb</span> <span class="o">%in%</span> <span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>mtcars <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>carb <span class="o">%in%</span> <span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="sap-xep-du-lieu-voi-arrange">
 <h4>1.2.1.4. Sắp xếp dữ liệu với <code class="docutils literal notranslate"><span class="pre">arrange</span></code><a class="headerlink" href="#sap-xep-du-lieu-voi-arrange" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span> <span class="nf">arrange</span><span class="p">(</span><span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">%&gt;%</span> arrange<span class="p">(</span>var1<span class="p">,</span> var2<span class="p">)</span>
 </pre></div>
 </div>
 <p>Ngoài việc lọc dữ liệu có điều kiện, chúng ta cũng thường xuyên thực
 hiện việc sắp xếp dữ liệu theo một trật tự nhất định nào đó khi xem dữ
 liệu. Hàm arrange() hỗ trợ công việc này. Cách thức sắp xếp dữ liệu mặc
 định là từ nhỏ đến lớn.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mtcars</span> <span class="o">%&gt;%</span>
-  <span class="nf">arrange</span><span class="p">(</span><span class="n">mpg</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>mtcars <span class="o">%&gt;%</span>
+  arrange<span class="p">(</span>mpg<span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
@@ -840,7 +841,7 @@ liệu. Hàm arrange() hỗ trợ công việc này. Cách thức sắp xếp d�
 </div>
 <p>Khi có nhiều biến cần được sắp xếp, hàm <code class="docutils literal notranslate"><span class="pre">arrange</span></code> sẽ ưu tiên các biến
 theo thứ tự từ trái sang phải.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mtcars</span> <span class="o">%&gt;%</span> <span class="nf">arrange</span><span class="p">(</span><span class="n">mpg</span><span class="p">,</span> <span class="n">cyl</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>mtcars <span class="o">%&gt;%</span> arrange<span class="p">(</span>mpg<span class="p">,</span> cyl<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##     mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
@@ -881,13 +882,13 @@ theo thứ tự từ trái sang phải.</p>
 </div>
 <div class="section" id="doi-ten-bien-voi-rename">
 <h4>1.2.1.5. Đổi tên biến với <code class="docutils literal notranslate"><span class="pre">rename</span></code><a class="headerlink" href="#doi-ten-bien-voi-rename" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span> <span class="nf">rename</span><span class="p">(</span><span class="n">new_var</span> <span class="o">=</span> <span class="n">old_var</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">%&gt;%</span> rename<span class="p">(</span>new_var <span class="o">=</span> old_var<span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mtcars</span> <span class="o">%&gt;%</span>
-  <span class="nf">rename</span><span class="p">(</span><span class="n">displacement</span> <span class="o">=</span> <span class="n">disp</span><span class="p">,</span>
-         <span class="n">miles_per_gallon</span> <span class="o">=</span> <span class="n">mpg</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">names</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>mtcars <span class="o">%&gt;%</span>
+  rename<span class="p">(</span>displacement <span class="o">=</span> disp<span class="p">,</span>
+         miles_per_gallon <span class="o">=</span> mpg<span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="kp">names</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  [1] &quot;miles_per_gallon&quot; &quot;cyl&quot;              &quot;displacement&quot;</span>
@@ -903,14 +904,14 @@ theo thứ tự từ trái sang phải.</p>
 <p>Trong quá trình xử lý dữ liệu, ta thường xuyên phải tạo thêm các trường
 dữ liệu mới (trường dữ liệu phát sinh). Hàm mutate() được sử dụng để làm
 công việc này. Cấu trúc của hàm rất đơn giản như sau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span> <span class="nf">mutate</span><span class="p">(</span><span class="n">new_var</span> <span class="o">=</span> <span class="n">statement</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">%&gt;%</span> mutate<span class="p">(</span>new_var <span class="o">=</span> statement<span class="p">)</span>
 </pre></div>
 </div>
 <p>Xem ví dụ sau:</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mtcars</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="n">mpg</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">new_mpg</span> <span class="o">=</span> <span class="n">mpg</span> <span class="o">*</span> <span class="m">2</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>mtcars <span class="o">%&gt;%</span>
+  select<span class="p">(</span>mpg<span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>new_mpg <span class="o">=</span> mpg <span class="o">*</span> <span class="m">2</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    mpg new_mpg</span>
@@ -925,10 +926,10 @@ công việc này. Cấu trúc của hàm rất đơn giản như sau.</p>
 <p>Trong một số trường hợp, khi ta không muốn lấy các trường thông tin cũ
 mà chỉ muốn lấy các trường thông tin mới tạo thì có thể sử dụng hàm
 <code class="docutils literal notranslate"><span class="pre">transmute()</span></code> với cấu trúc giống như hàm mutate.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mtcars</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="n">mpg</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">transmute</span><span class="p">(</span><span class="n">new_mpg</span> <span class="o">=</span> <span class="n">mpg</span> <span class="o">*</span> <span class="m">1.61</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>mtcars <span class="o">%&gt;%</span>
+  select<span class="p">(</span>mpg<span class="p">)</span> <span class="o">%&gt;%</span>
+  transmute<span class="p">(</span>new_mpg <span class="o">=</span> mpg <span class="o">*</span> <span class="m">1.61</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   new_mpg</span>
@@ -944,13 +945,13 @@ mà chỉ muốn lấy các trường thông tin mới tạo thì có thể sử
 <li>Hàm <code class="docutils literal notranslate"><span class="pre">inner_join(x,</span> <span class="pre">y,</span> <span class="pre">by</span> <span class="pre">=</span> <span class="pre">&quot;key&quot;)</span></code>: lấy tất cả dữ liệu có trên bảng
 hai bảng khi trùng key, ví dụ:</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">student_id</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">1</span><span class="p">),</span>
-                <span class="n">maths</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="m">8</span><span class="p">,</span> <span class="m">7</span><span class="p">,</span> <span class="m">6</span><span class="p">,</span> <span class="m">7.8</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>x <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>student_id <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">1</span><span class="p">),</span>
+                maths <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">10</span><span class="p">,</span> <span class="m">8</span><span class="p">,</span> <span class="m">7</span><span class="p">,</span> <span class="m">6</span><span class="p">,</span> <span class="m">7.8</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span>
                           <span class="m">7.7</span><span class="p">,</span> <span class="m">9</span><span class="p">,</span> <span class="m">9.5</span><span class="p">,</span> <span class="m">6.5</span><span class="p">))</span>
-<span class="n">y</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">student_id</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">20</span><span class="p">,</span> <span class="m">2</span><span class="p">),</span>
-                <span class="n">physics</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">8</span><span class="p">,</span> <span class="m">9.5</span><span class="p">,</span> <span class="m">7.5</span><span class="p">,</span> <span class="m">6</span><span class="p">,</span> <span class="m">5.5</span><span class="p">,</span>
+y <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>student_id <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">20</span><span class="p">,</span> <span class="m">2</span><span class="p">),</span>
+                physics <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">8</span><span class="p">,</span> <span class="m">9.5</span><span class="p">,</span> <span class="m">7.5</span><span class="p">,</span> <span class="m">6</span><span class="p">,</span> <span class="m">5.5</span><span class="p">,</span>
                             <span class="m">6.5</span><span class="p">,</span> <span class="m">7.8</span><span class="p">,</span> <span class="m">8.2</span><span class="p">,</span> <span class="m">8</span><span class="p">,</span> <span class="m">7.5</span><span class="p">))</span>
-<span class="n">x</span>
+x
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    student_id maths</span>
@@ -966,7 +967,7 @@ hai bảng khi trùng key, ví dụ:</li>
 <span class="c1">## 10         10   6.5</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">y</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>y
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    student_id physics</span>
@@ -983,8 +984,8 @@ hai bảng khi trùng key, ví dụ:</li>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># gộp 2 bảng dữ liệu x và y theo student_id</span>
-<span class="n">x</span> <span class="o">%&gt;%</span>
-  <span class="nf">inner_join</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="s">&quot;student_id&quot;</span><span class="p">)</span>
+x <span class="o">%&gt;%</span>
+  inner_join<span class="p">(</span>y<span class="p">,</span> by <span class="o">=</span> <span class="s">&quot;student_id&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   student_id maths physics</span>
@@ -999,11 +1000,11 @@ hai bảng khi trùng key, ví dụ:</li>
 <ul class="simple">
 <li><strong>full_join</strong>: lấy tất cả dữ liệu có cả trên bảng x, y.</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">full_join</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="s">&quot;key&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>full_join<span class="p">(</span>x<span class="p">,</span> y<span class="p">,</span> by <span class="o">=</span> <span class="s">&quot;key&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">%&gt;%</span>
-  <span class="nf">full_join</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="s">&quot;student_id&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>x <span class="o">%&gt;%</span>
+  full_join<span class="p">(</span>y<span class="p">,</span> by <span class="o">=</span> <span class="s">&quot;student_id&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    student_id maths physics</span>
@@ -1031,11 +1032,11 @@ trị điểm vật lý (physics) của các student_id không tồn tại trên
 <ul class="simple">
 <li>Hàm <strong>left_join</strong>: lấy dữ liệu chỉ có trên bảng x, ví dụ:</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">left_join</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="s">&quot;var&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>left_join<span class="p">(</span>x<span class="p">,</span> y<span class="p">,</span> by <span class="o">=</span> <span class="s">&quot;var&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">%&gt;%</span>
-  <span class="nf">left_join</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="s">&quot;student_id&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>x <span class="o">%&gt;%</span>
+  left_join<span class="p">(</span>y<span class="p">,</span> by <span class="o">=</span> <span class="s">&quot;student_id&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    student_id maths physics</span>
@@ -1057,11 +1058,11 @@ về giá trị NA</p>
 <ul class="simple">
 <li>Hàm <strong>right_join</strong> : lấy dữ liệu chỉ có trên bảng y, ví dụ:</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">right_join</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="s">&quot;var&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>right_join<span class="p">(</span>x<span class="p">,</span> y<span class="p">,</span> by <span class="o">=</span> <span class="s">&quot;var&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">%&gt;%</span>
-  <span class="nf">right_join</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="s">&quot;student_id&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>x <span class="o">%&gt;%</span>
+  right_join<span class="p">(</span>y<span class="p">,</span> by <span class="o">=</span> <span class="s">&quot;student_id&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    student_id maths physics</span>
@@ -1081,15 +1082,15 @@ về giá trị NA</p>
 giá trị NA</p>
 <p><strong>Lưu ý</strong>: Trong trường hợp cột dữ liệu dùng để nối các bảng có tên khác
 nhau, ta có thể sử dụng cấu trúc sau:</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">left_join</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;key_x&quot;</span> <span class="o">=</span> <span class="s">&quot;key_y&quot;</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>left_join<span class="p">(</span>x<span class="p">,</span> y<span class="p">,</span> by <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;key_x&quot;</span> <span class="o">=</span> <span class="s">&quot;key_y&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>Xem ví dụ sau:</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">names</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="n">[1]</span> <span class="o">&lt;-</span> <span class="s">&quot;student_id1&quot;</span>
-<span class="nf">names</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="n">[1]</span> <span class="o">&lt;-</span> <span class="s">&quot;student_id2&quot;</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kp">names</span><span class="p">(</span>x<span class="p">)[</span><span class="m">1</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="s">&quot;student_id1&quot;</span>
+<span class="kp">names</span><span class="p">(</span>y<span class="p">)[</span><span class="m">1</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="s">&quot;student_id2&quot;</span>
 
-<span class="n">x</span> <span class="o">%&gt;%</span>
-  <span class="nf">inner_join</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;student_id1&quot;</span> <span class="o">=</span> <span class="s">&quot;student_id2&quot;</span><span class="p">))</span>
+x <span class="o">%&gt;%</span>
+  inner_join<span class="p">(</span>y<span class="p">,</span> by <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;student_id1&quot;</span> <span class="o">=</span> <span class="s">&quot;student_id2&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   student_id1 maths physics</span>
@@ -1103,20 +1104,20 @@ nhau, ta có thể sử dụng cấu trúc sau:</p>
 <p>Bên cạnh các hàm <code class="docutils literal notranslate"><span class="pre">join</span></code>, khi xử lý dữ liệu trong thực tiễn, ta có thể
 phải <em>ghép</em> các bảng dữ liệu theo hàng hoặc cột. Trong dplyr, có hai hàm
 rất hữu dụng trong hai trường hợp trên là <code class="docutils literal notranslate"><span class="pre">bind_col</span></code> và <code class="docutils literal notranslate"><span class="pre">bind_rows</span></code></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">bind_cols</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">)</span>
-<span class="nf">bind_rows</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>bind_cols<span class="p">(</span>data1<span class="p">,</span> data2<span class="p">)</span>
+bind_rows<span class="p">(</span>data1<span class="p">,</span> data2<span class="p">)</span>
 </pre></div>
 </div>
 <p>Xem hai ví dụ sau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">id</span> <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span>
-                  <span class="n">income</span> <span class="o">=</span> <span class="m">8</span><span class="o">:</span><span class="m">10</span><span class="p">)</span>
-<span class="n">df2</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">id</span> <span class="o">=</span> <span class="m">4</span><span class="o">:</span><span class="m">9</span><span class="p">,</span>
-                  <span class="n">income</span> <span class="o">=</span> <span class="m">8</span><span class="o">:</span><span class="m">13</span><span class="p">)</span>
-<span class="n">df3</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">id</span> <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span>
-                  <span class="n">gender</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;F&quot;</span><span class="p">,</span> <span class="s">&quot;F&quot;</span><span class="p">,</span> <span class="s">&quot;M&quot;</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>df1 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>id <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span>
+                  income <span class="o">=</span> <span class="m">8</span><span class="o">:</span><span class="m">10</span><span class="p">)</span>
+df2 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>id <span class="o">=</span> <span class="m">4</span><span class="o">:</span><span class="m">9</span><span class="p">,</span>
+                  income <span class="o">=</span> <span class="m">8</span><span class="o">:</span><span class="m">13</span><span class="p">)</span>
+df3 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>id <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span>
+                  gender <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;F&quot;</span><span class="p">,</span> <span class="s">&quot;F&quot;</span><span class="p">,</span> <span class="s">&quot;M&quot;</span><span class="p">))</span>
 
 <span class="c1"># Nối theo dòng</span>
-<span class="n">df1</span> <span class="o">%&gt;%</span> <span class="nf">bind_rows</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
+df1 <span class="o">%&gt;%</span> bind_rows<span class="p">(</span>df2<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   id income</span>
@@ -1132,7 +1133,7 @@ rất hữu dụng trong hai trường hợp trên là <code class="docutils lit
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Nối theo cột</span>
-<span class="n">df1</span> <span class="o">%&gt;%</span> <span class="nf">bind_cols</span><span class="p">(</span><span class="n">df3</span><span class="p">)</span>
+df1 <span class="o">%&gt;%</span> bind_cols<span class="p">(</span>df3<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   id income id1 gender</span>
@@ -1148,13 +1149,13 @@ rất hữu dụng trong hai trường hợp trên là <code class="docutils lit
 theo các cách như: tính tổng, tính số dư bình quân, phương sai, tổng số
 lượng quan sát… Với <code class="docutils literal notranslate"><span class="pre">dplyr</span></code>, ta có thể sử dụng hàm <code class="docutils literal notranslate"><span class="pre">summarise()</span></code> để
 thực hiện công việc này.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span>
-  <span class="nf">summarise</span><span class="p">(</span><span class="n">var_name</span> <span class="o">=</span> <span class="nf">calculate_stats</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">%&gt;%</span>
+  summarise<span class="p">(</span>var_name <span class="o">=</span> calculate_stats<span class="p">(</span>var<span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mtcars</span> <span class="o">%&gt;%</span>
-  <span class="nf">summarise</span><span class="p">(</span><span class="n">mean_mpg</span> <span class="o">=</span> <span class="nf">mean</span><span class="p">(</span><span class="n">mpg</span><span class="p">),</span>
-            <span class="n">sd_mpg</span> <span class="o">=</span> <span class="nf">sd</span><span class="p">(</span><span class="n">mpg</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>mtcars <span class="o">%&gt;%</span>
+  summarise<span class="p">(</span>mean_mpg <span class="o">=</span> <span class="kp">mean</span><span class="p">(</span>mpg<span class="p">),</span>
+            sd_mpg <span class="o">=</span> sd<span class="p">(</span>mpg<span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   mean_mpg   sd_mpg</span>
@@ -1168,10 +1169,10 @@ hợp một cách đa chiều hơn. Hàm group_by() cho phép dữ liệu tổng
 gộp lại theo một hoặc nhiều trường thông tin khác nhau, giúp người phân
 tích có thể nhìn dữ liệu theo từ chiều riêng biệt hoặc gộp các chiều
 thông tin với nhau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mtcars</span> <span class="o">%&gt;%</span>
-  <span class="nf">group_by</span><span class="p">(</span><span class="n">cyl</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">summarise</span><span class="p">(</span><span class="n">mean_mpg</span> <span class="o">=</span> <span class="nf">mean</span><span class="p">(</span><span class="n">mpg</span><span class="p">),</span>
-            <span class="n">mean_disp</span> <span class="o">=</span> <span class="nf">mean</span><span class="p">(</span><span class="n">disp</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>mtcars <span class="o">%&gt;%</span>
+  group_by<span class="p">(</span>cyl<span class="p">)</span> <span class="o">%&gt;%</span>
+  summarise<span class="p">(</span>mean_mpg <span class="o">=</span> <span class="kp">mean</span><span class="p">(</span>mpg<span class="p">),</span>
+            mean_disp <span class="o">=</span> <span class="kp">mean</span><span class="p">(</span>disp<span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 3 x 3</span>
@@ -1200,19 +1201,19 @@ như KH thuộc VIP sẽ nhân 1 tỷ lệ, KH thuộc nhóm trung bình sẽ c�
 khác, hay KH thông thường thì sẽ 1 tỷ lệ khác….</p>
 <p>Trong dplyr, hàm <code class="docutils literal notranslate"><span class="pre">case_when()</span></code> xử lý các trường hợp trên rất nhanh
 chóng.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span> <span class="nf">mutate</span><span class="p">(</span><span class="n">new_var</span> <span class="o">=</span> <span class="nf">case_when</span><span class="p">(</span>
-                   <span class="n">condition_1</span> <span class="o">~</span> <span class="s">&quot;value_1&quot;</span><span class="p">,</span>
-                   <span class="n">condition_2</span> <span class="o">~</span> <span class="s">&quot;value_2&quot;</span><span class="p">,</span><span class="kc">...</span><span class="p">,</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">%&gt;%</span> mutate<span class="p">(</span>new_var <span class="o">=</span> case_when<span class="p">(</span>
+                   condition_1 <span class="o">~</span> <span class="s">&quot;value_1&quot;</span><span class="p">,</span>
+                   condition_2 <span class="o">~</span> <span class="s">&quot;value_2&quot;</span><span class="p">,</span><span class="kc">...</span><span class="p">,</span>
                    <span class="kc">TRUE</span> <span class="o">~</span> <span class="s">&quot;value_n&quot;</span>
                  <span class="p">))</span>
 </pre></div>
 </div>
 <p>Ta xem ví dụ sau:</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">number</span> <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>df <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>number <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">)</span>
 
-<span class="n">df</span> <span class="o">%&gt;%</span> <span class="nf">mutate</span><span class="p">(</span><span class="n">nhom</span> <span class="o">=</span> <span class="nf">case_when</span><span class="p">(</span>
-  <span class="n">number</span> <span class="o">&lt;=</span> <span class="m">5</span> <span class="o">~</span> <span class="s">&quot;nhom_1&quot;</span><span class="p">,</span> <span class="c1"># nhóm 1: số từ 1 đến 5</span>
-  <span class="n">number</span> <span class="o">&gt;</span> <span class="m">5</span> <span class="o">&amp;</span> <span class="n">number</span> <span class="o">&lt;=</span> <span class="m">8</span> <span class="o">~</span> <span class="s">&quot;nhom_2&quot;</span><span class="p">,</span> <span class="c1"># nhóm 2: số từ 6 đến 8</span>
+df <span class="o">%&gt;%</span> mutate<span class="p">(</span>nhom <span class="o">=</span> case_when<span class="p">(</span>
+  number <span class="o">&lt;=</span> <span class="m">5</span> <span class="o">~</span> <span class="s">&quot;nhom_1&quot;</span><span class="p">,</span> <span class="c1"># nhóm 1: số từ 1 đến 5</span>
+  number <span class="o">&gt;</span> <span class="m">5</span> <span class="o">&amp;</span> number <span class="o">&lt;=</span> <span class="m">8</span> <span class="o">~</span> <span class="s">&quot;nhom_2&quot;</span><span class="p">,</span> <span class="c1"># nhóm 2: số từ 6 đến 8</span>
   <span class="kc">TRUE</span> <span class="o">~</span> <span class="s">&quot;nhom_3&quot;</span> <span class="c1"># các số còn lại</span>
   <span class="p">))</span>
 </pre></div>
@@ -1237,12 +1238,12 @@ chóng.</p>
 thỏa mãn điều kiện nào đó.</p>
 <blockquote>
 <div>data %&gt;% mutate_if(condition, function)</div></blockquote>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span>
-  <span class="n">id</span> <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">,</span>
-  <span class="n">gender</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;F&quot;</span><span class="p">,</span> <span class="s">&quot;M&quot;</span><span class="p">,</span> <span class="s">&quot;M&quot;</span><span class="p">,</span> <span class="s">&quot;F&quot;</span><span class="p">,</span> <span class="s">&quot;F&quot;</span><span class="p">),</span>
-  <span class="n">income</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">4</span><span class="p">,</span><span class="m">5</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">6</span><span class="p">,</span><span class="m">7</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>df <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>
+  id <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">,</span>
+  gender <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;F&quot;</span><span class="p">,</span> <span class="s">&quot;M&quot;</span><span class="p">,</span> <span class="s">&quot;M&quot;</span><span class="p">,</span> <span class="s">&quot;F&quot;</span><span class="p">,</span> <span class="s">&quot;F&quot;</span><span class="p">),</span>
+  income <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">4</span><span class="p">,</span><span class="m">5</span><span class="p">,</span><span class="m">3</span><span class="p">,</span><span class="m">6</span><span class="p">,</span><span class="m">7</span><span class="p">)</span>
 <span class="p">)</span>
-<span class="n">df</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+df <span class="o">%&gt;%</span> <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##        id    gender     income</span>
@@ -1255,9 +1256,9 @@ thỏa mãn điều kiện nào đó.</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Biến đổi các biến factor thành character</span>
-<span class="n">df</span> <span class="o">%&gt;%</span> <span class="nf">mutate_if</span><span class="p">(</span><span class="n">is.factor</span><span class="p">,</span>
-                 <span class="n">as.character</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">summary</span>
+df <span class="o">%&gt;%</span> mutate_if<span class="p">(</span><span class="kp">is.factor</span><span class="p">,</span>
+                 <span class="kp">as.character</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##        id       gender              income</span>
@@ -1271,10 +1272,10 @@ thỏa mãn điều kiện nào đó.</p>
 </div>
 <p>Ngoài ra, ta có thể tự tạo các hàm mới và áp dụng với <code class="docutils literal notranslate"><span class="pre">mutate_if</span></code>. Xem
 ví dụ sau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">my_func</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">x</span><span class="p">){</span><span class="n">x</span><span class="o">*</span><span class="m">100</span><span class="p">}</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>my_func <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">){</span>x<span class="o">*</span><span class="m">100</span><span class="p">}</span>
 <span class="c1"># Nhân các biến numeric lên 100 lần</span>
-<span class="n">df</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate_if</span><span class="p">(</span><span class="n">is.numeric</span><span class="p">,</span> <span class="n">my_func</span><span class="p">)</span>
+df <span class="o">%&gt;%</span>
+  mutate_if<span class="p">(</span><span class="kp">is.numeric</span><span class="p">,</span> my_func<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    id gender income</span>
@@ -1287,11 +1288,11 @@ ví dụ sau.</p>
 </div>
 <p>Đối với <code class="docutils literal notranslate"><span class="pre">mutate_at</span></code>, ta cũng có thể thực hiện tương tự. Cấu trúc tổng
 quát của <code class="docutils literal notranslate"><span class="pre">mutate_at</span></code> như sau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate_at</span><span class="p">(</span><span class="nf">vars</span><span class="p">(</span><span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="p">,</span> <span class="kc">...</span><span class="p">),</span> <span class="nf">function</span><span class="p">())</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">%&gt;%</span>
+  mutate_at<span class="p">(</span>vars<span class="p">(</span>var1<span class="p">,</span> var2<span class="p">,</span> <span class="kc">...</span><span class="p">),</span> <span class="kr">function</span><span class="p">())</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>df
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   id gender income</span>
@@ -1303,7 +1304,7 @@ quát của <code class="docutils literal notranslate"><span class="pre">mutate_
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Nhân biến income lên 100 lần</span>
-<span class="n">df</span> <span class="o">%&gt;%</span> <span class="nf">mutate_at</span><span class="p">(</span><span class="nf">vars</span><span class="p">(</span><span class="n">income</span><span class="p">),</span> <span class="n">my_func</span><span class="p">)</span>
+df <span class="o">%&gt;%</span> mutate_at<span class="p">(</span>vars<span class="p">(</span>income<span class="p">),</span> my_func<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   id gender income</span>
@@ -1320,16 +1321,16 @@ quát của <code class="docutils literal notranslate"><span class="pre">mutate_
 <p>Tương tự như <code class="docutils literal notranslate"><span class="pre">mutate_at</span></code> và <code class="docutils literal notranslate"><span class="pre">mutate_if</span></code>, ta có thể tổng hợp nhanh dữ
 liệu theo điều kiện.</p>
 <p>Cấu trúc tổng quát của <code class="docutils literal notranslate"><span class="pre">summarise_at</span></code></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span>
-     <span class="nf">group_by</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="p">(</span><span class="n">không</span> <span class="n">bắt</span> <span class="n">buộc</span><span class="p">)</span>
-     <span class="nf">summarise_at</span><span class="p">(</span><span class="nf">vars</span><span class="p">(</span><span class="n">variables</span><span class="p">),</span> <span class="nf">funs</span><span class="p">(</span><span class="n">functions</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">%&gt;%</span>
+     group_by<span class="p">(</span>var<span class="p">)</span> <span class="p">(</span>không bắt buộc<span class="p">)</span>
+     summarise_at<span class="p">(</span>vars<span class="p">(</span>variables<span class="p">),</span> funs<span class="p">(</span>functions<span class="p">))</span>
 </pre></div>
 </div>
 <p>Xem ví dụ sau</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mtcars</span> <span class="o">%&gt;%</span>
-  <span class="nf">group_by</span><span class="p">(</span><span class="n">am</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">summarise_at</span><span class="p">(</span><span class="nf">vars</span><span class="p">(</span><span class="n">mpg</span><span class="p">,</span> <span class="n">disp</span><span class="p">),</span>
-               <span class="nf">funs</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">max</span><span class="p">,</span> <span class="n">median</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>mtcars <span class="o">%&gt;%</span>
+  group_by<span class="p">(</span>am<span class="p">)</span> <span class="o">%&gt;%</span>
+  summarise_at<span class="p">(</span>vars<span class="p">(</span>mpg<span class="p">,</span> disp<span class="p">),</span>
+               funs<span class="p">(</span><span class="kp">mean</span><span class="p">,</span> <span class="kp">max</span><span class="p">,</span> median<span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 2 x 7</span>
@@ -1340,16 +1341,16 @@ liệu theo điều kiện.</p>
 </pre></div>
 </div>
 <p>Tương tự, ta có cấu trúc tổng quát của <code class="docutils literal notranslate"><span class="pre">summarise_if</span></code></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span>
-   <span class="nf">group_by</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="p">(</span><span class="n">không</span> <span class="n">bắt</span> <span class="n">buộc</span><span class="p">)</span>
-   <span class="nf">summarise_if</span><span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="nf">funs</span><span class="p">(</span><span class="n">functions</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">%&gt;%</span>
+   group_by<span class="p">(</span>var<span class="p">)</span> <span class="p">(</span>không bắt buộc<span class="p">)</span>
+   summarise_if<span class="p">(</span>condition<span class="p">,</span> funs<span class="p">(</span>functions<span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="n">Species</span><span class="p">,</span> <span class="n">Sepal.Length</span><span class="p">,</span> <span class="n">Sepal.Width</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">group_by</span><span class="p">(</span><span class="n">Species</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">summarise_if</span><span class="p">(</span><span class="n">is.numeric</span><span class="p">,</span>
-               <span class="nf">funs</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">median</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>iris <span class="o">%&gt;%</span>
+  select<span class="p">(</span>Species<span class="p">,</span> Sepal.Length<span class="p">,</span> Sepal.Width<span class="p">)</span> <span class="o">%&gt;%</span>
+  group_by<span class="p">(</span>Species<span class="p">)</span> <span class="o">%&gt;%</span>
+  summarise_if<span class="p">(</span><span class="kp">is.numeric</span><span class="p">,</span>
+               funs<span class="p">(</span><span class="kp">mean</span><span class="p">,</span> median<span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 3 x 5</span>

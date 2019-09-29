@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -315,10 +316,10 @@ nhóm sau.</p>
 <code class="docutils literal notranslate"><span class="pre">vector</span> <span class="pre">data</span></code>. Loại dữ liệu này thường được lưu dưới dạng <code class="docutils literal notranslate"><span class="pre">shape</span></code>
 (<code class="docutils literal notranslate"><span class="pre">.shp</span></code>),để đọc định dạng này chúng ta sử dụng function <code class="docutils literal notranslate"><span class="pre">read_sp</span></code>
 trong package <code class="docutils literal notranslate"><span class="pre">sf</span></code></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">sf</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
-<span class="n">lnd_sport</span> <span class="o">&lt;-</span> <span class="n">sf</span><span class="o">::</span><span class="nf">read_sf</span><span class="p">(</span><span class="s">&quot;data/spatial-data/london_sport.shp&quot;</span><span class="p">)</span>
-<span class="nf">print</span><span class="p">(</span><span class="n">lnd_sport</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>sf<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
+lnd_sport <span class="o">&lt;-</span> sf<span class="o">::</span>read_sf<span class="p">(</span><span class="s">&quot;data/spatial-data/london_sport.shp&quot;</span><span class="p">)</span>
+<span class="kp">print</span><span class="p">(</span>lnd_sport<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Simple feature collection with 33 features and 4 fields</span>
@@ -352,8 +353,8 @@ chứa trong <code class="docutils literal notranslate"><span class="pre">raster
 </ul>
 <div class="section" id="geometry-data">
 <h3>4.2.1. Geometry data<a class="headerlink" href="#geometry-data" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">geom_type</span> <span class="o">&lt;-</span> <span class="nf">st_geometry</span><span class="p">(</span><span class="n">lnd_sport</span><span class="p">)</span>
-<span class="n">geom_type</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>geom_type <span class="o">&lt;-</span> st_geometry<span class="p">(</span>lnd_sport<span class="p">)</span>
+geom_type
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Geometry set for 33 features</span>
@@ -377,15 +378,15 @@ chứa trong <code class="docutils literal notranslate"><span class="pre">raster
 <h3>4.2.2. Attribute data<a class="headerlink" href="#attribute-data" title="Permalink to this headline">¶</a></h3>
 <p>Phần dữ liệu này chúng ta có thể biến đổi và phân tích như dữ liệu bảng
 thông thường.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">London_pop</span> <span class="o">&lt;-</span> <span class="n">lnd_sport</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">Pop_2001</span><span class="p">)</span>
-<span class="n">London_pop</span> <span class="o">%&gt;%</span> <span class="n">names</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>London_pop <span class="o">&lt;-</span> lnd_sport <span class="o">%&gt;%</span> select<span class="p">(</span>name<span class="p">,</span> Pop_2001<span class="p">)</span>
+London_pop <span class="o">%&gt;%</span> <span class="kp">names</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;name&quot;     &quot;Pop_2001&quot; &quot;geometry&quot;</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">Bromley</span> <span class="o">&lt;-</span> <span class="n">London_pop</span> <span class="o">%&gt;%</span> <span class="nf">filter</span><span class="p">(</span><span class="n">name</span> <span class="o">==</span> <span class="s">&quot;Bromley&quot;</span><span class="p">)</span>
-<span class="n">Bromley</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>Bromley <span class="o">&lt;-</span> London_pop <span class="o">%&gt;%</span> filter<span class="p">(</span>name <span class="o">==</span> <span class="s">&quot;Bromley&quot;</span><span class="p">)</span>
+Bromley <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Simple feature collection with 1 feature and 2 fields</span>
@@ -403,7 +404,7 @@ thông thường.</p>
 </div>
 <div class="section" id="bieu-do-co-ban">
 <h3>4.2.3. Biểu đồ cơ bản<a class="headerlink" href="#bieu-do-co-ban" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">plot</span><span class="p">(</span><span class="n">lnd_sport</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>plot<span class="p">(</span>lnd_sport<span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image0" src="p07-07-spatial-data_files/figure-html/unnamed-chunk-5-1.png" /></p>
@@ -417,44 +418,44 @@ thông thường.</p>
 <strong>ggplot2</strong>, package <strong>tmap</strong> cũng xây dựng theo hướng
 <code class="docutils literal notranslate"><span class="pre">layer</span> <span class="pre">approach</span></code>. Với <code class="docutils literal notranslate"><span class="pre">ggplot2</span></code> mới nhất, ta có thể dễ dàng xây dựng
 bản đồ.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="s">&quot;tmap&quot;</span><span class="p">)</span>
-<span class="nf">data</span><span class="p">(</span><span class="n">NLD_muni</span><span class="p">,</span><span class="n">NLD_prov</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span><span class="s">&quot;tmap&quot;</span><span class="p">)</span>
+data<span class="p">(</span>NLD_muni<span class="p">,</span>NLD_prov<span class="p">)</span>
 
-<span class="nf">tm_shape</span><span class="p">(</span><span class="n">NLD_muni</span><span class="p">,</span><span class="n">projection</span><span class="o">=</span><span class="s">&quot;rd&quot;</span><span class="p">)</span> <span class="o">+</span>
+tm_shape<span class="p">(</span>NLD_muni<span class="p">,</span>projection<span class="o">=</span><span class="s">&quot;rd&quot;</span><span class="p">)</span> <span class="o">+</span>
 <span class="c1">#fill by population per km2</span>
-    <span class="nf">tm_fill</span><span class="p">(</span><span class="s">&quot;population&quot;</span><span class="p">,</span>
-           <span class="n">convert2density</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span>
-           <span class="n">style</span><span class="o">=</span><span class="s">&quot;kmeans&quot;</span><span class="p">,</span>
-           <span class="n">palette</span> <span class="o">=</span> <span class="s">&quot;Greens&quot;</span><span class="p">,</span>
-           <span class="n">title</span><span class="o">=</span><span class="s">&quot;Population per km2&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">tm_borders</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span> <span class="m">.5</span><span class="p">)</span> <span class="o">+</span>
+    tm_fill<span class="p">(</span><span class="s">&quot;population&quot;</span><span class="p">,</span>
+           convert2density<span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span>
+           style<span class="o">=</span><span class="s">&quot;kmeans&quot;</span><span class="p">,</span>
+           palette <span class="o">=</span> <span class="s">&quot;Greens&quot;</span><span class="p">,</span>
+           title<span class="o">=</span><span class="s">&quot;Population per km2&quot;</span><span class="p">)</span> <span class="o">+</span>
+  tm_borders<span class="p">(</span>alpha<span class="o">=</span> <span class="m">.5</span><span class="p">)</span> <span class="o">+</span>
 <span class="c1">#combine with province data</span>
-<span class="nf">tm_shape</span><span class="p">(</span><span class="n">NLD_prov</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">tm_borders</span><span class="p">(</span><span class="n">lwd</span><span class="o">=</span><span class="m">2</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">.5</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">tm_text</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span>
-          <span class="n">size</span> <span class="o">=</span> <span class="m">.6</span><span class="p">,</span>
-          <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.9</span><span class="p">,</span>
-          <span class="n">shadow</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span>
-          <span class="n">bg.color</span><span class="o">=</span><span class="s">&quot;white&quot;</span><span class="p">,</span>
-          <span class="n">bg.alpha</span><span class="o">=</span><span class="m">.25</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">tm_layout</span><span class="p">(</span><span class="n">asp</span> <span class="o">=</span> <span class="m">0</span><span class="p">)</span>
+tm_shape<span class="p">(</span>NLD_prov<span class="p">)</span> <span class="o">+</span>
+  tm_borders<span class="p">(</span>lwd<span class="o">=</span><span class="m">2</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">.5</span><span class="p">)</span> <span class="o">+</span>
+  tm_text<span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span>
+          size <span class="o">=</span> <span class="m">.6</span><span class="p">,</span>
+          alpha <span class="o">=</span> <span class="m">0.9</span><span class="p">,</span>
+          shadow<span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span>
+          bg.color<span class="o">=</span><span class="s">&quot;white&quot;</span><span class="p">,</span>
+          bg.alpha<span class="o">=</span><span class="m">.25</span><span class="p">)</span> <span class="o">+</span>
+  tm_layout<span class="p">(</span>asp <span class="o">=</span> <span class="m">0</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image1" src="p07-07-spatial-data_files/figure-html/unnamed-chunk-6-1.png" /></p>
 </div>
 <div class="section" id="facet-theo-province">
 <h3>4.3.2. Facet theo Province<a class="headerlink" href="#facet-theo-province" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">tm_shape</span><span class="p">(</span><span class="n">NLD_muni</span><span class="p">,</span><span class="n">projection</span><span class="o">=</span><span class="s">&quot;rd&quot;</span><span class="p">)</span> <span class="o">+</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>tm_shape<span class="p">(</span>NLD_muni<span class="p">,</span>projection<span class="o">=</span><span class="s">&quot;rd&quot;</span><span class="p">)</span> <span class="o">+</span>
   <span class="c1">#fill by population per km2</span>
-  <span class="nf">tm_fill</span><span class="p">(</span><span class="s">&quot;population&quot;</span><span class="p">,</span>
-          <span class="n">convert2density</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span>
-          <span class="n">style</span><span class="o">=</span><span class="s">&quot;kmeans&quot;</span><span class="p">,</span>
-          <span class="n">palette</span> <span class="o">=</span> <span class="s">&quot;Greens&quot;</span><span class="p">,</span>
-          <span class="n">title</span><span class="o">=</span><span class="s">&quot;Population per km2&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">tm_borders</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span> <span class="m">.5</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">tm_facets</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s">&quot;province&quot;</span><span class="p">,</span>
-            <span class="n">free.coords</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span>
-            <span class="n">drop.shapes</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
+  tm_fill<span class="p">(</span><span class="s">&quot;population&quot;</span><span class="p">,</span>
+          convert2density<span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span>
+          style<span class="o">=</span><span class="s">&quot;kmeans&quot;</span><span class="p">,</span>
+          palette <span class="o">=</span> <span class="s">&quot;Greens&quot;</span><span class="p">,</span>
+          title<span class="o">=</span><span class="s">&quot;Population per km2&quot;</span><span class="p">)</span> <span class="o">+</span>
+  tm_borders<span class="p">(</span>alpha<span class="o">=</span> <span class="m">.5</span><span class="p">)</span> <span class="o">+</span>
+  tm_facets<span class="p">(</span>by<span class="o">=</span><span class="s">&quot;province&quot;</span><span class="p">,</span>
+            free.coords<span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span>
+            drop.shapes<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image2" src="p07-07-spatial-data_files/figure-html/unnamed-chunk-7-1.png" /></p>
@@ -465,28 +466,28 @@ bản đồ.</p>
 convert dữ liệu spatial về dạng data.frame, tuy nhiên version mới của
 <code class="docutils literal notranslate"><span class="pre">ggplot2</span></code> đã cập nhật thêm thuộc tính <strong>geom_sf</strong> - có thể vẽ trực
 tiếp trên <code class="docutils literal notranslate"><span class="pre">sf</span></code> objects mà không cần convert về data.frame.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">scales</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">RColorBrewer</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>scales<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>RColorBrewer<span class="p">)</span>
 
-<span class="n">pal</span> <span class="o">&lt;-</span> <span class="nf">brewer.pal</span><span class="p">(</span><span class="m">4</span><span class="p">,</span> <span class="s">&quot;YlGn&quot;</span><span class="p">)</span>
+pal <span class="o">&lt;-</span> brewer.pal<span class="p">(</span><span class="m">4</span><span class="p">,</span> <span class="s">&quot;YlGn&quot;</span><span class="p">)</span>
 
-<span class="n">NLD_muni_sub</span> <span class="o">&lt;-</span> <span class="n">NLD_muni</span> <span class="o">%&gt;%</span>
-  <span class="nf">filter</span><span class="p">(</span><span class="n">province</span> <span class="o">==</span><span class="s">&quot;Groningen&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">group_by</span><span class="p">(</span><span class="n">province</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">summarise</span><span class="p">(</span><span class="n">population</span> <span class="o">=</span> <span class="nf">sum</span><span class="p">(</span><span class="n">population</span><span class="p">),</span> <span class="n">na.rm</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+NLD_muni_sub <span class="o">&lt;-</span> NLD_muni <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>province <span class="o">==</span><span class="s">&quot;Groningen&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  group_by<span class="p">(</span>province<span class="p">)</span> <span class="o">%&gt;%</span>
+  summarise<span class="p">(</span>population <span class="o">=</span> <span class="kp">sum</span><span class="p">(</span>population<span class="p">),</span> na.rm <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
 
-<span class="n">base_plot</span> <span class="o">&lt;-</span> <span class="nf">ggplot</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">geom_sf</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">NLD_muni</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="n">population</span><span class="p">),</span>
-          <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;light grey&quot;</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">coord_sf</span><span class="p">(</span><span class="n">datum</span> <span class="o">=</span> <span class="kc">NA</span><span class="p">)</span> <span class="o">+</span> <span class="c1"># removes graticules +</span>
-    <span class="nf">scale_fill_gradientn</span><span class="p">(</span><span class="n">colors</span> <span class="o">=</span> <span class="n">pal</span><span class="p">,</span> <span class="n">trans</span> <span class="o">=</span> <span class="s">&quot;log10&quot;</span><span class="p">,</span>
-                         <span class="n">name</span> <span class="o">=</span><span class="s">&quot;population per km2&quot;</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">comma</span><span class="p">)</span>
+base_plot <span class="o">&lt;-</span> ggplot<span class="p">()</span> <span class="o">+</span>
+  geom_sf<span class="p">(</span>data <span class="o">=</span> NLD_muni<span class="p">,</span> aes<span class="p">(</span>fill <span class="o">=</span> population<span class="p">),</span>
+          color <span class="o">=</span> <span class="s">&quot;light grey&quot;</span><span class="p">)</span> <span class="o">+</span>
+    coord_sf<span class="p">(</span>datum <span class="o">=</span> <span class="kc">NA</span><span class="p">)</span> <span class="o">+</span> <span class="c1"># removes graticules +</span>
+    scale_fill_gradientn<span class="p">(</span>colors <span class="o">=</span> pal<span class="p">,</span> trans <span class="o">=</span> <span class="s">&quot;log10&quot;</span><span class="p">,</span>
+                         name <span class="o">=</span><span class="s">&quot;population per km2&quot;</span><span class="p">,</span> labels <span class="o">=</span> comma<span class="p">)</span>
 
-<span class="n">base_plot</span> <span class="o">+</span>
-  <span class="nf">geom_sf</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">NLD_muni_sub</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="kc">NA</span> <span class="p">),</span>
-          <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;grey60&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span><span class="n">lwd</span> <span class="o">=</span> <span class="m">0.8</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme_bw</span><span class="p">()</span>
+base_plot <span class="o">+</span>
+  geom_sf<span class="p">(</span>data <span class="o">=</span> NLD_muni_sub<span class="p">,</span> aes<span class="p">(</span>fill <span class="o">=</span> <span class="kc">NA</span> <span class="p">),</span>
+          color <span class="o">=</span> <span class="s">&quot;grey60&quot;</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">0</span><span class="p">,</span>lwd <span class="o">=</span> <span class="m">0.8</span><span class="p">)</span> <span class="o">+</span>
+  theme_bw<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image3" src="p07-07-spatial-data_files/figure-html/unnamed-chunk-8-1.png" /></p>

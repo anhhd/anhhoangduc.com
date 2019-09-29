@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul class="current">
@@ -462,14 +463,14 @@ họ ưu tiên khi chọn mua ô tô (bao gồm giá, tính an toàn, tiết ki�
 liệu, dịch vụ hậu mãi…). Survey được thiết kế dưới dạng thang đo Likert
 với 5 lựa chọn (5-point Likert scale) từ “Very low” (tương ứng với 1)
 đến “Very high” (tương ứng với 5)</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">psych</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">GPArotation</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>psych<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>GPArotation<span class="p">)</span>
 
-<span class="nf">load</span><span class="p">(</span><span class="s">&quot;data/efa-df.Rda&quot;</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">&lt;-</span> <span class="n">efa.df</span>
-<span class="nf">rm</span><span class="p">(</span><span class="n">efa.df</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+<span class="kp">load</span><span class="p">(</span><span class="s">&quot;data/efa-df.Rda&quot;</span><span class="p">)</span>
+df <span class="o">&lt;-</span> efa.df
+<span class="kp">rm</span><span class="p">(</span>efa.df<span class="p">)</span>
+df <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   Price Safety Exterior_Looks Space_comfort Technology After_Sales_Service</span>
@@ -499,7 +500,7 @@ với 5 lựa chọn (5-point Likert scale) từ “Very low” (tương ứng v
 <li>Bước 1: Tập dữ liệu có 90 quan sát, đủ lớn cho phân tích. Kiểm tra
 KMO test = 0.61 chỉ ở mức dưới trung bình nhưng đủ cho phân tích</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">KMO</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>KMO<span class="p">(</span>df<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Kaiser-Meyer-Olkin factor adequacy</span>
@@ -522,7 +523,7 @@ KMO test = 0.61 chỉ ở mức dưới trung bình nhưng đủ cho phân tích
 <li>Bước 2: Lựa chọn số factor bằng cách visualise <strong>eigen value</strong> trong
 <strong>scree plot</strong></li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">parallel</span> <span class="o">&lt;-</span> <span class="nf">fa.parallel</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">fm</span> <span class="o">=</span> <span class="s">&#39;minres&#39;</span><span class="p">,</span> <span class="n">fa</span> <span class="o">=</span> <span class="s">&#39;fa&#39;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>parallel <span class="o">&lt;-</span> fa.parallel<span class="p">(</span>df<span class="p">,</span> fm <span class="o">=</span> <span class="s">&#39;minres&#39;</span><span class="p">,</span> fa <span class="o">=</span> <span class="s">&#39;fa&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image6" src="p04-06-factor-analysis_files/figure-html/unnamed-chunk-4-1.png" /></p>
@@ -533,8 +534,8 @@ KMO test = 0.61 chỉ ở mức dưới trung bình nhưng đủ cho phân tích
 <ul class="simple">
 <li>Bước 3: Thực hiện factor analysis với 3 factors</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">three.fa</span> <span class="o">&lt;-</span> <span class="nf">fa</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">nfactors</span> <span class="o">=</span> <span class="m">3</span><span class="p">,</span> <span class="n">rotate</span> <span class="o">=</span> <span class="s">&quot;oblimin&quot;</span><span class="p">,</span> <span class="n">fm</span><span class="o">=</span><span class="s">&quot;minres&quot;</span><span class="p">)</span>
-<span class="nf">print</span><span class="p">(</span><span class="n">three.fa</span><span class="o">$</span><span class="n">loadings</span><span class="p">,</span> <span class="n">cutoff</span> <span class="o">=</span> <span class="m">0.3</span><span class="p">)</span> <span class="c1"># chỉ hiển thị các giá trị loading &gt; 0.3</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>three.fa <span class="o">&lt;-</span> fa<span class="p">(</span>df<span class="p">,</span>nfactors <span class="o">=</span> <span class="m">3</span><span class="p">,</span> rotate <span class="o">=</span> <span class="s">&quot;oblimin&quot;</span><span class="p">,</span> fm<span class="o">=</span><span class="s">&quot;minres&quot;</span><span class="p">)</span>
+<span class="kp">print</span><span class="p">(</span>three.fa<span class="o">$</span>loadings<span class="p">,</span> cutoff <span class="o">=</span> <span class="m">0.3</span><span class="p">)</span> <span class="c1"># chỉ hiển thị các giá trị loading &gt; 0.3</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -565,8 +566,8 @@ KMO test = 0.61 chỉ ở mức dưới trung bình nhưng đủ cho phân tích
 quan cùng lúc với cả 2 factor mới (double loading)</p>
 <p>Thực hiện lại factor analysis với 4 factors =&gt; Ta thấy không còn hiện
 tượng double loading nữa. Như vậy ta sử dụng model với 4 factor</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">four.fa</span> <span class="o">&lt;-</span> <span class="nf">fa</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">nfactors</span> <span class="o">=</span> <span class="m">4</span><span class="p">,</span> <span class="n">rotate</span> <span class="o">=</span> <span class="s">&quot;oblimin&quot;</span><span class="p">,</span> <span class="n">fm</span><span class="o">=</span><span class="s">&quot;minres&quot;</span><span class="p">)</span>
-<span class="nf">print</span><span class="p">(</span><span class="n">four.fa</span><span class="o">$</span><span class="n">loadings</span><span class="p">,</span> <span class="n">cutoff</span> <span class="o">=</span> <span class="m">0.3</span><span class="p">)</span> <span class="c1"># chỉ hiện thị các giá trị loading &gt; 0.3</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>four.fa <span class="o">&lt;-</span> fa<span class="p">(</span>df<span class="p">,</span>nfactors <span class="o">=</span> <span class="m">4</span><span class="p">,</span> rotate <span class="o">=</span> <span class="s">&quot;oblimin&quot;</span><span class="p">,</span> fm<span class="o">=</span><span class="s">&quot;minres&quot;</span><span class="p">)</span>
+<span class="kp">print</span><span class="p">(</span>four.fa<span class="o">$</span>loadings<span class="p">,</span> cutoff <span class="o">=</span> <span class="m">0.3</span><span class="p">)</span> <span class="c1"># chỉ hiện thị các giá trị loading &gt; 0.3</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -601,7 +602,7 @@ bảng Reliability if an item is dropped ta thấy nếu loại bỏ các biến
 Safety, Exterior_Looks, Testimonials có thể cải thiện
 (<a href="#id3"><span class="problematic" id="id4">:raw-latex:`\alpha`</span></a>) tuy nhiên rất ít =&gt; Ta chọn giữ lại tất cả các
 biến này để không bị mất thông tin</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">alpha</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">check.keys</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>alpha<span class="p">(</span>df<span class="p">,</span>check.keys<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>

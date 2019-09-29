@@ -1,0 +1,1851 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="vi" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="vi" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>6. Xây dựng mô hình với H2O &mdash; Tài liệu Phân tích dữ liệu với R 2019</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'2019',
+              LANGUAGE:'vi',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript" src="_static/copybutton.js"></script>
+        <script type="text/javascript" src="_static/translations.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Tìm Kiếm" href="search.html" />
+    <link rel="next" title="7. Support Vector Machine" href="p03-08-svm.html" />
+    <link rel="prev" title="5. Bagging, RandomForest và Boosting" href="p03-05-bagging-boosting.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Phân tích dữ liệu với R
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Giới thiệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p01-01-gioi-thieu.html">Khoa học dữ liệu và nghề phân tích dữ liệu</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Phân tích khám phá dữ liệu</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p02-03-bien-doi-du-lieu-dplyr.html">1. Ngữ pháp của biến đổi dữ liệu với DPLYR</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-04-phan-ra-va-xoay-chieu-du-lieu.html">2. Phân rã và xoay chiều dữ liệu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-05-cac-chi-so-thong-ke.html">3. Các chỉ số thống kê mô tả cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-06-lap-trinh-ham.html">4. Lập trình hàm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-07-lap-trinh-ham-voi-purrr.html">5. Lập trình chức năng hàm với purrr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-08-bien-doi-du-lieu-text.html">6. Biến đổi dữ liệu text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-11-quan-ly-nhieu-mo-hinh.html">7. Quản lý kết quả phân tích từ nhiều mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-15-thong-ke-co-ban.html">8. Xác suất và phân phối thống kê cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-16-power-analysis.html">9. Power analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-20-sampling-methods.html">10. Phương pháp ước lượng lấy mẫu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-50-datatable.html">11. Biến đổi dữ liệu với <code class="docutils literal notranslate"><span class="pre">data.table</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-60-thu-thap-du-lieu-tu-website.html">12. Thu thập dữ liệu từ website</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-99-meo-trong-r.html">13. Các mẹo trong R</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Supervised learning</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p03-01-nguyen-ly-du-bao.html">1. Các nguyên lý dự báo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-02-mo-hinh-ols.html">2. Mô hình OLS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">6. Xây dựng mô hình với H2O</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gioi-thieu">6.1. Giới thiệu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cai-dat-va-khoi-dong">6.2. Cài đặt và khởi động</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#thuc-hanh-voi-r">6.3. Thực hành với R</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lay-du-lieu">6.3.1. Lấy dữ liệu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kiem-tra-du-lieu">6.3.2. Kiểm tra dữ liệu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#khoi-dong-h2o">6.3.3. Khởi động H2O</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dua-du-lieu-vao-h2o">6.3.4. Đưa dữ liệu vào H2O</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#chia-du-lieu-train-test">6.3.5. Chia dữ liệu train/test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#xay-dung-mo-hinh-tren-tap-train">6.3.6. Xây dựng mô hình trên tập train</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#du-bao-tren-tap-test">6.3.7. Dự báo trên tập test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#danh-gia-chat-luong-du-bao-tren-test">6.3.8. Đánh giá chất lượng dự báo trên test</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tuning">6.3.9. Tuning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#luu-va-load-mo-hinh">6.3.10. Lưu và load mô hình</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tai-lieu-tham-khao">6.4. Tài liệu tham khảo</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Unsupervised learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p04-01-unsupervised-learning.html">1. Unsupervised learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-02-kmeans.html">2. k-means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-03-hierarchical-clustering.html">3. Hierachical clustering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-04-basket-analysis.html">4. Phân tích giỏ hàng</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-05-pca.html">5. Principal component analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p04-06-factor-analysis.html">6. Phân tích nhân tố ẩn (factor analysis)</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Chuỗi thời gian</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p05-01-chuoi-thoi-gian.html">1. Giới thiệu về chuỗi thời gian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-02-arima.html">2. Mô hình ARIMA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html">3. Phân tích chuỗi thời gian với tidyquant và timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-06-du-bao-ts-voi-prophet.html">4. Dự báo chuỗi thời gian với prophet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-07-du-bao-ts-voi-timetk.html">5. Dự báo chuỗi thời gian với timetk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p05-08-abnomaly-detection.html">6. Abnomaly detection trong times series</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Ngôn ngữ tự nghiên</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p06-01-nlp-co-ban.html">1. Xử lý ngôn ngữ tự nhiên cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-04-text-classification.html">2. Phân loại text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-07-nlp-api.html">3. Sử dụng API từ các dịch vụ đám mây</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p06-10-ocr-tesseract.html">4. OCR với <code class="docutils literal notranslate"><span class="pre">tesseract</span></code></a></li>
+</ul>
+<p class="caption"><span class="caption-text">Các phương pháp khác</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p07-01-survival-analysis.html">1. Survival analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-02-causal-impact.html">2. Causal Impact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-03-collaborative-filtering.html">3. Collaborative Filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-07-spatial-data.html">4. Spatial data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p07-10-shiny.html">5. Shiny apps</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Deep Learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p09-01-gioi-thieu-deep-learning.html">1. Giới thiệu cơ bản về Deep Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-02-co-ban-kien-thuc-toan.html">2. Kiến thức cơ bản toán học cho deep learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-03-mo-hinh-deep-learning-co-ban.html">3. Mô hình deep learning cơ bản</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p09-04-convolution-neural-network.html">4. Convolution neural networks</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Cloud Computing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p10-01-cai-dat-rstudio-server-tren-amazon.html">1. Cài đặt server RStudio trên Amazon</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-03-web-service-azure.html">2. Xây dựng web service với Azure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p10-09-apis-voi-plumber.html">3. API với Plumber</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Kiến thức bổ trợ</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p11-01-git.html">1. Sử dụng GIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-02-cmd.html">2. CMD và Bash</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-03-docker.html">3. Sử dụng docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-04-apis.html">4. API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-05-html-css.html">5. Cơ bản về HTML và CSS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p11-09-other.html">6. Các tricks khác</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Case studies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p13-01-casestudy-truc-quan-hoa.html">1. Trực quan hóa dữ liệu</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Phân tích dữ liệu với R</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>6. Xây dựng mô hình với H2O</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/p03-07-xay-dung-mo-hinh-voi-h2o.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast,
+.nboutput.nblast {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast + .nbinput {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="xay-dung-mo-hinh-voi-h2o">
+<h1>6. Xây dựng mô hình với H2O<a class="headerlink" href="#xay-dung-mo-hinh-voi-h2o" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="gioi-thieu">
+<h2>6.1. Giới thiệu<a class="headerlink" href="#gioi-thieu" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>H2O là một phần mềm dựa trên nền tảng của Java dùng để mô hình hóa dữ
+liệu (data modeling) và tính toán nói chung (general computing).</li>
+<li>H2O là một platform mã nguồn mở hàng đầu thế giới hiện nay về Machine
+Learning và AI.</li>
+<li>Hỗ trợ nhiều phần mềm khác nhau như: R, Python, Azure, Spark…</li>
+</ul>
+</div>
+<div class="section" id="cai-dat-va-khoi-dong">
+<h2>6.2. Cài đặt và khởi động<a class="headerlink" href="#cai-dat-va-khoi-dong" title="Permalink to this headline">¶</a></h2>
+<p>Để cài đặt và khởi động H2O, chúng ta cần thực hiện các bước sau:</p>
+<ul class="simple">
+<li>Bước 1: Cài đặt Java</li>
+<li>Bước 2: Cài đặt R package <code class="docutils literal notranslate"><span class="pre">h2o</span></code></li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>install.packages<span class="p">(</span><span class="s">&quot;h2o&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>Bước 3: Khởi động H2O từ R - sử dụng câu lệnh <code class="docutils literal notranslate"><span class="pre">h2o.init()</span></code></li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>h2o<span class="p">)</span>
+h2o.init<span class="p">(</span>ip <span class="o">=</span> <span class="s">&quot;localhost&quot;</span><span class="p">,</span>
+         port <span class="o">=</span> <span class="m">54321</span><span class="p">,</span>
+         nthreads<span class="o">=</span> <span class="m">-1</span><span class="p">,</span>
+         max_mem_size <span class="o">=</span> <span class="s">&quot;4g&quot;</span><span class="p">)</span> <span class="c1"># Đặt mức RAM tối đa</span>
+</pre></div>
+</div>
+<p><strong>Lưu ý</strong>: Trong trường hợp chúng ta muốn tắt H2O trên R, chúng ta có
+thể sử dụng câu lệnh sau:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>h2o.shutdown<span class="p">(</span>prompt <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="thuc-hanh-voi-r">
+<h2>6.3. Thực hành với R<a class="headerlink" href="#thuc-hanh-voi-r" title="Permalink to this headline">¶</a></h2>
+<p>Để thực hành xây dựng mô hình dự báo với H2O, chúng ta sẽ sử dụng dữ
+liệu có sẵn trong <code class="docutils literal notranslate"><span class="pre">R</span></code> - <code class="docutils literal notranslate"><span class="pre">GermanCredit</span></code> trong package <strong>caret</strong>.</p>
+<p>Đây là dữ liệu ghi nhận về lịch sử vay của khách hàng, với các 61 biến
+đầu vào cùng với biến đầu ra <code class="docutils literal notranslate"><span class="pre">Class</span></code> ghi nhận thực tế là các khoản vay
+đó có phải là khoản nợ xấu hay không. Chúng ta sẽ dự báo khoản vay nào
+không có nợ xấu.</p>
+<div class="section" id="lay-du-lieu">
+<h3>6.3.1. Lấy dữ liệu<a class="headerlink" href="#lay-du-lieu" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bước 1: Lấy dữ liệu</span>
+<span class="kn">library</span><span class="p">(</span>caret<span class="p">)</span>
+data<span class="p">(</span><span class="s">&quot;GermanCredit&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="kiem-tra-du-lieu">
+<h3>6.3.2. Kiểm tra dữ liệu<a class="headerlink" href="#kiem-tra-du-lieu" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bước 2: Kiểm tra dữ liệu</span>
+<span class="c1"># Kiểm tra định dạng các biến trong tập dữ liệu</span>
+<span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+GermanCredit <span class="o">%&gt;%</span> str
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## &#39;data.frame&#39;:    1000 obs. of  62 variables:</span>
+<span class="c1">##  $ Duration                              : int  6 48 12 42 24 36 24 36 12 30 ...</span>
+<span class="c1">##  $ Amount                                : int  1169 5951 2096 7882 4870 9055 2835 6948 3059 5234 ...</span>
+<span class="c1">##  $ InstallmentRatePercentage             : int  4 2 2 2 3 2 3 2 2 4 ...</span>
+<span class="c1">##  $ ResidenceDuration                     : int  4 2 3 4 4 4 4 2 4 2 ...</span>
+<span class="c1">##  $ Age                                   : int  67 22 49 45 53 35 53 35 61 28 ...</span>
+<span class="c1">##  $ NumberExistingCredits                 : int  2 1 1 1 2 1 1 1 1 2 ...</span>
+<span class="c1">##  $ NumberPeopleMaintenance               : int  1 1 2 2 2 2 1 1 1 1 ...</span>
+<span class="c1">##  $ Telephone                             : num  0 1 1 1 1 0 1 0 1 1 ...</span>
+<span class="c1">##  $ ForeignWorker                         : num  1 1 1 1 1 1 1 1 1 1 ...</span>
+<span class="c1">##  $ Class                                 : Factor w/ 2 levels &quot;Bad&quot;,&quot;Good&quot;: 2 1 2 2 1 2 2 2 2 1 ...</span>
+<span class="c1">##  $ CheckingAccountStatus.lt.0            : num  1 0 0 1 1 0 0 0 0 0 ...</span>
+<span class="c1">##  $ CheckingAccountStatus.0.to.200        : num  0 1 0 0 0 0 0 1 0 1 ...</span>
+<span class="c1">##  $ CheckingAccountStatus.gt.200          : num  0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ CheckingAccountStatus.none            : num  0 0 1 0 0 1 1 0 1 0 ...</span>
+<span class="c1">##  $ CreditHistory.NoCredit.AllPaid        : num  0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ CreditHistory.ThisBank.AllPaid        : num  0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ CreditHistory.PaidDuly                : num  0 1 0 1 0 1 1 1 1 0 ...</span>
+<span class="c1">##  $ CreditHistory.Delay                   : num  0 0 0 0 1 0 0 0 0 0 ...</span>
+<span class="c1">##  $ CreditHistory.Critical                : num  1 0 1 0 0 0 0 0 0 1 ...</span>
+<span class="c1">##  $ Purpose.NewCar                        : num  0 0 0 0 1 0 0 0 0 1 ...</span>
+<span class="c1">##  $ Purpose.UsedCar                       : num  0 0 0 0 0 0 0 1 0 0 ...</span>
+<span class="c1">##  $ Purpose.Furniture.Equipment           : num  0 0 0 1 0 0 1 0 0 0 ...</span>
+<span class="c1">##  $ Purpose.Radio.Television              : num  1 1 0 0 0 0 0 0 1 0 ...</span>
+<span class="c1">##  $ Purpose.DomesticAppliance             : num  0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ Purpose.Repairs                       : num  0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ Purpose.Education                     : num  0 0 1 0 0 1 0 0 0 0 ...</span>
+<span class="c1">##  $ Purpose.Vacation                      : num  0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ Purpose.Retraining                    : num  0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ Purpose.Business                      : num  0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ Purpose.Other                         : num  0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ SavingsAccountBonds.lt.100            : num  0 1 1 1 1 0 0 1 0 1 ...</span>
+<span class="c1">##  $ SavingsAccountBonds.100.to.500        : num  0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ SavingsAccountBonds.500.to.1000       : num  0 0 0 0 0 0 1 0 0 0 ...</span>
+<span class="c1">##  $ SavingsAccountBonds.gt.1000           : num  0 0 0 0 0 0 0 0 1 0 ...</span>
+<span class="c1">##  $ SavingsAccountBonds.Unknown           : num  1 0 0 0 0 1 0 0 0 0 ...</span>
+<span class="c1">##  $ EmploymentDuration.lt.1               : num  0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ EmploymentDuration.1.to.4             : num  0 1 0 0 1 1 0 1 0 0 ...</span>
+<span class="c1">##  $ EmploymentDuration.4.to.7             : num  0 0 1 1 0 0 0 0 1 0 ...</span>
+<span class="c1">##  $ EmploymentDuration.gt.7               : num  1 0 0 0 0 0 1 0 0 0 ...</span>
+<span class="c1">##  $ EmploymentDuration.Unemployed         : num  0 0 0 0 0 0 0 0 0 1 ...</span>
+<span class="c1">##  $ Personal.Male.Divorced.Seperated      : num  0 0 0 0 0 0 0 0 1 0 ...</span>
+<span class="c1">##  $ Personal.Female.NotSingle             : num  0 1 0 0 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ Personal.Male.Single                  : num  1 0 1 1 1 1 1 1 0 0 ...</span>
+<span class="c1">##  $ Personal.Male.Married.Widowed         : num  0 0 0 0 0 0 0 0 0 1 ...</span>
+<span class="c1">##  $ Personal.Female.Single                : num  0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ OtherDebtorsGuarantors.None           : num  1 1 1 0 1 1 1 1 1 1 ...</span>
+<span class="c1">##  $ OtherDebtorsGuarantors.CoApplicant    : num  0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ OtherDebtorsGuarantors.Guarantor      : num  0 0 0 1 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ Property.RealEstate                   : num  1 1 1 0 0 0 0 0 1 0 ...</span>
+<span class="c1">##  $ Property.Insurance                    : num  0 0 0 1 0 0 1 0 0 0 ...</span>
+<span class="c1">##  $ Property.CarOther                     : num  0 0 0 0 0 0 0 1 0 1 ...</span>
+<span class="c1">##  $ Property.Unknown                      : num  0 0 0 0 1 1 0 0 0 0 ...</span>
+<span class="c1">##  $ OtherInstallmentPlans.Bank            : num  0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ OtherInstallmentPlans.Stores          : num  0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ OtherInstallmentPlans.None            : num  1 1 1 1 1 1 1 1 1 1 ...</span>
+<span class="c1">##  $ Housing.Rent                          : num  0 0 0 0 0 0 0 1 0 0 ...</span>
+<span class="c1">##  $ Housing.Own                           : num  1 1 1 0 0 0 1 0 1 1 ...</span>
+<span class="c1">##  $ Housing.ForFree                       : num  0 0 0 1 1 1 0 0 0 0 ...</span>
+<span class="c1">##  $ Job.UnemployedUnskilled               : num  0 0 0 0 0 0 0 0 0 0 ...</span>
+<span class="c1">##  $ Job.UnskilledResident                 : num  0 0 1 0 0 1 0 0 1 0 ...</span>
+<span class="c1">##  $ Job.SkilledEmployee                   : num  1 1 0 1 1 0 1 0 0 0 ...</span>
+<span class="c1">##  $ Job.Management.SelfEmp.HighlyQualified: num  0 0 0 0 0 0 0 1 0 1 ...</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kiểm tra biến đầu ra (biến muốn dự báo)</span>
+GermanCredit<span class="o">$</span>Class <span class="o">%&gt;%</span>
+  table <span class="o">%&gt;%</span>
+  <span class="kp">prop.table</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## .</span>
+<span class="c1">##  Bad Good</span>
+<span class="c1">##  0.3  0.7</span>
+</pre></div>
+</div>
+<p>Như vậy, chúng ta thấy trong tập dữ liệu này:</p>
+<ul class="simple">
+<li>70% là các khoản vay không có nợ xấu</li>
+<li>30% là các khoản vay có nợ xấu</li>
+</ul>
+</div>
+<div class="section" id="khoi-dong-h2o">
+<h3>6.3.3. Khởi động H2O<a class="headerlink" href="#khoi-dong-h2o" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bước 3: Khởi động H2O</span>
+<span class="kn">library</span><span class="p">(</span>h2o<span class="p">)</span>
+h2o.init<span class="p">(</span>ip <span class="o">=</span> <span class="s">&quot;localhost&quot;</span><span class="p">,</span>
+         port <span class="o">=</span> <span class="m">54321</span><span class="p">,</span>
+         nthreads<span class="o">=</span> <span class="m">-1</span><span class="p">,</span>
+         max_mem_size <span class="o">=</span> <span class="s">&quot;4g&quot;</span><span class="p">)</span> <span class="c1"># Đặt mức RAM tối đa</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+<span class="c1">## H2O is not running yet, starting it now...</span>
+<span class="c1">##</span>
+<span class="c1">## Note:  In case of errors look at the following log files:</span>
+<span class="c1">##     C:\Users\Admin\AppData\Local\Temp\RtmpWgKGh5/h2o_Admin_started_from_r.out</span>
+<span class="c1">##     C:\Users\Admin\AppData\Local\Temp\RtmpWgKGh5/h2o_Admin_started_from_r.err</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+<span class="c1">## Starting H2O JVM and connecting: . Connection successful!</span>
+<span class="c1">##</span>
+<span class="c1">## R is connected to the H2O cluster:</span>
+<span class="c1">##     H2O cluster uptime:         13 seconds 619 milliseconds</span>
+<span class="c1">##     H2O cluster timezone:       Asia/Bangkok</span>
+<span class="c1">##     H2O data parsing timezone:  UTC</span>
+<span class="c1">##     H2O cluster version:        3.20.0.2</span>
+<span class="c1">##     H2O cluster version age:    1 year, 3 months and 14 days !!!</span>
+<span class="c1">##     H2O cluster name:           H2O_started_from_R_Admin_lth831</span>
+<span class="c1">##     H2O cluster total nodes:    1</span>
+<span class="c1">##     H2O cluster total memory:   3.56 GB</span>
+<span class="c1">##     H2O cluster total cores:    4</span>
+<span class="c1">##     H2O cluster allowed cores:  4</span>
+<span class="c1">##     H2O cluster healthy:        TRUE</span>
+<span class="c1">##     H2O Connection ip:          localhost</span>
+<span class="c1">##     H2O Connection port:        54321</span>
+<span class="c1">##     H2O Connection proxy:       NA</span>
+<span class="c1">##     H2O Internal Security:      FALSE</span>
+<span class="c1">##     H2O API Extensions:         Algos, AutoML, Core V3, Core V4</span>
+<span class="c1">##     R Version:                  R version 3.4.0 (2017-04-21)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="dua-du-lieu-vao-h2o">
+<h3>6.3.4. Đưa dữ liệu vào H2O<a class="headerlink" href="#dua-du-lieu-vao-h2o" title="Permalink to this headline">¶</a></h3>
+<p>Để đưa dữ liệu vào H2O, chúng ta sử dụng câu lệnh: <code class="docutils literal notranslate"><span class="pre">as.h2o()</span></code>.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bước 4: Đưa dữ liệu vào h2o</span>
+data_h2o <span class="o">&lt;-</span> as.h2o<span class="p">(</span>GermanCredit<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+  <span class="o">|</span>
+  <span class="o">|</span>                                                                 <span class="o">|</span>   <span class="mi">0</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|=================================================================|</span> <span class="mi">100</span><span class="o">%</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="chia-du-lieu-train-test">
+<h3>6.3.5. Chia dữ liệu train/test<a class="headerlink" href="#chia-du-lieu-train-test" title="Permalink to this headline">¶</a></h3>
+<p>Chia tập dữ liệu thành 2 tập dữ liệu train và test (tỷ lệ 80-20)</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bước 5: Chia tập dữ liệu thành: train/test (tỷ lệ 80/20)</span>
+<span class="kp">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
+data_split <span class="o">=</span> h2o.splitFrame<span class="p">(</span>data <span class="o">=</span> data_h2o<span class="p">,</span>
+                            ratios <span class="o">=</span> <span class="m">0.8</span><span class="p">)</span>
+train <span class="o">=</span> data_split<span class="p">[[</span><span class="m">1</span><span class="p">]]</span>
+test <span class="o">=</span> data_split<span class="p">[[</span><span class="m">2</span><span class="p">]]</span>
+
+<span class="c1"># Tập dữ liệu train (data frame)</span>
+train_df <span class="o">&lt;-</span> <span class="kp">as.data.frame</span><span class="p">(</span>train<span class="p">)</span>
+train_df<span class="o">$</span>Class <span class="o">%&gt;%</span> <span class="kp">table</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## .</span>
+<span class="c1">##  Bad Good</span>
+<span class="c1">##  235  551</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tập dữ liệu test (data frame)</span>
+test_df <span class="o">&lt;-</span> <span class="kp">as.data.frame</span><span class="p">(</span>test<span class="p">)</span>
+test_df<span class="o">$</span>Class <span class="o">%&gt;%</span> <span class="kp">table</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## .</span>
+<span class="c1">##  Bad Good</span>
+<span class="c1">##   65  149</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="xay-dung-mo-hinh-tren-tap-train">
+<h3>6.3.6. Xây dựng mô hình trên tập train<a class="headerlink" href="#xay-dung-mo-hinh-tren-tap-train" title="Permalink to this headline">¶</a></h3>
+<p>Để xây dựng mô hình dự báo với H2O, chúng ta có thể sử dụng những câu
+lệnh khác nhau tương ứng với từng phương pháp/thuật toán như: Logistic
+regression, Random Forests, Boosting…</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">h2o.glm()</span></code> - Logistic regression</li>
+<li><code class="docutils literal notranslate"><span class="pre">h2o.randomForest()</span></code> - Random Forests</li>
+<li><code class="docutils literal notranslate"><span class="pre">h2o.gbm()</span></code> - Boosting</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bước 6: Xây dựng mô hình trên train</span>
+start_time <span class="o">&lt;-</span> <span class="kp">Sys.time</span><span class="p">()</span>
+<span class="kp">set.seed</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+gbm_model1 <span class="o">&lt;-</span> h2o.gbm<span class="p">(</span>training_frame <span class="o">=</span> train<span class="p">,</span> <span class="c1"># Tập dữ liệu train</span>
+                      x <span class="o">=</span> <span class="kp">setdiff</span><span class="p">(</span><span class="kp">names</span><span class="p">(</span>GermanCredit<span class="p">),</span> <span class="s">&quot;Class&quot;</span><span class="p">),</span>  <span class="c1"># Các biến đầu vào</span>
+                      y <span class="o">=</span> <span class="s">&quot;Class&quot;</span> <span class="c1"># Biến đầu ra (biến muốn dự báo)</span>
+                      <span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+  <span class="o">|</span>
+  <span class="o">|</span>                                                                 <span class="o">|</span>   <span class="mi">0</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|=============</span>                                                    <span class="o">|</span>  <span class="mi">20</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|===========================================</span>                      <span class="o">|</span>  <span class="mi">66</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|=================================================================|</span> <span class="mi">100</span><span class="o">%</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>end_time <span class="o">&lt;-</span> <span class="kp">Sys.time</span><span class="p">()</span>
+time <span class="o">&lt;-</span> end_time <span class="o">-</span> start_time
+time
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Time difference of 4.30056 secs</span>
+</pre></div>
+</div>
+<p>Chúng ta thấy việc xây dựng mô hình với H2O có tốc độ rất nhanh, xây
+dựng mô hình với các tham số cơ bản với dữ liệu này chỉ mất khoảng 4.3
+giây. Đương nhiên trong trường hợp này dữ liệu nhỏ nên chúng ta chưa
+nhìn thấy rõ ưu điểm vượt trội của H2O về tốc độ, nhưng trong trường hơp
+dữ liệu lớn, việc sử dụng H2O sẽ rút ngắn thời gian xây dựng mô hình dự
+báo của chúng ta đi rất nhiều.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Summary model</span>
+gbm_model1 <span class="o">%&gt;%</span> <span class="kp">summary</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Model Details:</span>
+<span class="c1">## ==============</span>
+<span class="c1">##</span>
+<span class="c1">## H2OBinomialModel: gbm</span>
+<span class="c1">## Model Key:  GBM_model_R_1569766512944_1</span>
+<span class="c1">## Model Summary:</span>
+<span class="c1">##   number_of_trees number_of_internal_trees model_size_in_bytes min_depth</span>
+<span class="c1">## 1              50                       50               14178         5</span>
+<span class="c1">##   max_depth mean_depth min_leaves max_leaves mean_leaves</span>
+<span class="c1">## 1         5    5.00000          9         26    17.58000</span>
+<span class="c1">##</span>
+<span class="c1">## H2OBinomialMetrics: gbm</span>
+<span class="c1">## ** Reported on training data. **</span>
+<span class="c1">##</span>
+<span class="c1">## MSE:  0.07258735</span>
+<span class="c1">## RMSE:  0.2694204</span>
+<span class="c1">## LogLoss:  0.2676266</span>
+<span class="c1">## Mean Per-Class Error:  0.07134031</span>
+<span class="c1">## AUC:  0.9794455</span>
+<span class="c1">## Gini:  0.958891</span>
+<span class="c1">##</span>
+<span class="c1">## Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:</span>
+<span class="c1">##        Bad Good    Error     Rate</span>
+<span class="c1">## Bad    210   25 0.106383  =25/235</span>
+<span class="c1">## Good    20  531 0.036298  =20/551</span>
+<span class="c1">## Totals 230  556 0.057252  =45/786</span>
+<span class="c1">##</span>
+<span class="c1">## Maximum Metrics: Maximum metrics at their respective thresholds</span>
+<span class="c1">##                         metric threshold    value idx</span>
+<span class="c1">## 1                       max f1  0.585928 0.959350 231</span>
+<span class="c1">## 2                       max f2  0.528659 0.973467 251</span>
+<span class="c1">## 3                 max f0point5  0.641146 0.964326 215</span>
+<span class="c1">## 4                 max accuracy  0.585928 0.942748 231</span>
+<span class="c1">## 5                max precision  0.985738 1.000000   0</span>
+<span class="c1">## 6                   max recall  0.301839 1.000000 324</span>
+<span class="c1">## 7              max specificity  0.985738 1.000000   0</span>
+<span class="c1">## 8             max absolute_mcc  0.585928 0.862683 231</span>
+<span class="c1">## 9   max min_per_class_accuracy  0.650274 0.932849 211</span>
+<span class="c1">## 10 max mean_per_class_accuracy  0.641146 0.936919 215</span>
+<span class="c1">##</span>
+<span class="c1">## Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+<span class="c1">## Scoring History:</span>
+<span class="c1">##             timestamp   duration number_of_trees training_rmse</span>
+<span class="c1">## 1 2019-09-29 21:15:33  0.124 sec               0       0.45781</span>
+<span class="c1">## 2 2019-09-29 21:15:34  0.712 sec               1       0.44489</span>
+<span class="c1">## 3 2019-09-29 21:15:34  0.812 sec               2       0.43324</span>
+<span class="c1">## 4 2019-09-29 21:15:34  0.876 sec               3       0.42313</span>
+<span class="c1">## 5 2019-09-29 21:15:34  0.956 sec               4       0.41501</span>
+<span class="c1">##   training_logloss training_auc training_lift</span>
+<span class="c1">## 1          0.61000      0.50000       1.00000</span>
+<span class="c1">## 2          0.58254      0.82314       1.42650</span>
+<span class="c1">## 3          0.55877      0.83729       1.42650</span>
+<span class="c1">## 4          0.53861      0.85373       1.42650</span>
+<span class="c1">## 5          0.52240      0.86354       1.42650</span>
+<span class="c1">##   training_classification_error</span>
+<span class="c1">## 1                       0.29898</span>
+<span class="c1">## 2                       0.22774</span>
+<span class="c1">## 3                       0.21374</span>
+<span class="c1">## 4                       0.20738</span>
+<span class="c1">## 5                       0.19338</span>
+<span class="c1">##</span>
+<span class="c1">## ---</span>
+<span class="c1">##              timestamp   duration number_of_trees training_rmse</span>
+<span class="c1">## 46 2019-09-29 21:15:36  2.757 sec              45       0.27706</span>
+<span class="c1">## 47 2019-09-29 21:15:36  2.789 sec              46       0.27555</span>
+<span class="c1">## 48 2019-09-29 21:15:36  2.829 sec              47       0.27383</span>
+<span class="c1">## 49 2019-09-29 21:15:36  2.853 sec              48       0.27225</span>
+<span class="c1">## 50 2019-09-29 21:15:36  2.889 sec              49       0.27105</span>
+<span class="c1">## 51 2019-09-29 21:15:36  2.921 sec              50       0.26942</span>
+<span class="c1">##    training_logloss training_auc training_lift</span>
+<span class="c1">## 46          0.27988      0.97668       1.42650</span>
+<span class="c1">## 47          0.27727      0.97715       1.42650</span>
+<span class="c1">## 48          0.27464      0.97787       1.42650</span>
+<span class="c1">## 49          0.27199      0.97879       1.42650</span>
+<span class="c1">## 50          0.27012      0.97924       1.42650</span>
+<span class="c1">## 51          0.26763      0.97945       1.42650</span>
+<span class="c1">##    training_classification_error</span>
+<span class="c1">## 46                       0.06234</span>
+<span class="c1">## 47                       0.06107</span>
+<span class="c1">## 48                       0.05980</span>
+<span class="c1">## 49                       0.05980</span>
+<span class="c1">## 50                       0.05852</span>
+<span class="c1">## 51                       0.05725</span>
+<span class="c1">##</span>
+<span class="c1">## Variable Importances: (Extract with `h2o.varimp`)</span>
+<span class="c1">## =================================================</span>
+<span class="c1">##</span>
+<span class="c1">## Variable Importances:</span>
+<span class="c1">##                     variable relative_importance scaled_importance</span>
+<span class="c1">## 1 CheckingAccountStatus.none           84.350624          1.000000</span>
+<span class="c1">## 2                     Amount           82.419136          0.977102</span>
+<span class="c1">## 3                   Duration           68.733696          0.814857</span>
+<span class="c1">## 4                        Age           31.725632          0.376116</span>
+<span class="c1">## 5             Purpose.NewCar           19.282278          0.228597</span>
+<span class="c1">##   percentage</span>
+<span class="c1">## 1   0.156410</span>
+<span class="c1">## 2   0.152829</span>
+<span class="c1">## 3   0.127452</span>
+<span class="c1">## 4   0.058828</span>
+<span class="c1">## 5   0.035755</span>
+<span class="c1">##</span>
+<span class="c1">## ---</span>
+<span class="c1">##                            variable relative_importance scaled_importance</span>
+<span class="c1">## 54                  Housing.ForFree            0.132180          0.001567</span>
+<span class="c1">## 55        Purpose.DomesticAppliance            0.000000          0.000000</span>
+<span class="c1">## 56               Purpose.Retraining            0.000000          0.000000</span>
+<span class="c1">## 57                    Purpose.Other            0.000000          0.000000</span>
+<span class="c1">## 58 Personal.Male.Divorced.Seperated            0.000000          0.000000</span>
+<span class="c1">## 59          Job.UnemployedUnskilled            0.000000          0.000000</span>
+<span class="c1">##    percentage</span>
+<span class="c1">## 54   0.000245</span>
+<span class="c1">## 55   0.000000</span>
+<span class="c1">## 56   0.000000</span>
+<span class="c1">## 57   0.000000</span>
+<span class="c1">## 58   0.000000</span>
+<span class="c1">## 59   0.000000</span>
+</pre></div>
+</div>
+<p>Nhìn vào kết quả mô hình vừa được xây dựng trên tập train, chúng ta có
+thể thấy một số thông tin quan trọng sau:</p>
+<ul class="simple">
+<li>Các tham số (<code class="docutils literal notranslate"><span class="pre">parameters</span></code>) cơ bản của mô hình:<ul>
+<li>number_of_trees = 50: Số lượng cây là 50</li>
+<li>max_depth = 5: Mỗi cây có 5 tầng (mức độ phức tạp của mô hình)</li>
+</ul>
+</li>
+<li>AUC trên tập train: 0.9794455</li>
+<li>Dựa vào mục <code class="docutils literal notranslate"><span class="pre">Confusion</span> <span class="pre">Matrix</span></code> (tối ưu hóa F1-score) có thể tính
+toán được:<ul>
+<li>error rate (tỷ lệ quan sát dự báo sai): 45/786 = 0.057 (5.7%)</li>
+<li>accuracy (tỷ lệ quan sát dự báo đúng): 1 - 0.057 = 0.943 (94.3%)</li>
+<li>precision: 531/551 = 0.96 (96%)</li>
+<li>recall: 531/556 = 0.96 (96%)</li>
+</ul>
+</li>
+<li>Dựa vào mục <code class="docutils literal notranslate"><span class="pre">Maximum</span> <span class="pre">Metrics</span></code>, chúng ta có thể biết được các ngưỡng
+cutoff xác suất để tối ưu hóa các chỉ số như accuracy, precision,
+recall, f1-score…<ul>
+<li>max f1: Điểm cutoff xác suất là 0.585928</li>
+<li>max accuracy: 0.585928</li>
+<li>max recall: 0.301839</li>
+<li>max precision: 0.985738</li>
+</ul>
+</li>
+<li>Dựa vào mục <code class="docutils literal notranslate"><span class="pre">Variable</span> <span class="pre">Importances</span></code>, chúng ta có thể biết được những
+biến nào có ảnh hưởng nhiều nhất đến biến đầu ra mà chúng ta muốn dự
+báo (có thể sử dụng câu lệnh <code class="docutils literal notranslate"><span class="pre">h2o.varimp()</span></code> để xem chi tiết). Trong
+trường hợp này, các biến có ảnh hưởng nhiều nhất tới biến <code class="docutils literal notranslate"><span class="pre">Class</span></code>
+theo thứ tự là:<ul>
+<li>CheckingAccountStatus.none</li>
+<li>Amount</li>
+<li>Duration</li>
+<li>Age</li>
+<li>Purpose.NewCar</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kiểm tra chi tiết các biến có ảnh hướng nhiều tới biến dự báo trong mô hình</span>
+gbm_model1 <span class="o">%&gt;%</span>
+  h2o.varimp<span class="p">()</span> <span class="o">%&gt;%</span>
+  as.data.frame <span class="o">%&gt;%</span>
+  knitr<span class="o">::</span>kable<span class="p">()</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="45%" />
+<col width="23%" />
+<col width="20%" />
+<col width="12%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">variable</th>
+<th class="head">relative_importance</th>
+<th class="head">scaled_importance</th>
+<th class="head">percentage</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>CheckingAccountStatus.none</td>
+<td>84.3506241</td>
+<td>1.0000000</td>
+<td>0.1564102</td>
+</tr>
+<tr class="row-odd"><td>Amount</td>
+<td>82.4191360</td>
+<td>0.9771017</td>
+<td>0.1528287</td>
+</tr>
+<tr class="row-even"><td>Duration</td>
+<td>68.7336960</td>
+<td>0.8148570</td>
+<td>0.1274520</td>
+</tr>
+<tr class="row-odd"><td>Age</td>
+<td>31.7256317</td>
+<td>0.3761161</td>
+<td>0.0588284</td>
+</tr>
+<tr class="row-even"><td>Purpose.NewCar</td>
+<td>19.2822781</td>
+<td>0.2285967</td>
+<td>0.0357549</td>
+</tr>
+<tr class="row-odd"><td>InstallmentRatePercentage</td>
+<td>15.5161829</td>
+<td>0.1839486</td>
+<td>0.0287714</td>
+</tr>
+<tr class="row-even"><td>OtherInstallmentPlans.None</td>
+<td>15.2438316</td>
+<td>0.1807198</td>
+<td>0.0282664</td>
+</tr>
+<tr class="row-odd"><td>CreditHistory.Critical</td>
+<td>14.5524130</td>
+<td>0.1725229</td>
+<td>0.0269843</td>
+</tr>
+<tr class="row-even"><td>CheckingAccountStatus.lt.0</td>
+<td>12.5769672</td>
+<td>0.1491034</td>
+<td>0.0233213</td>
+</tr>
+<tr class="row-odd"><td>Property.RealEstate</td>
+<td>12.3567972</td>
+<td>0.1464933</td>
+<td>0.0229130</td>
+</tr>
+<tr class="row-even"><td>SavingsAccountBonds.lt.100</td>
+<td>10.7499561</td>
+<td>0.1274437</td>
+<td>0.0199335</td>
+</tr>
+<tr class="row-odd"><td>OtherDebtorsGuarantors.Guarantor</td>
+<td>9.6545200</td>
+<td>0.1144570</td>
+<td>0.0179022</td>
+</tr>
+<tr class="row-even"><td>Property.Insurance</td>
+<td>9.3979931</td>
+<td>0.1114158</td>
+<td>0.0174266</td>
+</tr>
+<tr class="row-odd"><td>Job.SkilledEmployee</td>
+<td>8.7692375</td>
+<td>0.1039617</td>
+<td>0.0162607</td>
+</tr>
+<tr class="row-even"><td>CheckingAccountStatus.gt.200</td>
+<td>8.7212677</td>
+<td>0.1033930</td>
+<td>0.0161717</td>
+</tr>
+<tr class="row-odd"><td>ResidenceDuration</td>
+<td>8.4237700</td>
+<td>0.0998661</td>
+<td>0.0156201</td>
+</tr>
+<tr class="row-even"><td>OtherDebtorsGuarantors.None</td>
+<td>7.9725552</td>
+<td>0.0945168</td>
+<td>0.0147834</td>
+</tr>
+<tr class="row-odd"><td>OtherInstallmentPlans.Bank</td>
+<td>7.7707009</td>
+<td>0.0921238</td>
+<td>0.0144091</td>
+</tr>
+<tr class="row-even"><td>CreditHistory.NoCredit.AllPaid</td>
+<td>7.2156229</td>
+<td>0.0855432</td>
+<td>0.0133798</td>
+</tr>
+<tr class="row-odd"><td>Personal.Male.Single</td>
+<td>7.0852146</td>
+<td>0.0839972</td>
+<td>0.0131380</td>
+</tr>
+<tr class="row-even"><td>NumberExistingCredits</td>
+<td>6.5925212</td>
+<td>0.0781562</td>
+<td>0.0122244</td>
+</tr>
+<tr class="row-odd"><td>Purpose.UsedCar</td>
+<td>6.2361321</td>
+<td>0.0739311</td>
+<td>0.0115636</td>
+</tr>
+<tr class="row-even"><td>Personal.Female.NotSingle</td>
+<td>5.6832266</td>
+<td>0.0673762</td>
+<td>0.0105383</td>
+</tr>
+<tr class="row-odd"><td>EmploymentDuration.lt.1</td>
+<td>5.2887440</td>
+<td>0.0626995</td>
+<td>0.0098068</td>
+</tr>
+<tr class="row-even"><td>EmploymentDuration.4.to.7</td>
+<td>5.2262311</td>
+<td>0.0619584</td>
+<td>0.0096909</td>
+</tr>
+<tr class="row-odd"><td>Telephone</td>
+<td>5.1227264</td>
+<td>0.0607313</td>
+<td>0.0094990</td>
+</tr>
+<tr class="row-even"><td>Property.Unknown</td>
+<td>4.8568892</td>
+<td>0.0575798</td>
+<td>0.0090061</td>
+</tr>
+<tr class="row-odd"><td>Housing.Rent</td>
+<td>4.7812662</td>
+<td>0.0566832</td>
+<td>0.0088658</td>
+</tr>
+<tr class="row-even"><td>CreditHistory.Delay</td>
+<td>4.5384483</td>
+<td>0.0538046</td>
+<td>0.0084156</td>
+</tr>
+<tr class="row-odd"><td>SavingsAccountBonds.Unknown</td>
+<td>3.7545331</td>
+<td>0.0445110</td>
+<td>0.0069620</td>
+</tr>
+<tr class="row-even"><td>EmploymentDuration.1.to.4</td>
+<td>3.6860566</td>
+<td>0.0436992</td>
+<td>0.0068350</td>
+</tr>
+<tr class="row-odd"><td>Job.Management.SelfEmp.HighlyQualified</td>
+<td>3.5472615</td>
+<td>0.0420538</td>
+<td>0.0065776</td>
+</tr>
+<tr class="row-even"><td>Purpose.Education</td>
+<td>3.3089063</td>
+<td>0.0392280</td>
+<td>0.0061357</td>
+</tr>
+<tr class="row-odd"><td>EmploymentDuration.gt.7</td>
+<td>3.2702508</td>
+<td>0.0387697</td>
+<td>0.0060640</td>
+</tr>
+<tr class="row-even"><td>Housing.Own</td>
+<td>3.0387659</td>
+<td>0.0360254</td>
+<td>0.0056347</td>
+</tr>
+<tr class="row-odd"><td>CreditHistory.PaidDuly</td>
+<td>2.8158870</td>
+<td>0.0333831</td>
+<td>0.0052215</td>
+</tr>
+<tr class="row-even"><td>OtherDebtorsGuarantors.CoApplicant</td>
+<td>2.5130854</td>
+<td>0.0297933</td>
+<td>0.0046600</td>
+</tr>
+<tr class="row-odd"><td>NumberPeopleMaintenance</td>
+<td>2.4034374</td>
+<td>0.0284934</td>
+<td>0.0044567</td>
+</tr>
+<tr class="row-even"><td>CreditHistory.ThisBank.AllPaid</td>
+<td>2.3900807</td>
+<td>0.0283351</td>
+<td>0.0044319</td>
+</tr>
+<tr class="row-odd"><td>CheckingAccountStatus.0.to.200</td>
+<td>2.0607431</td>
+<td>0.0244307</td>
+<td>0.0038212</td>
+</tr>
+<tr class="row-even"><td>Purpose.Radio.Television</td>
+<td>2.0184691</td>
+<td>0.0239295</td>
+<td>0.0037428</td>
+</tr>
+<tr class="row-odd"><td>Property.CarOther</td>
+<td>1.9168139</td>
+<td>0.0227244</td>
+<td>0.0035543</td>
+</tr>
+<tr class="row-even"><td>Purpose.Furniture.Equipment</td>
+<td>1.8031244</td>
+<td>0.0213765</td>
+<td>0.0033435</td>
+</tr>
+<tr class="row-odd"><td>Purpose.Business</td>
+<td>1.5692081</td>
+<td>0.0186034</td>
+<td>0.0029098</td>
+</tr>
+<tr class="row-even"><td>SavingsAccountBonds.gt.1000</td>
+<td>1.4338670</td>
+<td>0.0169989</td>
+<td>0.0026588</td>
+</tr>
+<tr class="row-odd"><td>EmploymentDuration.Unemployed</td>
+<td>1.3670616</td>
+<td>0.0162069</td>
+<td>0.0025349</td>
+</tr>
+<tr class="row-even"><td>Purpose.Repairs</td>
+<td>1.2434046</td>
+<td>0.0147409</td>
+<td>0.0023056</td>
+</tr>
+<tr class="row-odd"><td>SavingsAccountBonds.100.to.500</td>
+<td>1.1172017</td>
+<td>0.0132447</td>
+<td>0.0020716</td>
+</tr>
+<tr class="row-even"><td>OtherInstallmentPlans.Stores</td>
+<td>1.0155718</td>
+<td>0.0120399</td>
+<td>0.0018832</td>
+</tr>
+<tr class="row-odd"><td>SavingsAccountBonds.500.to.1000</td>
+<td>0.7910167</td>
+<td>0.0093777</td>
+<td>0.0014668</td>
+</tr>
+<tr class="row-even"><td>ForeignWorker</td>
+<td>0.5909842</td>
+<td>0.0070063</td>
+<td>0.0010959</td>
+</tr>
+<tr class="row-odd"><td>Job.UnskilledResident</td>
+<td>0.3838074</td>
+<td>0.0045501</td>
+<td>0.0007117</td>
+</tr>
+<tr class="row-even"><td>Personal.Male.Married.Widowed</td>
+<td>0.2746936</td>
+<td>0.0032566</td>
+<td>0.0005094</td>
+</tr>
+<tr class="row-odd"><td>Housing.ForFree</td>
+<td>0.1321795</td>
+<td>0.0015670</td>
+<td>0.0002451</td>
+</tr>
+<tr class="row-even"><td>Purpose.DomesticAppliance</td>
+<td>0.0000000</td>
+<td>0.0000000</td>
+<td>0.0000000</td>
+</tr>
+<tr class="row-odd"><td>Purpose.Retraining</td>
+<td>0.0000000</td>
+<td>0.0000000</td>
+<td>0.0000000</td>
+</tr>
+<tr class="row-even"><td>Purpose.Other</td>
+<td>0.0000000</td>
+<td>0.0000000</td>
+<td>0.0000000</td>
+</tr>
+<tr class="row-odd"><td>Personal.Male.Divorced.Seperated</td>
+<td>0.0000000</td>
+<td>0.0000000</td>
+<td>0.0000000</td>
+</tr>
+<tr class="row-even"><td>Job.UnemployedUnskilled</td>
+<td>0.0000000</td>
+<td>0.0000000</td>
+<td>0.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="du-bao-tren-tap-test">
+<h3>6.3.7. Dự báo trên tập test<a class="headerlink" href="#du-bao-tren-tap-test" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bước 7: Dự báo trên tập test</span>
+pred_test1 <span class="o">&lt;-</span> h2o.predict<span class="p">(</span>gbm_model1<span class="p">,</span> newdata <span class="o">=</span> test<span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="kp">as.data.frame</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+  <span class="o">|</span>
+  <span class="o">|</span>                                                                 <span class="o">|</span>   <span class="mi">0</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|=================================================================|</span> <span class="mi">100</span><span class="o">%</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>pred_test1 <span class="o">%&gt;%</span> <span class="kp">head</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   predict        Bad      Good</span>
+<span class="c1">## 1     Bad 0.71166405 0.2883359</span>
+<span class="c1">## 2     Bad 0.82454629 0.1754537</span>
+<span class="c1">## 3     Bad 0.49154935 0.5084507</span>
+<span class="c1">## 4     Bad 0.79388195 0.2061180</span>
+<span class="c1">## 5    Good 0.03446872 0.9655313</span>
+<span class="c1">## 6     Bad 0.76942563 0.2305744</span>
+</pre></div>
+</div>
+<p>Nhìn vào kết quả trên, ta có thể biết được những thông tin sau:</p>
+<ul class="simple">
+<li>Cột <code class="docutils literal notranslate"><span class="pre">predict</span></code>: Là <code class="docutils literal notranslate"><span class="pre">Class</span></code> của khoản vay được dự báo<ul>
+<li>Good: Khoản vay không phải là khoản nợ xấu</li>
+<li>Bad: Khoản vay là khoản nợ xấu</li>
+</ul>
+</li>
+<li><code class="docutils literal notranslate"><span class="pre">Bad</span></code>: Xác suất khoản vay là khoản nợ xấu</li>
+<li><code class="docutils literal notranslate"><span class="pre">Good</span></code>: Xác suất khoản vay là khoản không có nợ xấu</li>
+</ul>
+</div>
+<div class="section" id="danh-gia-chat-luong-du-bao-tren-test">
+<h3>6.3.8. Đánh giá chất lượng dự báo trên test<a class="headerlink" href="#danh-gia-chat-luong-du-bao-tren-test" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bước 8: Đánh giá chất lượng dự báo trên test</span>
+<span class="c1"># Confusion matrix</span>
+<span class="kp">table</span><span class="p">(</span><span class="kp">as.vector</span><span class="p">(</span>pred_test1<span class="o">$</span>predict<span class="p">),</span>
+      test_df<span class="o">$</span>Class<span class="p">,</span>
+      dnn <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Predicted&quot;</span><span class="p">,</span> <span class="s">&quot;Actual&quot;</span><span class="p">)</span>
+      <span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##          Actual</span>
+<span class="c1">## Predicted Bad Good</span>
+<span class="c1">##      Bad   40   30</span>
+<span class="c1">##      Good  25  119</span>
+</pre></div>
+</div>
+<p>Dựa vào confusion matrix trên tập test, chúng ta có thể tính toán được:</p>
+<ul class="simple">
+<li>Accuracy: (40+119)/214 = 0.74 (74%)</li>
+<li>Error rate: (25+30)/186 = 1 - 0.74 = 0.26 (26%)</li>
+<li>Precision: 119/(119+25) = 0.83 (83%)</li>
+<li>Recall: 119/(119+30) = 0.80 (80%)</li>
+</ul>
+<hr class="docutils" />
+<p><strong>Note</strong>: Với H2O, chúng ta hoàn toàn có thể xây dựng mô hình trên tập
+train, rồi sau đó đánh giá chất lượng trên tập train và test đồng thời
+bằng một câu lệnh sau:</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kp">set.seed</span><span class="p">(</span><span class="m">2</span><span class="p">)</span>
+gbm_model2 <span class="o">&lt;-</span> h2o.gbm<span class="p">(</span>training_frame <span class="o">=</span> train<span class="p">,</span> <span class="c1"># Xây dựng trên train</span>
+                      x <span class="o">=</span> <span class="kp">setdiff</span><span class="p">(</span><span class="kp">names</span><span class="p">(</span>GermanCredit<span class="p">),</span> <span class="s">&quot;Class&quot;</span><span class="p">),</span>  <span class="c1"># Các biến đầu vào</span>
+                      y <span class="o">=</span> <span class="s">&quot;Class&quot;</span><span class="p">,</span> <span class="c1"># Biến đầu ra (biến muốn dự báo)</span>
+                      validation_frame <span class="o">=</span> test <span class="c1"># Đánh giá trên test</span>
+                      <span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+  <span class="o">|</span>
+  <span class="o">|</span>                                                                 <span class="o">|</span>   <span class="mi">0</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|=======================================</span>                          <span class="o">|</span>  <span class="mi">60</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|=================================================================|</span> <span class="mi">100</span><span class="o">%</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>gbm_model2 <span class="o">%&gt;%</span> <span class="kp">summary</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Model Details:</span>
+<span class="c1">## ==============</span>
+<span class="c1">##</span>
+<span class="c1">## H2OBinomialModel: gbm</span>
+<span class="c1">## Model Key:  GBM_model_R_1569766512944_54</span>
+<span class="c1">## Model Summary:</span>
+<span class="c1">##   number_of_trees number_of_internal_trees model_size_in_bytes min_depth</span>
+<span class="c1">## 1              50                       50               14179         5</span>
+<span class="c1">##   max_depth mean_depth min_leaves max_leaves mean_leaves</span>
+<span class="c1">## 1         5    5.00000          9         26    17.58000</span>
+<span class="c1">##</span>
+<span class="c1">## H2OBinomialMetrics: gbm</span>
+<span class="c1">## ** Reported on training data. **</span>
+<span class="c1">##</span>
+<span class="c1">## MSE:  0.07258735</span>
+<span class="c1">## RMSE:  0.2694204</span>
+<span class="c1">## LogLoss:  0.2676266</span>
+<span class="c1">## Mean Per-Class Error:  0.07134031</span>
+<span class="c1">## AUC:  0.9794455</span>
+<span class="c1">## Gini:  0.958891</span>
+<span class="c1">##</span>
+<span class="c1">## Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:</span>
+<span class="c1">##        Bad Good    Error     Rate</span>
+<span class="c1">## Bad    210   25 0.106383  =25/235</span>
+<span class="c1">## Good    20  531 0.036298  =20/551</span>
+<span class="c1">## Totals 230  556 0.057252  =45/786</span>
+<span class="c1">##</span>
+<span class="c1">## Maximum Metrics: Maximum metrics at their respective thresholds</span>
+<span class="c1">##                         metric threshold    value idx</span>
+<span class="c1">## 1                       max f1  0.585928 0.959350 231</span>
+<span class="c1">## 2                       max f2  0.528659 0.973467 251</span>
+<span class="c1">## 3                 max f0point5  0.641146 0.964326 215</span>
+<span class="c1">## 4                 max accuracy  0.585928 0.942748 231</span>
+<span class="c1">## 5                max precision  0.985738 1.000000   0</span>
+<span class="c1">## 6                   max recall  0.301839 1.000000 324</span>
+<span class="c1">## 7              max specificity  0.985738 1.000000   0</span>
+<span class="c1">## 8             max absolute_mcc  0.585928 0.862683 231</span>
+<span class="c1">## 9   max min_per_class_accuracy  0.650274 0.932849 211</span>
+<span class="c1">## 10 max mean_per_class_accuracy  0.641146 0.936919 215</span>
+<span class="c1">##</span>
+<span class="c1">## Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`</span>
+<span class="c1">## H2OBinomialMetrics: gbm</span>
+<span class="c1">## ** Reported on validation data. **</span>
+<span class="c1">##</span>
+<span class="c1">## MSE:  0.1745567</span>
+<span class="c1">## RMSE:  0.4177998</span>
+<span class="c1">## LogLoss:  0.5180404</span>
+<span class="c1">## Mean Per-Class Error:  0.4451729</span>
+<span class="c1">## AUC:  0.7696438</span>
+<span class="c1">## Gini:  0.5392876</span>
+<span class="c1">##</span>
+<span class="c1">## Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:</span>
+<span class="c1">##        Bad Good    Error     Rate</span>
+<span class="c1">## Bad      8   57 0.876923   =57/65</span>
+<span class="c1">## Good     2  147 0.013423   =2/149</span>
+<span class="c1">## Totals  10  204 0.275701  =59/214</span>
+<span class="c1">##</span>
+<span class="c1">## Maximum Metrics: Maximum metrics at their respective thresholds</span>
+<span class="c1">##                         metric threshold    value idx</span>
+<span class="c1">## 1                       max f1  0.230574 0.832861 203</span>
+<span class="c1">## 2                       max f2  0.175454 0.924318 209</span>
+<span class="c1">## 3                 max f0point5  0.643835 0.829662 132</span>
+<span class="c1">## 4                 max accuracy  0.579584 0.757009 148</span>
+<span class="c1">## 5                max precision  0.983556 1.000000   0</span>
+<span class="c1">## 6                   max recall  0.175454 1.000000 209</span>
+<span class="c1">## 7              max specificity  0.983556 1.000000   0</span>
+<span class="c1">## 8             max absolute_mcc  0.643835 0.427333 132</span>
+<span class="c1">## 9   max min_per_class_accuracy  0.705292 0.707692 124</span>
+<span class="c1">## 10 max mean_per_class_accuracy  0.643835 0.725348 132</span>
+<span class="c1">##</span>
+<span class="c1">## Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+<span class="c1">## Scoring History:</span>
+<span class="c1">##             timestamp   duration number_of_trees training_rmse</span>
+<span class="c1">## 1 2019-09-29 21:15:41  0.036 sec               0       0.45781</span>
+<span class="c1">## 2 2019-09-29 21:15:41  0.156 sec               1       0.44489</span>
+<span class="c1">## 3 2019-09-29 21:15:41  0.188 sec               2       0.43324</span>
+<span class="c1">## 4 2019-09-29 21:15:41  0.216 sec               3       0.42313</span>
+<span class="c1">## 5 2019-09-29 21:15:41  0.244 sec               4       0.41501</span>
+<span class="c1">##   training_logloss training_auc training_lift</span>
+<span class="c1">## 1          0.61000      0.50000       1.00000</span>
+<span class="c1">## 2          0.58254      0.82314       1.42650</span>
+<span class="c1">## 3          0.55877      0.83729       1.42650</span>
+<span class="c1">## 4          0.53861      0.85373       1.42650</span>
+<span class="c1">## 5          0.52240      0.86354       1.42650</span>
+<span class="c1">##   training_classification_error validation_rmse validation_logloss</span>
+<span class="c1">## 1                       0.29898         0.45990            0.61405</span>
+<span class="c1">## 2                       0.22774         0.45392            0.60102</span>
+<span class="c1">## 3                       0.21374         0.45093            0.59421</span>
+<span class="c1">## 4                       0.20738         0.44796            0.58744</span>
+<span class="c1">## 5                       0.19338         0.44516            0.58122</span>
+<span class="c1">##   validation_auc validation_lift validation_classification_error</span>
+<span class="c1">## 1        0.50000         1.00000                         0.30374</span>
+<span class="c1">## 2        0.66598         1.10480                         0.30374</span>
+<span class="c1">## 3        0.66004         1.07718                         0.29907</span>
+<span class="c1">## 4        0.66324         1.07718                         0.28037</span>
+<span class="c1">## 5        0.67491         0.95749                         0.26636</span>
+<span class="c1">##</span>
+<span class="c1">## ---</span>
+<span class="c1">##              timestamp   duration number_of_trees training_rmse</span>
+<span class="c1">## 46 2019-09-29 21:15:43  1.700 sec              45       0.27706</span>
+<span class="c1">## 47 2019-09-29 21:15:43  1.732 sec              46       0.27555</span>
+<span class="c1">## 48 2019-09-29 21:15:43  1.764 sec              47       0.27383</span>
+<span class="c1">## 49 2019-09-29 21:15:43  1.800 sec              48       0.27225</span>
+<span class="c1">## 50 2019-09-29 21:15:43  1.836 sec              49       0.27105</span>
+<span class="c1">## 51 2019-09-29 21:15:43  1.924 sec              50       0.26942</span>
+<span class="c1">##    training_logloss training_auc training_lift</span>
+<span class="c1">## 46          0.27988      0.97668       1.42650</span>
+<span class="c1">## 47          0.27727      0.97715       1.42650</span>
+<span class="c1">## 48          0.27464      0.97787       1.42650</span>
+<span class="c1">## 49          0.27199      0.97879       1.42650</span>
+<span class="c1">## 50          0.27012      0.97924       1.42650</span>
+<span class="c1">## 51          0.26763      0.97945       1.42650</span>
+<span class="c1">##    training_classification_error validation_rmse validation_logloss</span>
+<span class="c1">## 46                       0.06234         0.41681            0.51647</span>
+<span class="c1">## 47                       0.06107         0.41697            0.51699</span>
+<span class="c1">## 48                       0.05980         0.41727            0.51749</span>
+<span class="c1">## 49                       0.05980         0.41718            0.51717</span>
+<span class="c1">## 50                       0.05852         0.41795            0.51830</span>
+<span class="c1">## 51                       0.05725         0.41780            0.51804</span>
+<span class="c1">##    validation_auc validation_lift validation_classification_error</span>
+<span class="c1">## 46        0.76964         1.43624                         0.28037</span>
+<span class="c1">## 47        0.76944         1.43624                         0.28037</span>
+<span class="c1">## 48        0.76820         1.43624                         0.28037</span>
+<span class="c1">## 49        0.76923         1.43624                         0.27570</span>
+<span class="c1">## 50        0.76758         1.43624                         0.27570</span>
+<span class="c1">## 51        0.76964         1.43624                         0.27570</span>
+<span class="c1">##</span>
+<span class="c1">## Variable Importances: (Extract with `h2o.varimp`)</span>
+<span class="c1">## =================================================</span>
+<span class="c1">##</span>
+<span class="c1">## Variable Importances:</span>
+<span class="c1">##                     variable relative_importance scaled_importance</span>
+<span class="c1">## 1 CheckingAccountStatus.none           84.350624          1.000000</span>
+<span class="c1">## 2                     Amount           82.419136          0.977102</span>
+<span class="c1">## 3                   Duration           68.733696          0.814857</span>
+<span class="c1">## 4                        Age           31.725632          0.376116</span>
+<span class="c1">## 5             Purpose.NewCar           19.282278          0.228597</span>
+<span class="c1">##   percentage</span>
+<span class="c1">## 1   0.156410</span>
+<span class="c1">## 2   0.152829</span>
+<span class="c1">## 3   0.127452</span>
+<span class="c1">## 4   0.058828</span>
+<span class="c1">## 5   0.035755</span>
+<span class="c1">##</span>
+<span class="c1">## ---</span>
+<span class="c1">##                            variable relative_importance scaled_importance</span>
+<span class="c1">## 54                  Housing.ForFree            0.132180          0.001567</span>
+<span class="c1">## 55        Purpose.DomesticAppliance            0.000000          0.000000</span>
+<span class="c1">## 56               Purpose.Retraining            0.000000          0.000000</span>
+<span class="c1">## 57                    Purpose.Other            0.000000          0.000000</span>
+<span class="c1">## 58 Personal.Male.Divorced.Seperated            0.000000          0.000000</span>
+<span class="c1">## 59          Job.UnemployedUnskilled            0.000000          0.000000</span>
+<span class="c1">##    percentage</span>
+<span class="c1">## 54   0.000245</span>
+<span class="c1">## 55   0.000000</span>
+<span class="c1">## 56   0.000000</span>
+<span class="c1">## 57   0.000000</span>
+<span class="c1">## 58   0.000000</span>
+<span class="c1">## 59   0.000000</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tuning">
+<h3>6.3.9. Tuning<a class="headerlink" href="#tuning" title="Permalink to this headline">¶</a></h3>
+<p><strong>Tuning</strong> là quá trình tìm kiếm tổ hợp các tham số để tối ưu hóa mô
+hình (chất lượng dự báo tốt nhất có thể).</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bước 9: Tuning</span>
+<span class="c1"># 9.1. Set hyper parameters</span>
+hyper_params <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>
+  <span class="c1">## restrict the search to the range of max_depth established above</span>
+  max_depth <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">5</span><span class="o">:</span><span class="m">9</span><span class="p">),</span>
+
+  <span class="c1">## search a large space of row sampling rates per tree</span>
+  sample_rate <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">0.5</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">0.05</span><span class="p">),</span>
+
+  <span class="c1">## search a large space of column sampling rates per split</span>
+  col_sample_rate <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">0.5</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">0.05</span><span class="p">),</span>
+
+  <span class="c1">## search a large space of the number of min rows in a terminal node</span>
+  min_rows <span class="o">=</span> <span class="m">2</span><span class="o">^</span><span class="kp">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="kp">log2</span><span class="p">(</span><span class="kp">nrow</span><span class="p">(</span>train<span class="p">))</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span>
+
+  <span class="c1">## search a large space of the number of bins for split-finding for continuous and integer columns</span>
+  nbins <span class="o">=</span> <span class="m">2</span><span class="o">^</span><span class="kp">seq</span><span class="p">(</span><span class="m">4</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">1</span><span class="p">),</span>
+
+  <span class="c1">## search a large space of the number of bins for split-finding for categorical columns</span>
+  nbins_cats <span class="o">=</span> <span class="m">2</span><span class="o">^</span><span class="kp">seq</span><span class="p">(</span><span class="m">4</span><span class="p">,</span><span class="m">12</span><span class="p">,</span><span class="m">1</span><span class="p">),</span>
+
+  <span class="c1">## search a few minimum required relative error improvement thresholds for a split to happen</span>
+  min_split_improvement <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">1e-8</span><span class="p">,</span><span class="m">1e-6</span><span class="p">,</span><span class="m">1e-4</span><span class="p">),</span>
+
+  <span class="c1">## try all histogram types (QuantilesGlobal and RoundRobin are good for numeric columns with outliers)</span>
+  histogram_type <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;UniformAdaptive&quot;</span><span class="p">,</span><span class="s">&quot;QuantilesGlobal&quot;</span><span class="p">,</span><span class="s">&quot;RoundRobin&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># 9.2. Set search criteria</span>
+search_criteria <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>
+  <span class="c1">## Random grid search</span>
+  strategy <span class="o">=</span> <span class="s">&quot;RandomDiscrete&quot;</span><span class="p">,</span>
+
+  <span class="c1">## limit the runtime to xx minutes</span>
+  max_runtime_secs <span class="o">=</span> <span class="m">10</span><span class="p">,</span>
+
+  <span class="c1">## build no more than xx models</span>
+  max_models <span class="o">=</span> <span class="m">5</span><span class="p">,</span>
+
+  <span class="c1">## random number generator seed to make sampling of parameter combinations reproducible</span>
+  seed <span class="o">=</span> <span class="m">1234</span><span class="p">,</span>
+
+  <span class="c1">## early stopping once the leaderboard of the top 5 models is converged to 0.1% relative difference</span>
+  stopping_rounds <span class="o">=</span> <span class="m">5</span><span class="p">,</span>
+  stopping_metric <span class="o">=</span> <span class="s">&quot;AUC&quot;</span><span class="p">,</span>
+  stopping_tolerance <span class="o">=</span> <span class="m">1e-3</span>
+<span class="p">)</span>
+
+<span class="c1"># 9.3. Grid search</span>
+grid <span class="o">&lt;-</span> h2o.grid<span class="p">(</span>
+  <span class="c1">## hyper parameters</span>
+  hyper_params <span class="o">=</span> hyper_params<span class="p">,</span>
+
+  <span class="c1">## hyper-parameter search configuration (see above)</span>
+  search_criteria <span class="o">=</span> search_criteria<span class="p">,</span>
+
+  <span class="c1">## which algorithm to run</span>
+  algorithm <span class="o">=</span> <span class="s">&quot;gbm&quot;</span><span class="p">,</span>
+
+  <span class="c1">## identifier for the grid, to later retrieve it</span>
+  grid_id <span class="o">=</span> <span class="s">&quot;model_id&quot;</span><span class="p">,</span>
+
+  <span class="c1">## standard model parameters</span>
+  x <span class="o">=</span> <span class="kp">setdiff</span><span class="p">(</span><span class="kp">names</span><span class="p">(</span>GermanCredit<span class="p">),</span> <span class="s">&quot;Class&quot;</span><span class="p">),</span>
+  y <span class="o">=</span> <span class="s">&quot;Class&quot;</span><span class="p">,</span>
+  training_frame <span class="o">=</span> train<span class="p">,</span>
+  validation_frame <span class="o">=</span> test<span class="p">,</span>
+  <span class="c1">#balance_classes = T, #Option to solve imbalanced classification</span>
+
+  <span class="c1">## more trees is better if the learning rate is small enough</span>
+  <span class="c1">## use &quot;more than enough&quot; trees - we have early stopping</span>
+  ntrees <span class="o">=</span> <span class="m">200</span><span class="p">,</span>
+
+  <span class="c1">## smaller learning rate is better</span>
+  <span class="c1">## since we have learning_rate_annealing, we can afford to start with a bigger learning rate</span>
+  learn_rate <span class="o">=</span> <span class="m">0.05</span><span class="p">,</span>
+
+  <span class="c1">## learning rate annealing: learning_rate shrinks by 1% after every tree</span>
+  <span class="c1">## (use 1.00 to disable, but then lower the learning_rate)</span>
+  learn_rate_annealing <span class="o">=</span> <span class="m">0.99</span><span class="p">,</span>
+
+  <span class="c1">## early stopping based on timeout (no model should take more than 1 hour - modify as needed)</span>
+  max_runtime_secs <span class="o">=</span> <span class="m">30</span><span class="p">,</span>
+
+  <span class="c1">## early stopping once the validation AUC doesn&#39;t improve by at least 0.01% for 5 consecutive scoring events</span>
+  stopping_rounds <span class="o">=</span> <span class="m">5</span><span class="p">,</span> stopping_tolerance <span class="o">=</span> <span class="m">1e-3</span><span class="p">,</span> stopping_metric <span class="o">=</span> <span class="s">&quot;AUC&quot;</span><span class="p">,</span>
+
+  <span class="c1">## score every 10 trees to make early stopping reproducible (it depends on the scoring interval)</span>
+  score_tree_interval <span class="o">=</span> <span class="m">10</span><span class="p">,</span>
+
+  <span class="c1">## base random number generator seed for each model (automatically gets incremented internally for each model)</span>
+  seed <span class="o">=</span> <span class="m">1234</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
+  <span class="o">|</span>
+  <span class="o">|</span>                                                                 <span class="o">|</span>   <span class="mi">0</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|</span>                                                                 <span class="o">|</span>   <span class="mi">1</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|=======</span>                                                          <span class="o">|</span>  <span class="mi">11</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|==============</span>                                                   <span class="o">|</span>  <span class="mi">21</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|=====================</span>                                            <span class="o">|</span>  <span class="mi">32</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|===========================</span>                                      <span class="o">|</span>  <span class="mi">42</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|==================================</span>                               <span class="o">|</span>  <span class="mi">52</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|=========================================</span>                        <span class="o">|</span>  <span class="mi">63</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|===============================================</span>                  <span class="o">|</span>  <span class="mi">73</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|======================================================</span>           <span class="o">|</span>  <span class="mi">83</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|=============================================================</span>    <span class="o">|</span>  <span class="mi">94</span><span class="o">%</span>
+  <span class="o">|</span>
+  <span class="o">|=================================================================|</span> <span class="mi">100</span><span class="o">%</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># 9.4. Get models</span>
+sortedGrid <span class="o">&lt;-</span> h2o.getGrid<span class="p">(</span><span class="s">&quot;model_id&quot;</span><span class="p">,</span> sort_by <span class="o">=</span> <span class="s">&quot;auc&quot;</span><span class="p">,</span> decreasing <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+sortedGrid
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## H2O Grid Details</span>
+<span class="c1">## ================</span>
+<span class="c1">##</span>
+<span class="c1">## Grid ID: model_id</span>
+<span class="c1">## Used hyper parameters:</span>
+<span class="c1">##   -  col_sample_rate</span>
+<span class="c1">##   -  histogram_type</span>
+<span class="c1">##   -  max_depth</span>
+<span class="c1">##   -  min_rows</span>
+<span class="c1">##   -  min_split_improvement</span>
+<span class="c1">##   -  nbins</span>
+<span class="c1">##   -  nbins_cats</span>
+<span class="c1">##   -  sample_rate</span>
+<span class="c1">## Number of models: 2</span>
+<span class="c1">## Number of failed models: 0</span>
+<span class="c1">##</span>
+<span class="c1">## Hyper-Parameter Search Summary: ordered by decreasing auc</span>
+<span class="c1">##   col_sample_rate histogram_type max_depth min_rows min_split_improvement</span>
+<span class="c1">## 1            0.85     RoundRobin         6      1.0                1.0E-6</span>
+<span class="c1">## 2             0.7     RoundRobin         7     32.0                   0.0</span>
+<span class="c1">##   nbins nbins_cats sample_rate        model_ids                auc</span>
+<span class="c1">## 1   128         64         0.6 model_id_model_0 0.7895715023231802</span>
+<span class="c1">## 2  1024       2048        0.75 model_id_model_1 0.6519876097057306</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># 9.5. Get best model</span>
+gbm <span class="o">&lt;-</span> h2o.getModel<span class="p">(</span>sortedGrid<span class="o">@</span>model_ids<span class="p">[[</span><span class="m">1</span><span class="p">]])</span>
+
+<span class="c1"># Parameters of the best model</span>
+gbm<span class="o">@</span>parameters
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## $model_id</span>
+<span class="c1">## [1] &quot;model_id_model_0&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## $training_frame</span>
+<span class="c1">## [1] &quot;RTMP_sid_a89c_2&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## $validation_frame</span>
+<span class="c1">## [1] &quot;RTMP_sid_a89c_4&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## $score_tree_interval</span>
+<span class="c1">## [1] 10</span>
+<span class="c1">##</span>
+<span class="c1">## $ntrees</span>
+<span class="c1">## [1] 200</span>
+<span class="c1">##</span>
+<span class="c1">## $max_depth</span>
+<span class="c1">## [1] 6</span>
+<span class="c1">##</span>
+<span class="c1">## $min_rows</span>
+<span class="c1">## [1] 1</span>
+<span class="c1">##</span>
+<span class="c1">## $nbins</span>
+<span class="c1">## [1] 128</span>
+<span class="c1">##</span>
+<span class="c1">## $nbins_cats</span>
+<span class="c1">## [1] 64</span>
+<span class="c1">##</span>
+<span class="c1">## $stopping_rounds</span>
+<span class="c1">## [1] 5</span>
+<span class="c1">##</span>
+<span class="c1">## $stopping_metric</span>
+<span class="c1">## [1] &quot;AUC&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## $max_runtime_secs</span>
+<span class="c1">## [1] 10</span>
+<span class="c1">##</span>
+<span class="c1">## $seed</span>
+<span class="c1">## [1] 1234</span>
+<span class="c1">##</span>
+<span class="c1">## $learn_rate</span>
+<span class="c1">## [1] 0.05</span>
+<span class="c1">##</span>
+<span class="c1">## $learn_rate_annealing</span>
+<span class="c1">## [1] 0.99</span>
+<span class="c1">##</span>
+<span class="c1">## $distribution</span>
+<span class="c1">## [1] &quot;bernoulli&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## $sample_rate</span>
+<span class="c1">## [1] 0.6</span>
+<span class="c1">##</span>
+<span class="c1">## $col_sample_rate</span>
+<span class="c1">## [1] 0.85</span>
+<span class="c1">##</span>
+<span class="c1">## $min_split_improvement</span>
+<span class="c1">## [1] 1e-06</span>
+<span class="c1">##</span>
+<span class="c1">## $histogram_type</span>
+<span class="c1">## [1] &quot;RoundRobin&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## $x</span>
+<span class="c1">##  [1] &quot;Duration&quot;</span>
+<span class="c1">##  [2] &quot;Amount&quot;</span>
+<span class="c1">##  [3] &quot;InstallmentRatePercentage&quot;</span>
+<span class="c1">##  [4] &quot;ResidenceDuration&quot;</span>
+<span class="c1">##  [5] &quot;Age&quot;</span>
+<span class="c1">##  [6] &quot;NumberExistingCredits&quot;</span>
+<span class="c1">##  [7] &quot;NumberPeopleMaintenance&quot;</span>
+<span class="c1">##  [8] &quot;Telephone&quot;</span>
+<span class="c1">##  [9] &quot;ForeignWorker&quot;</span>
+<span class="c1">## [10] &quot;CheckingAccountStatus.lt.0&quot;</span>
+<span class="c1">## [11] &quot;CheckingAccountStatus.0.to.200&quot;</span>
+<span class="c1">## [12] &quot;CheckingAccountStatus.gt.200&quot;</span>
+<span class="c1">## [13] &quot;CheckingAccountStatus.none&quot;</span>
+<span class="c1">## [14] &quot;CreditHistory.NoCredit.AllPaid&quot;</span>
+<span class="c1">## [15] &quot;CreditHistory.ThisBank.AllPaid&quot;</span>
+<span class="c1">## [16] &quot;CreditHistory.PaidDuly&quot;</span>
+<span class="c1">## [17] &quot;CreditHistory.Delay&quot;</span>
+<span class="c1">## [18] &quot;CreditHistory.Critical&quot;</span>
+<span class="c1">## [19] &quot;Purpose.NewCar&quot;</span>
+<span class="c1">## [20] &quot;Purpose.UsedCar&quot;</span>
+<span class="c1">## [21] &quot;Purpose.Furniture.Equipment&quot;</span>
+<span class="c1">## [22] &quot;Purpose.Radio.Television&quot;</span>
+<span class="c1">## [23] &quot;Purpose.DomesticAppliance&quot;</span>
+<span class="c1">## [24] &quot;Purpose.Repairs&quot;</span>
+<span class="c1">## [25] &quot;Purpose.Education&quot;</span>
+<span class="c1">## [26] &quot;Purpose.Retraining&quot;</span>
+<span class="c1">## [27] &quot;Purpose.Business&quot;</span>
+<span class="c1">## [28] &quot;Purpose.Other&quot;</span>
+<span class="c1">## [29] &quot;SavingsAccountBonds.lt.100&quot;</span>
+<span class="c1">## [30] &quot;SavingsAccountBonds.100.to.500&quot;</span>
+<span class="c1">## [31] &quot;SavingsAccountBonds.500.to.1000&quot;</span>
+<span class="c1">## [32] &quot;SavingsAccountBonds.gt.1000&quot;</span>
+<span class="c1">## [33] &quot;SavingsAccountBonds.Unknown&quot;</span>
+<span class="c1">## [34] &quot;EmploymentDuration.lt.1&quot;</span>
+<span class="c1">## [35] &quot;EmploymentDuration.1.to.4&quot;</span>
+<span class="c1">## [36] &quot;EmploymentDuration.4.to.7&quot;</span>
+<span class="c1">## [37] &quot;EmploymentDuration.gt.7&quot;</span>
+<span class="c1">## [38] &quot;EmploymentDuration.Unemployed&quot;</span>
+<span class="c1">## [39] &quot;Personal.Male.Divorced.Seperated&quot;</span>
+<span class="c1">## [40] &quot;Personal.Female.NotSingle&quot;</span>
+<span class="c1">## [41] &quot;Personal.Male.Single&quot;</span>
+<span class="c1">## [42] &quot;Personal.Male.Married.Widowed&quot;</span>
+<span class="c1">## [43] &quot;OtherDebtorsGuarantors.None&quot;</span>
+<span class="c1">## [44] &quot;OtherDebtorsGuarantors.CoApplicant&quot;</span>
+<span class="c1">## [45] &quot;OtherDebtorsGuarantors.Guarantor&quot;</span>
+<span class="c1">## [46] &quot;Property.RealEstate&quot;</span>
+<span class="c1">## [47] &quot;Property.Insurance&quot;</span>
+<span class="c1">## [48] &quot;Property.CarOther&quot;</span>
+<span class="c1">## [49] &quot;Property.Unknown&quot;</span>
+<span class="c1">## [50] &quot;OtherInstallmentPlans.Bank&quot;</span>
+<span class="c1">## [51] &quot;OtherInstallmentPlans.Stores&quot;</span>
+<span class="c1">## [52] &quot;OtherInstallmentPlans.None&quot;</span>
+<span class="c1">## [53] &quot;Housing.Rent&quot;</span>
+<span class="c1">## [54] &quot;Housing.Own&quot;</span>
+<span class="c1">## [55] &quot;Housing.ForFree&quot;</span>
+<span class="c1">## [56] &quot;Job.UnemployedUnskilled&quot;</span>
+<span class="c1">## [57] &quot;Job.UnskilledResident&quot;</span>
+<span class="c1">## [58] &quot;Job.SkilledEmployee&quot;</span>
+<span class="c1">## [59] &quot;Job.Management.SelfEmp.HighlyQualified&quot;</span>
+<span class="c1">##</span>
+<span class="c1">## $y</span>
+<span class="c1">## [1] &quot;Class&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Summary best model</span>
+gbm <span class="o">%&gt;%</span> <span class="kp">summary</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Model Details:</span>
+<span class="c1">## ==============</span>
+<span class="c1">##</span>
+<span class="c1">## H2OBinomialModel: gbm</span>
+<span class="c1">## Model Key:  model_id_model_0</span>
+<span class="c1">## Model Summary:</span>
+<span class="c1">##   number_of_trees number_of_internal_trees model_size_in_bytes min_depth</span>
+<span class="c1">## 1             150                      150               87566         6</span>
+<span class="c1">##   max_depth mean_depth min_leaves max_leaves mean_leaves</span>
+<span class="c1">## 1         6    6.00000         25         56    41.36666</span>
+<span class="c1">##</span>
+<span class="c1">## H2OBinomialMetrics: gbm</span>
+<span class="c1">## ** Reported on training data. **</span>
+<span class="c1">##</span>
+<span class="c1">## MSE:  0.04609157</span>
+<span class="c1">## RMSE:  0.2146895</span>
+<span class="c1">## LogLoss:  0.1975817</span>
+<span class="c1">## Mean Per-Class Error:  0.03279144</span>
+<span class="c1">## AUC:  0.9968413</span>
+<span class="c1">## Gini:  0.9936827</span>
+<span class="c1">##</span>
+<span class="c1">## Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:</span>
+<span class="c1">##        Bad Good    Error     Rate</span>
+<span class="c1">## Bad    223   12 0.051064  =12/235</span>
+<span class="c1">## Good     8  543 0.014519   =8/551</span>
+<span class="c1">## Totals 231  555 0.025445  =20/786</span>
+<span class="c1">##</span>
+<span class="c1">## Maximum Metrics: Maximum metrics at their respective thresholds</span>
+<span class="c1">##                         metric threshold    value idx</span>
+<span class="c1">## 1                       max f1  0.557658 0.981917 233</span>
+<span class="c1">## 2                       max f2  0.494161 0.989189 246</span>
+<span class="c1">## 3                 max f0point5  0.683415 0.985837 215</span>
+<span class="c1">## 4                 max accuracy  0.606647 0.974555 224</span>
+<span class="c1">## 5                max precision  0.981744 1.000000   0</span>
+<span class="c1">## 6                   max recall  0.416175 1.000000 265</span>
+<span class="c1">## 7              max specificity  0.981744 1.000000   0</span>
+<span class="c1">## 8             max absolute_mcc  0.606647 0.939893 224</span>
+<span class="c1">## 9   max min_per_class_accuracy  0.635032 0.970213 222</span>
+<span class="c1">## 10 max mean_per_class_accuracy  0.606647 0.973310 224</span>
+<span class="c1">##</span>
+<span class="c1">## Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`</span>
+<span class="c1">## H2OBinomialMetrics: gbm</span>
+<span class="c1">## ** Reported on validation data. **</span>
+<span class="c1">##</span>
+<span class="c1">## MSE:  0.1640402</span>
+<span class="c1">## RMSE:  0.4050187</span>
+<span class="c1">## LogLoss:  0.49375</span>
+<span class="c1">## Mean Per-Class Error:  0.3412494</span>
+<span class="c1">## AUC:  0.7895715</span>
+<span class="c1">## Gini:  0.579143</span>
+<span class="c1">##</span>
+<span class="c1">## Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:</span>
+<span class="c1">##        Bad Good    Error     Rate</span>
+<span class="c1">## Bad     25   40 0.615385   =40/65</span>
+<span class="c1">## Good    10  139 0.067114  =10/149</span>
+<span class="c1">## Totals  35  179 0.233645  =50/214</span>
+<span class="c1">##</span>
+<span class="c1">## Maximum Metrics: Maximum metrics at their respective thresholds</span>
+<span class="c1">##                         metric threshold    value idx</span>
+<span class="c1">## 1                       max f1  0.419420 0.847561 178</span>
+<span class="c1">## 2                       max f2  0.240139 0.928928 205</span>
+<span class="c1">## 3                 max f0point5  0.566980 0.832250 154</span>
+<span class="c1">## 4                 max accuracy  0.566980 0.775701 154</span>
+<span class="c1">## 5                max precision  0.979432 1.000000   0</span>
+<span class="c1">## 6                   max recall  0.240139 1.000000 205</span>
+<span class="c1">## 7              max specificity  0.979432 1.000000   0</span>
+<span class="c1">## 8             max absolute_mcc  0.566980 0.456587 154</span>
+<span class="c1">## 9   max min_per_class_accuracy  0.733737 0.707692 124</span>
+<span class="c1">## 10 max mean_per_class_accuracy  0.566980 0.721838 154</span>
+<span class="c1">##</span>
+<span class="c1">## Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`</span>
+<span class="c1">##</span>
+<span class="c1">##</span>
+<span class="c1">## Scoring History:</span>
+<span class="c1">##              timestamp   duration number_of_trees training_rmse</span>
+<span class="c1">## 1  2019-09-29 21:15:44  0.039 sec               0       0.45781</span>
+<span class="c1">## 2  2019-09-29 21:15:47  2.234 sec              10       0.38763</span>
+<span class="c1">## 3  2019-09-29 21:15:47  2.462 sec              20       0.34544</span>
+<span class="c1">## 4  2019-09-29 21:15:47  2.730 sec              30       0.31670</span>
+<span class="c1">## 5  2019-09-29 21:15:47  2.962 sec              40       0.29576</span>
+<span class="c1">## 6  2019-09-29 21:15:47  3.186 sec              50       0.28082</span>
+<span class="c1">## 7  2019-09-29 21:15:48  3.370 sec              60       0.26738</span>
+<span class="c1">## 8  2019-09-29 21:15:48  3.534 sec              70       0.25817</span>
+<span class="c1">## 9  2019-09-29 21:15:48  3.690 sec              80       0.24905</span>
+<span class="c1">## 10 2019-09-29 21:15:48  3.858 sec              90       0.24140</span>
+<span class="c1">## 11 2019-09-29 21:15:48  4.026 sec             100       0.23425</span>
+<span class="c1">## 12 2019-09-29 21:15:48  4.222 sec             110       0.22978</span>
+<span class="c1">## 13 2019-09-29 21:15:49  4.402 sec             120       0.22572</span>
+<span class="c1">## 14 2019-09-29 21:15:49  4.598 sec             130       0.22135</span>
+<span class="c1">## 15 2019-09-29 21:15:49  4.782 sec             140       0.21774</span>
+<span class="c1">## 16 2019-09-29 21:15:49  4.969 sec             150       0.21469</span>
+<span class="c1">##    training_logloss training_auc training_lift</span>
+<span class="c1">## 1           0.61000      0.50000       1.00000</span>
+<span class="c1">## 2           0.47229      0.95625       1.42650</span>
+<span class="c1">## 3           0.39750      0.96806       1.42650</span>
+<span class="c1">## 4           0.34908      0.97642       1.42650</span>
+<span class="c1">## 5           0.31446      0.98191       1.42650</span>
+<span class="c1">## 6           0.29155      0.98548       1.42650</span>
+<span class="c1">## 7           0.27135      0.98910       1.42650</span>
+<span class="c1">## 8           0.25757      0.99003       1.42650</span>
+<span class="c1">## 9           0.24450      0.99217       1.42650</span>
+<span class="c1">## 10          0.23374      0.99351       1.42650</span>
+<span class="c1">## 11          0.22409      0.99471       1.42650</span>
+<span class="c1">## 12          0.21782      0.99510       1.42650</span>
+<span class="c1">## 13          0.21203      0.99559       1.42650</span>
+<span class="c1">## 14          0.20626      0.99609       1.42650</span>
+<span class="c1">## 15          0.20152      0.99660       1.42650</span>
+<span class="c1">## 16          0.19758      0.99684       1.42650</span>
+<span class="c1">##    training_classification_error validation_rmse validation_logloss</span>
+<span class="c1">## 1                        0.29898         0.45990            0.61405</span>
+<span class="c1">## 2                        0.08015         0.43239            0.55531</span>
+<span class="c1">## 3                        0.07761         0.41915            0.52568</span>
+<span class="c1">## 4                        0.06234         0.41203            0.51035</span>
+<span class="c1">## 5                        0.05852         0.40949            0.50433</span>
+<span class="c1">## 6                        0.04835         0.40745            0.50014</span>
+<span class="c1">## 7                        0.03690         0.40660            0.49789</span>
+<span class="c1">## 8                        0.03690         0.40707            0.49831</span>
+<span class="c1">## 9                        0.03562         0.40673            0.49703</span>
+<span class="c1">## 10                       0.03181         0.40501            0.49333</span>
+<span class="c1">## 11                       0.02799         0.40554            0.49441</span>
+<span class="c1">## 12                       0.02799         0.40566            0.49456</span>
+<span class="c1">## 13                       0.02799         0.40601            0.49527</span>
+<span class="c1">## 14                       0.02672         0.40565            0.49485</span>
+<span class="c1">## 15                       0.02545         0.40512            0.49357</span>
+<span class="c1">## 16                       0.02545         0.40502            0.49375</span>
+<span class="c1">##    validation_auc validation_lift validation_classification_error</span>
+<span class="c1">## 1         0.50000         1.00000                         0.30374</span>
+<span class="c1">## 2         0.75333         1.43624                         0.26168</span>
+<span class="c1">## 3         0.77357         1.43624                         0.26636</span>
+<span class="c1">## 4         0.78503         1.43624                         0.21495</span>
+<span class="c1">## 5         0.78482         1.43624                         0.21495</span>
+<span class="c1">## 6         0.78699         1.43624                         0.21495</span>
+<span class="c1">## 7         0.78771         1.43624                         0.21963</span>
+<span class="c1">## 8         0.78616         1.43624                         0.22897</span>
+<span class="c1">## 9         0.78730         1.43624                         0.21963</span>
+<span class="c1">## 10        0.78998         1.43624                         0.22897</span>
+<span class="c1">## 11        0.78926         1.43624                         0.23832</span>
+<span class="c1">## 12        0.78875         1.43624                         0.23832</span>
+<span class="c1">## 13        0.78792         1.43624                         0.23832</span>
+<span class="c1">## 14        0.78813         1.43624                         0.23832</span>
+<span class="c1">## 15        0.78906         1.43624                         0.23364</span>
+<span class="c1">## 16        0.78957         1.43624                         0.23364</span>
+<span class="c1">##</span>
+<span class="c1">## Variable Importances: (Extract with `h2o.varimp`)</span>
+<span class="c1">## =================================================</span>
+<span class="c1">##</span>
+<span class="c1">## Variable Importances:</span>
+<span class="c1">##                     variable relative_importance scaled_importance</span>
+<span class="c1">## 1                     Amount          271.652588          1.000000</span>
+<span class="c1">## 2 CheckingAccountStatus.none          183.992157          0.677307</span>
+<span class="c1">## 3                   Duration          174.874634          0.643744</span>
+<span class="c1">## 4                        Age          168.345612          0.619709</span>
+<span class="c1">## 5  InstallmentRatePercentage           56.974583          0.209733</span>
+<span class="c1">##   percentage</span>
+<span class="c1">## 1   0.149237</span>
+<span class="c1">## 2   0.101079</span>
+<span class="c1">## 3   0.096070</span>
+<span class="c1">## 4   0.092484</span>
+<span class="c1">## 5   0.031300</span>
+<span class="c1">##</span>
+<span class="c1">## ---</span>
+<span class="c1">##                     variable relative_importance scaled_importance</span>
+<span class="c1">## 54           Purpose.Repairs            7.493972          0.027587</span>
+<span class="c1">## 55             ForeignWorker            6.335423          0.023322</span>
+<span class="c1">## 56   Job.UnemployedUnskilled            4.599856          0.016933</span>
+<span class="c1">## 57        Purpose.Retraining            3.144078          0.011574</span>
+<span class="c1">## 58 Purpose.DomesticAppliance            1.838258          0.006767</span>
+<span class="c1">## 59             Purpose.Other            0.832699          0.003065</span>
+<span class="c1">##    percentage</span>
+<span class="c1">## 54   0.004117</span>
+<span class="c1">## 55   0.003480</span>
+<span class="c1">## 56   0.002527</span>
+<span class="c1">## 57   0.001727</span>
+<span class="c1">## 58   0.001010</span>
+<span class="c1">## 59   0.000457</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="luu-va-load-mo-hinh">
+<h3>6.3.10. Lưu và load mô hình<a class="headerlink" href="#luu-va-load-mo-hinh" title="Permalink to this headline">¶</a></h3>
+<p>Để lưu lại mô hình trên H2O, chúng ta sử dụng câu lệnh
+<code class="docutils literal notranslate"><span class="pre">h2o.saveModel()</span></code>.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lưu model</span>
+h2o.saveModel<span class="p">(</span>gbm<span class="p">,</span> <span class="c1"># Tên mô hình</span>
+              path <span class="o">=</span> <span class="kp">getwd</span><span class="p">(),</span> <span class="c1"># Đường dẫn muốn lưu</span>
+              force <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Để load mô hình trên H2O, chúng ta sử dụng câu lệnh <code class="docutils literal notranslate"><span class="pre">h2o.loadModel()</span></code>.</p>
+<hr class="docutils" />
+<p>Như vậy, trong chương này, chúng ta được học cách xây dựng mô hình dự
+báo với H2O. Đây là một platform rất mạnh giúp cải thiện chất lượng dự
+báo, tốc độ xử lý, tối ưu hóa mô hình, cũng như hiển thị kết quả mô hình
+một cách rất hiệu quả.</p>
+</div>
+</div>
+<div class="section" id="tai-lieu-tham-khao">
+<h2>6.4. Tài liệu tham khảo<a class="headerlink" href="#tai-lieu-tham-khao" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/h2oai/h2o-tutorials">https://github.com/h2oai/h2o-tutorials</a></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="p03-08-svm.html" class="btn btn-neutral float-right" title="7. Support Vector Machine" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="p03-05-bagging-boosting.html" class="btn btn-neutral float-left" title="5. Bagging, RandomForest và Boosting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Anh Hoang Duc
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

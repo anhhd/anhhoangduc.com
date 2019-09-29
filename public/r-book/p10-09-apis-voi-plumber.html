@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -301,56 +302,56 @@ kỳ trở ngại nào.</p>
 
 <span class="c1">#&#39; @get /mean</span>
 <span class="c1">#&#39; @post /mean</span>
-<span class="n">normalMean</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">samples</span><span class="o">=</span><span class="m">10</span><span class="p">){</span>
-  <span class="n">data</span> <span class="o">&lt;-</span> <span class="nf">rnorm</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
-  <span class="nf">mean</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+normalMean <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>samples<span class="o">=</span><span class="m">10</span><span class="p">){</span>
+  data <span class="o">&lt;-</span> rnorm<span class="p">(</span>samples<span class="p">)</span>
+  <span class="kp">mean</span><span class="p">(</span>data<span class="p">)</span>
 <span class="p">}</span>
 
 <span class="c1">#&#39; @post /sum</span>
 <span class="c1">#&#39; @get /sum</span>
-<span class="n">addTwo</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="m">8</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="m">9</span><span class="p">){</span>
-  <span class="nf">as.numeric</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="nf">as.numeric</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+addTwo <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>a<span class="o">=</span><span class="m">8</span><span class="p">,</span> b<span class="o">=</span><span class="m">9</span><span class="p">){</span>
+  <span class="kp">as.numeric</span><span class="p">(</span>a<span class="p">)</span> <span class="o">+</span> <span class="kp">as.numeric</span><span class="p">(</span>b<span class="p">)</span>
 <span class="p">}</span>
 
-<span class="nf">library</span><span class="p">(</span><span class="n">plumber</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>plumber<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>ggplot2<span class="p">)</span>
 <span class="c1">#&#39; @get /histogram_test</span>
 <span class="c1">#&#39; @png</span>
-<span class="n">histogram_test</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(){</span>
-  <span class="n">mtcars</span><span class="o">=</span><span class="n">mtcars</span>
-  <span class="n">b</span><span class="o">=</span><span class="nf">ggplot</span><span class="p">(</span><span class="n">mtcars</span><span class="p">,</span><span class="nf">aes</span><span class="p">(</span><span class="n">mtcars</span><span class="o">$</span><span class="n">cyl</span><span class="p">))</span>
-  <span class="nf">print</span><span class="p">(</span><span class="n">b</span><span class="o">+</span><span class="nf">geom_bar</span><span class="p">())</span>
+histogram_test <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(){</span>
+  mtcars<span class="o">=</span>mtcars
+  b<span class="o">=</span>ggplot<span class="p">(</span>mtcars<span class="p">,</span>aes<span class="p">(</span>mtcars<span class="o">$</span>cyl<span class="p">))</span>
+  <span class="kp">print</span><span class="p">(</span>b<span class="o">+</span>geom_bar<span class="p">())</span>
 <span class="p">}</span>
 
 <span class="c1">#&#39; @get /plot</span>
 <span class="c1">#&#39; @png</span>
-<span class="n">my_plot</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">samples</span><span class="o">=</span><span class="m">100</span><span class="p">){</span>
-  <span class="nf">print</span><span class="p">(</span><span class="nf">hist</span><span class="p">(</span><span class="nf">rnorm</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="m">3</span><span class="p">,</span><span class="m">1</span><span class="p">)))</span>
+my_plot <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>samples<span class="o">=</span><span class="m">100</span><span class="p">){</span>
+  <span class="kp">print</span><span class="p">(</span>hist<span class="p">(</span>rnorm<span class="p">(</span>samples<span class="p">,</span> <span class="m">3</span><span class="p">,</span><span class="m">1</span><span class="p">)))</span>
 <span class="p">}</span>
 
-<span class="nf">library</span><span class="p">(</span><span class="n">dygraphs</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">htmlwidgets</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>dygraphs<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>htmlwidgets<span class="p">)</span>
 <span class="c1">#&#39; @post /my_html</span>
 <span class="c1">#&#39; @get /my_html</span>
 <span class="c1">#&#39; @serializer htmlwidget</span>
-<span class="n">my_html</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(){</span>
-  <span class="nf">library</span><span class="p">(</span><span class="n">dygraphs</span><span class="p">)</span>
-  <span class="n">lungDeaths</span> <span class="o">&lt;-</span> <span class="nf">cbind</span><span class="p">(</span><span class="n">mdeaths</span><span class="p">,</span> <span class="n">fdeaths</span><span class="p">)</span>
-  <span class="n">out</span> <span class="o">&lt;-</span> <span class="nf">dygraph</span><span class="p">(</span><span class="n">lungDeaths</span><span class="p">)</span>
-  <span class="nf">print</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+my_html <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(){</span>
+  <span class="kn">library</span><span class="p">(</span>dygraphs<span class="p">)</span>
+  lungDeaths <span class="o">&lt;-</span> <span class="kp">cbind</span><span class="p">(</span>mdeaths<span class="p">,</span> fdeaths<span class="p">)</span>
+  out <span class="o">&lt;-</span> dygraph<span class="p">(</span>lungDeaths<span class="p">)</span>
+  <span class="kp">print</span><span class="p">(</span>out<span class="p">)</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p><strong>File rum_plumber.R</strong>: run <code class="docutils literal notranslate"><span class="pre">server</span></code> để trả APIs</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">plumber</span><span class="p">)</span>
-<span class="n">r</span> <span class="o">&lt;-</span> <span class="nf">plumb</span><span class="p">(</span><span class="s">&quot;plumber.R&quot;</span><span class="p">)</span>
-<span class="n">r</span><span class="o">$</span><span class="nf">run</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="m">8000</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>plumber<span class="p">)</span>
+r <span class="o">&lt;-</span> plumb<span class="p">(</span><span class="s">&quot;plumber.R&quot;</span><span class="p">)</span>
+r<span class="o">$</span>run<span class="p">(</span>port<span class="o">=</span><span class="m">8000</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="cach-su-dung-ket-qua-tu-web">
 <h2>3.2. Cách sử dụng kết quả từ web<a class="headerlink" href="#cach-su-dung-ket-qua-tu-web" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">http</span><span class="o">://</span><span class="m">127.0.0.1</span><span class="o">:</span><span class="m">8000</span><span class="o">/</span><span class="n">sum</span><span class="o">?</span><span class="n">a</span><span class="o">=</span><span class="m">9</span><span class="o">&amp;</span><span class="n">b</span><span class="o">=</span><span class="m">10</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>http<span class="o">://</span><span class="m">127.0.0.1</span><span class="o">:</span><span class="m">8000</span><span class="o">/</span><span class="kp">sum</span><span class="o">?</span>a<span class="o">=</span><span class="m">9</span><span class="o">&amp;</span>b<span class="o">=</span><span class="m">10</span>
 </pre></div>
 </div>
 </div>

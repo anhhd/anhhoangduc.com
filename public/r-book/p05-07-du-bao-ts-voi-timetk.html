@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -285,17 +286,17 @@
 <h1>5. Dự báo chuỗi thời gian với timetk<a class="headerlink" href="#du-bao-chuoi-thoi-gian-voi-timetk" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="du-lieu">
 <h2>5.1. Dữ liệu<a class="headerlink" href="#du-lieu" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">timetk</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">lubridate</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">tidyquant</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>timetk<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>lubridate<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>tidyquant<span class="p">)</span>
 
-<span class="n">bikes</span> <span class="o">&lt;-</span> <span class="nf">read_csv</span><span class="p">(</span><span class="s">&quot;data/day.csv&quot;</span><span class="p">)</span>
+bikes <span class="o">&lt;-</span> read_csv<span class="p">(</span><span class="s">&quot;data/day.csv&quot;</span><span class="p">)</span>
 <span class="c1"># Select date and count</span>
-<span class="n">bikes</span> <span class="o">&lt;-</span> <span class="n">bikes</span> <span class="o">%&gt;%</span>
-    <span class="nf">select</span><span class="p">(</span><span class="n">dteday</span><span class="p">,</span> <span class="n">cnt</span><span class="p">)</span> <span class="o">%&gt;%</span>
-    <span class="nf">rename</span><span class="p">(</span><span class="n">date</span> <span class="o">=</span> <span class="n">dteday</span><span class="p">)</span>
-<span class="n">bikes</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+bikes <span class="o">&lt;-</span> bikes <span class="o">%&gt;%</span>
+    select<span class="p">(</span>dteday<span class="p">,</span> cnt<span class="p">)</span> <span class="o">%&gt;%</span>
+    rename<span class="p">(</span>date <span class="o">=</span> dteday<span class="p">)</span>
+bikes <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 6 x 2</span>
@@ -310,19 +311,19 @@
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Visualize data and training/testing regions</span>
-<span class="n">bikes</span> <span class="o">%&gt;%</span>
-    <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cnt</span><span class="p">))</span> <span class="o">+</span>
-    <span class="nf">geom_rect</span><span class="p">(</span><span class="n">xmin</span> <span class="o">=</span> <span class="nf">as.numeric</span><span class="p">(</span><span class="nf">ymd</span><span class="p">(</span><span class="s">&quot;2012-07-01&quot;</span><span class="p">)),</span>
-              <span class="n">xmax</span> <span class="o">=</span> <span class="nf">as.numeric</span><span class="p">(</span><span class="nf">ymd</span><span class="p">(</span><span class="s">&quot;2013-01-01&quot;</span><span class="p">)),</span>
-              <span class="n">ymin</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="m">10000</span><span class="p">,</span>
-              <span class="n">fill</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[4]]</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.01</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">annotate</span><span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="nf">ymd</span><span class="p">(</span><span class="s">&quot;2011-10-01&quot;</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="m">7800</span><span class="p">,</span>
-             <span class="n">color</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[1]]</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;Train Region&quot;</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">annotate</span><span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="nf">ymd</span><span class="p">(</span><span class="s">&quot;2012-10-01&quot;</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="m">1550</span><span class="p">,</span>
-             <span class="n">color</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[1]]</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;Test Region&quot;</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">geom_point</span><span class="p">(</span><span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[1]]</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">labs</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Bikes Sharing Dataset: Daily Scale&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">theme_tq</span><span class="p">()</span>
+bikes <span class="o">%&gt;%</span>
+    ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> <span class="kp">date</span><span class="p">,</span> y <span class="o">=</span> cnt<span class="p">))</span> <span class="o">+</span>
+    geom_rect<span class="p">(</span>xmin <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>ymd<span class="p">(</span><span class="s">&quot;2012-07-01&quot;</span><span class="p">)),</span>
+              xmax <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>ymd<span class="p">(</span><span class="s">&quot;2013-01-01&quot;</span><span class="p">)),</span>
+              ymin <span class="o">=</span> <span class="m">0</span><span class="p">,</span> ymax <span class="o">=</span> <span class="m">10000</span><span class="p">,</span>
+              fill <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">4</span><span class="p">]],</span> alpha <span class="o">=</span> <span class="m">0.01</span><span class="p">)</span> <span class="o">+</span>
+    annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> x <span class="o">=</span> ymd<span class="p">(</span><span class="s">&quot;2011-10-01&quot;</span><span class="p">),</span> y <span class="o">=</span> <span class="m">7800</span><span class="p">,</span>
+             color <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">1</span><span class="p">]],</span> label <span class="o">=</span> <span class="s">&quot;Train Region&quot;</span><span class="p">)</span> <span class="o">+</span>
+    annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> x <span class="o">=</span> ymd<span class="p">(</span><span class="s">&quot;2012-10-01&quot;</span><span class="p">),</span> y <span class="o">=</span> <span class="m">1550</span><span class="p">,</span>
+             color <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">1</span><span class="p">]],</span> label <span class="o">=</span> <span class="s">&quot;Test Region&quot;</span><span class="p">)</span> <span class="o">+</span>
+    geom_point<span class="p">(</span>alpha <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> color <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">1</span><span class="p">]])</span> <span class="o">+</span>
+    labs<span class="p">(</span>title <span class="o">=</span> <span class="s">&quot;Bikes Sharing Dataset: Daily Scale&quot;</span><span class="p">,</span> x <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span>
+    theme_tq<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image0" src="p05-07-du-bao-ts-voi-timetk_files/figure-html/unnamed-chunk-2-1.png" /></p>
@@ -330,19 +331,19 @@
 <li>Dữ liệu train/test</li>
 </ul>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Split into training and test sets</span>
-<span class="n">train</span> <span class="o">&lt;-</span> <span class="n">bikes</span> <span class="o">%&gt;%</span>
-    <span class="nf">filter</span><span class="p">(</span><span class="n">date</span> <span class="o">&lt;</span> <span class="nf">ymd</span><span class="p">(</span><span class="s">&quot;2012-07-01&quot;</span><span class="p">))</span>
+train <span class="o">&lt;-</span> bikes <span class="o">%&gt;%</span>
+    filter<span class="p">(</span>date <span class="o">&lt;</span> ymd<span class="p">(</span><span class="s">&quot;2012-07-01&quot;</span><span class="p">))</span>
 
-<span class="n">test</span> <span class="o">&lt;-</span> <span class="n">bikes</span> <span class="o">%&gt;%</span>
-    <span class="nf">filter</span><span class="p">(</span><span class="n">date</span> <span class="o">&gt;=</span> <span class="nf">ymd</span><span class="p">(</span><span class="s">&quot;2012-07-01&quot;</span><span class="p">))</span>
+test <span class="o">&lt;-</span> bikes <span class="o">%&gt;%</span>
+    filter<span class="p">(</span>date <span class="o">&gt;=</span> ymd<span class="p">(</span><span class="s">&quot;2012-07-01&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li>Tạo thêm dữ liệu pattern</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">train_augmented</span> <span class="o">&lt;-</span> <span class="n">train</span> <span class="o">%&gt;%</span>
-    <span class="nf">tk_augment_timeseries_signature</span><span class="p">()</span>
-<span class="n">train_augmented</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>train_augmented <span class="o">&lt;-</span> train <span class="o">%&gt;%</span>
+    tk_augment_timeseries_signature<span class="p">()</span>
+train_augmented <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 6 x 30</span>
@@ -364,9 +365,9 @@
 <ul class="simple">
 <li>Mô hình</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">broom</span><span class="p">)</span>
-<span class="n">fit_lm</span> <span class="o">&lt;-</span> <span class="nf">lm</span><span class="p">(</span><span class="n">cnt</span> <span class="o">~</span> <span class="n">.,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">train_augmented</span><span class="p">)</span>
-<span class="n">fit_lm</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>broom<span class="p">)</span>
+fit_lm <span class="o">&lt;-</span> lm<span class="p">(</span>cnt <span class="o">~</span> <span class="m">.</span><span class="p">,</span> data <span class="o">=</span> train_augmented<span class="p">)</span>
+fit_lm <span class="o">%&gt;%</span> <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -433,23 +434,23 @@
 <span class="c1">## F-statistic: 54.52 on 28 and 517 DF,  p-value: &lt; 2.2e-16</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">fit_lm</span> <span class="o">%&gt;%</span>
-    <span class="nf">augment</span><span class="p">()</span> <span class="o">%&gt;%</span>
-    <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">.resid</span><span class="p">))</span> <span class="o">+</span>
-    <span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">geom_point</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[1]]</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">theme_tq</span><span class="p">()</span> <span class="o">+</span>
-    <span class="nf">labs</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Training Set: lm() Model Residuals&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">scale_y_continuous</span><span class="p">(</span><span class="n">limits</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">-5000</span><span class="p">,</span> <span class="m">5000</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>fit_lm <span class="o">%&gt;%</span>
+    augment<span class="p">()</span> <span class="o">%&gt;%</span>
+    ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> <span class="kp">date</span><span class="p">,</span> y <span class="o">=</span> <span class="m">.</span>resid<span class="p">))</span> <span class="o">+</span>
+    geom_hline<span class="p">(</span>yintercept <span class="o">=</span> <span class="m">0</span><span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span> <span class="o">+</span>
+    geom_point<span class="p">(</span>color <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">1</span><span class="p">]],</span> alpha <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span> <span class="o">+</span>
+    theme_tq<span class="p">()</span> <span class="o">+</span>
+    labs<span class="p">(</span>title <span class="o">=</span> <span class="s">&quot;Training Set: lm() Model Residuals&quot;</span><span class="p">,</span> x <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span>
+    scale_y_continuous<span class="p">(</span>limits <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">-5000</span><span class="p">,</span> <span class="m">5000</span><span class="p">))</span>
 </pre></div>
 </div>
 <p><img alt="image1" src="p05-07-du-bao-ts-voi-timetk_files/figure-html/unnamed-chunk-5-1.png" /></p>
 <ul class="simple">
 <li>Tạo dữ liệu test</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">test_augmented</span> <span class="o">&lt;-</span> <span class="n">test</span> <span class="o">%&gt;%</span>
-    <span class="nf">tk_augment_timeseries_signature</span><span class="p">()</span>
-<span class="n">test_augmented</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>test_augmented <span class="o">&lt;-</span> test <span class="o">%&gt;%</span>
+    tk_augment_timeseries_signature<span class="p">()</span>
+test_augmented
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 184 x 30</span>
@@ -472,11 +473,11 @@
 <span class="c1">## #   week.iso &lt;int&gt;, week2 &lt;int&gt;, week3 &lt;int&gt;, week4 &lt;int&gt;, mday7 &lt;int&gt;</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">yhat_test</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">fit_lm</span><span class="p">,</span> <span class="n">newdata</span> <span class="o">=</span> <span class="n">test_augmented</span><span class="p">)</span>
-<span class="n">pred_test</span> <span class="o">&lt;-</span> <span class="n">test</span> <span class="o">%&gt;%</span>
-    <span class="nf">add_column</span><span class="p">(</span><span class="n">yhat</span> <span class="o">=</span> <span class="n">yhat_test</span><span class="p">)</span> <span class="o">%&gt;%</span>
-    <span class="nf">mutate</span><span class="p">(</span><span class="n">.resid</span> <span class="o">=</span> <span class="n">cnt</span> <span class="o">-</span> <span class="n">yhat</span><span class="p">)</span>
-<span class="n">pred_test</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>yhat_test <span class="o">&lt;-</span> predict<span class="p">(</span>fit_lm<span class="p">,</span> newdata <span class="o">=</span> test_augmented<span class="p">)</span>
+pred_test <span class="o">&lt;-</span> test <span class="o">%&gt;%</span>
+    add_column<span class="p">(</span>yhat <span class="o">=</span> yhat_test<span class="p">)</span> <span class="o">%&gt;%</span>
+    mutate<span class="p">(</span><span class="m">.</span>resid <span class="o">=</span> cnt <span class="o">-</span> yhat<span class="p">)</span>
+pred_test
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 184 x 4</span>
@@ -498,36 +499,36 @@
 <ul class="simple">
 <li>So sánh kết quả</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">date</span><span class="p">),</span> <span class="n">data</span> <span class="o">=</span> <span class="n">bikes</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">geom_rect</span><span class="p">(</span><span class="n">xmin</span> <span class="o">=</span> <span class="nf">as.numeric</span><span class="p">(</span><span class="nf">ymd</span><span class="p">(</span><span class="s">&quot;2012-07-01&quot;</span><span class="p">)),</span>
-              <span class="n">xmax</span> <span class="o">=</span> <span class="nf">as.numeric</span><span class="p">(</span><span class="nf">ymd</span><span class="p">(</span><span class="s">&quot;2013-01-01&quot;</span><span class="p">)),</span>
-              <span class="n">ymin</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="m">10000</span><span class="p">,</span>
-              <span class="n">fill</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[4]]</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.01</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">annotate</span><span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="nf">ymd</span><span class="p">(</span><span class="s">&quot;2011-10-01&quot;</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="m">7800</span><span class="p">,</span>
-             <span class="n">color</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[1]]</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;Train Region&quot;</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">annotate</span><span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="nf">ymd</span><span class="p">(</span><span class="s">&quot;2012-10-01&quot;</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="m">1550</span><span class="p">,</span>
-             <span class="n">color</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[1]]</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;Test Region&quot;</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cnt</span><span class="p">),</span> <span class="n">data</span> <span class="o">=</span> <span class="n">train</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[1]]</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cnt</span><span class="p">),</span> <span class="n">data</span> <span class="o">=</span> <span class="n">pred_test</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[1]]</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">yhat</span><span class="p">),</span> <span class="n">data</span> <span class="o">=</span> <span class="n">pred_test</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[2]]</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">theme_tq</span><span class="p">()</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> <span class="kp">date</span><span class="p">),</span> data <span class="o">=</span> bikes<span class="p">)</span> <span class="o">+</span>
+    geom_rect<span class="p">(</span>xmin <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>ymd<span class="p">(</span><span class="s">&quot;2012-07-01&quot;</span><span class="p">)),</span>
+              xmax <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>ymd<span class="p">(</span><span class="s">&quot;2013-01-01&quot;</span><span class="p">)),</span>
+              ymin <span class="o">=</span> <span class="m">0</span><span class="p">,</span> ymax <span class="o">=</span> <span class="m">10000</span><span class="p">,</span>
+              fill <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">4</span><span class="p">]],</span> alpha <span class="o">=</span> <span class="m">0.01</span><span class="p">)</span> <span class="o">+</span>
+    annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> x <span class="o">=</span> ymd<span class="p">(</span><span class="s">&quot;2011-10-01&quot;</span><span class="p">),</span> y <span class="o">=</span> <span class="m">7800</span><span class="p">,</span>
+             color <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">1</span><span class="p">]],</span> label <span class="o">=</span> <span class="s">&quot;Train Region&quot;</span><span class="p">)</span> <span class="o">+</span>
+    annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> x <span class="o">=</span> ymd<span class="p">(</span><span class="s">&quot;2012-10-01&quot;</span><span class="p">),</span> y <span class="o">=</span> <span class="m">1550</span><span class="p">,</span>
+             color <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">1</span><span class="p">]],</span> label <span class="o">=</span> <span class="s">&quot;Test Region&quot;</span><span class="p">)</span> <span class="o">+</span>
+    geom_point<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> <span class="kp">date</span><span class="p">,</span> y <span class="o">=</span> cnt<span class="p">),</span> data <span class="o">=</span> train<span class="p">,</span> alpha <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> color <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">1</span><span class="p">]])</span> <span class="o">+</span>
+    geom_point<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> <span class="kp">date</span><span class="p">,</span> y <span class="o">=</span> cnt<span class="p">),</span> data <span class="o">=</span> pred_test<span class="p">,</span> alpha <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> color <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">1</span><span class="p">]])</span> <span class="o">+</span>
+    geom_point<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> <span class="kp">date</span><span class="p">,</span> y <span class="o">=</span> yhat<span class="p">),</span> data <span class="o">=</span> pred_test<span class="p">,</span> alpha <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> color <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">2</span><span class="p">]])</span> <span class="o">+</span>
+    theme_tq<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image2" src="p05-07-du-bao-ts-voi-timetk_files/figure-html/unnamed-chunk-7-1.png" /></p>
 <ul class="simple">
 <li>Độ chính xác mô hình</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">test_residuals</span> <span class="o">&lt;-</span> <span class="n">pred_test</span><span class="o">$</span><span class="n">.resid</span>
-<span class="n">pct_err</span> <span class="o">&lt;-</span> <span class="n">test_residuals</span><span class="o">/</span><span class="n">pred_test</span><span class="o">$</span><span class="n">cnt</span> <span class="o">*</span> <span class="m">100</span> <span class="c1"># Percentage error</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>test_residuals <span class="o">&lt;-</span> pred_test<span class="o">$</span><span class="m">.</span>resid
+pct_err <span class="o">&lt;-</span> test_residuals<span class="o">/</span>pred_test<span class="o">$</span>cnt <span class="o">*</span> <span class="m">100</span> <span class="c1"># Percentage error</span>
 
-<span class="n">me</span>   <span class="o">&lt;-</span> <span class="nf">mean</span><span class="p">(</span><span class="n">test_residuals</span><span class="p">,</span> <span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
-<span class="n">rmse</span> <span class="o">&lt;-</span> <span class="nf">mean</span><span class="p">(</span><span class="n">test_residuals^2</span><span class="p">,</span> <span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span><span class="n">^0.5</span>
-<span class="n">mae</span>  <span class="o">&lt;-</span> <span class="nf">mean</span><span class="p">(</span><span class="nf">abs</span><span class="p">(</span><span class="n">test_residuals</span><span class="p">),</span> <span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
-<span class="n">mape</span> <span class="o">&lt;-</span> <span class="nf">mean</span><span class="p">(</span><span class="nf">abs</span><span class="p">(</span><span class="n">pct_err</span><span class="p">),</span> <span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
-<span class="n">mpe</span>  <span class="o">&lt;-</span> <span class="nf">mean</span><span class="p">(</span><span class="n">pct_err</span><span class="p">,</span> <span class="n">na.rm</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
+me   <span class="o">&lt;-</span> <span class="kp">mean</span><span class="p">(</span>test_residuals<span class="p">,</span> na.rm<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
+rmse <span class="o">&lt;-</span> <span class="kp">mean</span><span class="p">(</span>test_residuals<span class="o">^</span><span class="m">2</span><span class="p">,</span> na.rm<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span><span class="o">^</span><span class="m">0.5</span>
+mae  <span class="o">&lt;-</span> <span class="kp">mean</span><span class="p">(</span><span class="kp">abs</span><span class="p">(</span>test_residuals<span class="p">),</span> na.rm<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
+mape <span class="o">&lt;-</span> <span class="kp">mean</span><span class="p">(</span><span class="kp">abs</span><span class="p">(</span>pct_err<span class="p">),</span> na.rm<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
+mpe  <span class="o">&lt;-</span> <span class="kp">mean</span><span class="p">(</span>pct_err<span class="p">,</span> na.rm<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
 
-<span class="n">error_tbl</span> <span class="o">&lt;-</span> <span class="nf">tibble</span><span class="p">(</span><span class="n">me</span><span class="p">,</span> <span class="n">rmse</span><span class="p">,</span> <span class="n">mae</span><span class="p">,</span> <span class="n">mape</span><span class="p">,</span> <span class="n">mpe</span><span class="p">)</span>
-<span class="n">error_tbl</span>
+error_tbl <span class="o">&lt;-</span> tibble<span class="p">(</span>me<span class="p">,</span> rmse<span class="p">,</span> mae<span class="p">,</span> mape<span class="p">,</span> mpe<span class="p">)</span>
+error_tbl
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 1 x 5</span>
@@ -540,52 +541,52 @@
 <li>Forecast</li>
 </ul>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extract bikes index</span>
-<span class="n">idx</span> <span class="o">&lt;-</span> <span class="n">bikes</span> <span class="o">%&gt;%</span>
-    <span class="nf">tk_index</span><span class="p">()</span>
+idx <span class="o">&lt;-</span> bikes <span class="o">%&gt;%</span>
+    tk_index<span class="p">()</span>
 
 <span class="c1"># Get time series summary from index</span>
-<span class="n">bikes_summary</span> <span class="o">&lt;-</span> <span class="n">idx</span> <span class="o">%&gt;%</span>
-    <span class="nf">tk_get_timeseries_summary</span><span class="p">()</span>
+bikes_summary <span class="o">&lt;-</span> idx <span class="o">%&gt;%</span>
+    tk_get_timeseries_summary<span class="p">()</span>
 
 <span class="c1"># Tạo dữ liệu mới</span>
-<span class="n">idx_future</span> <span class="o">&lt;-</span> <span class="n">idx</span> <span class="o">%&gt;%</span>
-    <span class="nf">tk_make_future_timeseries</span><span class="p">(</span><span class="n">n_future</span> <span class="o">=</span> <span class="m">180</span><span class="p">)</span>
+idx_future <span class="o">&lt;-</span> idx <span class="o">%&gt;%</span>
+    tk_make_future_timeseries<span class="p">(</span>n_future <span class="o">=</span> <span class="m">180</span><span class="p">)</span>
 
-<span class="n">data_future</span> <span class="o">&lt;-</span> <span class="n">idx_future</span> <span class="o">%&gt;%</span>
-    <span class="nf">tk_get_timeseries_signature</span><span class="p">()</span> <span class="o">%&gt;%</span>
-    <span class="nf">rename</span><span class="p">(</span><span class="n">date</span> <span class="o">=</span> <span class="n">index</span><span class="p">)</span>
+data_future <span class="o">&lt;-</span> idx_future <span class="o">%&gt;%</span>
+    tk_get_timeseries_signature<span class="p">()</span> <span class="o">%&gt;%</span>
+    rename<span class="p">(</span>date <span class="o">=</span> index<span class="p">)</span>
 
-<span class="n">pred_future</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">fit_lm</span><span class="p">,</span> <span class="n">newdata</span> <span class="o">=</span> <span class="n">data_future</span><span class="p">)</span>
+pred_future <span class="o">&lt;-</span> predict<span class="p">(</span>fit_lm<span class="p">,</span> newdata <span class="o">=</span> data_future<span class="p">)</span>
 
 <span class="c1">#Tạo dữ liệu mới</span>
-<span class="n">bikes_future</span> <span class="o">&lt;-</span> <span class="n">data_future</span> <span class="o">%&gt;%</span>
-    <span class="nf">select</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="o">%&gt;%</span>
-    <span class="nf">add_column</span><span class="p">(</span><span class="n">cnt</span> <span class="o">=</span> <span class="n">pred_future</span><span class="p">)</span>
+bikes_future <span class="o">&lt;-</span> data_future <span class="o">%&gt;%</span>
+    select<span class="p">(</span><span class="kp">date</span><span class="p">)</span> <span class="o">%&gt;%</span>
+    add_column<span class="p">(</span>cnt <span class="o">=</span> pred_future<span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">bikes</span> <span class="o">%&gt;%</span>
-    <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cnt</span><span class="p">))</span> <span class="o">+</span>
-    <span class="nf">geom_rect</span><span class="p">(</span><span class="n">xmin</span> <span class="o">=</span> <span class="nf">as.numeric</span><span class="p">(</span><span class="nf">ymd</span><span class="p">(</span><span class="s">&quot;2012-07-01&quot;</span><span class="p">)),</span>
-              <span class="n">xmax</span> <span class="o">=</span> <span class="nf">as.numeric</span><span class="p">(</span><span class="nf">ymd</span><span class="p">(</span><span class="s">&quot;2013-01-01&quot;</span><span class="p">)),</span>
-              <span class="n">ymin</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="m">10000</span><span class="p">,</span>
-              <span class="n">fill</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[4]]</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.01</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">geom_rect</span><span class="p">(</span><span class="n">xmin</span> <span class="o">=</span> <span class="nf">as.numeric</span><span class="p">(</span><span class="nf">ymd</span><span class="p">(</span><span class="s">&quot;2013-01-01&quot;</span><span class="p">)),</span>
-              <span class="n">xmax</span> <span class="o">=</span> <span class="nf">as.numeric</span><span class="p">(</span><span class="nf">ymd</span><span class="p">(</span><span class="s">&quot;2013-07-01&quot;</span><span class="p">)),</span>
-              <span class="n">ymin</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="m">10000</span><span class="p">,</span>
-              <span class="n">fill</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[3]]</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.01</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">annotate</span><span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="nf">ymd</span><span class="p">(</span><span class="s">&quot;2011-10-01&quot;</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="m">7800</span><span class="p">,</span>
-             <span class="n">color</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[1]]</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;Train Region&quot;</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">annotate</span><span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="nf">ymd</span><span class="p">(</span><span class="s">&quot;2012-10-01&quot;</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="m">1550</span><span class="p">,</span>
-             <span class="n">color</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[1]]</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;Test Region&quot;</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">annotate</span><span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="nf">ymd</span><span class="p">(</span><span class="s">&quot;2013-4-01&quot;</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="m">1550</span><span class="p">,</span>
-             <span class="n">color</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[1]]</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;Forecast Region&quot;</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">geom_point</span><span class="p">(</span><span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[1]]</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cnt</span><span class="p">),</span> <span class="n">data</span> <span class="o">=</span> <span class="n">bikes_future</span><span class="p">,</span>
-               <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[2]]</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">geom_smooth</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cnt</span><span class="p">),</span> <span class="n">data</span> <span class="o">=</span> <span class="n">bikes_future</span><span class="p">,</span>
-                <span class="n">method</span> <span class="o">=</span> <span class="s">&#39;loess&#39;</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">labs</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Bikes Sharing Dataset: 6-Month Forecast&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">theme_tq</span><span class="p">()</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>bikes <span class="o">%&gt;%</span>
+    ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> <span class="kp">date</span><span class="p">,</span> y <span class="o">=</span> cnt<span class="p">))</span> <span class="o">+</span>
+    geom_rect<span class="p">(</span>xmin <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>ymd<span class="p">(</span><span class="s">&quot;2012-07-01&quot;</span><span class="p">)),</span>
+              xmax <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>ymd<span class="p">(</span><span class="s">&quot;2013-01-01&quot;</span><span class="p">)),</span>
+              ymin <span class="o">=</span> <span class="m">0</span><span class="p">,</span> ymax <span class="o">=</span> <span class="m">10000</span><span class="p">,</span>
+              fill <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">4</span><span class="p">]],</span> alpha <span class="o">=</span> <span class="m">0.01</span><span class="p">)</span> <span class="o">+</span>
+    geom_rect<span class="p">(</span>xmin <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>ymd<span class="p">(</span><span class="s">&quot;2013-01-01&quot;</span><span class="p">)),</span>
+              xmax <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>ymd<span class="p">(</span><span class="s">&quot;2013-07-01&quot;</span><span class="p">)),</span>
+              ymin <span class="o">=</span> <span class="m">0</span><span class="p">,</span> ymax <span class="o">=</span> <span class="m">10000</span><span class="p">,</span>
+              fill <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">3</span><span class="p">]],</span> alpha <span class="o">=</span> <span class="m">0.01</span><span class="p">)</span> <span class="o">+</span>
+    annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> x <span class="o">=</span> ymd<span class="p">(</span><span class="s">&quot;2011-10-01&quot;</span><span class="p">),</span> y <span class="o">=</span> <span class="m">7800</span><span class="p">,</span>
+             color <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">1</span><span class="p">]],</span> label <span class="o">=</span> <span class="s">&quot;Train Region&quot;</span><span class="p">)</span> <span class="o">+</span>
+    annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> x <span class="o">=</span> ymd<span class="p">(</span><span class="s">&quot;2012-10-01&quot;</span><span class="p">),</span> y <span class="o">=</span> <span class="m">1550</span><span class="p">,</span>
+             color <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">1</span><span class="p">]],</span> label <span class="o">=</span> <span class="s">&quot;Test Region&quot;</span><span class="p">)</span> <span class="o">+</span>
+    annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> x <span class="o">=</span> ymd<span class="p">(</span><span class="s">&quot;2013-4-01&quot;</span><span class="p">),</span> y <span class="o">=</span> <span class="m">1550</span><span class="p">,</span>
+             color <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">1</span><span class="p">]],</span> label <span class="o">=</span> <span class="s">&quot;Forecast Region&quot;</span><span class="p">)</span> <span class="o">+</span>
+    geom_point<span class="p">(</span>alpha <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> color <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">1</span><span class="p">]])</span> <span class="o">+</span>
+    geom_point<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> <span class="kp">date</span><span class="p">,</span> y <span class="o">=</span> cnt<span class="p">),</span> data <span class="o">=</span> bikes_future<span class="p">,</span>
+               alpha <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> color <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">2</span><span class="p">]])</span> <span class="o">+</span>
+    geom_smooth<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> <span class="kp">date</span><span class="p">,</span> y <span class="o">=</span> cnt<span class="p">),</span> data <span class="o">=</span> bikes_future<span class="p">,</span>
+                method <span class="o">=</span> <span class="s">&#39;loess&#39;</span><span class="p">)</span> <span class="o">+</span>
+    labs<span class="p">(</span>title <span class="o">=</span> <span class="s">&quot;Bikes Sharing Dataset: 6-Month Forecast&quot;</span><span class="p">,</span> x <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span>
+    theme_tq<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image3" src="p05-07-du-bao-ts-voi-timetk_files/figure-html/unnamed-chunk-10-1.png" /></p>
@@ -593,38 +594,38 @@
 <li>Độ chính xác mô hình</li>
 </ul>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate standard deviation of residuals</span>
-<span class="n">test_resid_sd</span> <span class="o">&lt;-</span> <span class="nf">sd</span><span class="p">(</span><span class="n">test_residuals</span><span class="p">)</span>
+test_resid_sd <span class="o">&lt;-</span> sd<span class="p">(</span>test_residuals<span class="p">)</span>
 
-<span class="n">bikes_future</span> <span class="o">&lt;-</span> <span class="n">bikes_future</span> <span class="o">%&gt;%</span>
-    <span class="nf">mutate</span><span class="p">(</span>
-        <span class="n">lo.95</span> <span class="o">=</span> <span class="n">cnt</span> <span class="o">-</span> <span class="m">1.96</span> <span class="o">*</span> <span class="n">test_resid_sd</span><span class="p">,</span>
-        <span class="n">lo.80</span> <span class="o">=</span> <span class="n">cnt</span> <span class="o">-</span> <span class="m">1.28</span> <span class="o">*</span> <span class="n">test_resid_sd</span><span class="p">,</span>
-        <span class="n">hi.80</span> <span class="o">=</span> <span class="n">cnt</span> <span class="o">+</span> <span class="m">1.28</span> <span class="o">*</span> <span class="n">test_resid_sd</span><span class="p">,</span>
-        <span class="n">hi.95</span> <span class="o">=</span> <span class="n">cnt</span> <span class="o">+</span> <span class="m">1.96</span> <span class="o">*</span> <span class="n">test_resid_sd</span>
+bikes_future <span class="o">&lt;-</span> bikes_future <span class="o">%&gt;%</span>
+    mutate<span class="p">(</span>
+        lo.95 <span class="o">=</span> cnt <span class="o">-</span> <span class="m">1.96</span> <span class="o">*</span> test_resid_sd<span class="p">,</span>
+        lo.80 <span class="o">=</span> cnt <span class="o">-</span> <span class="m">1.28</span> <span class="o">*</span> test_resid_sd<span class="p">,</span>
+        hi.80 <span class="o">=</span> cnt <span class="o">+</span> <span class="m">1.28</span> <span class="o">*</span> test_resid_sd<span class="p">,</span>
+        hi.95 <span class="o">=</span> cnt <span class="o">+</span> <span class="m">1.96</span> <span class="o">*</span> test_resid_sd
         <span class="p">)</span>
 
-<span class="n">bikes</span> <span class="o">%&gt;%</span>
-    <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cnt</span><span class="p">))</span> <span class="o">+</span>
-    <span class="nf">geom_point</span><span class="p">(</span><span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[1]]</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">geom_ribbon</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">ymin</span> <span class="o">=</span> <span class="n">lo.95</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">hi.95</span><span class="p">),</span> <span class="n">data</span> <span class="o">=</span> <span class="n">bikes_future</span><span class="p">,</span>
-                <span class="n">fill</span> <span class="o">=</span> <span class="s">&quot;#D5DBFF&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="kc">NA</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">0</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">geom_ribbon</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">ymin</span> <span class="o">=</span> <span class="n">lo.80</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">hi.80</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="n">key</span><span class="p">),</span> <span class="n">data</span> <span class="o">=</span> <span class="n">bikes_future</span><span class="p">,</span>
-                <span class="n">fill</span> <span class="o">=</span> <span class="s">&quot;#596DD5&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="kc">NA</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.8</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cnt</span><span class="p">),</span> <span class="n">data</span> <span class="o">=</span> <span class="n">bikes_future</span><span class="p">,</span>
-               <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="nf">palette_light</span><span class="p">()</span><span class="n">[[2]]</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">geom_smooth</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">date</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cnt</span><span class="p">),</span> <span class="n">data</span> <span class="o">=</span> <span class="n">bikes_future</span><span class="p">,</span>
-                <span class="n">method</span> <span class="o">=</span> <span class="s">&#39;loess&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;white&quot;</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">labs</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Bikes Sharing Dataset: 6-Month Forecast with Prediction Intervals&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">theme_tq</span><span class="p">()</span>
+bikes <span class="o">%&gt;%</span>
+    ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> <span class="kp">date</span><span class="p">,</span> y <span class="o">=</span> cnt<span class="p">))</span> <span class="o">+</span>
+    geom_point<span class="p">(</span>alpha <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> color <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">1</span><span class="p">]])</span> <span class="o">+</span>
+    geom_ribbon<span class="p">(</span>aes<span class="p">(</span>ymin <span class="o">=</span> lo.95<span class="p">,</span> ymax <span class="o">=</span> hi.95<span class="p">),</span> data <span class="o">=</span> bikes_future<span class="p">,</span>
+                fill <span class="o">=</span> <span class="s">&quot;#D5DBFF&quot;</span><span class="p">,</span> color <span class="o">=</span> <span class="kc">NA</span><span class="p">,</span> size <span class="o">=</span> <span class="m">0</span><span class="p">)</span> <span class="o">+</span>
+    geom_ribbon<span class="p">(</span>aes<span class="p">(</span>ymin <span class="o">=</span> lo.80<span class="p">,</span> ymax <span class="o">=</span> hi.80<span class="p">,</span> fill <span class="o">=</span> key<span class="p">),</span> data <span class="o">=</span> bikes_future<span class="p">,</span>
+                fill <span class="o">=</span> <span class="s">&quot;#596DD5&quot;</span><span class="p">,</span> color <span class="o">=</span> <span class="kc">NA</span><span class="p">,</span> size <span class="o">=</span> <span class="m">0</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">0.8</span><span class="p">)</span> <span class="o">+</span>
+    geom_point<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> <span class="kp">date</span><span class="p">,</span> y <span class="o">=</span> cnt<span class="p">),</span> data <span class="o">=</span> bikes_future<span class="p">,</span>
+               alpha <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> color <span class="o">=</span> palette_light<span class="p">()[[</span><span class="m">2</span><span class="p">]])</span> <span class="o">+</span>
+    geom_smooth<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> <span class="kp">date</span><span class="p">,</span> y <span class="o">=</span> cnt<span class="p">),</span> data <span class="o">=</span> bikes_future<span class="p">,</span>
+                method <span class="o">=</span> <span class="s">&#39;loess&#39;</span><span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;white&quot;</span><span class="p">)</span> <span class="o">+</span>
+    labs<span class="p">(</span>title <span class="o">=</span> <span class="s">&quot;Bikes Sharing Dataset: 6-Month Forecast with Prediction Intervals&quot;</span><span class="p">,</span> x <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">)</span> <span class="o">+</span>
+    theme_tq<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image4" src="p05-07-du-bao-ts-voi-timetk_files/figure-html/unnamed-chunk-11-1.png" /></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyquant</span><span class="p">)</span>
-<span class="n">bikes</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">cnt</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="n">alpha</span> <span class="o">=</span> <span class="m">0.4</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_ma</span><span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="m">7</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">0.9</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme_tq</span><span class="p">()</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>tidyquant<span class="p">)</span>
+bikes <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span><span class="kp">date</span><span class="p">,</span> cnt<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>alpha <span class="o">=</span> <span class="m">0.4</span><span class="p">)</span> <span class="o">+</span>
+  geom_ma<span class="p">(</span>n <span class="o">=</span> <span class="m">7</span><span class="p">,</span> col <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">0.9</span><span class="p">)</span> <span class="o">+</span>
+  theme_tq<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image5" src="p05-07-du-bao-ts-voi-timetk_files/figure-html/unnamed-chunk-12-1.png" /></p>

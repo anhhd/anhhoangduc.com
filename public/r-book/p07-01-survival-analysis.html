@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -456,15 +457,15 @@ là <span class="math notranslate">\(\frac{14}{15} * \frac{17}{18}\)</span></li>
 </div>
 <div class="section" id="vi-du">
 <h2>1.3. Ví dụ<a class="headerlink" href="#vi-du" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">survival</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">KMsurv</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">ggfortify</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">ISwR</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>survival<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>KMsurv<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>ggfortify<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>ISwR<span class="p">)</span>
 
-<span class="nf">library</span><span class="p">(</span><span class="n">ISwR</span><span class="p">)</span>
-<span class="nf">data</span><span class="p">(</span><span class="n">melanom</span><span class="p">)</span>
-<span class="n">melanom</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+<span class="kn">library</span><span class="p">(</span>ISwR<span class="p">)</span>
+data<span class="p">(</span>melanom<span class="p">)</span>
+melanom <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    no status days ulc thick sex</span>
@@ -477,10 +478,10 @@ là <span class="math notranslate">\(\frac{14}{15} * \frac{17}{18}\)</span></li>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tạo status == 1 là death</span>
-<span class="n">msurv</span> <span class="o">&lt;-</span> <span class="nf">with</span><span class="p">(</span><span class="n">melanom</span><span class="p">,</span> <span class="nf">Surv</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">status</span> <span class="o">==</span> <span class="m">1</span><span class="p">))</span>
+msurv <span class="o">&lt;-</span> <span class="kp">with</span><span class="p">(</span>melanom<span class="p">,</span> Surv<span class="p">(</span>days<span class="p">,</span> status <span class="o">==</span> <span class="m">1</span><span class="p">))</span>
 
 <span class="c1">#Lưu ý: Các status là 2 và 3 được coi như uncensored</span>
-<span class="n">melanom</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+melanom <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    no status days ulc thick sex</span>
@@ -492,15 +493,15 @@ là <span class="math notranslate">\(\frac{14}{15} * \frac{17}{18}\)</span></li>
 <span class="c1">## 6 469      1  204   1   484   2</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">msurv</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>msurv <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1]  10+  30+  35+  99+ 185  204</span>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Phân tích</span>
-<span class="n">mfit</span> <span class="o">&lt;-</span> <span class="nf">survfit</span><span class="p">(</span><span class="nf">Surv</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">status</span> <span class="o">==</span> <span class="m">1</span><span class="p">)</span> <span class="o">~</span> <span class="m">1</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">melanom</span><span class="p">)</span>
-<span class="n">mfit</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+mfit <span class="o">&lt;-</span> survfit<span class="p">(</span>Surv<span class="p">(</span>days<span class="p">,</span> status <span class="o">==</span> <span class="m">1</span><span class="p">)</span> <span class="o">~</span> <span class="m">1</span><span class="p">,</span> data <span class="o">=</span> melanom<span class="p">)</span>
+mfit <span class="o">%&gt;%</span> <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Call: survfit(formula = Surv(days, status == 1) ~ 1, data = melanom)</span>
@@ -565,18 +566,18 @@ là <span class="math notranslate">\(\frac{14}{15} * \frac{17}{18}\)</span></li>
 <span class="c1">##  3338     35       1    0.645 0.04307        0.566        0.735</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mfit</span> <span class="o">%&gt;%</span> <span class="n">autoplot</span> <span class="o">+</span>
-  <span class="nf">theme_bw</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">scale_x_continuous</span><span class="p">(</span><span class="n">breaks</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">6000</span><span class="p">,</span> <span class="m">1000</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>mfit <span class="o">%&gt;%</span> autoplot <span class="o">+</span>
+  theme_bw<span class="p">()</span> <span class="o">+</span>
+  scale_x_continuous<span class="p">(</span>breaks <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">6000</span><span class="p">,</span> <span class="m">1000</span><span class="p">))</span>
 </pre></div>
 </div>
 <p><img alt="image3" src="p07-01-survival-analysis_files/figure-html/unnamed-chunk-2-1.png" /></p>
 </div>
 <div class="section" id="survival-function-theo-gioi-tinh">
 <h2>1.4. Survival function theo giới tính<a class="headerlink" href="#survival-function-theo-gioi-tinh" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mfit.bysex</span> <span class="o">&lt;-</span> <span class="nf">survfit</span><span class="p">(</span><span class="nf">Surv</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">status</span> <span class="o">==</span> <span class="m">1</span><span class="p">)</span> <span class="o">~</span> <span class="n">sex</span><span class="p">,</span>
-                      <span class="n">data</span> <span class="o">=</span> <span class="n">melanom</span><span class="p">)</span>
-<span class="n">mfit.bysex</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>mfit.bysex <span class="o">&lt;-</span> survfit<span class="p">(</span>Surv<span class="p">(</span>days<span class="p">,</span> status <span class="o">==</span> <span class="m">1</span><span class="p">)</span> <span class="o">~</span> sex<span class="p">,</span>
+                      data <span class="o">=</span> melanom<span class="p">)</span>
+mfit.bysex
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Call: survfit(formula = Surv(days, status == 1) ~ sex, data = melanom)</span>
@@ -586,13 +587,13 @@ là <span class="math notranslate">\(\frac{14}{15} * \frac{17}{18}\)</span></li>
 <span class="c1">## sex=2  79     29     NA    2388      NA</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mfit.bysex</span> <span class="o">%&gt;%</span> <span class="nf">autoplot</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">theme_bw</span><span class="p">()</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>mfit.bysex <span class="o">%&gt;%</span> autoplot<span class="p">()</span> <span class="o">+</span>
+  theme_bw<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image4" src="p07-01-survival-analysis_files/figure-html/unnamed-chunk-3-1.png" /></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">mfit.bysex</span> <span class="o">%&gt;%</span> <span class="nf">autoplot</span><span class="p">(</span><span class="n">fun</span> <span class="o">=</span> <span class="s">&quot;cloglog&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme_bw</span><span class="p">()</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>mfit.bysex <span class="o">%&gt;%</span> autoplot<span class="p">(</span>fun <span class="o">=</span> <span class="s">&quot;cloglog&quot;</span><span class="p">)</span> <span class="o">+</span>
+  theme_bw<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image5" src="p07-01-survival-analysis_files/figure-html/unnamed-chunk-3-2.png" /></p>
@@ -604,7 +605,7 @@ là <span class="math notranslate">\(\frac{14}{15} * \frac{17}{18}\)</span></li>
 <li><span class="math notranslate">\(H_0\)</span>: <span class="math notranslate">\(S_1(.) = S_2(.)\)</span></li>
 <li><span class="math notranslate">\(H_1\)</span>: <span class="math notranslate">\(S_1(.) \neq S_2(.)\)</span></li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">survdiff</span><span class="p">(</span><span class="nf">Surv</span><span class="p">(</span><span class="n">time</span><span class="p">,</span><span class="n">status</span><span class="p">)</span> <span class="o">~</span> <span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">aml</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>survdiff<span class="p">(</span>Surv<span class="p">(</span>time<span class="p">,</span>status<span class="p">)</span> <span class="o">~</span> x<span class="p">,</span> data<span class="o">=</span>aml<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Call:</span>
@@ -629,7 +630,7 @@ là <span class="math notranslate">\(\frac{14}{15} * \frac{17}{18}\)</span></li>
 <li><span class="math notranslate">\(\lambda(t)\)</span> là hàm nguy cơ nếu không tính đến các ảnh hưởng
 của x (còn được gọi là baseline hazard function)</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">melanom</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>melanom <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    no status days ulc thick sex</span>
@@ -641,9 +642,9 @@ của x (còn được gọi là baseline hazard function)</li>
 <span class="c1">## 6 469      1  204   1   484   2</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">cox.model</span> <span class="o">&lt;-</span> <span class="nf">coxph</span><span class="p">(</span><span class="nf">Surv</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">status</span> <span class="o">==</span> <span class="m">1</span><span class="p">)</span> <span class="o">~</span> <span class="n">sex</span> <span class="o">+</span> <span class="n">ulc</span><span class="p">,</span>
-                   <span class="n">data</span> <span class="o">=</span> <span class="n">melanom</span><span class="p">)</span>
-<span class="n">cox.model</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>cox.model <span class="o">&lt;-</span> coxph<span class="p">(</span>Surv<span class="p">(</span>days<span class="p">,</span> status <span class="o">==</span> <span class="m">1</span><span class="p">)</span> <span class="o">~</span> sex <span class="o">+</span> ulc<span class="p">,</span>
+                   data <span class="o">=</span> melanom<span class="p">)</span>
+cox.model <span class="o">%&gt;%</span> <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Call:</span>

@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -367,10 +368,10 @@ biệt</li>
 <h2>1.2. Dữ liệu chuỗi thời gian<a class="headerlink" href="#du-lieu-chuoi-thoi-gian" title="Permalink to this headline">¶</a></h2>
 <p>Khi lưu trữ trong R, chuỗi thời gian được lưu dưới dạng <code class="docutils literal notranslate"><span class="pre">ts</span></code> như sau.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tạo chuỗi thời gian</span>
-<span class="n">sales</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="nf">round</span><span class="p">(</span><span class="nf">rnorm</span><span class="p">(</span><span class="m">24</span><span class="p">,</span><span class="m">50</span><span class="p">,</span><span class="m">10</span><span class="p">),</span><span class="m">0</span><span class="p">))</span>
+sales <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="kp">round</span><span class="p">(</span>rnorm<span class="p">(</span><span class="m">24</span><span class="p">,</span><span class="m">50</span><span class="p">,</span><span class="m">10</span><span class="p">),</span><span class="m">0</span><span class="p">))</span>
 <span class="c1">#Tạo object ts</span>
-<span class="n">tsales</span> <span class="o">&lt;-</span> <span class="nf">ts</span><span class="p">(</span><span class="n">sales</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">2003</span><span class="p">,</span><span class="m">1</span><span class="p">),</span> <span class="n">frequency</span> <span class="o">=</span> <span class="m">12</span><span class="p">)</span>
-<span class="n">tsales</span>
+tsales <span class="o">&lt;-</span> ts<span class="p">(</span>sales<span class="p">,</span> start <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">2003</span><span class="p">,</span><span class="m">1</span><span class="p">),</span> frequency <span class="o">=</span> <span class="m">12</span><span class="p">)</span>
+tsales
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec</span>
@@ -380,34 +381,34 @@ biệt</li>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Các chỉ số cơ bản</span>
 <span class="c1">#plot</span>
-<span class="nf">plot</span><span class="p">(</span><span class="n">tsales</span><span class="p">,</span> <span class="n">pch</span><span class="o">=</span><span class="m">19</span><span class="p">,</span> <span class="n">type</span> <span class="o">=</span> <span class="s">&quot;o&quot;</span><span class="p">)</span>
+plot<span class="p">(</span>tsales<span class="p">,</span> pch<span class="o">=</span><span class="m">19</span><span class="p">,</span> type <span class="o">=</span> <span class="s">&quot;o&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image0" src="p05-01-chuoi-thoi-gian_files/figure-html/unnamed-chunk-2-1.png" /></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Thời điểm bắt đầu</span>
-<span class="nf">start</span><span class="p">(</span><span class="n">tsales</span><span class="p">)</span>
+start<span class="p">(</span>tsales<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 2003    1</span>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Thời điểm kết thúc</span>
-<span class="nf">end</span><span class="p">(</span><span class="n">tsales</span><span class="p">)</span>
+end<span class="p">(</span>tsales<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 2004   12</span>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Frequency</span>
-<span class="nf">frequency</span><span class="p">(</span><span class="n">tsales</span><span class="p">)</span>
+frequency<span class="p">(</span>tsales<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 12</span>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tạo subset</span>
-<span class="n">tsales.subset</span> <span class="o">&lt;-</span> <span class="nf">window</span><span class="p">(</span><span class="n">tsales</span><span class="p">,</span> <span class="n">start</span>  <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">2003</span><span class="p">,</span><span class="m">9</span><span class="p">),</span> <span class="n">end</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">2004</span><span class="p">,</span><span class="m">3</span><span class="p">))</span>
-<span class="n">tsales.subset</span>
+tsales.subset <span class="o">&lt;-</span> window<span class="p">(</span>tsales<span class="p">,</span> start  <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">2003</span><span class="p">,</span><span class="m">9</span><span class="p">),</span> end <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">2004</span><span class="p">,</span><span class="m">3</span><span class="p">))</span>
+tsales.subset
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec</span>
@@ -426,13 +427,13 @@ nhiễu trong chuỗi thời gian.</p>
 t, <span class="math notranslate">\(k=2q+1\)</span> là số quan sát được lấy giá trị trung bình. k thường
 là giá trị lẻ.</p>
 <p>Mô hình trên được gọi là Moving Average (MA)</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">forecast</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">ggfortify</span><span class="p">)</span>
-<span class="nf">par</span><span class="p">(</span><span class="n">mfrow</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">))</span>
-<span class="nf">plot</span><span class="p">(</span><span class="n">Nile</span><span class="p">)</span>
-<span class="nf">plot</span><span class="p">(</span><span class="nf">ma</span><span class="p">(</span><span class="n">Nile</span><span class="p">,</span> <span class="m">3</span><span class="p">),</span> <span class="n">main</span> <span class="o">=</span> <span class="s">&quot;Moving Average with k=3&quot;</span><span class="p">)</span>
-<span class="nf">plot</span><span class="p">(</span><span class="nf">ma</span><span class="p">(</span><span class="n">Nile</span><span class="p">,</span> <span class="m">10</span><span class="p">),</span> <span class="n">main</span> <span class="o">=</span> <span class="s">&quot;Moving Average with k=10&quot;</span><span class="p">)</span>
-<span class="nf">plot</span><span class="p">(</span><span class="nf">ma</span><span class="p">(</span><span class="n">Nile</span><span class="p">,</span> <span class="m">15</span><span class="p">),</span> <span class="n">main</span> <span class="o">=</span> <span class="s">&quot;Moving Average with k=15&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>forecast<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>ggfortify<span class="p">)</span>
+par<span class="p">(</span>mfrow<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">))</span>
+plot<span class="p">(</span>Nile<span class="p">)</span>
+plot<span class="p">(</span>ma<span class="p">(</span>Nile<span class="p">,</span> <span class="m">3</span><span class="p">),</span> main <span class="o">=</span> <span class="s">&quot;Moving Average with k=3&quot;</span><span class="p">)</span>
+plot<span class="p">(</span>ma<span class="p">(</span>Nile<span class="p">,</span> <span class="m">10</span><span class="p">),</span> main <span class="o">=</span> <span class="s">&quot;Moving Average with k=10&quot;</span><span class="p">)</span>
+plot<span class="p">(</span>ma<span class="p">(</span>Nile<span class="p">,</span> <span class="m">15</span><span class="p">),</span> main <span class="o">=</span> <span class="s">&quot;Moving Average with k=15&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image1" src="p05-01-chuoi-thoi-gian_files/figure-html/unnamed-chunk-3-1.png" /></p>
@@ -453,7 +454,7 @@ là giá trị lẻ.</p>
 <p>Do đó, để phân tích chuỗi thời gian, ta cũng cần bóc tách chuỗi thời
 gian thành 3 yếu tố như trên bằng hàm stl (Seasonal Decomposition of
 Time Series by Loess)</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">stl</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span> <span class="n">s.window</span> <span class="o">=</span> <span class="p">,</span> <span class="n">t.window</span> <span class="o">=</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>stl<span class="p">(</span>ts<span class="p">,</span> s.window <span class="o">=</span> <span class="p">,</span> t.window <span class="o">=</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Lưu ý</strong>:</p>
@@ -470,24 +471,24 @@ sẽ giống hệt nhau qua các năm</li>
 <li>t.window: kiểm soát yếu tố xu hướng (trend) thay đổi theo thời gian
 thế nào</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="nf">par</span><span class="p">(</span><span class="n">mfrow</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+par<span class="p">(</span>mfrow<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span>
 <span class="c1">#Mô hình có dạng Multiplicative</span>
-<span class="nf">plot</span><span class="p">(</span><span class="n">AirPassengers</span><span class="p">)</span>
+plot<span class="p">(</span>AirPassengers<span class="p">)</span>
 <span class="c1">#Chuyển sang dạng Additive</span>
-<span class="n">lAirPassengers</span> <span class="o">&lt;-</span> <span class="nf">log</span><span class="p">(</span><span class="n">AirPassengers</span><span class="p">)</span>
-<span class="nf">plot</span><span class="p">(</span><span class="n">AirPassengers</span><span class="p">)</span>
+lAirPassengers <span class="o">&lt;-</span> <span class="kp">log</span><span class="p">(</span>AirPassengers<span class="p">)</span>
+plot<span class="p">(</span>AirPassengers<span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image2" src="p05-01-chuoi-thoi-gian_files/figure-html/unnamed-chunk-5-1.png" /></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Phân tích thành phần ts</span>
-<span class="n">fit</span> <span class="o">&lt;-</span> <span class="nf">stl</span><span class="p">(</span><span class="n">lAirPassengers</span><span class="p">,</span> <span class="n">s.window</span> <span class="o">=</span> <span class="s">&quot;period&quot;</span><span class="p">)</span>
-<span class="nf">autoplot</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span> <span class="o">+</span> <span class="nf">theme_bw</span><span class="p">()</span>
+fit <span class="o">&lt;-</span> stl<span class="p">(</span>lAirPassengers<span class="p">,</span> s.window <span class="o">=</span> <span class="s">&quot;period&quot;</span><span class="p">)</span>
+autoplot<span class="p">(</span>fit<span class="p">)</span> <span class="o">+</span> theme_bw<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image3" src="p05-01-chuoi-thoi-gian_files/figure-html/unnamed-chunk-5-2.png" /></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Quay lại dữ liệu gốc</span>
-<span class="n">fit</span><span class="o">$</span><span class="n">time.series</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+fit<span class="o">$</span>time.series <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##         seasonal    trend   remainder</span>
@@ -499,7 +500,7 @@ thế nào</li>
 <span class="c1">## [6,]  0.10978976 4.838166 -0.04268143</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">fit</span><span class="o">$</span><span class="n">time.series</span> <span class="o">%&gt;%</span> <span class="n">exp</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>fit<span class="o">$</span>time.series <span class="o">%&gt;%</span> exp <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##       seasonal    trend remainder</span>
@@ -512,11 +513,11 @@ thế nào</li>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Phân tích xu hướng theo tháng và seasonal</span>
-<span class="nf">monthplot</span><span class="p">(</span><span class="n">AirPassengers</span><span class="p">)</span>
+monthplot<span class="p">(</span>AirPassengers<span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image4" src="p05-01-chuoi-thoi-gian_files/figure-html/unnamed-chunk-5-3.png" /></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">seasonplot</span><span class="p">(</span><span class="n">AirPassengers</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="n">type</span> <span class="o">=</span> <span class="s">&quot;o&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>seasonplot<span class="p">(</span>AirPassengers<span class="p">,</span> col <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> type <span class="o">=</span> <span class="s">&quot;o&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image5" src="p05-01-chuoi-thoi-gian_files/figure-html/unnamed-chunk-5-4.png" /></p>
@@ -562,9 +563,9 @@ trị dự báo :math:`Y_{t+1}`</span></a>:</p>
 lớn</li>
 <li>:raw-latex:<a href="#id7"><span class="problematic" id="id8">`</span></a>alpha <a href="#id9"><span class="problematic" id="id10">`</span></a>càng gần 0, các biến càng xa có trọng số càng lớn</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">forecast</span><span class="p">)</span>
-<span class="n">fit</span> <span class="o">&lt;-</span> <span class="nf">ets</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="n">nhtemp</span><span class="p">,</span> <span class="n">model</span> <span class="o">=</span> <span class="s">&quot;ANN&quot;</span><span class="p">)</span>
-<span class="n">fit</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>forecast<span class="p">)</span>
+fit <span class="o">&lt;-</span> ets<span class="p">(</span>y <span class="o">=</span> nhtemp<span class="p">,</span> model <span class="o">=</span> <span class="s">&quot;ANN&quot;</span><span class="p">)</span>
+fit
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## ETS(A,N,N)</span>
@@ -584,21 +585,21 @@ lớn</li>
 <span class="c1">## 265.9298 266.3584 272.2129</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">forecast</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span><span class="m">1</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>forecast<span class="p">(</span>fit<span class="p">,</span><span class="m">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##      Point Forecast    Lo 80    Hi 80    Lo 95   Hi 95</span>
 <span class="c1">## 1972       51.87045 50.42708 53.31382 49.66301 54.0779</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">autoplot</span><span class="p">(</span><span class="nf">forecast</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="m">1</span><span class="p">),</span> <span class="n">xlab</span><span class="o">=</span><span class="s">&quot;Year&quot;</span><span class="p">,</span>
-    <span class="n">ylab</span><span class="o">=</span><span class="nf">expression</span><span class="p">(</span><span class="nf">paste</span><span class="p">(</span><span class="s">&quot;Temperature (&quot;</span><span class="p">,</span> <span class="n">degree</span><span class="o">*</span><span class="bp">F</span><span class="p">,</span><span class="s">&quot;)&quot;</span><span class="p">,)),</span>
-    <span class="n">main</span><span class="o">=</span><span class="s">&quot;New Haven Annual Mean Temperature&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme_bw</span><span class="p">()</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>autoplot<span class="p">(</span>forecast<span class="p">(</span>fit<span class="p">,</span> <span class="m">1</span><span class="p">),</span> xlab<span class="o">=</span><span class="s">&quot;Year&quot;</span><span class="p">,</span>
+    ylab<span class="o">=</span><span class="kp">expression</span><span class="p">(</span><span class="kp">paste</span><span class="p">(</span><span class="s">&quot;Temperature (&quot;</span><span class="p">,</span> degree<span class="o">*</span><span class="bp">F</span><span class="p">,</span><span class="s">&quot;)&quot;</span><span class="p">,)),</span>
+    main<span class="o">=</span><span class="s">&quot;New Haven Annual Mean Temperature&quot;</span><span class="p">)</span> <span class="o">+</span>
+  theme_bw<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image6" src="p05-01-chuoi-thoi-gian_files/figure-html/unnamed-chunk-6-1.png" /></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">accuracy</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>accuracy<span class="p">(</span>fit<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##                     ME     RMSE       MAE       MPE     MAPE      MASE</span>
@@ -679,10 +680,10 @@ tại</li>
 <p><strong>Lưu ý</strong>: Các ảnh hưởng của slope và chu kỳ (<a href="#id11"><span class="problematic" id="id12">:raw-latex:`\beta `và
 :raw-latex:`</span></a>gamma`) đến giá trị hiện tại được tính theo công thức giống
 như alpha</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">forecast</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="n">fit</span> <span class="o">&lt;-</span> <span class="nf">ets</span><span class="p">(</span><span class="nf">log</span><span class="p">(</span><span class="n">AirPassengers</span><span class="p">),</span> <span class="n">model</span> <span class="o">=</span> <span class="s">&quot;AAA&quot;</span><span class="p">)</span>
-<span class="n">fit</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>forecast<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+fit <span class="o">&lt;-</span> ets<span class="p">(</span><span class="kp">log</span><span class="p">(</span>AirPassengers<span class="p">),</span> model <span class="o">=</span> <span class="s">&quot;AAA&quot;</span><span class="p">)</span>
+fit
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## ETS(A,A,A)</span>
@@ -708,8 +709,8 @@ như alpha</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Dự báo</span>
-<span class="n">pred</span> <span class="o">&lt;-</span> <span class="nf">forecast</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="m">5</span><span class="p">)</span>
-<span class="n">pred</span>
+pred <span class="o">&lt;-</span> forecast<span class="p">(</span>fit<span class="p">,</span> <span class="m">5</span><span class="p">)</span>
+pred
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##          Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95</span>
@@ -720,18 +721,18 @@ như alpha</p>
 <span class="c1">## May 1961       6.223273 6.147500 6.299047 6.107388 6.339159</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">autoplot</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">main</span><span class="o">=</span><span class="s">&quot;Forecast for Air Travel&quot;</span><span class="p">,</span>
-    <span class="n">ylab</span><span class="o">=</span><span class="s">&quot;Log(AirPassengers)&quot;</span><span class="p">,</span> <span class="n">xlab</span><span class="o">=</span><span class="s">&quot;Time&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme_bw</span><span class="p">()</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>autoplot<span class="p">(</span>pred<span class="p">,</span> main<span class="o">=</span><span class="s">&quot;Forecast for Air Travel&quot;</span><span class="p">,</span>
+    ylab<span class="o">=</span><span class="s">&quot;Log(AirPassengers)&quot;</span><span class="p">,</span> xlab<span class="o">=</span><span class="s">&quot;Time&quot;</span><span class="p">)</span> <span class="o">+</span>
+  theme_bw<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image7" src="p05-01-chuoi-thoi-gian_files/figure-html/unnamed-chunk-7-1.png" /></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">pred</span><span class="o">$</span><span class="n">mean</span> <span class="o">&lt;-</span> <span class="nf">exp</span><span class="p">(</span><span class="n">pred</span><span class="o">$</span><span class="n">mean</span><span class="p">)</span>
-<span class="n">pred</span><span class="o">$</span><span class="n">lower</span> <span class="o">&lt;-</span> <span class="nf">exp</span><span class="p">(</span><span class="n">pred</span><span class="o">$</span><span class="n">lower</span><span class="p">)</span>
-<span class="n">pred</span><span class="o">$</span><span class="n">upper</span> <span class="o">&lt;-</span> <span class="nf">exp</span><span class="p">(</span><span class="n">pred</span><span class="o">$</span><span class="n">upper</span><span class="p">)</span>
-<span class="n">p</span> <span class="o">&lt;-</span> <span class="nf">cbind</span><span class="p">(</span><span class="n">pred</span><span class="o">$</span><span class="n">mean</span><span class="p">,</span> <span class="n">pred</span><span class="o">$</span><span class="n">lower</span><span class="p">,</span> <span class="n">pred</span><span class="o">$</span><span class="n">upper</span><span class="p">)</span>
-<span class="nf">dimnames</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="n">[[2]]</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;mean&quot;</span><span class="p">,</span> <span class="s">&quot;Lo 80&quot;</span><span class="p">,</span> <span class="s">&quot;Lo 95&quot;</span><span class="p">,</span> <span class="s">&quot;Hi 80&quot;</span><span class="p">,</span> <span class="s">&quot;Hi 95&quot;</span><span class="p">)</span>
-<span class="n">p</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>pred<span class="o">$</span>mean <span class="o">&lt;-</span> <span class="kp">exp</span><span class="p">(</span>pred<span class="o">$</span><span class="kp">mean</span><span class="p">)</span>
+pred<span class="o">$</span>lower <span class="o">&lt;-</span> <span class="kp">exp</span><span class="p">(</span>pred<span class="o">$</span>lower<span class="p">)</span>
+pred<span class="o">$</span>upper <span class="o">&lt;-</span> <span class="kp">exp</span><span class="p">(</span>pred<span class="o">$</span>upper<span class="p">)</span>
+p <span class="o">&lt;-</span> <span class="kp">cbind</span><span class="p">(</span>pred<span class="o">$</span><span class="kp">mean</span><span class="p">,</span> pred<span class="o">$</span>lower<span class="p">,</span> pred<span class="o">$</span>upper<span class="p">)</span>
+<span class="kp">dimnames</span><span class="p">(</span>p<span class="p">)[[</span><span class="m">2</span><span class="p">]]</span> <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;mean&quot;</span><span class="p">,</span> <span class="s">&quot;Lo 80&quot;</span><span class="p">,</span> <span class="s">&quot;Lo 95&quot;</span><span class="p">,</span> <span class="s">&quot;Hi 80&quot;</span><span class="p">,</span> <span class="s">&quot;Hi 95&quot;</span><span class="p">)</span>
+p <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##          mean    Lo 80    Lo 95    Hi 80    Hi 95</span>
@@ -742,7 +743,7 @@ như alpha</p>
 <span class="c1">## [5,] 504.3514 467.5469 449.1637 544.0531 566.3198</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">class</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kp">class</span><span class="p">(</span>p<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;mts&quot;    &quot;ts&quot;     &quot;matrix&quot;</span>
@@ -753,9 +754,9 @@ như alpha</p>
 <h3>1.5.3. Tự động xây dựng mô hình<a class="headerlink" href="#tu-dong-xay-dung-mo-hinh" title="Permalink to this headline">¶</a></h3>
 <p>Hàm <strong>ets</strong> cho phép tự động lựa chọn mô hình tốt nhất theo phương pháp
 maximum likelihood.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">forecast</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="p">(</span><span class="n">fit</span> <span class="o">&lt;-</span> <span class="nf">ets</span><span class="p">(</span><span class="n">JohnsonJohnson</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>forecast<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+<span class="p">(</span>fit <span class="o">&lt;-</span> ets<span class="p">(</span>JohnsonJohnson<span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## ETS(M,A,M)</span>
@@ -779,7 +780,7 @@ maximum likelihood.</p>
 <span class="c1">## 166.6964 169.1289 188.5738</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">forecast</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">autoplot</span> <span class="o">+</span> <span class="nf">theme_bw</span><span class="p">()</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>forecast<span class="p">(</span>fit<span class="p">)</span> <span class="o">%&gt;%</span> autoplot <span class="o">+</span> theme_bw<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image8" src="p05-01-chuoi-thoi-gian_files/figure-html/unnamed-chunk-8-1.png" /></p>

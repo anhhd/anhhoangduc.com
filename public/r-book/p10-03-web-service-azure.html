@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -288,14 +289,14 @@
 <h1>2. Xây dựng web service với Azure<a class="headerlink" href="#xay-dung-web-service-voi-azure" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="log-in-vao-azure">
 <h2>2.1. Log in vào Azure<a class="headerlink" href="#log-in-vao-azure" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">AzureML</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>AzureML<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
 
 <span class="c1">#Tạo workspace</span>
-<span class="nf">sessionInfo</span><span class="p">()</span>
-<span class="n">ws</span> <span class="o">&lt;-</span> <span class="nf">workspace</span><span class="p">(</span>
-  <span class="n">id</span> <span class="o">=</span> <span class="s">&quot;2052e86780c342fcb7cdf5a7179b447a&quot;</span><span class="p">,</span>
-  <span class="n">auth</span> <span class="o">=</span> <span class="s">&quot;76186c54e53443e38b78226ebb5f2873&quot;</span>
+sessionInfo<span class="p">()</span>
+ws <span class="o">&lt;-</span> workspace<span class="p">(</span>
+  id <span class="o">=</span> <span class="s">&quot;2052e86780c342fcb7cdf5a7179b447a&quot;</span><span class="p">,</span>
+  auth <span class="o">=</span> <span class="s">&quot;76186c54e53443e38b78226ebb5f2873&quot;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -307,108 +308,108 @@
 <li>Điều chỉnh Path cho zip tool &amp; khởi động lại R (tắt RStudio và bật
 lại)</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">Sys.which</span><span class="p">(</span><span class="s">&quot;zip&quot;</span><span class="p">)</span>
-<span class="n">Rtools.bin</span><span class="o">=</span><span class="s">&quot;C:\\RBuildTools\\3.4\\bin&quot;</span>
-<span class="n">sys.path</span> <span class="o">=</span> <span class="nf">Sys.getenv</span><span class="p">(</span><span class="s">&quot;PATH&quot;</span><span class="p">)</span>
-<span class="nf">if </span><span class="p">(</span><span class="nf">Sys.which</span><span class="p">(</span><span class="s">&quot;zip&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;&quot;</span> <span class="p">)</span> <span class="p">{</span>
-  <span class="nf">system</span><span class="p">(</span><span class="nf">paste</span><span class="p">(</span><span class="s">&quot;setx PATH \&quot;&quot;</span><span class="p">,</span> <span class="n">Rtools.bin</span><span class="p">,</span> <span class="s">&quot;;&quot;</span><span class="p">,</span> <span class="n">sys.path</span><span class="p">,</span> <span class="s">&quot;\&quot;&quot;</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kp">Sys.which</span><span class="p">(</span><span class="s">&quot;zip&quot;</span><span class="p">)</span>
+Rtools.bin<span class="o">=</span><span class="s">&quot;C:\\RBuildTools\\3.4\\bin&quot;</span>
+sys.path <span class="o">=</span> <span class="kp">Sys.getenv</span><span class="p">(</span><span class="s">&quot;PATH&quot;</span><span class="p">)</span>
+<span class="kr">if</span> <span class="p">(</span><span class="kp">Sys.which</span><span class="p">(</span><span class="s">&quot;zip&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;&quot;</span> <span class="p">)</span> <span class="p">{</span>
+  <span class="kp">system</span><span class="p">(</span><span class="kp">paste</span><span class="p">(</span><span class="s">&quot;setx PATH \&quot;&quot;</span><span class="p">,</span> Rtools.bin<span class="p">,</span> <span class="s">&quot;;&quot;</span><span class="p">,</span> sys.path<span class="p">,</span> <span class="s">&quot;\&quot;&quot;</span><span class="p">,</span> sep <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">))</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li>Kết quả sau khi khởi động lại R</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">Sys.which</span><span class="p">(</span><span class="s">&quot;zip&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kp">Sys.which</span><span class="p">(</span><span class="s">&quot;zip&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="xay-dung-api-don-gian">
 <h2>2.3. Xây dựng API đơn giản<a class="headerlink" href="#xay-dung-api-don-gian" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">add</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">){</span>
-  <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>add <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">,</span> y<span class="p">){</span>
+  x <span class="o">+</span> y
 <span class="p">}</span>
 
-<span class="n">api</span> <span class="o">&lt;-</span> <span class="nf">publishWebService</span><span class="p">(</span>
-  <span class="n">ws</span><span class="p">,</span>
-  <span class="n">fun</span> <span class="o">=</span> <span class="n">add</span><span class="p">,</span>
-  <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;AzureML-vignette-silly&quot;</span><span class="p">,</span>
-  <span class="n">inputSchema</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="s">&quot;numeric&quot;</span><span class="p">,</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="s">&quot;numeric&quot;</span>
+api <span class="o">&lt;-</span> publishWebService<span class="p">(</span>
+  ws<span class="p">,</span>
+  fun <span class="o">=</span> add<span class="p">,</span>
+  name <span class="o">=</span> <span class="s">&quot;AzureML-vignette-silly&quot;</span><span class="p">,</span>
+  inputSchema <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>
+    x <span class="o">=</span> <span class="s">&quot;numeric&quot;</span><span class="p">,</span>
+    y <span class="o">=</span> <span class="s">&quot;numeric&quot;</span>
   <span class="p">),</span>
-  <span class="n">outputSchema</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span>
-    <span class="n">ans</span> <span class="o">=</span> <span class="s">&quot;numeric&quot;</span>
+  outputSchema <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>
+    ans <span class="o">=</span> <span class="s">&quot;numeric&quot;</span>
   <span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">api</span> <span class="o">%&gt;%</span> <span class="n">class</span>
-<span class="n">api</span> <span class="o">%&gt;%</span> <span class="n">names</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>api <span class="o">%&gt;%</span> <span class="kp">class</span>
+api <span class="o">%&gt;%</span> <span class="kp">names</span>
 
 <span class="c1">#Tìm kiếm document</span>
-<span class="p">(</span><span class="n">helpPageUrl</span> <span class="o">&lt;-</span> <span class="n">api</span><span class="o">$</span><span class="n">HelpLocation</span><span class="p">)</span>
+<span class="p">(</span>helpPageUrl <span class="o">&lt;-</span> api<span class="o">$</span>HelpLocation<span class="p">)</span>
 
 <span class="c1">#ServiceID</span>
-<span class="n">api</span><span class="o">$</span><span class="n">WebServiceId</span>
+api<span class="o">$</span>WebServiceId
 
 <span class="c1">#Tìm kiếm thông tin</span>
 
-<span class="p">(</span><span class="n">webservices</span> <span class="o">&lt;-</span> <span class="nf">services</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;AzureML-vignette-silly&quot;</span><span class="p">))</span>
+<span class="p">(</span>webservices <span class="o">&lt;-</span> services<span class="p">(</span>ws<span class="p">,</span> name <span class="o">=</span> <span class="s">&quot;AzureML-vignette-silly&quot;</span><span class="p">))</span>
 
 <span class="c1">#Sử dụng webservice</span>
-<span class="n">df</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span>
-  <span class="n">x</span> <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">,</span>
-  <span class="n">y</span> <span class="o">=</span> <span class="m">6</span><span class="o">:</span><span class="m">10</span>
+df <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>
+  x <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">,</span>
+  y <span class="o">=</span> <span class="m">6</span><span class="o">:</span><span class="m">10</span>
 <span class="p">)</span>
-<span class="n">s</span> <span class="o">&lt;-</span> <span class="nf">services</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;AzureML-vignette-silly&quot;</span><span class="p">)</span>
-<span class="n">s</span> <span class="o">&lt;-</span> <span class="nf">tail</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="c1"># Sử dụng services mới nhất</span>
-<span class="n">ep</span> <span class="o">&lt;-</span> <span class="nf">endpoints</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+s <span class="o">&lt;-</span> services<span class="p">(</span>ws<span class="p">,</span> name <span class="o">=</span> <span class="s">&quot;AzureML-vignette-silly&quot;</span><span class="p">)</span>
+s <span class="o">&lt;-</span> <span class="kp">tail</span><span class="p">(</span>s<span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="c1"># Sử dụng services mới nhất</span>
+ep <span class="o">&lt;-</span> endpoints<span class="p">(</span>ws<span class="p">,</span> s<span class="p">)</span>
 
-<span class="nf">consume</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+consume<span class="p">(</span>ep<span class="p">,</span> df<span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li>Xóa webservice</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">deleteWebService</span><span class="p">(</span><span class="n">ws</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;AzureML-vignette-silly&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>deleteWebService<span class="p">(</span>ws<span class="p">,</span> name <span class="o">=</span> <span class="s">&quot;AzureML-vignette-silly&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="xay-dung-api-web-service-cho-mo-hinh-du-bao">
 <h2>2.4. Xây dựng API web service cho mô hình dự báo<a class="headerlink" href="#xay-dung-api-web-service-cho-mo-hinh-du-bao" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">MASS</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">gbm</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>MASS<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>gbm<span class="p">)</span>
 
-<span class="n">test</span> <span class="o">&lt;-</span> <span class="n">Boston[1</span><span class="o">:</span><span class="m">5</span><span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="m">13</span><span class="n">]</span>
-<span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
+test <span class="o">&lt;-</span> Boston<span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="m">13</span><span class="p">]</span>
+<span class="kp">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
 
-<span class="n">gbm1</span> <span class="o">&lt;-</span> <span class="nf">gbm</span><span class="p">(</span><span class="n">medv</span> <span class="o">~</span> <span class="n">.,</span>
-            <span class="n">distribution</span> <span class="o">=</span> <span class="s">&quot;gaussian&quot;</span><span class="p">,</span>
-            <span class="n">n.trees</span> <span class="o">=</span> <span class="m">5000</span><span class="p">,</span>
-            <span class="n">interaction.depth</span> <span class="o">=</span> <span class="m">8</span><span class="p">,</span>
-            <span class="n">n.minobsinnode</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
-            <span class="n">shrinkage</span> <span class="o">=</span> <span class="m">0.01</span><span class="p">,</span>
-            <span class="n">cv.folds</span> <span class="o">=</span> <span class="m">5</span><span class="p">,</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">Boston</span><span class="p">,</span>
-            <span class="n">n.cores</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="c1"># You can set this to n.cores = NULL to use all cores</span>
+gbm1 <span class="o">&lt;-</span> gbm<span class="p">(</span>medv <span class="o">~</span> <span class="m">.</span><span class="p">,</span>
+            distribution <span class="o">=</span> <span class="s">&quot;gaussian&quot;</span><span class="p">,</span>
+            n.trees <span class="o">=</span> <span class="m">5000</span><span class="p">,</span>
+            interaction.depth <span class="o">=</span> <span class="m">8</span><span class="p">,</span>
+            n.minobsinnode <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
+            shrinkage <span class="o">=</span> <span class="m">0.01</span><span class="p">,</span>
+            cv.folds <span class="o">=</span> <span class="m">5</span><span class="p">,</span>
+            data <span class="o">=</span> Boston<span class="p">,</span>
+            n.cores <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="c1"># You can set this to n.cores = NULL to use all cores</span>
 
-<span class="n">best.iter</span> <span class="o">&lt;-</span> <span class="nf">gbm.perf</span><span class="p">(</span><span class="n">gbm1</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&quot;cv&quot;</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">FALSE</span><span class="p">)</span>
+best.iter <span class="o">&lt;-</span> gbm.perf<span class="p">(</span>gbm1<span class="p">,</span> method<span class="o">=</span><span class="s">&quot;cv&quot;</span><span class="p">,</span> plot<span class="o">=</span><span class="kc">FALSE</span><span class="p">)</span>
 
-<span class="n">mypredict</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">newdata</span><span class="p">){</span>
-  <span class="nf">require</span><span class="p">(</span><span class="n">gbm</span><span class="p">)</span>
-  <span class="nf">predict</span><span class="p">(</span><span class="n">gbm1</span><span class="p">,</span> <span class="n">newdata</span><span class="p">,</span> <span class="n">best.iter</span><span class="p">)</span>
+mypredict <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>newdata<span class="p">){</span>
+  <span class="kn">require</span><span class="p">(</span>gbm<span class="p">)</span>
+  predict<span class="p">(</span>gbm1<span class="p">,</span> newdata<span class="p">,</span> best.iter<span class="p">)</span>
 <span class="p">}</span>
 
 <span class="c1"># Example use of the prediction function</span>
-<span class="nf">print</span><span class="p">(</span><span class="nf">mypredict</span><span class="p">(</span><span class="n">test</span><span class="p">))</span>
+<span class="kp">print</span><span class="p">(</span>mypredict<span class="p">(</span>test<span class="p">))</span>
 
-<span class="n">ep</span> <span class="o">&lt;-</span> <span class="nf">publishWebService</span><span class="p">(</span><span class="n">ws</span> <span class="o">=</span> <span class="n">ws</span><span class="p">,</span>
-                        <span class="n">fun</span> <span class="o">=</span> <span class="n">mypredict</span><span class="p">,</span>
-                        <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;AzureML-vignette-gbm&quot;</span><span class="p">,</span>
-                        <span class="n">inputSchema</span> <span class="o">=</span> <span class="n">test</span><span class="p">)</span> <span class="c1">#Thêm định dạng của dataframe trong input</span>
+ep <span class="o">&lt;-</span> publishWebService<span class="p">(</span>ws <span class="o">=</span> ws<span class="p">,</span>
+                        fun <span class="o">=</span> mypredict<span class="p">,</span>
+                        name <span class="o">=</span> <span class="s">&quot;AzureML-vignette-gbm&quot;</span><span class="p">,</span>
+                        inputSchema <span class="o">=</span> test<span class="p">)</span> <span class="c1">#Thêm định dạng của dataframe trong input</span>
 
 <span class="c1"># Sử dụng service</span>
-<span class="nf">print</span><span class="p">(</span><span class="nf">consume</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="n">test</span><span class="p">))</span>
+<span class="kp">print</span><span class="p">(</span>consume<span class="p">(</span>ep<span class="p">,</span> test<span class="p">))</span>
 </pre></div>
 </div>
 </div>

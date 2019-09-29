@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -285,7 +286,7 @@
 <h1>4. Convolution neural networks<a class="headerlink" href="#convolution-neural-networks" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="vi-du">
 <h2>4.1. Ví dụ<a class="headerlink" href="#vi-du" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Warning: package &#39;dplyr&#39; was built under R version 3.4.4</span>
@@ -305,16 +306,16 @@
 <span class="c1">##     intersect, setdiff, setequal, union</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">keras</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>keras<span class="p">)</span>
 
-<span class="n">model</span> <span class="o">&lt;-</span> <span class="nf">keras_model_sequential</span><span class="p">()</span> <span class="o">%&gt;%</span>
-  <span class="nf">layer_conv_2d</span><span class="p">(</span><span class="n">filters</span> <span class="o">=</span> <span class="m">32</span><span class="p">,</span> <span class="n">kernel_size</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">3</span><span class="p">,</span> <span class="m">3</span><span class="p">),</span> <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">,</span>
-                <span class="n">input_shape</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">28</span><span class="p">,</span> <span class="m">28</span><span class="p">,</span> <span class="m">1</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">layer_max_pooling_2d</span><span class="p">(</span><span class="n">pool_size</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">2</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">layer_conv_2d</span><span class="p">(</span><span class="n">filters</span> <span class="o">=</span> <span class="m">64</span><span class="p">,</span> <span class="n">kernel_size</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">3</span><span class="p">,</span> <span class="m">3</span><span class="p">),</span> <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">layer_max_pooling_2d</span><span class="p">(</span><span class="n">pool_size</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">2</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">layer_conv_2d</span><span class="p">(</span><span class="n">filters</span> <span class="o">=</span> <span class="m">64</span><span class="p">,</span> <span class="n">kernel_size</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">3</span><span class="p">,</span> <span class="m">3</span><span class="p">),</span> <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">)</span>
-<span class="n">model</span>
+model <span class="o">&lt;-</span> keras_model_sequential<span class="p">()</span> <span class="o">%&gt;%</span>
+  layer_conv_2d<span class="p">(</span>filters <span class="o">=</span> <span class="m">32</span><span class="p">,</span> kernel_size <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">3</span><span class="p">,</span> <span class="m">3</span><span class="p">),</span> activation <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">,</span>
+                input_shape <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">28</span><span class="p">,</span> <span class="m">28</span><span class="p">,</span> <span class="m">1</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  layer_max_pooling_2d<span class="p">(</span>pool_size <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">2</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  layer_conv_2d<span class="p">(</span>filters <span class="o">=</span> <span class="m">64</span><span class="p">,</span> kernel_size <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">3</span><span class="p">,</span> <span class="m">3</span><span class="p">),</span> activation <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  layer_max_pooling_2d<span class="p">(</span>pool_size <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">2</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  layer_conv_2d<span class="p">(</span>filters <span class="o">=</span> <span class="m">64</span><span class="p">,</span> kernel_size <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">3</span><span class="p">,</span> <span class="m">3</span><span class="p">),</span> activation <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">)</span>
+model
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Model</span>
@@ -337,11 +338,11 @@
 <span class="c1">## ___________________________________________________________________________</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">&lt;-</span> <span class="n">model</span> <span class="o">%&gt;%</span>
-  <span class="nf">layer_flatten</span><span class="p">()</span> <span class="o">%&gt;%</span>
-  <span class="nf">layer_dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="m">64</span><span class="p">,</span> <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">layer_dense</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="m">10</span><span class="p">,</span> <span class="n">activation</span> <span class="o">=</span> <span class="s">&quot;softmax&quot;</span><span class="p">)</span>
-<span class="n">model</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>model <span class="o">&lt;-</span> model <span class="o">%&gt;%</span>
+  layer_flatten<span class="p">()</span> <span class="o">%&gt;%</span>
+  layer_dense<span class="p">(</span>units <span class="o">=</span> <span class="m">64</span><span class="p">,</span> activation <span class="o">=</span> <span class="s">&quot;relu&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  layer_dense<span class="p">(</span>units <span class="o">=</span> <span class="m">10</span><span class="p">,</span> activation <span class="o">=</span> <span class="s">&quot;softmax&quot;</span><span class="p">)</span>
+model
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Model</span>
@@ -373,30 +374,30 @@
 <ul class="simple">
 <li>Train model với MNIST</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">load</span><span class="p">(</span><span class="s">&quot;data/mnist.rda&quot;</span><span class="p">)</span>
-<span class="nf">c</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="n">train_images</span><span class="p">,</span> <span class="n">train_labels</span><span class="p">),</span> <span class="nf">c</span><span class="p">(</span><span class="n">test_images</span><span class="p">,</span> <span class="n">test_labels</span><span class="p">))</span> <span class="o">%&lt;-%</span> <span class="n">mnist</span>
-<span class="n">train_images</span> <span class="o">&lt;-</span> <span class="nf">array_reshape</span><span class="p">(</span><span class="n">train_images</span><span class="p">,</span> <span class="nf">c</span><span class="p">(</span><span class="m">60000</span><span class="p">,</span> <span class="m">28</span><span class="p">,</span> <span class="m">28</span><span class="p">,</span> <span class="m">1</span><span class="p">))</span>
-<span class="n">train_images</span> <span class="o">&lt;-</span> <span class="n">train_images</span> <span class="o">/</span> <span class="m">255</span>
-<span class="n">test_images</span> <span class="o">&lt;-</span> <span class="nf">array_reshape</span><span class="p">(</span><span class="n">test_images</span><span class="p">,</span> <span class="nf">c</span><span class="p">(</span><span class="m">10000</span><span class="p">,</span> <span class="m">28</span><span class="p">,</span> <span class="m">28</span><span class="p">,</span> <span class="m">1</span><span class="p">))</span>
-<span class="n">test_images</span> <span class="o">&lt;-</span> <span class="n">test_images</span> <span class="o">/</span> <span class="m">255</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kp">load</span><span class="p">(</span><span class="s">&quot;data/mnist.rda&quot;</span><span class="p">)</span>
+<span class="kt">c</span><span class="p">(</span><span class="kt">c</span><span class="p">(</span>train_images<span class="p">,</span> train_labels<span class="p">),</span> <span class="kt">c</span><span class="p">(</span>test_images<span class="p">,</span> test_labels<span class="p">))</span> <span class="o">%&lt;-%</span> mnist
+train_images <span class="o">&lt;-</span> array_reshape<span class="p">(</span>train_images<span class="p">,</span> <span class="kt">c</span><span class="p">(</span><span class="m">60000</span><span class="p">,</span> <span class="m">28</span><span class="p">,</span> <span class="m">28</span><span class="p">,</span> <span class="m">1</span><span class="p">))</span>
+train_images <span class="o">&lt;-</span> train_images <span class="o">/</span> <span class="m">255</span>
+test_images <span class="o">&lt;-</span> array_reshape<span class="p">(</span>test_images<span class="p">,</span> <span class="kt">c</span><span class="p">(</span><span class="m">10000</span><span class="p">,</span> <span class="m">28</span><span class="p">,</span> <span class="m">28</span><span class="p">,</span> <span class="m">1</span><span class="p">))</span>
+test_images <span class="o">&lt;-</span> test_images <span class="o">/</span> <span class="m">255</span>
 
-<span class="n">train_labels</span> <span class="o">&lt;-</span> <span class="nf">to_categorical</span><span class="p">(</span><span class="n">train_labels</span><span class="p">)</span>
-<span class="n">test_labels</span> <span class="o">&lt;-</span> <span class="nf">to_categorical</span><span class="p">(</span><span class="n">test_labels</span><span class="p">)</span>
+train_labels <span class="o">&lt;-</span> to_categorical<span class="p">(</span>train_labels<span class="p">)</span>
+test_labels <span class="o">&lt;-</span> to_categorical<span class="p">(</span>test_labels<span class="p">)</span>
 
-<span class="n">model</span> <span class="o">%&gt;%</span> <span class="nf">compile</span><span class="p">(</span><span class="n">optimizer</span> <span class="o">=</span> <span class="s">&quot;rmsprop&quot;</span><span class="p">,</span>
-                  <span class="n">loss</span> <span class="o">=</span> <span class="s">&quot;categorical_crossentropy&quot;</span><span class="p">,</span>
-                  <span class="n">metrics</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;accuracy&quot;</span><span class="p">))</span>
-<span class="n">model</span> <span class="o">%&gt;%</span> <span class="nf">fit</span><span class="p">(</span><span class="n">train_images</span><span class="p">,</span>
-              <span class="n">train_labels</span><span class="p">,</span>
-              <span class="n">epochs</span> <span class="o">=</span> <span class="m">5</span><span class="p">,</span>
-              <span class="n">batch_size</span> <span class="o">=</span> <span class="m">64</span><span class="p">)</span>
+model <span class="o">%&gt;%</span> compile<span class="p">(</span>optimizer <span class="o">=</span> <span class="s">&quot;rmsprop&quot;</span><span class="p">,</span>
+                  loss <span class="o">=</span> <span class="s">&quot;categorical_crossentropy&quot;</span><span class="p">,</span>
+                  metrics <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;accuracy&quot;</span><span class="p">))</span>
+model <span class="o">%&gt;%</span> fit<span class="p">(</span>train_images<span class="p">,</span>
+              train_labels<span class="p">,</span>
+              epochs <span class="o">=</span> <span class="m">5</span><span class="p">,</span>
+              batch_size <span class="o">=</span> <span class="m">64</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li>Đánh giá mô hình</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">&lt;-</span> <span class="n">model</span> <span class="o">%&gt;%</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">test_images</span><span class="p">,</span> <span class="n">test_labels</span><span class="p">)</span>
-<span class="n">results</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>results <span class="o">&lt;-</span> model <span class="o">%&gt;%</span> evaluate<span class="p">(</span>test_images<span class="p">,</span> test_labels<span class="p">)</span>
+results
 </pre></div>
 </div>
 </div>

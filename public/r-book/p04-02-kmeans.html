@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul class="current">
@@ -303,19 +304,19 @@ nên từ 2 đến 10 nhóm).</p>
 <p>Ví dụ, sử dụng dữ liệu <code class="docutils literal notranslate"><span class="pre">iris</span></code> có sẵn trong <code class="docutils literal notranslate"><span class="pre">R</span></code> chúng ta sẽ phân nhóm
 (<code class="docutils literal notranslate"><span class="pre">cluster</span></code>) các quan sát thành 2 nhóm dựa vào biến <code class="docutils literal notranslate"><span class="pre">Sepal.Length</span></code> và
 <code class="docutils literal notranslate"><span class="pre">Petal.length</span></code>.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
 <span class="c1"># Lấy ngẫu nhiên 100 quan sát,</span>
 <span class="c1"># và chỉ lấy 2 biến `Sepal.Length` và `Petal.Length`</span>
-<span class="nf">set.seed</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">&lt;-</span> <span class="n">iris</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="n">Sepal.Length</span><span class="p">,</span> <span class="n">Petal.Length</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">sample_n</span><span class="p">(</span><span class="m">100</span><span class="p">)</span>
+<span class="kp">set.seed</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+data <span class="o">&lt;-</span> iris <span class="o">%&gt;%</span>
+  select<span class="p">(</span>Sepal.Length<span class="p">,</span> Petal.Length<span class="p">)</span> <span class="o">%&gt;%</span>
+  sample_n<span class="p">(</span><span class="m">100</span><span class="p">)</span>
 
-<span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">Sepal.Length</span><span class="p">,</span> <span class="n">Petal.Length</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;darkgreen&quot;</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">theme_classic</span><span class="p">()</span>
+<span class="kn">library</span><span class="p">(</span>ggplot2<span class="p">)</span>
+data <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>Sepal.Length<span class="p">,</span> Petal.Length<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>size <span class="o">=</span> <span class="m">2</span><span class="p">,</span> col <span class="o">=</span> <span class="s">&quot;darkgreen&quot;</span><span class="p">)</span><span class="o">+</span>
+  theme_classic<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image0" src="p04-02-kmeans_files/figure-html/unnamed-chunk-2-1.png" /></p>
@@ -324,12 +325,12 @@ nên từ 2 đến 10 nhóm).</p>
 (<code class="docutils literal notranslate"><span class="pre">cluster</span> <span class="pre">centroids</span></code>) - tương đương với 2 nhóm, là 2 điểm x (đỏ) và
 x (xanh dương) như sau:</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">Sepal.Length</span><span class="p">,</span> <span class="n">Petal.Length</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;darkgreen&quot;</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">theme_classic</span><span class="p">()</span><span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="m">6</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="m">5</span><span class="p">),</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="m">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="m">5</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="m">1</span><span class="p">),</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="m">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>Sepal.Length<span class="p">,</span> Petal.Length<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>size <span class="o">=</span> <span class="m">2</span><span class="p">,</span> col <span class="o">=</span> <span class="s">&quot;darkgreen&quot;</span><span class="p">)</span><span class="o">+</span>
+  theme_classic<span class="p">()</span><span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span><span class="m">6</span><span class="p">,</span>y<span class="o">=</span><span class="m">5</span><span class="p">),</span> col <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> shape<span class="o">=</span><span class="m">4</span><span class="p">,</span> size <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span><span class="m">5</span><span class="p">,</span>y<span class="o">=</span><span class="m">1</span><span class="p">),</span> col <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> shape<span class="o">=</span><span class="m">4</span><span class="p">,</span> size <span class="o">=</span> <span class="m">5</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image1" src="p04-02-kmeans_files/figure-html/unnamed-chunk-3-1.png" /></p>
@@ -344,36 +345,36 @@ hơn.</li>
 sau:</p>
 <div class="math notranslate">
 \[d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}\]</div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data1</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data1 <span class="o">&lt;-</span> data <span class="o">%&gt;%</span>
   <span class="c1"># Set ngẫu nhiên 2 centroids</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">Sepal.Length_red</span> <span class="o">=</span> <span class="m">6</span><span class="p">,</span>
-         <span class="n">Petal.Length_red</span> <span class="o">=</span> <span class="m">5</span><span class="p">,</span>
-         <span class="n">Sepal.Length_blue</span> <span class="o">=</span> <span class="m">5</span><span class="p">,</span>
-         <span class="n">Petal.Length_blue</span> <span class="o">=</span> <span class="m">1</span>
+  mutate<span class="p">(</span>Sepal.Length_red <span class="o">=</span> <span class="m">6</span><span class="p">,</span>
+         Petal.Length_red <span class="o">=</span> <span class="m">5</span><span class="p">,</span>
+         Sepal.Length_blue <span class="o">=</span> <span class="m">5</span><span class="p">,</span>
+         Petal.Length_blue <span class="o">=</span> <span class="m">1</span>
          <span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="c1"># Tính khoảng cách từ các quan sát đến 2 centroids</span>
-  <span class="nf">mutate</span><span class="p">(</span>
-    <span class="n">distance_red</span> <span class="o">=</span> <span class="nf">sqrt</span><span class="p">((</span><span class="n">Sepal.Length</span><span class="o">-</span><span class="n">Sepal.Length_red</span><span class="p">)</span><span class="n">^2</span> <span class="o">+</span> <span class="p">(</span><span class="n">Petal.Length</span> <span class="o">-</span> <span class="n">Petal.Length_red</span><span class="p">)</span><span class="n">^2</span><span class="p">),</span>
-    <span class="n">distance_blue</span> <span class="o">=</span> <span class="nf">sqrt</span><span class="p">((</span><span class="n">Sepal.Length</span><span class="o">-</span><span class="n">Sepal.Length_blue</span><span class="p">)</span><span class="n">^2</span> <span class="o">+</span> <span class="p">(</span><span class="n">Petal.Length</span> <span class="o">-</span> <span class="n">Petal.Length_blue</span><span class="p">)</span><span class="n">^2</span><span class="p">)</span>
+  mutate<span class="p">(</span>
+    distance_red <span class="o">=</span> <span class="kp">sqrt</span><span class="p">((</span>Sepal.Length<span class="o">-</span>Sepal.Length_red<span class="p">)</span><span class="o">^</span><span class="m">2</span> <span class="o">+</span> <span class="p">(</span>Petal.Length <span class="o">-</span> Petal.Length_red<span class="p">)</span><span class="o">^</span><span class="m">2</span><span class="p">),</span>
+    distance_blue <span class="o">=</span> <span class="kp">sqrt</span><span class="p">((</span>Sepal.Length<span class="o">-</span>Sepal.Length_blue<span class="p">)</span><span class="o">^</span><span class="m">2</span> <span class="o">+</span> <span class="p">(</span>Petal.Length <span class="o">-</span> Petal.Length_blue<span class="p">)</span><span class="o">^</span><span class="m">2</span><span class="p">)</span>
     <span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="c1"># Tạo biến mới - nhóm mà các quan sát được phân vào</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">group</span> <span class="o">=</span> <span class="nf">case_when</span><span class="p">(</span>
-    <span class="n">distance_red</span> <span class="o">&lt;</span> <span class="n">distance_blue</span> <span class="o">~</span> <span class="s">&quot;red&quot;</span><span class="p">,</span>
+  mutate<span class="p">(</span>group <span class="o">=</span> case_when<span class="p">(</span>
+    distance_red <span class="o">&lt;</span> distance_blue <span class="o">~</span> <span class="s">&quot;red&quot;</span><span class="p">,</span>
     <span class="kc">TRUE</span> <span class="o">~</span> <span class="s">&quot;blue&quot;</span>
-  <span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">as.factor</span><span class="p">)</span>
+  <span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">as.factor</span><span class="p">)</span>
 
 
 <span class="c1"># Plot dữ liệu mới</span>
-<span class="n">data1</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">Sepal.Length</span><span class="p">,</span> <span class="n">Petal.Length</span><span class="p">),</span> <span class="n">group</span> <span class="o">=</span> <span class="n">group</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">col</span> <span class="o">=</span> <span class="n">group</span><span class="p">))</span><span class="o">+</span>
-  <span class="nf">theme_classic</span><span class="p">()</span><span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="m">6</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="m">5</span><span class="p">),</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="m">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="m">5</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="m">1</span><span class="p">),</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="m">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">scale_color_manual</span><span class="p">(</span>
-    <span class="n">values</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="s">&quot;red&quot;</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
+data1 <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>Sepal.Length<span class="p">,</span> Petal.Length<span class="p">),</span> group <span class="o">=</span> group<span class="p">)</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>size <span class="o">=</span> <span class="m">2</span><span class="p">,</span> aes<span class="p">(</span>col <span class="o">=</span> group<span class="p">))</span><span class="o">+</span>
+  theme_classic<span class="p">()</span><span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span><span class="m">6</span><span class="p">,</span>y<span class="o">=</span><span class="m">5</span><span class="p">),</span> col <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> shape<span class="o">=</span><span class="m">4</span><span class="p">,</span> size <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span><span class="m">5</span><span class="p">,</span>y<span class="o">=</span><span class="m">1</span><span class="p">),</span> col <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> shape<span class="o">=</span><span class="m">4</span><span class="p">,</span> size <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
+  scale_color_manual<span class="p">(</span>
+    values <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="s">&quot;red&quot;</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
   <span class="p">)</span><span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span>
+  theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image2" src="p04-02-kmeans_files/figure-html/unnamed-chunk-4-1.png" /></p>
@@ -383,50 +384,50 @@ dương) (<code class="docutils literal notranslate"><span class="pre">move</spa
 tọa độ các quan sát thuộc về 2 nhóm nói trên.</li>
 </ul>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tính tọa độ của 2 centroids mới</span>
-<span class="n">new_centroids_1</span> <span class="o">&lt;-</span> <span class="n">data1</span> <span class="o">%&gt;%</span>
-  <span class="nf">group_by</span><span class="p">(</span><span class="n">group</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">summarise</span><span class="p">(</span><span class="n">average_sepal</span> <span class="o">=</span> <span class="nf">mean</span><span class="p">(</span><span class="n">Sepal.Length</span><span class="p">),</span>
-            <span class="n">average_petal</span> <span class="o">=</span> <span class="nf">mean</span><span class="p">(</span><span class="n">Petal.Length</span><span class="p">)</span>
+new_centroids_1 <span class="o">&lt;-</span> data1 <span class="o">%&gt;%</span>
+  group_by<span class="p">(</span>group<span class="p">)</span> <span class="o">%&gt;%</span>
+  summarise<span class="p">(</span>average_sepal <span class="o">=</span> <span class="kp">mean</span><span class="p">(</span>Sepal.Length<span class="p">),</span>
+            average_petal <span class="o">=</span> <span class="kp">mean</span><span class="p">(</span>Petal.Length<span class="p">)</span>
             <span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">as.data.frame</span>
+  <span class="kp">as.data.frame</span>
 
 
 <span class="c1"># Plot di chuyển centroids</span>
-<span class="n">data1</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">Sepal.Length</span><span class="p">,</span> <span class="n">Petal.Length</span><span class="p">),</span> <span class="n">group</span> <span class="o">=</span> <span class="n">group</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">col</span> <span class="o">=</span> <span class="n">group</span><span class="p">))</span><span class="o">+</span>
-  <span class="nf">theme_classic</span><span class="p">()</span><span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="m">6</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="m">5</span><span class="p">),</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="m">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="m">5</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="m">1</span><span class="p">),</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="m">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">scale_color_manual</span><span class="p">(</span>
-    <span class="n">values</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="s">&quot;red&quot;</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
+data1 <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>Sepal.Length<span class="p">,</span> Petal.Length<span class="p">),</span> group <span class="o">=</span> group<span class="p">)</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>size <span class="o">=</span> <span class="m">2</span><span class="p">,</span> aes<span class="p">(</span>col <span class="o">=</span> group<span class="p">))</span><span class="o">+</span>
+  theme_classic<span class="p">()</span><span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span><span class="m">6</span><span class="p">,</span>y<span class="o">=</span><span class="m">5</span><span class="p">),</span> col <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> shape<span class="o">=</span><span class="m">4</span><span class="p">,</span> size <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span><span class="m">5</span><span class="p">,</span>y<span class="o">=</span><span class="m">1</span><span class="p">),</span> col <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> shape<span class="o">=</span><span class="m">4</span><span class="p">,</span> size <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
+  scale_color_manual<span class="p">(</span>
+    values <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="s">&quot;red&quot;</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
   <span class="p">)</span><span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_sepal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span><span class="p">,</span>
-                 <span class="n">y</span><span class="o">=</span><span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_petal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span>
+  theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span><span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span>new_centroids_1<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">],</span>
+                 y<span class="o">=</span>new_centroids_1<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">]</span>
                  <span class="p">),</span>
-             <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="m">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_sepal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span><span class="p">,</span>
-                 <span class="n">y</span><span class="o">=</span><span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_petal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span>
+             col <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> shape<span class="o">=</span><span class="m">4</span><span class="p">,</span> size <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span>new_centroids_1<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">],</span>
+                 y<span class="o">=</span>new_centroids_1<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">]</span>
                  <span class="p">),</span>
-             <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="m">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_segment</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="m">6</span><span class="p">,</span>
-                   <span class="n">y</span> <span class="o">=</span> <span class="m">5</span><span class="p">,</span>
-                   <span class="n">xend</span> <span class="o">=</span> <span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_sepal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span><span class="p">,</span>
-                   <span class="n">yend</span> <span class="o">=</span> <span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_petal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span>
+             col <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> shape<span class="o">=</span><span class="m">4</span><span class="p">,</span> size <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
+  geom_segment<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> <span class="m">6</span><span class="p">,</span>
+                   y <span class="o">=</span> <span class="m">5</span><span class="p">,</span>
+                   xend <span class="o">=</span> new_centroids_1<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">],</span>
+                   yend <span class="o">=</span> new_centroids_1<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">]</span>
                    <span class="p">),</span>
-               <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">,</span>
-               <span class="n">arrow</span> <span class="o">=</span> <span class="nf">arrow</span><span class="p">(</span><span class="n">length</span> <span class="o">=</span> <span class="nf">unit</span><span class="p">(</span><span class="m">0.015</span><span class="p">,</span> <span class="s">&quot;npc&quot;</span><span class="p">)),</span>
-               <span class="n">size</span> <span class="o">=</span> <span class="m">0.1</span>
+               col <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">,</span>
+               arrow <span class="o">=</span> arrow<span class="p">(</span>length <span class="o">=</span> unit<span class="p">(</span><span class="m">0.015</span><span class="p">,</span> <span class="s">&quot;npc&quot;</span><span class="p">)),</span>
+               size <span class="o">=</span> <span class="m">0.1</span>
                <span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_segment</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="m">5</span><span class="p">,</span>
-                   <span class="n">y</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
-                   <span class="n">xend</span> <span class="o">=</span> <span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_sepal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span><span class="p">,</span>
-                   <span class="n">yend</span> <span class="o">=</span> <span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_petal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span>
+  geom_segment<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> <span class="m">5</span><span class="p">,</span>
+                   y <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
+                   xend <span class="o">=</span> new_centroids_1<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">],</span>
+                   yend <span class="o">=</span> new_centroids_1<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">]</span>
                    <span class="p">),</span>
-               <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">,</span>
-               <span class="n">arrow</span> <span class="o">=</span> <span class="nf">arrow</span><span class="p">(</span><span class="n">length</span> <span class="o">=</span> <span class="nf">unit</span><span class="p">(</span><span class="m">0.015</span><span class="p">,</span> <span class="s">&quot;npc&quot;</span><span class="p">)),</span>
-               <span class="n">size</span> <span class="o">=</span> <span class="m">0.1</span>
+               col <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">,</span>
+               arrow <span class="o">=</span> arrow<span class="p">(</span>length <span class="o">=</span> unit<span class="p">(</span><span class="m">0.015</span><span class="p">,</span> <span class="s">&quot;npc&quot;</span><span class="p">)),</span>
+               size <span class="o">=</span> <span class="m">0.1</span>
                <span class="p">)</span>
 </pre></div>
 </div>
@@ -436,48 +437,48 @@ tọa độ các quan sát thuộc về 2 nhóm nói trên.</li>
 sát gần hơn với điểm centroids mới nào thì sẽ thuộc về nhóm tương
 ứng. Kết quả như sau:</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data2</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data2 <span class="o">&lt;-</span> data <span class="o">%&gt;%</span>
   <span class="c1"># Update 2 centroids mới</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">Sepal.Length_red</span> <span class="o">=</span> <span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_sepal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span><span class="p">,</span>
-         <span class="n">Petal.Length_red</span> <span class="o">=</span> <span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_petal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span><span class="p">,</span>
-         <span class="n">Sepal.Length_blue</span> <span class="o">=</span> <span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_sepal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span><span class="p">,</span>
-         <span class="n">Petal.Length_blue</span> <span class="o">=</span> <span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_petal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span>
+  mutate<span class="p">(</span>Sepal.Length_red <span class="o">=</span> new_centroids_1<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">],</span>
+         Petal.Length_red <span class="o">=</span> new_centroids_1<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">],</span>
+         Sepal.Length_blue <span class="o">=</span> new_centroids_1<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">],</span>
+         Petal.Length_blue <span class="o">=</span> new_centroids_1<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">]</span>
          <span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="c1"># Tính khoảng cách từ các quan sát đến 2 centroids</span>
-  <span class="nf">mutate</span><span class="p">(</span>
-    <span class="n">distance_red</span> <span class="o">=</span> <span class="nf">sqrt</span><span class="p">((</span><span class="n">Sepal.Length</span><span class="o">-</span><span class="n">Sepal.Length_red</span><span class="p">)</span><span class="n">^2</span> <span class="o">+</span> <span class="p">(</span><span class="n">Petal.Length</span> <span class="o">-</span> <span class="n">Petal.Length_red</span><span class="p">)</span><span class="n">^2</span><span class="p">),</span>
-    <span class="n">distance_blue</span> <span class="o">=</span> <span class="nf">sqrt</span><span class="p">((</span><span class="n">Sepal.Length</span><span class="o">-</span><span class="n">Sepal.Length_blue</span><span class="p">)</span><span class="n">^2</span> <span class="o">+</span> <span class="p">(</span><span class="n">Petal.Length</span> <span class="o">-</span> <span class="n">Petal.Length_blue</span><span class="p">)</span><span class="n">^2</span><span class="p">)</span>
+  mutate<span class="p">(</span>
+    distance_red <span class="o">=</span> <span class="kp">sqrt</span><span class="p">((</span>Sepal.Length<span class="o">-</span>Sepal.Length_red<span class="p">)</span><span class="o">^</span><span class="m">2</span> <span class="o">+</span> <span class="p">(</span>Petal.Length <span class="o">-</span> Petal.Length_red<span class="p">)</span><span class="o">^</span><span class="m">2</span><span class="p">),</span>
+    distance_blue <span class="o">=</span> <span class="kp">sqrt</span><span class="p">((</span>Sepal.Length<span class="o">-</span>Sepal.Length_blue<span class="p">)</span><span class="o">^</span><span class="m">2</span> <span class="o">+</span> <span class="p">(</span>Petal.Length <span class="o">-</span> Petal.Length_blue<span class="p">)</span><span class="o">^</span><span class="m">2</span><span class="p">)</span>
     <span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="c1"># Tạo biến mới - nhóm mà các quan sát được phân vào</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">group</span> <span class="o">=</span> <span class="nf">case_when</span><span class="p">(</span>
-    <span class="n">distance_red</span> <span class="o">&lt;</span> <span class="n">distance_blue</span> <span class="o">~</span> <span class="s">&quot;red&quot;</span><span class="p">,</span>
+  mutate<span class="p">(</span>group <span class="o">=</span> case_when<span class="p">(</span>
+    distance_red <span class="o">&lt;</span> distance_blue <span class="o">~</span> <span class="s">&quot;red&quot;</span><span class="p">,</span>
     <span class="kc">TRUE</span> <span class="o">~</span> <span class="s">&quot;blue&quot;</span>
-  <span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">as.factor</span><span class="p">)</span>
+  <span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">as.factor</span><span class="p">)</span>
 
 
 <span class="c1"># Plot dữ liệu mới</span>
-<span class="n">data2</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">Sepal.Length</span><span class="p">,</span> <span class="n">Petal.Length</span><span class="p">),</span> <span class="n">group</span> <span class="o">=</span> <span class="n">group</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">col</span> <span class="o">=</span> <span class="n">group</span><span class="p">))</span><span class="o">+</span>
-  <span class="nf">theme_classic</span><span class="p">()</span><span class="o">+</span>
-  <span class="nf">scale_color_manual</span><span class="p">(</span>
-    <span class="n">values</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="s">&quot;red&quot;</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
+data2 <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>Sepal.Length<span class="p">,</span> Petal.Length<span class="p">),</span> group <span class="o">=</span> group<span class="p">)</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>size <span class="o">=</span> <span class="m">2</span><span class="p">,</span> aes<span class="p">(</span>col <span class="o">=</span> group<span class="p">))</span><span class="o">+</span>
+  theme_classic<span class="p">()</span><span class="o">+</span>
+  scale_color_manual<span class="p">(</span>
+    values <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="s">&quot;red&quot;</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
   <span class="p">)</span><span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_sepal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span><span class="p">,</span>
-                 <span class="n">y</span><span class="o">=</span><span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_petal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span>
+  theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span><span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span>new_centroids_1<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">],</span>
+                 y<span class="o">=</span>new_centroids_1<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">]</span>
                  <span class="p">),</span>
-             <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="m">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_sepal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span><span class="p">,</span>
-                 <span class="n">y</span><span class="o">=</span><span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_petal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span>
+             col <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> shape<span class="o">=</span><span class="m">4</span><span class="p">,</span> size <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span>new_centroids_1<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">],</span>
+                 y<span class="o">=</span>new_centroids_1<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">]</span>
                  <span class="p">),</span>
-             <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="m">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">annotate</span><span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span>
-           <span class="n">x</span> <span class="o">=</span> <span class="m">4.9</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="m">3.3</span><span class="p">,</span>
-           <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">,</span>
-           <span class="n">size</span> <span class="o">=</span> <span class="m">4</span><span class="p">,</span>
-           <span class="n">hjust</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
-           <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;This point: \n red -&gt; blue&quot;</span>
+             col <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> shape<span class="o">=</span><span class="m">4</span><span class="p">,</span> size <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
+  annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span>
+           x <span class="o">=</span> <span class="m">4.9</span><span class="p">,</span> y <span class="o">=</span> <span class="m">3.3</span><span class="p">,</span>
+           col <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">,</span>
+           size <span class="o">=</span> <span class="m">4</span><span class="p">,</span>
+           hjust <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
+           label <span class="o">=</span> <span class="s">&quot;This point: \n red -&gt; blue&quot;</span>
            <span class="p">)</span>
 </pre></div>
 </div>
@@ -489,56 +490,56 @@ sát gần hơn với điểm centroids mới nào thì sẽ thuộc về nhóm 
 các centroids để tìm các centroids mới.</li>
 </ul>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tính tọa độ của 2 centroids mới</span>
-<span class="n">new_centroids_2</span> <span class="o">&lt;-</span> <span class="n">data2</span> <span class="o">%&gt;%</span>
-  <span class="nf">group_by</span><span class="p">(</span><span class="n">group</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">summarise</span><span class="p">(</span><span class="n">average_sepal</span> <span class="o">=</span> <span class="nf">mean</span><span class="p">(</span><span class="n">Sepal.Length</span><span class="p">),</span>
-            <span class="n">average_petal</span> <span class="o">=</span> <span class="nf">mean</span><span class="p">(</span><span class="n">Petal.Length</span><span class="p">)</span>
+new_centroids_2 <span class="o">&lt;-</span> data2 <span class="o">%&gt;%</span>
+  group_by<span class="p">(</span>group<span class="p">)</span> <span class="o">%&gt;%</span>
+  summarise<span class="p">(</span>average_sepal <span class="o">=</span> <span class="kp">mean</span><span class="p">(</span>Sepal.Length<span class="p">),</span>
+            average_petal <span class="o">=</span> <span class="kp">mean</span><span class="p">(</span>Petal.Length<span class="p">)</span>
             <span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">as.data.frame</span>
+  <span class="kp">as.data.frame</span>
 
 
 <span class="c1"># Plot di chuyển centroids</span>
-<span class="n">data2</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">Sepal.Length</span><span class="p">,</span> <span class="n">Petal.Length</span><span class="p">),</span> <span class="n">group</span> <span class="o">=</span> <span class="n">group</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">col</span> <span class="o">=</span> <span class="n">group</span><span class="p">))</span><span class="o">+</span>
-  <span class="nf">theme_classic</span><span class="p">()</span><span class="o">+</span>
-  <span class="nf">scale_color_manual</span><span class="p">(</span>
-    <span class="n">values</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="s">&quot;red&quot;</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
+data2 <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>Sepal.Length<span class="p">,</span> Petal.Length<span class="p">),</span> group <span class="o">=</span> group<span class="p">)</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>size <span class="o">=</span> <span class="m">2</span><span class="p">,</span> aes<span class="p">(</span>col <span class="o">=</span> group<span class="p">))</span><span class="o">+</span>
+  theme_classic<span class="p">()</span><span class="o">+</span>
+  scale_color_manual<span class="p">(</span>
+    values <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="s">&quot;red&quot;</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
   <span class="p">)</span><span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_sepal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span><span class="p">,</span>
-                 <span class="n">y</span><span class="o">=</span><span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_petal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span>
+  theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span><span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span>new_centroids_1<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">],</span>
+                 y<span class="o">=</span>new_centroids_1<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">]</span>
                  <span class="p">),</span>
-             <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="m">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_sepal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span><span class="p">,</span>
-                 <span class="n">y</span><span class="o">=</span><span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_petal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span>
+             col <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> shape<span class="o">=</span><span class="m">4</span><span class="p">,</span> size <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span>new_centroids_1<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">],</span>
+                 y<span class="o">=</span>new_centroids_1<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">]</span>
                  <span class="p">),</span>
-             <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="m">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">new_centroids_2</span><span class="o">$</span><span class="n">average_sepal[new_centroids_2</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span><span class="p">,</span>
-                 <span class="n">y</span><span class="o">=</span><span class="n">new_centroids_2</span><span class="o">$</span><span class="n">average_petal[new_centroids_2</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span>
+             col <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> shape<span class="o">=</span><span class="m">4</span><span class="p">,</span> size <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span>new_centroids_2<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_2<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">],</span>
+                 y<span class="o">=</span>new_centroids_2<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_2<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">]</span>
                  <span class="p">),</span>
-             <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="m">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">new_centroids_2</span><span class="o">$</span><span class="n">average_sepal[new_centroids_2</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span><span class="p">,</span>
-                 <span class="n">y</span><span class="o">=</span><span class="n">new_centroids_2</span><span class="o">$</span><span class="n">average_petal[new_centroids_2</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span>
+             col <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> shape<span class="o">=</span><span class="m">4</span><span class="p">,</span> size <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span>new_centroids_2<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_2<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">],</span>
+                 y<span class="o">=</span>new_centroids_2<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_2<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">]</span>
                  <span class="p">),</span>
-             <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="m">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_segment</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_sepal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span><span class="p">,</span>
-                   <span class="n">y</span> <span class="o">=</span> <span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_petal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span><span class="p">,</span>
-                   <span class="n">xend</span> <span class="o">=</span> <span class="n">new_centroids_2</span><span class="o">$</span><span class="n">average_sepal[new_centroids_2</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span><span class="p">,</span>
-                   <span class="n">yend</span> <span class="o">=</span> <span class="n">new_centroids_2</span><span class="o">$</span><span class="n">average_petal[new_centroids_2</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span>
+             col <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> shape<span class="o">=</span><span class="m">4</span><span class="p">,</span> size <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
+  geom_segment<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> new_centroids_1<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">],</span>
+                   y <span class="o">=</span> new_centroids_1<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">],</span>
+                   xend <span class="o">=</span> new_centroids_2<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_2<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">],</span>
+                   yend <span class="o">=</span> new_centroids_2<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_2<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">]</span>
                    <span class="p">),</span>
-               <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">,</span>
-               <span class="n">arrow</span> <span class="o">=</span> <span class="nf">arrow</span><span class="p">(</span><span class="n">length</span> <span class="o">=</span> <span class="nf">unit</span><span class="p">(</span><span class="m">0.015</span><span class="p">,</span> <span class="s">&quot;npc&quot;</span><span class="p">)),</span>
-               <span class="n">size</span> <span class="o">=</span> <span class="m">0.1</span>
+               col <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">,</span>
+               arrow <span class="o">=</span> arrow<span class="p">(</span>length <span class="o">=</span> unit<span class="p">(</span><span class="m">0.015</span><span class="p">,</span> <span class="s">&quot;npc&quot;</span><span class="p">)),</span>
+               size <span class="o">=</span> <span class="m">0.1</span>
                <span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_segment</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_sepal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span><span class="p">,</span>
-                   <span class="n">y</span> <span class="o">=</span> <span class="n">new_centroids_1</span><span class="o">$</span><span class="n">average_petal[new_centroids_1</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span><span class="p">,</span>
-                   <span class="n">xend</span> <span class="o">=</span> <span class="n">new_centroids_2</span><span class="o">$</span><span class="n">average_sepal[new_centroids_2</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span><span class="p">,</span>
-                   <span class="n">yend</span> <span class="o">=</span> <span class="n">new_centroids_2</span><span class="o">$</span><span class="n">average_petal[new_centroids_2</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span>
+  geom_segment<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> new_centroids_1<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">],</span>
+                   y <span class="o">=</span> new_centroids_1<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_1<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">],</span>
+                   xend <span class="o">=</span> new_centroids_2<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_2<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">],</span>
+                   yend <span class="o">=</span> new_centroids_2<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_2<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">]</span>
                    <span class="p">),</span>
-               <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">,</span>
-               <span class="n">arrow</span> <span class="o">=</span> <span class="nf">arrow</span><span class="p">(</span><span class="n">length</span> <span class="o">=</span> <span class="nf">unit</span><span class="p">(</span><span class="m">0.015</span><span class="p">,</span> <span class="s">&quot;npc&quot;</span><span class="p">)),</span>
-               <span class="n">size</span> <span class="o">=</span> <span class="m">0.1</span>
+               col <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">,</span>
+               arrow <span class="o">=</span> arrow<span class="p">(</span>length <span class="o">=</span> unit<span class="p">(</span><span class="m">0.015</span><span class="p">,</span> <span class="s">&quot;npc&quot;</span><span class="p">)),</span>
+               size <span class="o">=</span> <span class="m">0.1</span>
                <span class="p">)</span>
 </pre></div>
 </div>
@@ -546,42 +547,42 @@ các centroids để tìm các centroids mới.</li>
 <ul class="simple">
 <li><strong>Bước 6</strong>: Phân nhóm lại theo các centroids mới</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data3</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data3 <span class="o">&lt;-</span> data <span class="o">%&gt;%</span>
   <span class="c1"># Update 2 centroids mới</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">Sepal.Length_red</span> <span class="o">=</span> <span class="n">new_centroids_2</span><span class="o">$</span><span class="n">average_sepal[new_centroids_2</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span><span class="p">,</span>
-         <span class="n">Petal.Length_red</span> <span class="o">=</span> <span class="n">new_centroids_2</span><span class="o">$</span><span class="n">average_petal[new_centroids_2</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span><span class="p">,</span>
-         <span class="n">Sepal.Length_blue</span> <span class="o">=</span> <span class="n">new_centroids_2</span><span class="o">$</span><span class="n">average_sepal[new_centroids_2</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span><span class="p">,</span>
-         <span class="n">Petal.Length_blue</span> <span class="o">=</span> <span class="n">new_centroids_2</span><span class="o">$</span><span class="n">average_petal[new_centroids_2</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span>
+  mutate<span class="p">(</span>Sepal.Length_red <span class="o">=</span> new_centroids_2<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_2<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">],</span>
+         Petal.Length_red <span class="o">=</span> new_centroids_2<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_2<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">],</span>
+         Sepal.Length_blue <span class="o">=</span> new_centroids_2<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_2<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">],</span>
+         Petal.Length_blue <span class="o">=</span> new_centroids_2<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_2<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">]</span>
          <span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="c1"># Tính khoảng cách từ các quan sát đến 2 centroids</span>
-  <span class="nf">mutate</span><span class="p">(</span>
-    <span class="n">distance_red</span> <span class="o">=</span> <span class="nf">sqrt</span><span class="p">((</span><span class="n">Sepal.Length</span><span class="o">-</span><span class="n">Sepal.Length_red</span><span class="p">)</span><span class="n">^2</span> <span class="o">+</span> <span class="p">(</span><span class="n">Petal.Length</span> <span class="o">-</span> <span class="n">Petal.Length_red</span><span class="p">)</span><span class="n">^2</span><span class="p">),</span>
-    <span class="n">distance_blue</span> <span class="o">=</span> <span class="nf">sqrt</span><span class="p">((</span><span class="n">Sepal.Length</span><span class="o">-</span><span class="n">Sepal.Length_blue</span><span class="p">)</span><span class="n">^2</span> <span class="o">+</span> <span class="p">(</span><span class="n">Petal.Length</span> <span class="o">-</span> <span class="n">Petal.Length_blue</span><span class="p">)</span><span class="n">^2</span><span class="p">)</span>
+  mutate<span class="p">(</span>
+    distance_red <span class="o">=</span> <span class="kp">sqrt</span><span class="p">((</span>Sepal.Length<span class="o">-</span>Sepal.Length_red<span class="p">)</span><span class="o">^</span><span class="m">2</span> <span class="o">+</span> <span class="p">(</span>Petal.Length <span class="o">-</span> Petal.Length_red<span class="p">)</span><span class="o">^</span><span class="m">2</span><span class="p">),</span>
+    distance_blue <span class="o">=</span> <span class="kp">sqrt</span><span class="p">((</span>Sepal.Length<span class="o">-</span>Sepal.Length_blue<span class="p">)</span><span class="o">^</span><span class="m">2</span> <span class="o">+</span> <span class="p">(</span>Petal.Length <span class="o">-</span> Petal.Length_blue<span class="p">)</span><span class="o">^</span><span class="m">2</span><span class="p">)</span>
     <span class="p">)</span> <span class="o">%&gt;%</span>
   <span class="c1"># Tạo biến mới - nhóm mà các quan sát được phân vào</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">group</span> <span class="o">=</span> <span class="nf">case_when</span><span class="p">(</span>
-    <span class="n">distance_red</span> <span class="o">&lt;</span> <span class="n">distance_blue</span> <span class="o">~</span> <span class="s">&quot;red&quot;</span><span class="p">,</span>
+  mutate<span class="p">(</span>group <span class="o">=</span> case_when<span class="p">(</span>
+    distance_red <span class="o">&lt;</span> distance_blue <span class="o">~</span> <span class="s">&quot;red&quot;</span><span class="p">,</span>
     <span class="kc">TRUE</span> <span class="o">~</span> <span class="s">&quot;blue&quot;</span>
-  <span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">as.factor</span><span class="p">)</span>
+  <span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">as.factor</span><span class="p">)</span>
 
 
 <span class="c1"># Plot dữ liệu mới</span>
-<span class="n">data3</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">Sepal.Length</span><span class="p">,</span> <span class="n">Petal.Length</span><span class="p">),</span> <span class="n">group</span> <span class="o">=</span> <span class="n">group</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="nf">aes</span><span class="p">(</span><span class="n">col</span> <span class="o">=</span> <span class="n">group</span><span class="p">))</span><span class="o">+</span>
-  <span class="nf">theme_classic</span><span class="p">()</span><span class="o">+</span>
-  <span class="nf">scale_color_manual</span><span class="p">(</span>
-    <span class="n">values</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="s">&quot;red&quot;</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
+data3 <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>Sepal.Length<span class="p">,</span> Petal.Length<span class="p">),</span> group <span class="o">=</span> group<span class="p">)</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>size <span class="o">=</span> <span class="m">2</span><span class="p">,</span> aes<span class="p">(</span>col <span class="o">=</span> group<span class="p">))</span><span class="o">+</span>
+  theme_classic<span class="p">()</span><span class="o">+</span>
+  scale_color_manual<span class="p">(</span>
+    values <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;blue&quot;</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="s">&quot;red&quot;</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
   <span class="p">)</span><span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">new_centroids_2</span><span class="o">$</span><span class="n">average_sepal[new_centroids_2</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span><span class="p">,</span>
-                 <span class="n">y</span><span class="o">=</span><span class="n">new_centroids_2</span><span class="o">$</span><span class="n">average_petal[new_centroids_2</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="n">]</span>
+  theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span><span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span>new_centroids_2<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_2<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">],</span>
+                 y<span class="o">=</span>new_centroids_2<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_2<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;red&quot;</span><span class="p">]</span>
                  <span class="p">),</span>
-             <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="m">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">new_centroids_2</span><span class="o">$</span><span class="n">average_sepal[new_centroids_2</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span><span class="p">,</span>
-                 <span class="n">y</span><span class="o">=</span><span class="n">new_centroids_2</span><span class="o">$</span><span class="n">average_petal[new_centroids_2</span><span class="o">$</span><span class="n">group</span> <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="n">]</span>
+             col <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> shape<span class="o">=</span><span class="m">4</span><span class="p">,</span> size <span class="o">=</span> <span class="m">5</span><span class="p">)</span><span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span>new_centroids_2<span class="o">$</span>average_sepal<span class="p">[</span>new_centroids_2<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">],</span>
+                 y<span class="o">=</span>new_centroids_2<span class="o">$</span>average_petal<span class="p">[</span>new_centroids_2<span class="o">$</span>group <span class="o">==</span> <span class="s">&quot;blue&quot;</span><span class="p">]</span>
                  <span class="p">),</span>
-             <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="m">4</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span>
+             col <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> shape<span class="o">=</span><span class="m">4</span><span class="p">,</span> size <span class="o">=</span> <span class="m">5</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image6" src="p04-02-kmeans_files/figure-html/unnamed-chunk-8-1.png" /></p>
@@ -628,17 +629,17 @@ dụng trên hạn mức được cấp, v.v.</p>
 <li><strong>Bước 1</strong>: Chuẩn hóa dữ liệu (<code class="docutils literal notranslate"><span class="pre">Scaling</span></code>):</li>
 </ul>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale dữ liệu</span>
-<span class="n">iris_scale</span> <span class="o">&lt;-</span> <span class="nf">scale</span><span class="p">(</span><span class="n">iris</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">Species</span><span class="p">))</span>
+iris_scale <span class="o">&lt;-</span> <span class="kp">scale</span><span class="p">(</span>iris <span class="o">%&gt;%</span> select<span class="p">(</span><span class="o">-</span>Species<span class="p">))</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li><strong>Bước 2</strong>: Xác định số lượng nhóm tối ưu</li>
 </ul>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Xác định số lượng nhóm tối ưu</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">factoextra</span><span class="p">)</span>
-<span class="nf">fviz_nbclust</span><span class="p">(</span><span class="n">iris_scale</span><span class="p">,</span>
-             <span class="n">kmeans</span><span class="p">,</span>
-             <span class="n">method</span> <span class="o">=</span> <span class="s">&quot;silhouette&quot;</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>factoextra<span class="p">)</span>
+fviz_nbclust<span class="p">(</span>iris_scale<span class="p">,</span>
+             kmeans<span class="p">,</span>
+             method <span class="o">=</span> <span class="s">&quot;silhouette&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image7" src="p04-02-kmeans_files/figure-html/unnamed-chunk-10-1.png" /></p>
@@ -649,12 +650,12 @@ kinh doanh, thông thường số lượng nhóm nên từ 2 đến 10.</p>
 <li><strong>Bước 3</strong>: Thực hiện <code class="docutils literal notranslate"><span class="pre">clustering</span> <span class="pre">K-means</span></code> thành 2 nhóm</li>
 </ul>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Thực hiện thuật toán K-means</span>
-<span class="n">k_means_fit</span> <span class="o">&lt;-</span> <span class="nf">kmeans</span><span class="p">(</span><span class="n">iris_scale</span><span class="p">,</span>
-                      <span class="n">centers</span> <span class="o">=</span> <span class="m">2</span> <span class="c1"># số lượng nhóm</span>
+k_means_fit <span class="o">&lt;-</span> kmeans<span class="p">(</span>iris_scale<span class="p">,</span>
+                      centers <span class="o">=</span> <span class="m">2</span> <span class="c1"># số lượng nhóm</span>
                       <span class="p">)</span>
 
 <span class="c1"># Nhóm của các quan sát</span>
-<span class="n">k_means_fit</span><span class="o">$</span><span class="n">cluster</span>
+k_means_fit<span class="o">$</span>cluster
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   [1] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2</span>
@@ -665,7 +666,7 @@ kinh doanh, thông thường số lượng nhóm nên từ 2 đến 10.</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tâm của mỗi nhóm</span>
-<span class="n">k_means_fit</span><span class="o">$</span><span class="n">centers</span>
+k_means_fit<span class="o">$</span>centers
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
@@ -674,7 +675,7 @@ kinh doanh, thông thường số lượng nhóm nên từ 2 đến 10.</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Số lượng quan sát tại mỗi nhóm</span>
-<span class="n">k_means_fit</span><span class="o">$</span><span class="n">size</span>
+k_means_fit<span class="o">$</span>size
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 100  50</span>
@@ -684,16 +685,16 @@ kinh doanh, thông thường số lượng nhóm nên từ 2 đến 10.</p>
 <li><strong>Bước 4</strong>: Trực quan hóa kết quả</li>
 </ul>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Trực quan hóa kết quả K-means</span>
-<span class="nf">fviz_cluster</span><span class="p">(</span><span class="n">k_means_fit</span><span class="p">,</span>
-             <span class="n">data</span> <span class="o">=</span> <span class="n">iris_scale</span><span class="p">,</span>
-             <span class="n">geom</span> <span class="o">=</span> <span class="s">&quot;point&quot;</span><span class="p">,</span>
-             <span class="n">main</span> <span class="o">=</span> <span class="s">&quot;Iris Cluster&quot;</span>
+fviz_cluster<span class="p">(</span>k_means_fit<span class="p">,</span>
+             data <span class="o">=</span> iris_scale<span class="p">,</span>
+             geom <span class="o">=</span> <span class="s">&quot;point&quot;</span><span class="p">,</span>
+             main <span class="o">=</span> <span class="s">&quot;Iris Cluster&quot;</span>
              <span class="p">)</span><span class="o">+</span>
-  <span class="nf">theme_bw</span><span class="p">()</span><span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">axis.text</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
-        <span class="n">axis.title</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
-        <span class="n">axis.ticks</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
-        <span class="n">panel.grid</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">()</span>
+  theme_bw<span class="p">()</span><span class="o">+</span>
+  theme<span class="p">(</span>axis.text <span class="o">=</span> element_blank<span class="p">(),</span>
+        axis.title <span class="o">=</span> element_blank<span class="p">(),</span>
+        axis.ticks <span class="o">=</span> element_blank<span class="p">(),</span>
+        panel.grid <span class="o">=</span> element_blank<span class="p">()</span>
         <span class="p">)</span>
 </pre></div>
 </div>

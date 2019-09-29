@@ -151,14 +151,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -344,21 +345,21 @@ lượng mô hình càng tốt.</p>
 <p>Để xây dựng mô hình, ta sử dụng tập dữ liệu phân tích về doanh số bán
 hàng với quảng cáo.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Packages</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">modelr</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">broom</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">ISLR</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>modelr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>broom<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>ISLR<span class="p">)</span>
 
 <span class="c1"># Load data (remove row numbers included as X1 variable)</span>
 <span class="c1">#advertising &lt;- read_csv(&quot;http://www-bcf.usc.edu/~gareth/ISL/Advertising.csv&quot;) %&gt;%</span>
 <span class="c1">#  select(-X1) %&gt;%</span>
 <span class="c1">#  rename_all(tolower)</span>
 
-<span class="n">advertising</span> <span class="o">&lt;-</span> <span class="nf">read_csv</span><span class="p">(</span><span class="s">&quot;data/Advertising.csv&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
- <span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">X1</span><span class="p">)</span> <span class="o">%&gt;%</span>
- <span class="nf">rename_all</span><span class="p">(</span><span class="n">tolower</span><span class="p">)</span>
+advertising <span class="o">&lt;-</span> read_csv<span class="p">(</span><span class="s">&quot;data/Advertising.csv&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+ select<span class="p">(</span><span class="o">-</span>X1<span class="p">)</span> <span class="o">%&gt;%</span>
+ rename_all<span class="p">(</span><span class="kp">tolower</span><span class="p">)</span>
 
-<span class="n">advertising</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+advertising <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 6 x 4</span>
@@ -375,18 +376,18 @@ hàng với quảng cáo.</p>
 <p>Trong tập dữ liệu trên, <code class="docutils literal notranslate"><span class="pre">sales</span></code> là doanh số bán hàng (ngàn sản phẩm),
 các biến khác là chi tiêu marketing theo kênh (ngàn USD). Để xây dựng mô
 hình, ta cũng chia dữ liệu thành hai phần: <code class="docutils literal notranslate"><span class="pre">train</span></code> và <code class="docutils literal notranslate"><span class="pre">test</span></code>.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
-<span class="n">train</span> <span class="o">&lt;-</span> <span class="nf">sample_frac</span><span class="p">(</span><span class="n">advertising</span><span class="p">,</span><span class="n">size</span> <span class="o">=</span> <span class="m">0.6</span><span class="p">)</span>
-<span class="n">test</span> <span class="o">&lt;-</span> <span class="n">advertising</span> <span class="o">%&gt;%</span> <span class="nf">anti_join</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kp">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
+train <span class="o">&lt;-</span> sample_frac<span class="p">(</span>advertising<span class="p">,</span>size <span class="o">=</span> <span class="m">0.6</span><span class="p">)</span>
+test <span class="o">&lt;-</span> advertising <span class="o">%&gt;%</span> anti_join<span class="p">(</span>train<span class="p">)</span>
 </pre></div>
 </div>
 <p>Ta cũng có thể tạo train và test theo cách khác như sau</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cách khác</span>
-<span class="n">train</span> <span class="o">&lt;-</span> <span class="n">sample</span> <span class="o">&lt;-</span> <span class="nf">sample</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="kc">TRUE</span><span class="p">,</span> <span class="kc">FALSE</span><span class="p">),</span>
-                          <span class="nf">nrow</span><span class="p">(</span><span class="n">advertising</span><span class="p">),</span>
-                          <span class="n">replace</span> <span class="o">=</span> <span class="bp">T</span><span class="p">,</span> <span class="n">prob</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.6</span><span class="p">,</span><span class="m">0.4</span><span class="p">))</span>
-<span class="n">train</span> <span class="o">&lt;-</span> <span class="n">advertising[sample</span><span class="p">,</span> <span class="n">]</span>
-<span class="n">test</span> <span class="o">&lt;-</span> <span class="n">advertising[</span><span class="o">!</span><span class="n">sample</span><span class="p">,</span> <span class="n">]</span>
+train <span class="o">&lt;-</span> sample <span class="o">&lt;-</span> <span class="kp">sample</span><span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="kc">TRUE</span><span class="p">,</span> <span class="kc">FALSE</span><span class="p">),</span>
+                          <span class="kp">nrow</span><span class="p">(</span>advertising<span class="p">),</span>
+                          replace <span class="o">=</span> <span class="bp">T</span><span class="p">,</span> prob <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">0.6</span><span class="p">,</span><span class="m">0.4</span><span class="p">))</span>
+train <span class="o">&lt;-</span> advertising<span class="p">[</span><span class="kp">sample</span><span class="p">,</span> <span class="p">]</span>
+test <span class="o">&lt;-</span> advertising<span class="p">[</span><span class="o">!</span><span class="kp">sample</span><span class="p">,</span> <span class="p">]</span>
 </pre></div>
 </div>
 <div class="section" id="mo-hinh-hoi-quy-don-bien">
@@ -407,8 +408,8 @@ hồi quy tuyến tính)</li>
 định là có giá trị trung bình bằng 0 và tuân theo phân phối chuẩn.</li>
 </ul>
 <p>Để xây dựng mô hình, ta thực hiện như sau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">model1</span> <span class="o">&lt;-</span> <span class="nf">lm</span><span class="p">(</span><span class="n">sales</span> <span class="o">~</span> <span class="n">tv</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">train</span><span class="p">)</span>
-<span class="n">model1</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>model1 <span class="o">&lt;-</span> lm<span class="p">(</span>sales <span class="o">~</span> tv<span class="p">,</span> data <span class="o">=</span> train<span class="p">)</span>
+model1 <span class="o">%&gt;%</span> <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -431,25 +432,25 @@ hồi quy tuyến tính)</li>
 <span class="c1">## F-statistic: 165.5 on 1 and 118 DF,  p-value: &lt; 2.2e-16</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">train</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">sale_fit</span> <span class="o">=</span> <span class="nf">predict</span><span class="p">(</span><span class="n">model1</span><span class="p">,</span> <span class="n">train</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">sample_frac</span><span class="p">(</span><span class="m">0.4</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">tv</span><span class="p">,</span> <span class="n">sales</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_line</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">tv</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">sale_fit</span><span class="p">),</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_segment</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">tv</span><span class="p">,</span> <span class="n">xend</span> <span class="o">=</span> <span class="n">tv</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">sales</span><span class="p">,</span> <span class="n">yend</span> <span class="o">=</span> <span class="n">sale_fit</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">theme_bw</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">labs</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Sales vs. TV marketing budget&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">panel.border</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
-        <span class="n">axis.line</span> <span class="o">=</span> <span class="nf">element_line</span><span class="p">(</span><span class="n">colour</span> <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>train <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>sale_fit <span class="o">=</span> predict<span class="p">(</span>model1<span class="p">,</span> train<span class="p">))</span> <span class="o">%&gt;%</span>
+  sample_frac<span class="p">(</span><span class="m">0.4</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>tv<span class="p">,</span> sales<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>alpha <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> size <span class="o">=</span> <span class="m">2</span><span class="p">)</span> <span class="o">+</span>
+  geom_line<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> tv<span class="p">,</span> y <span class="o">=</span> sale_fit<span class="p">),</span> col <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">+</span>
+  geom_segment<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> tv<span class="p">,</span> xend <span class="o">=</span> tv<span class="p">,</span> y <span class="o">=</span> sales<span class="p">,</span> yend <span class="o">=</span> sale_fit<span class="p">))</span> <span class="o">+</span>
+  theme_bw<span class="p">()</span> <span class="o">+</span>
+  labs<span class="p">(</span>title <span class="o">=</span> <span class="s">&quot;Sales vs. TV marketing budget&quot;</span><span class="p">)</span> <span class="o">+</span>
+  theme<span class="p">(</span>panel.border <span class="o">=</span> element_blank<span class="p">(),</span>
+        axis.line <span class="o">=</span> element_line<span class="p">(</span>colour <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p><img alt="image2" src="p03-02-mo-hinh-ols_files/figure-html/unnamed-chunk-8-1.png" /></p>
 </div>
 <div class="section" id="dien-giai-mo-hinh">
 <h3>2.2.2. Diễn giải mô hình<a class="headerlink" href="#dien-giai-mo-hinh" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">&lt;-</span> <span class="n">model1</span> <span class="o">%&gt;%</span> <span class="n">tidy</span>
-<span class="n">result</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>result <span class="o">&lt;-</span> model1 <span class="o">%&gt;%</span> tidy
+result
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 2 x 5</span>
@@ -478,7 +479,7 @@ hệ số <span class="math notranslate">\(\beta\)</span> như sau.</p>
 \[\beta \pm 2 \cdot SE(\beta)  \tag{4}\]</div>
 <p>Trong R, để tìm ra mức độ tin cậy 95% của hệ số <span class="math notranslate">\(\beta\)</span>, ta có thể
 làm như sau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">confint</span><span class="p">(</span><span class="n">model1</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>confint<span class="p">(</span>model1<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##                  2.5 %     97.5 %</span>
@@ -488,7 +489,7 @@ làm như sau.</p>
 </div>
 <p>Như vậy, ta thấy độ tin cậy 95% của hệ số <span class="math notranslate">\(\beta_1\)</span> khác 0. Ta có
 thể kiểm tra dựa trên <code class="docutils literal notranslate"><span class="pre">p-value</span></code> của mô hình đều nhỏ hơn <code class="docutils literal notranslate"><span class="pre">0.05</span></code></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">model1</span> <span class="o">%&gt;%</span> <span class="n">tidy</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>model1 <span class="o">%&gt;%</span> tidy
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 2 x 5</span>
@@ -512,7 +513,7 @@ thể kiểm tra dựa trên <code class="docutils literal notranslate"><span cl
 <h3>2.3.1. Sai số của mô hình<a class="headerlink" href="#sai-so-cua-mo-hinh" title="Permalink to this headline">¶</a></h3>
 <div class="math notranslate">
 \[RSE = \sqrt{\frac{1}{n-2}\sum^n_{i=1}(y_i - \hat{y}_i)^2} \tag{6}\]</div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">sigma</span><span class="p">(</span><span class="n">model1</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>sigma<span class="p">(</span>model1<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 3.331281</span>
@@ -521,7 +522,7 @@ thể kiểm tra dựa trên <code class="docutils literal notranslate"><span cl
 <p>Với sai số như trên, ta có thể nói rằng, doanh số thực tế trên thị
 trường sẽ có sai số so với dự báo 1 khoảng 3.3. Sai số tương đối của mô
 hình so với thực tế sẽ là</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">sigma</span><span class="p">(</span><span class="n">model1</span><span class="p">)</span><span class="o">/</span><span class="nf">mean</span><span class="p">(</span><span class="n">train</span><span class="o">$</span><span class="n">sales</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>sigma<span class="p">(</span>model1<span class="p">)</span><span class="o">/</span><span class="kp">mean</span><span class="p">(</span>train<span class="o">$</span>sales<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 0.2360657</span>
@@ -547,7 +548,7 @@ Explained Sum of Square)</li>
 </ul>
 <div class="math notranslate">
 \[R^2 = 1 - \frac{RSS}{TSS}= 1 - \frac{\sum^n_{i=1}(y_i-\hat{y}_i)^2}{\sum^n_{i=1}(y_i-\bar{y}_i)^2} \tag{7}\]</div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">rsquare</span><span class="p">(</span><span class="n">model1</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">train</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>rsquare<span class="p">(</span>model1<span class="p">,</span> data <span class="o">=</span> train<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 0.58383</span>
@@ -575,41 +576,41 @@ vậy, có ít nhất một hệ số trong mô hình khác không.</p>
 <p>Để dự báo kết quả mô hình, ta có thể dùng hàm <code class="docutils literal notranslate"><span class="pre">predict</span></code> trong R như
 sau.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Model result</span>
-<span class="n">result</span> <span class="o">&lt;-</span> <span class="n">test</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="n">tv</span><span class="p">,</span> <span class="n">sales</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">predict</span> <span class="o">=</span> <span class="nf">predict</span><span class="p">(</span><span class="n">model1</span><span class="p">,</span> <span class="n">test</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">error</span> <span class="o">=</span> <span class="n">predict</span> <span class="o">-</span> <span class="n">sales</span><span class="p">)</span>
+result <span class="o">&lt;-</span> test <span class="o">%&gt;%</span>
+  select<span class="p">(</span>tv<span class="p">,</span> sales<span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>predict <span class="o">=</span> predict<span class="p">(</span>model1<span class="p">,</span> test<span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>error <span class="o">=</span> predict <span class="o">-</span> sales<span class="p">)</span>
 
-<span class="nf">sqrt</span><span class="p">(</span><span class="nf">sum</span><span class="p">(</span><span class="n">result</span><span class="o">$</span><span class="n">error^2</span><span class="p">)</span><span class="o">/</span><span class="nf">nrow</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+<span class="kp">sqrt</span><span class="p">(</span><span class="kp">sum</span><span class="p">(</span>result<span class="o">$</span>error<span class="o">^</span><span class="m">2</span><span class="p">)</span><span class="o">/</span><span class="kp">nrow</span><span class="p">(</span>result<span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 3.165155</span>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cách hai</span>
-<span class="n">modelr</span><span class="o">::</span><span class="nf">rmse</span><span class="p">(</span><span class="n">model1</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span>
+modelr<span class="o">::</span>rmse<span class="p">(</span>model1<span class="p">,</span> test<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 3.165155</span>
 </pre></div>
 </div>
 <p><strong>Vẽ kết quả mô hình với dự báo</strong></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">error</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">rename</span><span class="p">(</span><span class="n">predicted_sales</span> <span class="o">=</span> <span class="n">predict</span><span class="p">,</span>
-         <span class="n">real_sales</span> <span class="o">=</span> <span class="n">sales</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">gather</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="s">&quot;type&quot;</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="s">&quot;value&quot;</span><span class="p">,</span> <span class="o">-</span><span class="n">tv</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">tv</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">col</span> <span class="o">=</span> <span class="n">type</span><span class="p">),</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_line</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">col</span> <span class="o">=</span> <span class="n">type</span><span class="p">),</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.6</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme_bw</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;top&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">labs</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Sales vs. TV marketing budget&quot;</span><span class="p">,</span>
-       <span class="n">y</span> <span class="o">=</span> <span class="s">&quot;Sales&quot;</span><span class="p">,</span>
-       <span class="n">x</span> <span class="o">=</span> <span class="s">&quot;TV budget&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">scale_color_manual</span><span class="p">(</span><span class="n">values</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;darkred&quot;</span><span class="p">,</span> <span class="s">&quot;darkblue&quot;</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">panel.border</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
-        <span class="n">axis.line</span> <span class="o">=</span> <span class="nf">element_line</span><span class="p">(</span><span class="n">colour</span> <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>result <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="o">-</span>error<span class="p">)</span> <span class="o">%&gt;%</span>
+  rename<span class="p">(</span>predicted_sales <span class="o">=</span> predict<span class="p">,</span>
+         real_sales <span class="o">=</span> sales<span class="p">)</span> <span class="o">%&gt;%</span>
+  gather<span class="p">(</span>key <span class="o">=</span> <span class="s">&quot;type&quot;</span><span class="p">,</span> value <span class="o">=</span> <span class="s">&quot;value&quot;</span><span class="p">,</span> <span class="o">-</span>tv<span class="p">)</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>tv<span class="p">,</span> value<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>col <span class="o">=</span> type<span class="p">),</span> alpha <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span> <span class="o">+</span>
+  geom_line<span class="p">(</span>aes<span class="p">(</span>col <span class="o">=</span> type<span class="p">),</span> alpha <span class="o">=</span> <span class="m">0.6</span><span class="p">)</span> <span class="o">+</span>
+  theme_bw<span class="p">()</span> <span class="o">+</span>
+  theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;top&quot;</span><span class="p">)</span> <span class="o">+</span>
+  labs<span class="p">(</span>title <span class="o">=</span> <span class="s">&quot;Sales vs. TV marketing budget&quot;</span><span class="p">,</span>
+       y <span class="o">=</span> <span class="s">&quot;Sales&quot;</span><span class="p">,</span>
+       x <span class="o">=</span> <span class="s">&quot;TV budget&quot;</span><span class="p">)</span> <span class="o">+</span>
+  scale_color_manual<span class="p">(</span>values <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;darkred&quot;</span><span class="p">,</span> <span class="s">&quot;darkblue&quot;</span><span class="p">))</span> <span class="o">+</span>
+  theme<span class="p">(</span>panel.border <span class="o">=</span> element_blank<span class="p">(),</span>
+        axis.line <span class="o">=</span> element_line<span class="p">(</span>colour <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p><img alt="image4" src="p03-02-mo-hinh-ols_files/figure-html/unnamed-chunk-16-1.png" /></p>
@@ -690,53 +691,53 @@ trị của tham số và ngược lại</p>
 <p>Với câu hỏi thứ hai, ta phải đặt trước một giá trị quy định tốc độ thay
 đổi của tham số. Giá trị này được gọi là <code class="docutils literal notranslate"><span class="pre">learning</span> <span class="pre">rate</span></code>.</p>
 <p><strong>Mô hình hồi quy</strong>.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>ggplot2<span class="p">)</span>
 
-<span class="n">n</span>     <span class="o">&lt;-</span> <span class="m">200</span> <span class="c1"># số lượng quan sát</span>
-<span class="n">bias</span>  <span class="o">&lt;-</span> <span class="m">4</span>
-<span class="n">slope</span> <span class="o">&lt;-</span> <span class="m">3.5</span>
-<span class="n">dot</span>   <span class="o">&lt;-</span> <span class="n">`%*%`</span> <span class="c1"># Hàm tính phép nhân ma trận</span>
+n     <span class="o">&lt;-</span> <span class="m">200</span> <span class="c1"># số lượng quan sát</span>
+bias  <span class="o">&lt;-</span> <span class="m">4</span>
+slope <span class="o">&lt;-</span> <span class="m">3.5</span>
+dot   <span class="o">&lt;-</span> <span class="sb">`%*%`</span> <span class="c1"># Hàm tính phép nhân ma trận</span>
 
-<span class="n">x</span>   <span class="o">&lt;-</span> <span class="nf">rnorm</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="m">2</span>
-<span class="n">x_b</span> <span class="o">&lt;-</span> <span class="nf">cbind</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nf">rep</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span> <span class="c1"># Thêm hệ số beta_0 cho ma trận x</span>
-<span class="n">y</span>   <span class="o">&lt;-</span> <span class="n">bias</span> <span class="o">+</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="nf">rnorm</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-<span class="n">df</span>  <span class="o">&lt;-</span> <span class="nf">data_frame</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span>  <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">)</span>
+x   <span class="o">&lt;-</span> rnorm<span class="p">(</span>n<span class="p">)</span> <span class="o">*</span> <span class="m">2</span>
+x_b <span class="o">&lt;-</span> <span class="kp">cbind</span><span class="p">(</span>x<span class="p">,</span> <span class="kp">rep</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> n<span class="p">))</span> <span class="c1"># Thêm hệ số beta_0 cho ma trận x</span>
+y   <span class="o">&lt;-</span> bias <span class="o">+</span> slope <span class="o">*</span> x <span class="o">+</span> rnorm<span class="p">(</span>n<span class="p">)</span>
+df  <span class="o">&lt;-</span> <span class="kt">data_frame</span><span class="p">(</span>x <span class="o">=</span> x<span class="p">,</span>  y <span class="o">=</span> y<span class="p">)</span>
 
-<span class="n">df</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme_minimal</span><span class="p">()</span>
+df <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x<span class="p">,</span>y<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>alpha <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image5" src="p03-02-mo-hinh-ols_files/figure-html/unnamed-chunk-17-1.png" /></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">learning_rate</span> <span class="o">&lt;-</span> <span class="m">0.05</span>
-<span class="n">n_iterations</span>  <span class="o">&lt;-</span> <span class="m">100</span>
-<span class="n">theta</span>         <span class="o">&lt;-</span> <span class="nf">matrix</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="m">20</span><span class="p">,</span> <span class="m">20</span><span class="p">))</span> <span class="c1"># Giá trị tham số đầu tiên</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>learning_rate <span class="o">&lt;-</span> <span class="m">0.05</span>
+n_iterations  <span class="o">&lt;-</span> <span class="m">100</span>
+theta         <span class="o">&lt;-</span> <span class="kt">matrix</span><span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="m">20</span><span class="p">,</span> <span class="m">20</span><span class="p">))</span> <span class="c1"># Giá trị tham số đầu tiên</span>
 
-<span class="n">b0</span>    <span class="o">&lt;-</span> <span class="nf">vector</span><span class="p">(</span><span class="s">&quot;numeric&quot;</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="n">n_iterations</span><span class="p">)</span>
-<span class="n">b1</span>    <span class="o">&lt;-</span> <span class="nf">vector</span><span class="p">(</span><span class="s">&quot;numeric&quot;</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="n">n_iterations</span><span class="p">)</span>
-<span class="n">sse_i</span> <span class="o">&lt;-</span> <span class="nf">vector</span><span class="p">(</span><span class="s">&quot;numeric&quot;</span><span class="p">,</span> <span class="n">length</span> <span class="o">=</span> <span class="n">n_iterations</span><span class="p">)</span>
+b0    <span class="o">&lt;-</span> <span class="kt">vector</span><span class="p">(</span><span class="s">&quot;numeric&quot;</span><span class="p">,</span> length <span class="o">=</span> n_iterations<span class="p">)</span>
+b1    <span class="o">&lt;-</span> <span class="kt">vector</span><span class="p">(</span><span class="s">&quot;numeric&quot;</span><span class="p">,</span> length <span class="o">=</span> n_iterations<span class="p">)</span>
+sse_i <span class="o">&lt;-</span> <span class="kt">vector</span><span class="p">(</span><span class="s">&quot;numeric&quot;</span><span class="p">,</span> length <span class="o">=</span> n_iterations<span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">for </span><span class="p">(</span><span class="n">iteration</span> <span class="n">in</span> <span class="nf">seq_len</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">))</span> <span class="p">{</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kr">for</span> <span class="p">(</span>iteration <span class="kr">in</span> <span class="kp">seq_len</span><span class="p">(</span>n_iterations<span class="p">))</span> <span class="p">{</span>
   <span class="c1"># Mô hình dự báo với theta</span>
-  <span class="n">yhat</span>               <span class="o">&lt;-</span> <span class="nf">dot</span><span class="p">(</span><span class="n">x_b</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+  yhat               <span class="o">&lt;-</span> dot<span class="p">(</span>x_b<span class="p">,</span> theta<span class="p">)</span>
   <span class="c1"># Tính sai só của mô hình</span>
-  <span class="n">residuals_b</span>        <span class="o">&lt;-</span> <span class="n">yhat</span> <span class="o">-</span> <span class="n">y</span>
+  residuals_b        <span class="o">&lt;-</span> yhat <span class="o">-</span> y
   <span class="c1"># Tính gradient (đạo hàm riêng phần cho giá trị theta)</span>
-  <span class="n">gradients</span>          <span class="o">&lt;-</span> <span class="m">2</span><span class="o">/</span><span class="n">n</span> <span class="o">*</span> <span class="nf">dot</span><span class="p">(</span><span class="nf">t</span><span class="p">(</span><span class="n">x_b</span><span class="p">),</span> <span class="n">residuals_b</span><span class="p">)</span>  <span class="c1"># Lưu ý</span>
-  <span class="n">theta</span>              <span class="o">&lt;-</span> <span class="n">theta</span> <span class="o">-</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">gradients</span> <span class="c1"># update theta</span>
+  gradients          <span class="o">&lt;-</span> <span class="m">2</span><span class="o">/</span>n <span class="o">*</span> dot<span class="p">(</span><span class="kp">t</span><span class="p">(</span>x_b<span class="p">),</span> residuals_b<span class="p">)</span>  <span class="c1"># Lưu ý</span>
+  theta              <span class="o">&lt;-</span> theta <span class="o">-</span> learning_rate <span class="o">*</span> gradients <span class="c1"># update theta</span>
 
-  <span class="n">sse_i[[iteration]]</span> <span class="o">&lt;-</span> <span class="nf">sum</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="nf">dot</span><span class="p">(</span><span class="n">x_b</span><span class="p">,</span> <span class="n">theta</span><span class="p">))</span><span class="o">**</span><span class="m">2</span><span class="p">)</span>
-  <span class="n">b0[[iteration]]</span>    <span class="o">&lt;-</span> <span class="n">theta[2]</span>
-  <span class="n">b1[[iteration]]</span>    <span class="o">&lt;-</span> <span class="n">theta[1]</span>
+  sse_i<span class="p">[[</span>iteration<span class="p">]]</span> <span class="o">&lt;-</span> <span class="kp">sum</span><span class="p">((</span>y <span class="o">-</span> dot<span class="p">(</span>x_b<span class="p">,</span> theta<span class="p">))</span><span class="o">**</span><span class="m">2</span><span class="p">)</span>
+  b0<span class="p">[[</span>iteration<span class="p">]]</span>    <span class="o">&lt;-</span> theta<span class="p">[</span><span class="m">2</span><span class="p">]</span>
+  b1<span class="p">[[</span>iteration<span class="p">]]</span>    <span class="o">&lt;-</span> theta<span class="p">[</span><span class="m">1</span><span class="p">]</span>
 <span class="p">}</span>
 
-<span class="n">model_i</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">model_iter</span> <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="n">n_iterations</span><span class="p">,</span>
-                      <span class="n">sse</span> <span class="o">=</span> <span class="n">sse_i</span><span class="p">,</span>
-                      <span class="n">b0</span> <span class="o">=</span> <span class="n">b0</span><span class="p">,</span>
-                      <span class="n">b1</span> <span class="o">=</span> <span class="n">b1</span><span class="p">)</span>
+model_i <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>model_iter <span class="o">=</span> <span class="m">1</span><span class="o">:</span>n_iterations<span class="p">,</span>
+                      sse <span class="o">=</span> sse_i<span class="p">,</span>
+                      b0 <span class="o">=</span> b0<span class="p">,</span>
+                      b1 <span class="o">=</span> b1<span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Lưu ý</strong>: Với mô hình hồi quy, hàm chi phí (cost function) là MSE.</p>
@@ -750,44 +751,44 @@ trị của tham số và ngược lại</p>
 <div class="math notranslate">
 \[\nabla J = 2*error*X'\]</div>
 <p>Trong đó, X’ là [1, X]</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">p1</span> <span class="o">&lt;-</span> <span class="n">df</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_abline</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">intercept</span> <span class="o">=</span> <span class="n">b0</span><span class="p">,</span>
-                  <span class="n">slope</span> <span class="o">=</span> <span class="n">b1</span><span class="p">,</span>
-                  <span class="n">colour</span> <span class="o">=</span> <span class="o">-</span><span class="n">sse</span><span class="p">),</span>
-              <span class="n">data</span> <span class="o">=</span> <span class="n">model_i</span><span class="p">,</span>
-              <span class="n">alpha</span> <span class="o">=</span> <span class="m">.50</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>p1 <span class="o">&lt;-</span> df <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x<span class="o">=</span>x<span class="p">,</span> y<span class="o">=</span>y<span class="p">))</span> <span class="o">+</span>
+  geom_abline<span class="p">(</span>aes<span class="p">(</span>intercept <span class="o">=</span> b0<span class="p">,</span>
+                  slope <span class="o">=</span> b1<span class="p">,</span>
+                  colour <span class="o">=</span> <span class="o">-</span>sse<span class="p">),</span>
+              data <span class="o">=</span> model_i<span class="p">,</span>
+              alpha <span class="o">=</span> <span class="m">.50</span>
               <span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="n">alpha</span> <span class="o">=</span> <span class="m">0.4</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_abline</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">intercept</span> <span class="o">=</span> <span class="n">b0</span><span class="p">,</span>
-                  <span class="n">slope</span> <span class="o">=</span> <span class="n">b1</span><span class="p">),</span>
-              <span class="n">data</span> <span class="o">=</span> <span class="n">model_i[100</span><span class="p">,</span> <span class="n">]</span><span class="p">,</span>
-              <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span>
-              <span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span>
-              <span class="n">colour</span> <span class="o">=</span> <span class="s">&quot;dodger blue&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_abline</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">intercept</span> <span class="o">=</span> <span class="n">b0</span><span class="p">,</span>
-                  <span class="n">slope</span> <span class="o">=</span> <span class="n">b1</span><span class="p">),</span>
-              <span class="n">data</span> <span class="o">=</span> <span class="n">model_i[1</span><span class="p">,</span> <span class="n">]</span><span class="p">,</span>
-              <span class="n">colour</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span>
-              <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span>
-              <span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">scale_color_continuous</span><span class="p">(</span><span class="n">low</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="s">&quot;grey&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">guides</span><span class="p">(</span><span class="n">colour</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme_minimal</span><span class="p">()</span>
+  geom_point<span class="p">(</span>alpha <span class="o">=</span> <span class="m">0.4</span><span class="p">)</span> <span class="o">+</span>
+  geom_abline<span class="p">(</span>aes<span class="p">(</span>intercept <span class="o">=</span> b0<span class="p">,</span>
+                  slope <span class="o">=</span> b1<span class="p">),</span>
+              data <span class="o">=</span> model_i<span class="p">[</span><span class="m">100</span><span class="p">,</span> <span class="p">],</span>
+              alpha <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span>
+              size <span class="o">=</span> <span class="m">2</span><span class="p">,</span>
+              colour <span class="o">=</span> <span class="s">&quot;dodger blue&quot;</span><span class="p">)</span> <span class="o">+</span>
+  geom_abline<span class="p">(</span>aes<span class="p">(</span>intercept <span class="o">=</span> b0<span class="p">,</span>
+                  slope <span class="o">=</span> b1<span class="p">),</span>
+              data <span class="o">=</span> model_i<span class="p">[</span><span class="m">1</span><span class="p">,</span> <span class="p">],</span>
+              colour <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span>
+              alpha <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span>
+              size <span class="o">=</span> <span class="m">2</span><span class="p">)</span> <span class="o">+</span>
+  scale_color_continuous<span class="p">(</span>low <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> high <span class="o">=</span> <span class="s">&quot;grey&quot;</span><span class="p">)</span> <span class="o">+</span>
+  guides<span class="p">(</span>colour <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span>
 
-<span class="n">p1</span>
+p1
 </pre></div>
 </div>
 <p><img alt="image6" src="p03-02-mo-hinh-ols_files/figure-html/unnamed-chunk-19-1.png" /></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">p2</span> <span class="o">&lt;-</span> <span class="n">model_i[1</span><span class="o">:</span><span class="m">30</span><span class="p">,</span><span class="n">]</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">model_iter</span><span class="p">,</span> <span class="n">sse</span><span class="p">,</span> <span class="n">colour</span> <span class="o">=</span> <span class="o">-</span><span class="n">sse</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="n">alpha</span> <span class="o">=</span> <span class="m">0.4</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">labs</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s">&quot;Model iteration&quot;</span><span class="p">,</span>
-       <span class="n">y</span> <span class="o">=</span> <span class="s">&quot;Sum of Sqaured errors&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">scale_color_continuous</span><span class="p">(</span><span class="n">low</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="s">&quot;dodger blue&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">guides</span><span class="p">(</span><span class="n">colour</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
-<span class="n">p2</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>p2 <span class="o">&lt;-</span> model_i<span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">30</span><span class="p">,]</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>model_iter<span class="p">,</span> sse<span class="p">,</span> colour <span class="o">=</span> <span class="o">-</span>sse<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>alpha <span class="o">=</span> <span class="m">0.4</span><span class="p">)</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span>
+  labs<span class="p">(</span>x <span class="o">=</span> <span class="s">&quot;Model iteration&quot;</span><span class="p">,</span>
+       y <span class="o">=</span> <span class="s">&quot;Sum of Sqaured errors&quot;</span><span class="p">)</span> <span class="o">+</span>
+  scale_color_continuous<span class="p">(</span>low <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> high <span class="o">=</span> <span class="s">&quot;dodger blue&quot;</span><span class="p">)</span> <span class="o">+</span>
+  guides<span class="p">(</span>colour <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
+p2
 </pre></div>
 </div>
 <p><img alt="image7" src="p03-02-mo-hinh-ols_files/figure-html/unnamed-chunk-19-2.png" /></p>
@@ -818,13 +819,13 @@ giả định.</p>
 </ul>
 </li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">require</span><span class="p">(</span><span class="n">lmtest</span><span class="p">)</span>
-<span class="n">x</span> <span class="o">&lt;-</span> <span class="nf">rep</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span> <span class="m">50</span><span class="p">)</span>
-<span class="n">err1</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="nf">rnorm</span><span class="p">(</span><span class="m">50</span><span class="p">,</span> <span class="n">sd</span><span class="o">=</span><span class="m">1</span><span class="p">),</span> <span class="nf">rnorm</span><span class="p">(</span><span class="m">50</span><span class="p">,</span> <span class="n">sd</span><span class="o">=</span><span class="m">2</span><span class="p">))</span> <span class="c1"># heteroskedastycznosc</span>
-<span class="n">err2</span> <span class="o">&lt;-</span> <span class="nf">rnorm</span><span class="p">(</span><span class="m">100</span><span class="p">)</span> <span class="c1"># homoskedastycznosc</span>
-<span class="n">y1</span> <span class="o">&lt;-</span> <span class="m">1</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">err1</span>
-<span class="n">y2</span> <span class="o">&lt;-</span> <span class="m">1</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">err2</span>
-<span class="nf">gqtest</span><span class="p">(</span><span class="n">y1</span> <span class="o">~</span> <span class="n">x</span><span class="p">);</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">require</span><span class="p">(</span>lmtest<span class="p">)</span>
+x <span class="o">&lt;-</span> <span class="kp">rep</span><span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span> <span class="m">50</span><span class="p">)</span>
+err1 <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span>rnorm<span class="p">(</span><span class="m">50</span><span class="p">,</span> sd<span class="o">=</span><span class="m">1</span><span class="p">),</span> rnorm<span class="p">(</span><span class="m">50</span><span class="p">,</span> sd<span class="o">=</span><span class="m">2</span><span class="p">))</span> <span class="c1"># heteroskedastycznosc</span>
+err2 <span class="o">&lt;-</span> rnorm<span class="p">(</span><span class="m">100</span><span class="p">)</span> <span class="c1"># homoskedastycznosc</span>
+y1 <span class="o">&lt;-</span> <span class="m">1</span> <span class="o">+</span> x <span class="o">+</span> err1
+y2 <span class="o">&lt;-</span> <span class="m">1</span> <span class="o">+</span> x <span class="o">+</span> err2
+gqtest<span class="p">(</span>y1 <span class="o">~</span> x<span class="p">);</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -836,7 +837,7 @@ giả định.</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Loại bỏ Ho, residuals có phương sai ko ổn đinh</span>
-<span class="nf">gqtest</span><span class="p">(</span><span class="n">y2</span> <span class="o">~</span> <span class="n">x</span><span class="p">);</span>
+gqtest<span class="p">(</span>y2 <span class="o">~</span> x<span class="p">);</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -853,24 +854,24 @@ giả định.</p>
 <ul class="simple">
 <li>Ví dụ 2:</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">require</span><span class="p">(</span><span class="n">lmtest</span><span class="p">);</span>
-<span class="n">n</span> <span class="o">&lt;-</span> <span class="m">10</span><span class="n">^3</span><span class="p">;</span>
-<span class="n">x</span> <span class="o">&lt;-</span> <span class="nf">sort</span><span class="p">(</span><span class="nf">runif</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="m">-2</span><span class="p">,</span> <span class="m">2</span><span class="p">));</span>
-<span class="n">err</span> <span class="o">&lt;-</span> <span class="nf">rnorm</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">);</span>
-<span class="n">y1</span> <span class="o">&lt;-</span> <span class="m">1</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">err</span><span class="p">;</span> <span class="c1"># Heteroskedaticity</span>
-<span class="n">y2</span> <span class="o">&lt;-</span> <span class="m">1</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">err</span><span class="p">;</span> <span class="c1"># Homoskedaticity</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">require</span><span class="p">(</span>lmtest<span class="p">);</span>
+n <span class="o">&lt;-</span> <span class="m">10</span><span class="o">^</span><span class="m">3</span><span class="p">;</span>
+x <span class="o">&lt;-</span> <span class="kp">sort</span><span class="p">(</span>runif<span class="p">(</span>n<span class="p">,</span> <span class="m">-2</span><span class="p">,</span> <span class="m">2</span><span class="p">));</span>
+err <span class="o">&lt;-</span> rnorm<span class="p">(</span>n<span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">);</span>
+y1 <span class="o">&lt;-</span> <span class="m">1</span> <span class="o">+</span> x <span class="o">+</span> x<span class="o">*</span>err<span class="p">;</span> <span class="c1"># Heteroskedaticity</span>
+y2 <span class="o">&lt;-</span> <span class="m">1</span> <span class="o">+</span> x <span class="o">+</span> err<span class="p">;</span> <span class="c1"># Homoskedaticity</span>
 
-<span class="nf">par</span><span class="p">(</span><span class="n">mfrow</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">1</span><span class="p">));</span>
-<span class="nf">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">pch</span><span class="o">=</span><span class="m">20</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s">&quot;gray&quot;</span><span class="p">);</span>
-<span class="n">model1</span> <span class="o">&lt;-</span> <span class="nf">lm</span><span class="p">(</span><span class="n">y1</span> <span class="o">~</span> <span class="n">x</span><span class="p">);</span>
-<span class="nf">abline</span><span class="p">(</span><span class="n">model1</span><span class="p">);</span>
-<span class="nf">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">pch</span><span class="o">=</span><span class="m">20</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="s">&quot;gray&quot;</span><span class="p">);</span>
-<span class="n">model2</span> <span class="o">&lt;-</span> <span class="nf">lm</span><span class="p">(</span><span class="n">y2</span> <span class="o">~</span> <span class="n">x</span><span class="p">);</span>
-<span class="nf">abline</span><span class="p">(</span><span class="n">model2</span><span class="p">);</span>
+par<span class="p">(</span>mfrow<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">1</span><span class="p">));</span>
+plot<span class="p">(</span>x<span class="p">,</span> y1<span class="p">,</span> pch<span class="o">=</span><span class="m">20</span><span class="p">,</span> col<span class="o">=</span><span class="s">&quot;gray&quot;</span><span class="p">);</span>
+model1 <span class="o">&lt;-</span> lm<span class="p">(</span>y1 <span class="o">~</span> x<span class="p">);</span>
+abline<span class="p">(</span>model1<span class="p">);</span>
+plot<span class="p">(</span>x<span class="p">,</span> y2<span class="p">,</span> pch<span class="o">=</span><span class="m">20</span><span class="p">,</span> col<span class="o">=</span><span class="s">&quot;gray&quot;</span><span class="p">);</span>
+model2 <span class="o">&lt;-</span> lm<span class="p">(</span>y2 <span class="o">~</span> x<span class="p">);</span>
+abline<span class="p">(</span>model2<span class="p">);</span>
 </pre></div>
 </div>
 <p><img alt="image8" src="p03-02-mo-hinh-ols_files/figure-html/unnamed-chunk-21-1.png" /></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">gqtest</span><span class="p">(</span><span class="n">y1</span> <span class="o">~</span> <span class="n">x</span><span class="p">);</span> <span class="c1"># Heteroskedaticity</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>gqtest<span class="p">(</span>y1 <span class="o">~</span> x<span class="p">);</span> <span class="c1"># Heteroskedaticity</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -881,7 +882,7 @@ giả định.</p>
 <span class="c1">## alternative hypothesis: variance increases from segment 1 to 2</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">gqtest</span><span class="p">(</span><span class="n">y2</span> <span class="o">~</span> <span class="n">x</span><span class="p">);</span> <span class="c1"># Homoskedaticity</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>gqtest<span class="p">(</span>y2 <span class="o">~</span> x<span class="p">);</span> <span class="c1"># Homoskedaticity</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -902,8 +903,8 @@ giả định.</p>
 </ul>
 </li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">require</span><span class="p">(</span><span class="n">lmtest</span><span class="p">);</span>
-<span class="nf">shapiro.test</span><span class="p">(</span><span class="nf">rnorm</span><span class="p">(</span><span class="m">1000</span><span class="p">,</span> <span class="n">mean</span> <span class="o">=</span> <span class="m">5</span><span class="p">,</span> <span class="n">sd</span> <span class="o">=</span> <span class="m">3</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">require</span><span class="p">(</span>lmtest<span class="p">);</span>
+shapiro.test<span class="p">(</span>rnorm<span class="p">(</span><span class="m">1000</span><span class="p">,</span> mean <span class="o">=</span> <span class="m">5</span><span class="p">,</span> sd <span class="o">=</span> <span class="m">3</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -913,7 +914,7 @@ giả định.</p>
 <span class="c1">## W = 0.99906, p-value = 0.9022</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">shapiro.test</span><span class="p">(</span><span class="nf">runif</span><span class="p">(</span><span class="m">1000</span><span class="p">,</span> <span class="n">min</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="n">max</span> <span class="o">=</span> <span class="m">4</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>shapiro.test<span class="p">(</span>runif<span class="p">(</span><span class="m">1000</span><span class="p">,</span> min <span class="o">=</span> <span class="m">2</span><span class="p">,</span> max <span class="o">=</span> <span class="m">4</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -923,7 +924,7 @@ giả định.</p>
 <span class="c1">## W = 0.95637, p-value &lt; 2.2e-16</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">shapiro.test</span><span class="p">(</span><span class="nf">residuals</span><span class="p">(</span><span class="n">model1</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>shapiro.test<span class="p">(</span>residuals<span class="p">(</span>model1<span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -933,14 +934,14 @@ giả định.</p>
 <span class="c1">## W = 0.96341, p-value = 3.829e-15</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">par</span><span class="p">(</span><span class="n">mfrow</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span>
-<span class="nf">hist</span><span class="p">(</span><span class="nf">residuals</span><span class="p">(</span><span class="n">model1</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>par<span class="p">(</span>mfrow <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span>
+hist<span class="p">(</span>residuals<span class="p">(</span>model1<span class="p">))</span>
 </pre></div>
 </div>
 <p><img alt="image9" src="p03-02-mo-hinh-ols_files/figure-html/unnamed-chunk-22-1.png" /></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Kiểm tra đồ thị</span>
-<span class="nf">qqnorm</span><span class="p">(</span><span class="nf">residuals</span><span class="p">(</span><span class="n">model1</span><span class="p">),</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">)</span>
-<span class="nf">qqline</span><span class="p">(</span><span class="nf">residuals</span><span class="p">(</span><span class="n">model1</span><span class="p">),</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
+qqnorm<span class="p">(</span>residuals<span class="p">(</span>model1<span class="p">),</span> col <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">)</span>
+qqline<span class="p">(</span>residuals<span class="p">(</span>model1<span class="p">),</span> col <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image10" src="p03-02-mo-hinh-ols_files/figure-html/unnamed-chunk-22-2.png" /></p>
@@ -951,9 +952,9 @@ giả định.</p>
 </ul>
 </li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">require</span><span class="p">(</span><span class="n">tseries</span><span class="p">);</span>
-<span class="n">x</span> <span class="o">&lt;-</span> <span class="nf">rnorm</span><span class="p">(</span><span class="m">100</span><span class="p">)</span>  <span class="c1"># H0</span>
-<span class="nf">jarque.bera.test</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">require</span><span class="p">(</span>tseries<span class="p">);</span>
+x <span class="o">&lt;-</span> rnorm<span class="p">(</span><span class="m">100</span><span class="p">)</span>  <span class="c1"># H0</span>
+jarque.bera.test<span class="p">(</span>x<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -963,8 +964,8 @@ giả định.</p>
 <span class="c1">## X-squared = 0.55985, df = 2, p-value = 0.7558</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">&lt;-</span> <span class="nf">runif</span><span class="p">(</span><span class="m">100</span><span class="p">)</span>  <span class="c1"># Ha</span>
-<span class="nf">jarque.bera.test</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>x <span class="o">&lt;-</span> runif<span class="p">(</span><span class="m">100</span><span class="p">)</span>  <span class="c1"># Ha</span>
+jarque.bera.test<span class="p">(</span>x<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -984,14 +985,14 @@ giả định.</p>
 </ul>
 </li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">stats</span><span class="p">)</span>
-<span class="n">err1</span> <span class="o">&lt;-</span> <span class="nf">rnorm</span><span class="p">(</span><span class="m">100</span><span class="p">)</span> <span class="c1"># Nhiễu trắng (white error)</span>
-<span class="n">err2</span> <span class="o">&lt;-</span> <span class="n">stats</span><span class="o">::</span><span class="nf">filter</span><span class="p">(</span><span class="n">err1</span><span class="p">,</span> <span class="m">0.7</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&quot;recursive&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>stats<span class="p">)</span>
+err1 <span class="o">&lt;-</span> rnorm<span class="p">(</span><span class="m">100</span><span class="p">)</span> <span class="c1"># Nhiễu trắng (white error)</span>
+err2 <span class="o">&lt;-</span> stats<span class="o">::</span>filter<span class="p">(</span>err1<span class="p">,</span> <span class="m">0.7</span><span class="p">,</span> method<span class="o">=</span><span class="s">&quot;recursive&quot;</span><span class="p">)</span>
 <span class="c1"># AR với rho = 0.7</span>
-<span class="n">x</span> <span class="o">&lt;-</span> <span class="nf">runif</span><span class="p">(</span><span class="m">100</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
-<span class="n">y1</span> <span class="o">&lt;-</span> <span class="m">1</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">err1</span>
-<span class="n">y2</span> <span class="o">&lt;-</span> <span class="m">1</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">err2</span>
-<span class="nf">dwtest</span><span class="p">(</span><span class="n">y1</span> <span class="o">~</span> <span class="n">x</span><span class="p">)</span>
+x <span class="o">&lt;-</span> runif<span class="p">(</span><span class="m">100</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+y1 <span class="o">&lt;-</span> <span class="m">1</span> <span class="o">+</span> x <span class="o">+</span> err1
+y2 <span class="o">&lt;-</span> <span class="m">1</span> <span class="o">+</span> x <span class="o">+</span> err2
+dwtest<span class="p">(</span>y1 <span class="o">~</span> x<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -1002,7 +1003,7 @@ giả định.</p>
 <span class="c1">## alternative hypothesis: true autocorrelation is greater than 0</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">dwtest</span><span class="p">(</span><span class="n">y2</span> <span class="o">~</span> <span class="n">x</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>dwtest<span class="p">(</span>y2 <span class="o">~</span> x<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -1016,12 +1017,12 @@ giả định.</p>
 <ul class="simple">
 <li>Test Breusch - Godfrey</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">err1</span> <span class="o">&lt;-</span> <span class="nf">rnorm</span><span class="p">(</span><span class="m">100</span><span class="p">)</span> <span class="c1"># bialy szum</span>
-<span class="n">err2</span> <span class="o">&lt;-</span> <span class="n">stats</span><span class="o">::</span><span class="nf">filter</span><span class="p">(</span><span class="n">err1</span><span class="p">,</span> <span class="m">0.7</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">&quot;recursive&quot;</span><span class="p">)</span> <span class="c1"># model AR(1) z parametrem 0.7</span>
-<span class="n">x</span> <span class="o">&lt;-</span> <span class="nf">runif</span><span class="p">(</span><span class="m">100</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
-<span class="n">y1</span> <span class="o">&lt;-</span> <span class="m">1</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">err1</span>
-<span class="n">y2</span> <span class="o">&lt;-</span> <span class="m">1</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">err2</span>
-<span class="nf">bgtest</span><span class="p">(</span><span class="n">y1</span> <span class="o">~</span> <span class="n">x</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="m">2</span><span class="p">);</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>err1 <span class="o">&lt;-</span> rnorm<span class="p">(</span><span class="m">100</span><span class="p">)</span> <span class="c1"># bialy szum</span>
+err2 <span class="o">&lt;-</span> stats<span class="o">::</span>filter<span class="p">(</span>err1<span class="p">,</span> <span class="m">0.7</span><span class="p">,</span> method<span class="o">=</span><span class="s">&quot;recursive&quot;</span><span class="p">)</span> <span class="c1"># model AR(1) z parametrem 0.7</span>
+x <span class="o">&lt;-</span> runif<span class="p">(</span><span class="m">100</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+y1 <span class="o">&lt;-</span> <span class="m">1</span> <span class="o">+</span> x <span class="o">+</span> err1
+y2 <span class="o">&lt;-</span> <span class="m">1</span> <span class="o">+</span> x <span class="o">+</span> err2
+bgtest<span class="p">(</span>y1 <span class="o">~</span> x<span class="p">,</span> order<span class="o">=</span><span class="m">2</span><span class="p">);</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -1031,7 +1032,7 @@ giả định.</p>
 <span class="c1">## LM test = 1.2403, df = 2, p-value = 0.5379</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">bgtest</span><span class="p">(</span><span class="n">y2</span> <span class="o">~</span> <span class="n">x</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="m">2</span><span class="p">);</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>bgtest<span class="p">(</span>y2 <span class="o">~</span> x<span class="p">,</span> order<span class="o">=</span><span class="m">2</span><span class="p">);</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -1046,12 +1047,12 @@ giả định.</p>
 <h3>2.6.4. Multi-collinearity<a class="headerlink" href="#multi-collinearity" title="Permalink to this headline">¶</a></h3>
 <p>Hiện tượng đa cộng tuyến xảy ra khi các biến độc lập có tương quan với
 nhau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">car</span><span class="p">)</span>
-<span class="n">x</span> <span class="o">&lt;-</span> <span class="nf">rnorm</span><span class="p">(</span><span class="m">100</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">&lt;-</span> <span class="m">3</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="nf">rnorm</span><span class="p">(</span><span class="m">100</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">)</span>
-<span class="n">z</span> <span class="o">&lt;-</span> <span class="n">x</span> <span class="o">+</span> <span class="m">2</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="nf">rnorm</span><span class="p">(</span><span class="m">100</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)</span>
-<span class="n">model1</span> <span class="o">&lt;-</span> <span class="nf">lm</span><span class="p">(</span><span class="n">z</span> <span class="o">~</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>
-<span class="nf">summary</span><span class="p">(</span><span class="n">model1</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>car<span class="p">)</span>
+x <span class="o">&lt;-</span> rnorm<span class="p">(</span><span class="m">100</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">)</span>
+y <span class="o">&lt;-</span> <span class="m">3</span><span class="o">*</span>x <span class="o">+</span> rnorm<span class="p">(</span><span class="m">100</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">)</span>
+z <span class="o">&lt;-</span> x <span class="o">+</span> <span class="m">2</span><span class="o">*</span>y <span class="o">+</span> rnorm<span class="p">(</span><span class="m">100</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)</span>
+model1 <span class="o">&lt;-</span> lm<span class="p">(</span>z <span class="o">~</span> x <span class="o">+</span> y<span class="p">)</span>
+<span class="kp">summary</span><span class="p">(</span>model1<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -1076,15 +1077,15 @@ nhau.</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Kiểm tra</span>
-<span class="n">fit</span> <span class="o">&lt;-</span> <span class="nf">lm</span><span class="p">(</span><span class="n">mpg</span><span class="o">~</span><span class="n">disp</span><span class="o">+</span><span class="n">hp</span><span class="o">+</span><span class="n">wt</span><span class="o">+</span><span class="n">drat</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">mtcars</span><span class="p">)</span>
-<span class="nf">vif</span><span class="p">(</span><span class="n">model1</span><span class="p">)</span> <span class="c1"># variance inflation factors</span>
+fit <span class="o">&lt;-</span> lm<span class="p">(</span>mpg<span class="o">~</span>disp<span class="o">+</span>hp<span class="o">+</span>wt<span class="o">+</span>drat<span class="p">,</span> data<span class="o">=</span>mtcars<span class="p">)</span>
+vif<span class="p">(</span>model1<span class="p">)</span> <span class="c1"># variance inflation factors</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##        x        y</span>
 <span class="c1">## 5.149855 5.149855</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">sqrt</span><span class="p">(</span><span class="nf">vif</span><span class="p">(</span><span class="n">model1</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kp">sqrt</span><span class="p">(</span>vif<span class="p">(</span>model1<span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##        x        y</span>
@@ -1110,22 +1111,22 @@ có đa cộng tuyến, ta có thể bỏ biến xảy ra hiện tượng trên 
 <h3>2.7.1. Outliers<a class="headerlink" href="#outliers" title="Permalink to this headline">¶</a></h3>
 <p>Outliers là các quan sát không được dự báo tốt trong mô hình. Các quan
 sát này có thể thấy rõ trên đường Q-Q plot</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">car</span><span class="p">)</span>
-<span class="n">states</span> <span class="o">&lt;-</span> <span class="nf">as.data.frame</span><span class="p">(</span>
-  <span class="n">state.x77[</span><span class="p">,</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;Murder&quot;</span><span class="p">,</span> <span class="s">&quot;Population&quot;</span><span class="p">,</span>
-<span class="s">&quot;Illiteracy&quot;</span><span class="p">,</span> <span class="s">&quot;Income&quot;</span><span class="p">,</span> <span class="s">&quot;Frost&quot;</span><span class="p">)</span><span class="n">]</span><span class="p">)</span>
-<span class="n">fit</span> <span class="o">&lt;-</span> <span class="nf">lm</span><span class="p">(</span><span class="n">Murder</span> <span class="o">~</span>
-          <span class="n">Population</span> <span class="o">+</span> <span class="n">Illiteracy</span> <span class="o">+</span> <span class="n">Income</span> <span class="o">+</span> <span class="n">Frost</span><span class="p">,</span>
-          <span class="n">data</span><span class="o">=</span><span class="n">states</span><span class="p">)</span>
-<span class="nf">qqPlot</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span>
-       <span class="n">labels</span><span class="o">=</span><span class="nf">row.names</span><span class="p">(</span><span class="n">states</span><span class="p">),</span>
-       <span class="n">id.method</span><span class="o">=</span><span class="s">&quot;identify&quot;</span><span class="p">,</span>
-       <span class="n">simulate</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span>
-       <span class="n">main</span><span class="o">=</span><span class="s">&quot;Q-Q Plot&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>car<span class="p">)</span>
+states <span class="o">&lt;-</span> <span class="kp">as.data.frame</span><span class="p">(</span>
+  state.x77<span class="p">[,</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;Murder&quot;</span><span class="p">,</span> <span class="s">&quot;Population&quot;</span><span class="p">,</span>
+<span class="s">&quot;Illiteracy&quot;</span><span class="p">,</span> <span class="s">&quot;Income&quot;</span><span class="p">,</span> <span class="s">&quot;Frost&quot;</span><span class="p">)])</span>
+fit <span class="o">&lt;-</span> lm<span class="p">(</span>Murder <span class="o">~</span>
+          Population <span class="o">+</span> Illiteracy <span class="o">+</span> Income <span class="o">+</span> Frost<span class="p">,</span>
+          data<span class="o">=</span>states<span class="p">)</span>
+qqPlot<span class="p">(</span>fit<span class="p">,</span>
+       labels<span class="o">=</span><span class="kp">row.names</span><span class="p">(</span>states<span class="p">),</span>
+       id.method<span class="o">=</span><span class="s">&quot;identify&quot;</span><span class="p">,</span>
+       simulate<span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span>
+       main<span class="o">=</span><span class="s">&quot;Q-Q Plot&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image12" src="p03-02-mo-hinh-ols_files/figure-html/unnamed-chunk-27-1.png" /></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">outlier.test</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>outlier.test<span class="p">(</span>fit<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##        rstudent unadjusted p-value Bonferonni p</span>
@@ -1143,22 +1144,22 @@ sát này có thể thấy rõ trên đường Q-Q plot</p>
 <p>Các quan sát được cho là có leverage cao được tính theo hat-statistics.
 Giá trị trung bình của chỉ số này là p/n.&nbsp;Nếu các quan sát có hat cao
 hơn 2 lần giá trị trung bình thì cần phải được xem xét kỹ.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">hat.plot</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">p</span> <span class="o">&lt;-</span> <span class="nf">length</span><span class="p">(</span><span class="nf">coefficients</span><span class="p">(</span><span class="n">fit</span><span class="p">))</span>
-  <span class="n">n</span> <span class="o">&lt;-</span> <span class="nf">length</span><span class="p">(</span><span class="nf">fitted</span><span class="p">(</span><span class="n">fit</span><span class="p">))</span>
-  <span class="nf">plot</span><span class="p">(</span><span class="nf">hatvalues</span><span class="p">(</span><span class="n">fit</span><span class="p">),</span> <span class="n">main</span> <span class="o">=</span> <span class="s">&quot;Index Plot of Hat Values&quot;</span><span class="p">)</span>
-  <span class="nf">abline</span><span class="p">(</span><span class="n">h</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">p</span> <span class="o">/</span> <span class="n">n</span><span class="p">,</span>
-  <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span>
-  <span class="n">lty</span> <span class="o">=</span> <span class="m">2</span><span class="p">)</span>
-  <span class="nf">identify</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="n">n</span><span class="p">,</span> <span class="nf">hatvalues</span><span class="p">(</span><span class="n">fit</span><span class="p">),</span> <span class="nf">names</span><span class="p">(</span><span class="nf">hatvalues</span><span class="p">(</span><span class="n">fit</span><span class="p">)))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>hat.plot <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>fit<span class="p">)</span> <span class="p">{</span>
+  p <span class="o">&lt;-</span> <span class="kp">length</span><span class="p">(</span>coefficients<span class="p">(</span>fit<span class="p">))</span>
+  n <span class="o">&lt;-</span> <span class="kp">length</span><span class="p">(</span>fitted<span class="p">(</span>fit<span class="p">))</span>
+  plot<span class="p">(</span>hatvalues<span class="p">(</span>fit<span class="p">),</span> main <span class="o">=</span> <span class="s">&quot;Index Plot of Hat Values&quot;</span><span class="p">)</span>
+  abline<span class="p">(</span>h <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span> <span class="o">*</span> p <span class="o">/</span> n<span class="p">,</span>
+  col <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span>
+  lty <span class="o">=</span> <span class="m">2</span><span class="p">)</span>
+  identify<span class="p">(</span><span class="m">1</span><span class="o">:</span>n<span class="p">,</span> hatvalues<span class="p">(</span>fit<span class="p">),</span> <span class="kp">names</span><span class="p">(</span>hatvalues<span class="p">(</span>fit<span class="p">)))</span>
 <span class="p">}</span>
-<span class="n">states</span> <span class="o">&lt;-</span> <span class="nf">as.data.frame</span><span class="p">(</span>
-  <span class="n">state.x77[</span><span class="p">,</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Murder&quot;</span><span class="p">,</span> <span class="s">&quot;Population&quot;</span><span class="p">,</span>
-            <span class="s">&quot;Illiteracy&quot;</span><span class="p">,</span> <span class="s">&quot;Income&quot;</span><span class="p">,</span> <span class="s">&quot;Frost&quot;</span><span class="p">)</span><span class="n">]</span><span class="p">)</span>
-<span class="n">fit</span> <span class="o">&lt;-</span> <span class="nf">lm</span><span class="p">(</span><span class="n">Murder</span> <span class="o">~</span>
-          <span class="n">Population</span> <span class="o">+</span> <span class="n">Illiteracy</span> <span class="o">+</span> <span class="n">Income</span> <span class="o">+</span> <span class="n">Frost</span><span class="p">,</span>
-          <span class="n">data</span><span class="o">=</span><span class="n">states</span><span class="p">)</span>
-<span class="nf">hat.plot</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span>
+states <span class="o">&lt;-</span> <span class="kp">as.data.frame</span><span class="p">(</span>
+  state.x77<span class="p">[,</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Murder&quot;</span><span class="p">,</span> <span class="s">&quot;Population&quot;</span><span class="p">,</span>
+            <span class="s">&quot;Illiteracy&quot;</span><span class="p">,</span> <span class="s">&quot;Income&quot;</span><span class="p">,</span> <span class="s">&quot;Frost&quot;</span><span class="p">)])</span>
+fit <span class="o">&lt;-</span> lm<span class="p">(</span>Murder <span class="o">~</span>
+          Population <span class="o">+</span> Illiteracy <span class="o">+</span> Income <span class="o">+</span> Frost<span class="p">,</span>
+          data<span class="o">=</span>states<span class="p">)</span>
+hat.plot<span class="p">(</span>fit<span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image13" src="p03-02-mo-hinh-ols_files/figure-html/unnamed-chunk-28-1.png" /></p>
@@ -1172,20 +1173,20 @@ hơn 2 lần giá trị trung bình thì cần phải được xem xét kỹ.</p
 loại bỏ quan sát đó ra, sẽ thay đổi mô hình.</p>
 <p>Cook-distance lớn hơn <span class="math notranslate">\(\frac{4}{n-k-1}\)</span> được gọi là các quan sát
 có ảnh hưởng</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">cutoff</span> <span class="o">&lt;-</span> <span class="m">4</span><span class="o">/</span><span class="p">(</span><span class="nf">nrow</span><span class="p">(</span><span class="n">states</span><span class="p">)</span><span class="o">-</span><span class="nf">length</span><span class="p">(</span><span class="n">fit</span><span class="o">$</span><span class="n">coefficients</span><span class="p">)</span><span class="m">-2</span><span class="p">)</span>
-<span class="nf">plot</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">which</span> <span class="o">=</span> <span class="m">4</span><span class="p">,</span> <span class="n">cook.levels</span> <span class="o">=</span> <span class="n">cutoff</span><span class="p">)</span>
-<span class="nf">abline</span><span class="p">(</span><span class="n">h</span> <span class="o">=</span> <span class="n">cutoff</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>cutoff <span class="o">&lt;-</span> <span class="m">4</span><span class="o">/</span><span class="p">(</span><span class="kp">nrow</span><span class="p">(</span>states<span class="p">)</span><span class="o">-</span><span class="kp">length</span><span class="p">(</span>fit<span class="o">$</span>coefficients<span class="p">)</span><span class="m">-2</span><span class="p">)</span>
+plot<span class="p">(</span>fit<span class="p">,</span> which <span class="o">=</span> <span class="m">4</span><span class="p">,</span> cook.levels <span class="o">=</span> cutoff<span class="p">)</span>
+abline<span class="p">(</span>h <span class="o">=</span> cutoff<span class="p">,</span> col <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image14" src="p03-02-mo-hinh-ols_files/figure-html/unnamed-chunk-29-1.png" /></p>
 <p>Tuy nhiên, cách tiếp cận trên không chỉ cho ta biết chính xác các quan
 sát đó ảnh hưởng đến mô hình như thế nào.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">car</span><span class="p">)</span>
-<span class="nf">avPlots</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">ask</span> <span class="o">=</span> <span class="bp">F</span><span class="p">,</span> <span class="n">id.method</span> <span class="o">=</span> <span class="s">&quot;identity&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>car<span class="p">)</span>
+avPlots<span class="p">(</span>fit<span class="p">,</span> ask <span class="o">=</span> <span class="bp">F</span><span class="p">,</span> id.method <span class="o">=</span> <span class="s">&quot;identity&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image15" src="p03-02-mo-hinh-ols_files/figure-html/unnamed-chunk-30-1.png" /></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">influencePlot</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">id.method</span> <span class="o">=</span><span class="s">&quot;identity&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>influencePlot<span class="p">(</span>fit<span class="p">,</span> id.method <span class="o">=</span><span class="s">&quot;identity&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image16" src="p03-02-mo-hinh-ols_files/figure-html/unnamed-chunk-30-2.png" /></p>

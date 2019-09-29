@@ -50,7 +50,7 @@
   <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Tìm Kiếm" href="search.html" />
-    <link rel="next" title="6. Support Vector Machine" href="p03-08-svm.html" />
+    <link rel="next" title="6. Xây dựng mô hình với H2O" href="p03-07-xay-dung-mo-hinh-voi-h2o.html" />
     <link rel="prev" title="4. Cây quyết định" href="p03-04-decision-tree.html" /> 
 </head>
 
@@ -127,14 +127,15 @@
 <li class="toctree-l2"><a class="reference internal" href="#boosting">5.3. Boosting</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -422,21 +423,21 @@ sát mới mà không có trong tập dữ liệu training khi xây dựng cây 
 hàm <code class="docutils literal notranslate"><span class="pre">randomForest()</span></code> trong package <strong>randomForest</strong>. Số lượng cây mặc
 định là 500, số lượng biến tại mỗi cây mặc định là sqrt(tổng số biến),
 và kích thước nhỏ nhất của cây mặc định là 1.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">ISLR</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">randomForest</span><span class="p">)</span> <span class="c1"># Package sử dụng cho Random Forests</span>
-<span class="nf">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>ISLR<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>randomForest<span class="p">)</span> <span class="c1"># Package sử dụng cho Random Forests</span>
+<span class="kp">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
 
 <span class="c1"># Data</span>
-<span class="nf">data</span><span class="p">(</span><span class="s">&quot;Default&quot;</span><span class="p">)</span>
+data<span class="p">(</span><span class="s">&quot;Default&quot;</span><span class="p">)</span>
 
 <span class="c1"># Chia dữ liệu thành 2 tập: train/test</span>
-<span class="nf">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
-<span class="n">train</span> <span class="o">&lt;-</span> <span class="nf">sample</span><span class="p">(</span><span class="nf">nrow</span><span class="p">(</span><span class="n">Default</span><span class="p">),</span> <span class="m">0.7</span><span class="o">*</span><span class="nf">nrow</span><span class="p">(</span><span class="n">Default</span><span class="p">))</span>
-<span class="n">df.train</span> <span class="o">&lt;-</span> <span class="n">Default[train</span><span class="p">,</span><span class="n">]</span>
-<span class="n">df.validate</span> <span class="o">&lt;-</span> <span class="n">Default[</span><span class="o">-</span><span class="n">train</span><span class="p">,</span><span class="n">]</span>
+<span class="kp">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
+train <span class="o">&lt;-</span> <span class="kp">sample</span><span class="p">(</span><span class="kp">nrow</span><span class="p">(</span>Default<span class="p">),</span> <span class="m">0.7</span><span class="o">*</span><span class="kp">nrow</span><span class="p">(</span>Default<span class="p">))</span>
+df.train <span class="o">&lt;-</span> Default<span class="p">[</span>train<span class="p">,]</span>
+df.validate <span class="o">&lt;-</span> Default<span class="p">[</span><span class="o">-</span>train<span class="p">,]</span>
 
 <span class="c1"># Biến đầu ra của dữ liệu huấn luyện</span>
-<span class="nf">table</span><span class="p">(</span><span class="n">df.train</span><span class="o">$</span><span class="n">default</span><span class="p">)</span>
+<span class="kp">table</span><span class="p">(</span>df.train<span class="o">$</span>default<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -445,7 +446,7 @@ và kích thước nhỏ nhất của cây mặc định là 1.</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Biến đầu ra của dữ liệu kiểm tra</span>
-<span class="nf">table</span><span class="p">(</span><span class="n">df.validate</span><span class="o">$</span><span class="n">default</span><span class="p">)</span>
+<span class="kp">table</span><span class="p">(</span>df.validate<span class="o">$</span>default<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -454,13 +455,13 @@ và kích thước nhỏ nhất của cây mặc định là 1.</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Xây dựng mô hình trên tập training</span>
-<span class="n">fit_rf</span> <span class="o">&lt;-</span> <span class="nf">randomForest</span><span class="p">(</span><span class="n">default</span> <span class="o">~</span> <span class="n">.,</span>
-                       <span class="n">data</span> <span class="o">=</span> <span class="n">df.train</span><span class="p">,</span>
+fit_rf <span class="o">&lt;-</span> randomForest<span class="p">(</span>default <span class="o">~</span> <span class="m">.</span><span class="p">,</span>
+                       data <span class="o">=</span> df.train<span class="p">,</span>
                        <span class="c1"># na.action = na.roughfix, # Xử lý giá trị missing (nếu có)</span>
-                       <span class="n">importance</span> <span class="o">=</span> <span class="bp">T</span>
+                       importance <span class="o">=</span> <span class="bp">T</span>
                        <span class="p">)</span>
 
-<span class="n">fit_rf</span>
+fit_rf
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -625,67 +626,67 @@ dữ liệu có sẵn trong <code class="docutils literal notranslate"><span cla
 đó có phải là khoản nợ xấu hay không.</p>
 <p>Để xây dựng mô hình boosting trên <code class="docutils literal notranslate"><span class="pre">R</span></code>, chúng ta sẽ sử dụng hàm
 <code class="docutils literal notranslate"><span class="pre">gbm()</span></code> trong package <strong>gbm</strong>.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">caret</span><span class="p">)</span>
-<span class="nf">data</span><span class="p">(</span><span class="s">&quot;GermanCredit&quot;</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">&lt;-</span> <span class="n">GermanCredit</span>
-<span class="nf">rm</span><span class="p">(</span><span class="n">GermanCredit</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>caret<span class="p">)</span>
+data<span class="p">(</span><span class="s">&quot;GermanCredit&quot;</span><span class="p">)</span>
+data <span class="o">&lt;-</span> GermanCredit
+<span class="kp">rm</span><span class="p">(</span>GermanCredit<span class="p">)</span>
 
 <span class="c1"># Hàm tính toán các chỉ số đo lường chất lượng dự báo của mô hình</span>
-<span class="n">model.performance</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">a</span> <span class="o">&lt;-</span> <span class="n">confusion_matrix[1</span><span class="p">,</span><span class="m">1</span><span class="n">]</span>
-  <span class="n">b</span> <span class="o">&lt;-</span> <span class="n">confusion_matrix[1</span><span class="p">,</span><span class="m">2</span><span class="n">]</span>
-  <span class="n">c</span> <span class="o">&lt;-</span> <span class="n">confusion_matrix[2</span><span class="p">,</span><span class="m">2</span><span class="n">]</span>
-  <span class="n">d</span> <span class="o">&lt;-</span> <span class="n">confusion_matrix[2</span><span class="p">,</span><span class="m">1</span><span class="n">]</span>
+model.performance <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>confusion_matrix<span class="p">)</span> <span class="p">{</span>
+  a <span class="o">&lt;-</span> confusion_matrix<span class="p">[</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">]</span>
+  b <span class="o">&lt;-</span> confusion_matrix<span class="p">[</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">]</span>
+  <span class="kt">c</span> <span class="o">&lt;-</span> confusion_matrix<span class="p">[</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">]</span>
+  d <span class="o">&lt;-</span> confusion_matrix<span class="p">[</span><span class="m">2</span><span class="p">,</span><span class="m">1</span><span class="p">]</span>
 
-  <span class="n">tpr</span> <span class="o">&lt;-</span> <span class="n">c</span><span class="o">/</span><span class="p">(</span><span class="n">b</span><span class="o">+</span><span class="n">c</span><span class="p">)</span>
-  <span class="n">precision</span> <span class="o">&lt;-</span> <span class="n">c</span><span class="o">/</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="n">d</span><span class="p">)</span>
-  <span class="n">accuracy</span> <span class="o">&lt;-</span> <span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">c</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">+</span><span class="n">c</span><span class="o">+</span><span class="n">d</span><span class="p">)</span>
+  tpr <span class="o">&lt;-</span> <span class="kt">c</span><span class="o">/</span><span class="p">(</span>b<span class="o">+</span><span class="kt">c</span><span class="p">)</span>
+  precision <span class="o">&lt;-</span> <span class="kt">c</span><span class="o">/</span><span class="p">(</span><span class="kt">c</span><span class="o">+</span>d<span class="p">)</span>
+  accuracy <span class="o">&lt;-</span> <span class="p">(</span>a<span class="o">+</span><span class="kt">c</span><span class="p">)</span><span class="o">/</span><span class="p">(</span>a<span class="o">+</span>b<span class="o">+</span><span class="kt">c</span><span class="o">+</span>d<span class="p">)</span>
 
-  <span class="nf">print</span><span class="p">(</span><span class="nf">paste</span><span class="p">(</span><span class="s">&#39;recall :&#39;</span><span class="p">,</span><span class="nf">round</span><span class="p">(</span><span class="n">tpr</span><span class="p">,</span><span class="m">2</span><span class="p">)))</span>
-  <span class="nf">print</span><span class="p">(</span><span class="nf">paste</span><span class="p">(</span><span class="s">&#39;precision :&#39;</span><span class="p">,</span> <span class="nf">round</span><span class="p">(</span><span class="n">precision</span><span class="p">,</span><span class="m">2</span><span class="p">)))</span>
-  <span class="nf">print</span><span class="p">(</span><span class="nf">paste</span><span class="p">(</span><span class="s">&#39;accuracy :&#39;</span><span class="p">,</span><span class="nf">round</span><span class="p">(</span><span class="n">accuracy</span><span class="p">,</span><span class="m">2</span><span class="p">)))</span>
+  <span class="kp">print</span><span class="p">(</span><span class="kp">paste</span><span class="p">(</span><span class="s">&#39;recall :&#39;</span><span class="p">,</span><span class="kp">round</span><span class="p">(</span>tpr<span class="p">,</span><span class="m">2</span><span class="p">)))</span>
+  <span class="kp">print</span><span class="p">(</span><span class="kp">paste</span><span class="p">(</span><span class="s">&#39;precision :&#39;</span><span class="p">,</span> <span class="kp">round</span><span class="p">(</span>precision<span class="p">,</span><span class="m">2</span><span class="p">)))</span>
+  <span class="kp">print</span><span class="p">(</span><span class="kp">paste</span><span class="p">(</span><span class="s">&#39;accuracy :&#39;</span><span class="p">,</span><span class="kp">round</span><span class="p">(</span>accuracy<span class="p">,</span><span class="m">2</span><span class="p">)))</span>
 <span class="p">}</span>
 
 <span class="c1"># Chia data: training/testing tỷ lệ 8/2</span>
-<span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
-<span class="n">indxTrain</span> <span class="o">&lt;-</span> <span class="nf">createDataPartition</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="o">$</span><span class="n">Class</span><span class="p">,</span><span class="n">p</span> <span class="o">=</span> <span class="m">8</span><span class="o">/</span><span class="m">10</span><span class="p">,</span><span class="n">list</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
-<span class="n">training</span> <span class="o">&lt;-</span> <span class="n">data[indxTrain</span><span class="p">,</span><span class="n">]</span>
-<span class="n">testing</span> <span class="o">&lt;-</span> <span class="n">data[</span><span class="o">-</span><span class="n">indxTrain</span><span class="p">,</span><span class="n">]</span>
+<span class="kp">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
+indxTrain <span class="o">&lt;-</span> createDataPartition<span class="p">(</span>y <span class="o">=</span> data<span class="o">$</span>Class<span class="p">,</span>p <span class="o">=</span> <span class="m">8</span><span class="o">/</span><span class="m">10</span><span class="p">,</span><span class="kt">list</span> <span class="o">=</span> <span class="kc">FALSE</span><span class="p">)</span>
+training <span class="o">&lt;-</span> data<span class="p">[</span>indxTrain<span class="p">,]</span>
+testing <span class="o">&lt;-</span> data<span class="p">[</span><span class="o">-</span>indxTrain<span class="p">,]</span>
 
-<span class="n">df.train</span> <span class="o">&lt;-</span> <span class="n">training</span>
-<span class="n">df.train</span><span class="o">$</span><span class="n">Status[df.train</span><span class="o">$</span><span class="n">Class</span> <span class="o">==</span> <span class="s">&quot;Good&quot;</span><span class="n">]</span> <span class="o">&lt;-</span> <span class="m">1</span>
-<span class="n">df.train</span><span class="o">$</span><span class="n">Status[df.train</span><span class="o">$</span><span class="n">Class</span> <span class="o">==</span> <span class="s">&quot;Bad&quot;</span><span class="n">]</span> <span class="o">&lt;-</span> <span class="m">0</span>
+df.train <span class="o">&lt;-</span> training
+df.train<span class="o">$</span>Status<span class="p">[</span>df.train<span class="o">$</span>Class <span class="o">==</span> <span class="s">&quot;Good&quot;</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="m">1</span>
+df.train<span class="o">$</span>Status<span class="p">[</span>df.train<span class="o">$</span>Class <span class="o">==</span> <span class="s">&quot;Bad&quot;</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="m">0</span>
 
-<span class="n">df.test</span> <span class="o">&lt;-</span> <span class="n">testing</span>
-<span class="n">df.test</span><span class="o">$</span><span class="n">Status[df.test</span><span class="o">$</span><span class="n">Class</span> <span class="o">==</span> <span class="s">&quot;Good&quot;</span><span class="n">]</span> <span class="o">&lt;-</span> <span class="m">1</span>
-<span class="n">df.test</span><span class="o">$</span><span class="n">Status[df.test</span><span class="o">$</span><span class="n">Class</span> <span class="o">==</span> <span class="s">&quot;Bad&quot;</span><span class="n">]</span> <span class="o">&lt;-</span> <span class="m">0</span>
+df.test <span class="o">&lt;-</span> testing
+df.test<span class="o">$</span>Status<span class="p">[</span>df.test<span class="o">$</span>Class <span class="o">==</span> <span class="s">&quot;Good&quot;</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="m">1</span>
+df.test<span class="o">$</span>Status<span class="p">[</span>df.test<span class="o">$</span>Class <span class="o">==</span> <span class="s">&quot;Bad&quot;</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="m">0</span>
 
-<span class="nf">rm</span><span class="p">(</span><span class="n">training</span><span class="p">,</span> <span class="n">testing</span><span class="p">)</span>
+<span class="kp">rm</span><span class="p">(</span>training<span class="p">,</span> testing<span class="p">)</span>
 
 <span class="c1"># Gradient Boosting</span>
-<span class="nf">set.seed</span><span class="p">(</span><span class="m">9999</span><span class="p">)</span>
+<span class="kp">set.seed</span><span class="p">(</span><span class="m">9999</span><span class="p">)</span>
 
 <span class="c1"># Xây dựng mô hình trên tập train</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">gbm</span><span class="p">)</span>
-<span class="n">gbm.train</span> <span class="o">&lt;-</span> <span class="nf">gbm</span><span class="p">(</span><span class="n">Status</span> <span class="o">~</span> <span class="n">. </span><span class="o">-</span> <span class="n">Class</span><span class="p">,</span>
-                 <span class="n">data</span> <span class="o">=</span> <span class="n">df.train</span><span class="p">,</span>
-                 <span class="n">distribution</span> <span class="o">=</span> <span class="s">&quot;bernoulli&quot;</span><span class="p">,</span>
-                 <span class="n">n.trees</span> <span class="o">=</span> <span class="m">1000</span><span class="p">,</span>
-                 <span class="n">shrinkage</span> <span class="o">=</span> <span class="m">0.01</span><span class="p">,</span>
-                 <span class="n">interaction.depth</span> <span class="o">=</span> <span class="m">4</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>gbm<span class="p">)</span>
+gbm.train <span class="o">&lt;-</span> gbm<span class="p">(</span>Status <span class="o">~</span> <span class="m">.</span> <span class="o">-</span> Class<span class="p">,</span>
+                 data <span class="o">=</span> df.train<span class="p">,</span>
+                 distribution <span class="o">=</span> <span class="s">&quot;bernoulli&quot;</span><span class="p">,</span>
+                 n.trees <span class="o">=</span> <span class="m">1000</span><span class="p">,</span>
+                 shrinkage <span class="o">=</span> <span class="m">0.01</span><span class="p">,</span>
+                 interaction.depth <span class="o">=</span> <span class="m">4</span><span class="p">)</span>
 
 <span class="c1"># Dự báo quan sát trên tập test</span>
-<span class="n">gbm.result</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">gbm.train</span><span class="p">,</span>
-                      <span class="n">newdata</span> <span class="o">=</span> <span class="n">df.test</span><span class="p">,</span>
-                      <span class="n">n.trees</span> <span class="o">=</span> <span class="m">1000</span><span class="p">,</span>
-                      <span class="n">type</span> <span class="o">=</span> <span class="s">&quot;response&quot;</span><span class="p">)</span>
+gbm.result <span class="o">&lt;-</span> predict<span class="p">(</span>gbm.train<span class="p">,</span>
+                      newdata <span class="o">=</span> df.test<span class="p">,</span>
+                      n.trees <span class="o">=</span> <span class="m">1000</span><span class="p">,</span>
+                      type <span class="o">=</span> <span class="s">&quot;response&quot;</span><span class="p">)</span>
 
 
 <span class="c1"># Confusion matrix</span>
-<span class="n">gbm.conf</span>  <span class="o">&lt;-</span>  <span class="nf">rep </span><span class="p">(</span><span class="s">&quot;Bad&quot;</span><span class="p">,</span> <span class="m">200</span><span class="p">)</span>
-<span class="n">gbm.conf[gbm.result</span> <span class="o">&gt;</span> <span class="m">0.5</span><span class="n">]</span> <span class="o">=</span> <span class="s">&quot;Good&quot;</span>
-<span class="n">gbm.confusion</span> <span class="o">&lt;-</span> <span class="nf">table</span><span class="p">(</span><span class="n">gbm.conf</span><span class="p">,</span> <span class="n">df.test</span><span class="o">$</span><span class="n">Class</span><span class="p">)</span>
-<span class="n">gbm.confusion</span>
+gbm.conf  <span class="o">&lt;-</span>  rep <span class="p">(</span><span class="s">&quot;Bad&quot;</span><span class="p">,</span> <span class="m">200</span><span class="p">)</span>
+gbm.conf<span class="p">[</span>gbm.result <span class="o">&gt;</span> <span class="m">0.5</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;Good&quot;</span>
+gbm.confusion <span class="o">&lt;-</span> <span class="kp">table</span><span class="p">(</span>gbm.conf<span class="p">,</span> df.test<span class="o">$</span>Class<span class="p">)</span>
+gbm.confusion
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -694,7 +695,7 @@ dữ liệu có sẵn trong <code class="docutils literal notranslate"><span cla
 <span class="c1">##     Good  25  124</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">model.performance</span><span class="p">(</span><span class="n">gbm.confusion</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>model.performance<span class="p">(</span>gbm.confusion<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;recall : 0.89&quot;</span>
@@ -722,18 +723,18 @@ báo chính xác 124 khách hàng (tỷ lệ 124/140 = 89%)</li>
 </li>
 </ul>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># ROC</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">ROCR</span><span class="p">)</span> <span class="c1"># Dùng để vẽ đường ROC và tính toán AUC</span>
-<span class="n">gbm.ROC</span> <span class="o">&lt;-</span> <span class="nf">prediction</span><span class="p">(</span><span class="n">gbm.result</span><span class="p">,</span> <span class="n">df.test</span><span class="o">$</span><span class="n">Class</span><span class="p">)</span>
-<span class="n">gbm.ROCperf_test</span> <span class="o">&lt;-</span> <span class="nf">performance</span><span class="p">(</span><span class="n">gbm.ROC</span><span class="p">,</span> <span class="s">&quot;tpr&quot;</span><span class="p">,</span> <span class="s">&quot;fpr&quot;</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>ROCR<span class="p">)</span> <span class="c1"># Dùng để vẽ đường ROC và tính toán AUC</span>
+gbm.ROC <span class="o">&lt;-</span> prediction<span class="p">(</span>gbm.result<span class="p">,</span> df.test<span class="o">$</span>Class<span class="p">)</span>
+gbm.ROCperf_test <span class="o">&lt;-</span> performance<span class="p">(</span>gbm.ROC<span class="p">,</span> <span class="s">&quot;tpr&quot;</span><span class="p">,</span> <span class="s">&quot;fpr&quot;</span><span class="p">)</span>
 
 <span class="c1"># Vẽ ROC</span>
-<span class="nf">plot</span><span class="p">(</span><span class="n">gbm.ROCperf_test</span><span class="p">)</span>
+plot<span class="p">(</span>gbm.ROCperf_test<span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image3" src="p03-05-bagging-boosting_files/figure-html/unnamed-chunk-4-1.png" /></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tính toán AUC</span>
-<span class="n">gbm.auc_test</span> <span class="o">&lt;-</span> <span class="nf">performance</span><span class="p">(</span><span class="n">gbm.ROC</span><span class="p">,</span> <span class="s">&quot;auc&quot;</span><span class="p">,</span> <span class="s">&quot;cutoff&quot;</span><span class="p">)</span>
-<span class="n">gbm.auc_test</span><span class="o">@</span><span class="n">y.values</span>
+gbm.auc_test <span class="o">&lt;-</span> performance<span class="p">(</span>gbm.ROC<span class="p">,</span> <span class="s">&quot;auc&quot;</span><span class="p">,</span> <span class="s">&quot;cutoff&quot;</span><span class="p">)</span>
+gbm.auc_test<span class="o">@</span>y.values
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [[1]]</span>
@@ -755,7 +756,7 @@ mô hình là tương đối tốt.</li>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="p03-08-svm.html" class="btn btn-neutral float-right" title="6. Support Vector Machine" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="p03-07-xay-dung-mo-hinh-voi-h2o.html" class="btn btn-neutral float-right" title="6. Xây dựng mô hình với H2O" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="p03-04-decision-tree.html" class="btn btn-neutral float-left" title="4. Cây quyết định" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -298,21 +299,21 @@ và <code class="docutils literal notranslate"><span class="pre">remainder</span
 <li>Xác định các quan sát ngoại lai với hàm <code class="docutils literal notranslate"><span class="pre">anomalize()</span></code></li>
 <li>Xác định các khoảng quan sát bất thường với <code class="docutils literal notranslate"><span class="pre">time_recompose()</span></code></li>
 </ol>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">anomalize</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">tibbletime</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>anomalize<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>tibbletime<span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Dữ liệu mẫu</strong></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">data</span><span class="p">(</span><span class="s">&quot;tidyverse_cran_downloads&quot;</span><span class="p">)</span>
-<span class="nf">class</span><span class="p">(</span><span class="n">tidyverse_cran_downloads</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">(</span><span class="s">&quot;tidyverse_cran_downloads&quot;</span><span class="p">)</span>
+<span class="kp">class</span><span class="p">(</span>tidyverse_cran_downloads<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;grouped_tbl_time&quot; &quot;tbl_time&quot;         &quot;grouped_df&quot;</span>
 <span class="c1">## [4] &quot;tbl_df&quot;           &quot;tbl&quot;              &quot;data.frame&quot;</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">tidyverse_cran_downloads</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>tidyverse_cran_downloads <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A time tibble: 6 x 3</span>
@@ -331,16 +332,16 @@ và <code class="docutils literal notranslate"><span class="pre">remainder</span
 <p>Với ví dụ này, dữ liệu đã ở dạng tibble time và có thể sử dụng
 <code class="docutils literal notranslate"><span class="pre">anomalize</span></code>. Tuy nhiên, trong các trường hợp dữ liệu đang ở dạng data
 frame, ta cần làm như sau</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span>
-  <span class="nf">group_by</span><span class="p">(</span><span class="n">group_var</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="c1"># Group var</span>
-  <span class="nf">arrange</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="c1"># Sắp xếp thời gian từ thấp đến cao</span>
-  <span class="nf">as_tbl_time</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="n">date</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">%&gt;%</span>
+  group_by<span class="p">(</span>group_var<span class="p">)</span> <span class="o">%&gt;%</span> <span class="c1"># Group var</span>
+  arrange<span class="p">(</span><span class="kp">date</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="c1"># Sắp xếp thời gian từ thấp đến cao</span>
+  as_tbl_time<span class="p">(</span>index <span class="o">=</span> <span class="kp">date</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="section" id="phan-tach-cac-thanh-phan-chuoi-thoi-gian">
 <h2>6.1. Phân tách các thành phần chuỗi thời gian<a class="headerlink" href="#phan-tach-cac-thanh-phan-chuoi-thoi-gian" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">tidyverse_cran_downloads</span> <span class="o">%&gt;%</span>
-    <span class="nf">time_decompose</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s">&quot;stl&quot;</span><span class="p">,</span> <span class="n">frequency</span> <span class="o">=</span> <span class="s">&quot;auto&quot;</span><span class="p">,</span> <span class="n">trend</span> <span class="o">=</span> <span class="s">&quot;auto&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>tidyverse_cran_downloads <span class="o">%&gt;%</span>
+    time_decompose<span class="p">(</span>count<span class="p">,</span> method <span class="o">=</span> <span class="s">&quot;stl&quot;</span><span class="p">,</span> frequency <span class="o">=</span> <span class="s">&quot;auto&quot;</span><span class="p">,</span> trend <span class="o">=</span> <span class="s">&quot;auto&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A time tibble: 6,375 x 6</span>
@@ -371,9 +372,9 @@ sát bất thường</li>
 <li><code class="docutils literal notranslate"><span class="pre">max_anoms</span> <span class="pre">=</span> <span class="pre">0.2</span></code>: Tham số xác định tỷ lệ phần trăm quan sát có thể
 là quan sát bất thường</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">tidyverse_cran_downloads</span> <span class="o">%&gt;%</span>
-    <span class="nf">time_decompose</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s">&quot;stl&quot;</span><span class="p">,</span> <span class="n">frequency</span> <span class="o">=</span> <span class="s">&quot;auto&quot;</span><span class="p">,</span> <span class="n">trend</span> <span class="o">=</span> <span class="s">&quot;auto&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-    <span class="nf">anomalize</span><span class="p">(</span><span class="n">remainder</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s">&quot;iqr&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.05</span><span class="p">,</span> <span class="n">max_anoms</span> <span class="o">=</span> <span class="m">0.2</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>tidyverse_cran_downloads <span class="o">%&gt;%</span>
+    time_decompose<span class="p">(</span>count<span class="p">,</span> method <span class="o">=</span> <span class="s">&quot;stl&quot;</span><span class="p">,</span> frequency <span class="o">=</span> <span class="s">&quot;auto&quot;</span><span class="p">,</span> trend <span class="o">=</span> <span class="s">&quot;auto&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+    anomalize<span class="p">(</span>remainder<span class="p">,</span> method <span class="o">=</span> <span class="s">&quot;iqr&quot;</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">0.05</span><span class="p">,</span> max_anoms <span class="o">=</span> <span class="m">0.2</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A time tibble: 6,375 x 9</span>
@@ -396,36 +397,36 @@ là quan sát bất thường</li>
 </pre></div>
 </div>
 <p>Phân tách các quan sát bất thường trong chuỗi thời gian.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">tidyverse_cran_downloads</span> <span class="o">%&gt;%</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>tidyverse_cran_downloads <span class="o">%&gt;%</span>
 
     <span class="c1"># Select a single time series</span>
-    <span class="nf">filter</span><span class="p">(</span><span class="n">package</span> <span class="o">==</span> <span class="s">&quot;lubridate&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-    <span class="nf">ungroup</span><span class="p">()</span> <span class="o">%&gt;%</span>
+    filter<span class="p">(</span>package <span class="o">==</span> <span class="s">&quot;lubridate&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+    ungroup<span class="p">()</span> <span class="o">%&gt;%</span>
 
     <span class="c1"># Anomalize</span>
-    <span class="nf">time_decompose</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s">&quot;stl&quot;</span><span class="p">,</span> <span class="n">frequency</span> <span class="o">=</span> <span class="s">&quot;auto&quot;</span><span class="p">,</span> <span class="n">trend</span> <span class="o">=</span> <span class="s">&quot;auto&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-    <span class="nf">anomalize</span><span class="p">(</span><span class="n">remainder</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s">&quot;iqr&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.05</span><span class="p">,</span> <span class="n">max_anoms</span> <span class="o">=</span> <span class="m">0.2</span><span class="p">)</span> <span class="o">%&gt;%</span>
+    time_decompose<span class="p">(</span>count<span class="p">,</span> method <span class="o">=</span> <span class="s">&quot;stl&quot;</span><span class="p">,</span> frequency <span class="o">=</span> <span class="s">&quot;auto&quot;</span><span class="p">,</span> trend <span class="o">=</span> <span class="s">&quot;auto&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+    anomalize<span class="p">(</span>remainder<span class="p">,</span> method <span class="o">=</span> <span class="s">&quot;iqr&quot;</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">0.05</span><span class="p">,</span> max_anoms <span class="o">=</span> <span class="m">0.2</span><span class="p">)</span> <span class="o">%&gt;%</span>
 
     <span class="c1"># Plot Anomaly Decomposition</span>
-    <span class="nf">plot_anomaly_decomposition</span><span class="p">()</span> <span class="o">+</span>
-    <span class="nf">ggtitle</span><span class="p">(</span><span class="s">&quot;Lubridate Downloads: Anomaly Decomposition&quot;</span><span class="p">)</span>
+    plot_anomaly_decomposition<span class="p">()</span> <span class="o">+</span>
+    ggtitle<span class="p">(</span><span class="s">&quot;Lubridate Downloads: Anomaly Decomposition&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image0" src="p05-08-abnomaly-detection_files/figure-html/unnamed-chunk-7-1.png" /></p>
 </div>
 <div class="section" id="xac-dinh-vung-quan-sat-bat-thuong">
 <h2>6.3. Xác định vùng quan sát bất thường<a class="headerlink" href="#xac-dinh-vung-quan-sat-bat-thuong" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">tidyverse_cran_downloads</span> <span class="o">%&gt;%</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>tidyverse_cran_downloads <span class="o">%&gt;%</span>
     <span class="c1"># Select single time series</span>
-    <span class="nf">filter</span><span class="p">(</span><span class="n">package</span> <span class="o">==</span> <span class="s">&quot;lubridate&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-    <span class="nf">ungroup</span><span class="p">()</span> <span class="o">%&gt;%</span>
+    filter<span class="p">(</span>package <span class="o">==</span> <span class="s">&quot;lubridate&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+    ungroup<span class="p">()</span> <span class="o">%&gt;%</span>
     <span class="c1"># Anomalize</span>
-    <span class="nf">time_decompose</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s">&quot;stl&quot;</span><span class="p">,</span> <span class="n">frequency</span> <span class="o">=</span> <span class="s">&quot;auto&quot;</span><span class="p">,</span> <span class="n">trend</span> <span class="o">=</span> <span class="s">&quot;auto&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-    <span class="nf">anomalize</span><span class="p">(</span><span class="n">remainder</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s">&quot;iqr&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.05</span><span class="p">,</span> <span class="n">max_anoms</span> <span class="o">=</span> <span class="m">0.2</span><span class="p">)</span> <span class="o">%&gt;%</span>
-    <span class="nf">time_recompose</span><span class="p">()</span> <span class="o">%&gt;%</span>
+    time_decompose<span class="p">(</span>count<span class="p">,</span> method <span class="o">=</span> <span class="s">&quot;stl&quot;</span><span class="p">,</span> frequency <span class="o">=</span> <span class="s">&quot;auto&quot;</span><span class="p">,</span> trend <span class="o">=</span> <span class="s">&quot;auto&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+    anomalize<span class="p">(</span>remainder<span class="p">,</span> method <span class="o">=</span> <span class="s">&quot;iqr&quot;</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">0.05</span><span class="p">,</span> max_anoms <span class="o">=</span> <span class="m">0.2</span><span class="p">)</span> <span class="o">%&gt;%</span>
+    time_recompose<span class="p">()</span> <span class="o">%&gt;%</span>
     <span class="c1"># Plot Anomaly Decomposition</span>
-    <span class="nf">plot_anomalies</span><span class="p">(</span><span class="n">time_recomposed</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span> <span class="o">+</span>
-    <span class="nf">ggtitle</span><span class="p">(</span><span class="s">&quot;Lubridate Downloads: Anomalies Detected&quot;</span><span class="p">)</span>
+    plot_anomalies<span class="p">(</span>time_recomposed <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span> <span class="o">+</span>
+    ggtitle<span class="p">(</span><span class="s">&quot;Lubridate Downloads: Anomalies Detected&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image1" src="p05-08-abnomaly-detection_files/figure-html/unnamed-chunk-8-1.png" /></p>

@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -388,16 +389,16 @@ Test (10% còn lại). Ở đây ta sẽ chia Test thành 2 data nhỏ là
 Test_known dùng để predict và Test_unknown dùng để kiểm định sự chính
 xác của mô hình</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">recommenderlab</span><span class="p">)</span>
-<span class="nf">rm</span><span class="p">(</span><span class="n">list</span> <span class="o">=</span> <span class="nf">ls</span><span class="p">())</span>
-<span class="nf">data</span><span class="p">(</span><span class="n">MovieLense</span><span class="p">)</span>
-<span class="n">MovieLense</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>recommenderlab<span class="p">)</span>
+<span class="kp">rm</span><span class="p">(</span><span class="kt">list</span> <span class="o">=</span> <span class="kp">ls</span><span class="p">())</span>
+data<span class="p">(</span>MovieLense<span class="p">)</span>
+MovieLense
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## 943 x 1664 rating matrix of class &#39;realRatingMatrix&#39; with 99392 ratings.</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">MovieLenseMeta[1</span><span class="o">:</span><span class="m">5</span><span class="p">,</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="n">]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>MovieLenseMeta<span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">,</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##               title year</span>
@@ -420,24 +421,24 @@ xác của mô hình</li>
 <span class="c1">## 5         0         0          0      0     1</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">evaluation_value</span> <span class="o">&lt;-</span> <span class="nf">evaluationScheme</span><span class="p">(</span><span class="n">MovieLense</span><span class="p">,</span>
-                                     <span class="n">method</span> <span class="o">=</span> <span class="s">&quot;split&quot;</span><span class="p">,</span>
-                                     <span class="n">train</span> <span class="o">=</span> <span class="m">0.9</span><span class="p">,</span>
-                                     <span class="n">given</span> <span class="o">=</span> <span class="m">12</span><span class="p">)</span>
-<span class="n">train</span> <span class="o">&lt;-</span> <span class="nf">getData</span><span class="p">(</span><span class="n">evaluation_value</span><span class="p">,</span> <span class="s">&quot;train&quot;</span><span class="p">)</span>
-<span class="n">test_known</span> <span class="o">&lt;-</span> <span class="nf">getData</span><span class="p">(</span><span class="n">evaluation_value</span><span class="p">,</span> <span class="s">&quot;known&quot;</span><span class="p">)</span>
-<span class="n">test_unknown</span> <span class="o">&lt;-</span> <span class="nf">getData</span><span class="p">(</span><span class="n">evaluation_value</span><span class="p">,</span> <span class="s">&quot;unknown&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>evaluation_value <span class="o">&lt;-</span> evaluationScheme<span class="p">(</span>MovieLense<span class="p">,</span>
+                                     method <span class="o">=</span> <span class="s">&quot;split&quot;</span><span class="p">,</span>
+                                     train <span class="o">=</span> <span class="m">0.9</span><span class="p">,</span>
+                                     given <span class="o">=</span> <span class="m">12</span><span class="p">)</span>
+train <span class="o">&lt;-</span> getData<span class="p">(</span>evaluation_value<span class="p">,</span> <span class="s">&quot;train&quot;</span><span class="p">)</span>
+test_known <span class="o">&lt;-</span> getData<span class="p">(</span>evaluation_value<span class="p">,</span> <span class="s">&quot;known&quot;</span><span class="p">)</span>
+test_unknown <span class="o">&lt;-</span> getData<span class="p">(</span>evaluation_value<span class="p">,</span> <span class="s">&quot;unknown&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li><strong>Bước 2</strong>: Xây dựng mô hình CF dựa trên tập Train và Predict trên
 tập Test_known</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">ubcf_model</span> <span class="o">&lt;-</span> <span class="nf">Recommender</span><span class="p">(</span><span class="n">train</span><span class="p">,</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>ubcf_model <span class="o">&lt;-</span> Recommender<span class="p">(</span>train<span class="p">,</span>
                         <span class="s">&quot;UBCF&quot;</span><span class="p">,</span>
-                        <span class="n">param</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">method</span> <span class="o">=</span> <span class="s">&quot;Cosine&quot;</span><span class="p">,</span> <span class="n">nn</span> <span class="o">=</span> <span class="m">50</span><span class="p">))</span>
-<span class="n">pred_ubcf</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">ubcf_model</span><span class="p">,</span> <span class="n">test_known</span><span class="p">,</span> <span class="n">type</span><span class="o">=</span><span class="s">&quot;ratings&quot;</span><span class="p">)</span>
-<span class="nf">as</span><span class="p">(</span><span class="n">pred_ubcf</span><span class="p">,</span> <span class="s">&quot;matrix&quot;</span><span class="p">)</span><span class="n">[</span><span class="p">,</span><span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="n">]</span>
+                        param <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>method <span class="o">=</span> <span class="s">&quot;Cosine&quot;</span><span class="p">,</span> nn <span class="o">=</span> <span class="m">50</span><span class="p">))</span>
+pred_ubcf <span class="o">&lt;-</span> predict<span class="p">(</span>ubcf_model<span class="p">,</span> test_known<span class="p">,</span> type<span class="o">=</span><span class="s">&quot;ratings&quot;</span><span class="p">)</span>
+as<span class="p">(</span>pred_ubcf<span class="p">,</span> <span class="s">&quot;matrix&quot;</span><span class="p">)[,</span><span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##     Toy Story (1995) GoldenEye (1995) Four Rooms (1995) Get Shorty (1995)</span>
@@ -637,8 +638,8 @@ tập Test_known</li>
 <ul class="simple">
 <li><strong>Bước 3</strong>: Kiểm định mô hình trên tập Test_unknown</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">acc_ubcf</span> <span class="o">&lt;-</span> <span class="nf">calcPredictionAccuracy</span><span class="p">(</span><span class="n">pred_ubcf</span><span class="p">,</span> <span class="n">test_unknown</span><span class="p">)</span>
-<span class="nf">as</span><span class="p">(</span><span class="n">acc_ubcf</span><span class="p">,</span><span class="s">&quot;matrix&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>acc_ubcf <span class="o">&lt;-</span> calcPredictionAccuracy<span class="p">(</span>pred_ubcf<span class="p">,</span> test_unknown<span class="p">)</span>
+as<span class="p">(</span>acc_ubcf<span class="p">,</span><span class="s">&quot;matrix&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##          [,1]</span>
@@ -651,9 +652,9 @@ tập Test_known</li>
 <li><strong>Bước 4</strong>: Tiếp theo ta sẽ sử dựng mô hình Item based CF để tính
 toán các chỉ số accuracy</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">ibcf_model</span> <span class="o">&lt;-</span> <span class="nf">Recommender</span><span class="p">(</span><span class="n">train</span><span class="p">,</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>ibcf_model <span class="o">&lt;-</span> Recommender<span class="p">(</span>train<span class="p">,</span>
                         <span class="s">&quot;IBCF&quot;</span><span class="p">,</span>
-                        <span class="n">param</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">method</span> <span class="o">=</span> <span class="s">&quot;Cosine&quot;</span><span class="p">,</span> <span class="n">nn</span> <span class="o">=</span> <span class="m">50</span><span class="p">))</span>
+                        param <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>method <span class="o">=</span> <span class="s">&quot;Cosine&quot;</span><span class="p">,</span> nn <span class="o">=</span> <span class="m">50</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Available parameter (with default values):</span>
@@ -666,9 +667,9 @@ toán các chỉ số accuracy</li>
 <span class="c1">## verbose   =  FALSE</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">pred_ibcf</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">ibcf_model</span><span class="p">,</span> <span class="n">test_known</span><span class="p">,</span> <span class="n">type</span><span class="o">=</span><span class="s">&quot;ratings&quot;</span><span class="p">)</span>
-<span class="n">acc_ibcf</span> <span class="o">&lt;-</span> <span class="nf">calcPredictionAccuracy</span><span class="p">(</span><span class="n">pred_ibcf</span><span class="p">,</span> <span class="n">test_unknown</span><span class="p">)</span>
-<span class="nf">as</span><span class="p">(</span><span class="n">acc_ibcf</span><span class="p">,</span><span class="s">&quot;matrix&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>pred_ibcf <span class="o">&lt;-</span> predict<span class="p">(</span>ibcf_model<span class="p">,</span> test_known<span class="p">,</span> type<span class="o">=</span><span class="s">&quot;ratings&quot;</span><span class="p">)</span>
+acc_ibcf <span class="o">&lt;-</span> calcPredictionAccuracy<span class="p">(</span>pred_ibcf<span class="p">,</span> test_unknown<span class="p">)</span>
+as<span class="p">(</span>acc_ibcf<span class="p">,</span><span class="s">&quot;matrix&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##           [,1]</span>
@@ -677,8 +678,8 @@ toán các chỉ số accuracy</li>
 <span class="c1">## MAE  0.7573085</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">acc</span> <span class="o">&lt;-</span> <span class="nf">rbind</span><span class="p">(</span><span class="n">UBCF</span> <span class="o">=</span> <span class="n">acc_ubcf</span><span class="p">,</span> <span class="n">IBCF</span> <span class="o">=</span> <span class="n">acc_ibcf</span><span class="p">)</span>
-<span class="n">acc</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>acc <span class="o">&lt;-</span> <span class="kp">rbind</span><span class="p">(</span>UBCF <span class="o">=</span> acc_ubcf<span class="p">,</span> IBCF <span class="o">=</span> acc_ibcf<span class="p">)</span>
+acc
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##          RMSE      MSE       MAE</span>
@@ -691,8 +692,8 @@ toán các chỉ số accuracy</li>
 hơn ta sẽ áp dụng mô hình này để đưa gợi ý khách hàng xem 5 bộ phim
 khác</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">recommended_next_film</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">ibcf_model</span><span class="p">,</span> <span class="n">MovieLense[1</span><span class="o">:</span><span class="m">10</span><span class="p">,</span><span class="n">]</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="m">5</span><span class="p">)</span>
-<span class="nf">as</span><span class="p">(</span><span class="n">recommended_next_film</span><span class="p">,</span> <span class="s">&quot;list&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>recommended_next_film <span class="o">&lt;-</span> predict<span class="p">(</span>ibcf_model<span class="p">,</span> MovieLense<span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">10</span><span class="p">,],</span> n<span class="o">=</span><span class="m">5</span><span class="p">)</span>
+as<span class="p">(</span>recommended_next_film<span class="p">,</span> <span class="s">&quot;list&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## $`1`</span>

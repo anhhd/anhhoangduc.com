@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul class="current">
@@ -350,12 +351,12 @@ bằng 80% var của tập dữ liệu gốc</li>
 </div>
 <div class="section" id="thuc-hanh">
 <h2>5.3. Thực hành<a class="headerlink" href="#thuc-hanh" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">psych</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">broom</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>psych<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>broom<span class="p">)</span>
 
-<span class="n">data</span> <span class="o">&lt;-</span> <span class="n">iris</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">Species</span><span class="p">)</span>
-<span class="nf">describe</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+data <span class="o">&lt;-</span> iris <span class="o">%&gt;%</span> select<span class="p">(</span><span class="o">-</span>Species<span class="p">)</span>
+describe<span class="p">(</span>data<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##              vars   n mean   sd median trimmed  mad min max range  skew</span>
@@ -370,8 +371,8 @@ bằng 80% var của tập dữ liệu gốc</li>
 <span class="c1">## Petal.Width     -1.36 0.06</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">pr.out</span> <span class="o">&lt;-</span> <span class="nf">prcomp</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span> <span class="c1">#Scale data</span>
-<span class="n">pr.out</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>pr.out <span class="o">&lt;-</span> prcomp<span class="p">(</span>data<span class="p">,</span> scale <span class="o">=</span> <span class="bp">T</span><span class="p">)</span> <span class="c1">#Scale data</span>
+pr.out
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Standard deviations (1, .., p=4):</span>
@@ -385,7 +386,7 @@ bằng 80% var của tập dữ liệu gốc</li>
 <span class="c1">## Petal.Width   0.5648565 -0.06694199 -0.6342727  0.5235971</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">pr.out</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>pr.out <span class="o">%&gt;%</span> <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Importance of components%s:</span>
@@ -398,15 +399,15 @@ bằng 80% var của tập dữ liệu gốc</li>
 <p>Trong ví dụ trên, ta thấy <code class="docutils literal notranslate"><span class="pre">PC2</span></code> đã cover được 95% độ biến động của dữ
 liệu. Do đó, ta có thể chọn 2 nhân tố chính để thực hiện <code class="docutils literal notranslate"><span class="pre">PCA</span></code>. Kết
 quả trực quan hóa sau khi thực hiện PCA như sau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">ggfortify</span><span class="p">)</span>
-<span class="nf">autoplot</span><span class="p">(</span><span class="n">pr.out</span><span class="p">,</span> <span class="n">loadings</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
-         <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;Species&quot;</span><span class="p">,</span>
-         <span class="n">loadings.colour</span> <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span>
-         <span class="n">loadings.label</span> <span class="o">=</span> <span class="bp">T</span><span class="p">,</span>
-         <span class="n">data</span> <span class="o">=</span> <span class="n">iris</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;top&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">labs</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">&quot;PCA for iris dataset&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>ggfortify<span class="p">)</span>
+autoplot<span class="p">(</span>pr.out<span class="p">,</span> loadings <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
+         col <span class="o">=</span> <span class="s">&quot;Species&quot;</span><span class="p">,</span>
+         loadings.colour <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span>
+         loadings.label <span class="o">=</span> <span class="bp">T</span><span class="p">,</span>
+         data <span class="o">=</span> iris<span class="p">)</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span>
+  theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;top&quot;</span><span class="p">)</span> <span class="o">+</span>
+  labs<span class="p">(</span>title <span class="o">=</span> <span class="s">&quot;PCA for iris dataset&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image0" src="p04-05-pca_files/figure-html/unnamed-chunk-3-1.png" /></p>

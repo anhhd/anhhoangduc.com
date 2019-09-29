@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -313,20 +314,20 @@ với mô hình vừa xây</li>
 </div>
 <div class="section" id="thuc-hanh-voi-r">
 <h2>2.2. Thực hành với R<a class="headerlink" href="#thuc-hanh-voi-r" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">h2o</span><span class="p">)</span>
-<span class="nf">h2o.init</span><span class="p">()</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>h2o<span class="p">)</span>
+h2o.init<span class="p">()</span>
 
 <span class="c1">#df &lt;- read_csv(&quot;data/craigslistJobTitles.csv&quot;)</span>
 
-<span class="n">job.titles.path</span> <span class="o">=</span> <span class="s">&quot;data/craigslistJobTitles.csv&quot;</span>
+job.titles.path <span class="o">=</span> <span class="s">&quot;data/craigslistJobTitles.csv&quot;</span>
 
-<span class="n">job.titles</span> <span class="o">&lt;-</span> <span class="nf">h2o.importFile</span><span class="p">(</span><span class="n">job.titles.path</span><span class="p">,</span>
-                             <span class="n">destination_frame</span> <span class="o">=</span> <span class="s">&quot;jobtitles&quot;</span><span class="p">,</span>
-                             <span class="n">col.names</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;category&quot;</span><span class="p">,</span> <span class="s">&quot;jobtitle&quot;</span><span class="p">),</span>
-                             <span class="n">col.types</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Enum&quot;</span><span class="p">,</span> <span class="s">&quot;String&quot;</span><span class="p">),</span> <span class="n">header</span> <span class="o">=</span> <span class="bp">F</span><span class="p">)</span>
+job.titles <span class="o">&lt;-</span> h2o.importFile<span class="p">(</span>job.titles.path<span class="p">,</span>
+                             destination_frame <span class="o">=</span> <span class="s">&quot;jobtitles&quot;</span><span class="p">,</span>
+                             col.names <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;category&quot;</span><span class="p">,</span> <span class="s">&quot;jobtitle&quot;</span><span class="p">),</span>
+                             col.types <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Enum&quot;</span><span class="p">,</span> <span class="s">&quot;String&quot;</span><span class="p">),</span> header <span class="o">=</span> <span class="bp">F</span><span class="p">)</span>
 
-<span class="n">STOP_WORDS</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;ax&quot;</span><span class="p">,</span><span class="s">&quot;i&quot;</span><span class="p">,</span><span class="s">&quot;you&quot;</span><span class="p">,</span><span class="s">&quot;edu&quot;</span><span class="p">,</span><span class="s">&quot;s&quot;</span><span class="p">,</span><span class="s">&quot;t&quot;</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">,</span><span class="s">&quot;subject&quot;</span><span class="p">,</span><span class="s">&quot;can&quot;</span><span class="p">,</span><span class="s">&quot;lines&quot;</span><span class="p">,</span><span class="s">&quot;re&quot;</span><span class="p">,</span><span class="s">&quot;what&quot;</span><span class="p">,</span>
+STOP_WORDS <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;ax&quot;</span><span class="p">,</span><span class="s">&quot;i&quot;</span><span class="p">,</span><span class="s">&quot;you&quot;</span><span class="p">,</span><span class="s">&quot;edu&quot;</span><span class="p">,</span><span class="s">&quot;s&quot;</span><span class="p">,</span><span class="s">&quot;t&quot;</span><span class="p">,</span><span class="s">&quot;m&quot;</span><span class="p">,</span><span class="s">&quot;subject&quot;</span><span class="p">,</span><span class="s">&quot;can&quot;</span><span class="p">,</span><span class="s">&quot;lines&quot;</span><span class="p">,</span><span class="s">&quot;re&quot;</span><span class="p">,</span><span class="s">&quot;what&quot;</span><span class="p">,</span>
                <span class="s">&quot;there&quot;</span><span class="p">,</span><span class="s">&quot;all&quot;</span><span class="p">,</span><span class="s">&quot;we&quot;</span><span class="p">,</span><span class="s">&quot;one&quot;</span><span class="p">,</span><span class="s">&quot;the&quot;</span><span class="p">,</span><span class="s">&quot;a&quot;</span><span class="p">,</span><span class="s">&quot;an&quot;</span><span class="p">,</span><span class="s">&quot;of&quot;</span><span class="p">,</span><span class="s">&quot;or&quot;</span><span class="p">,</span><span class="s">&quot;in&quot;</span><span class="p">,</span><span class="s">&quot;for&quot;</span><span class="p">,</span><span class="s">&quot;by&quot;</span><span class="p">,</span><span class="s">&quot;on&quot;</span><span class="p">,</span>
                <span class="s">&quot;but&quot;</span><span class="p">,</span><span class="s">&quot;is&quot;</span><span class="p">,</span><span class="s">&quot;in&quot;</span><span class="p">,</span><span class="s">&quot;a&quot;</span><span class="p">,</span><span class="s">&quot;not&quot;</span><span class="p">,</span><span class="s">&quot;with&quot;</span><span class="p">,</span><span class="s">&quot;as&quot;</span><span class="p">,</span><span class="s">&quot;was&quot;</span><span class="p">,</span><span class="s">&quot;if&quot;</span><span class="p">,</span><span class="s">&quot;they&quot;</span><span class="p">,</span><span class="s">&quot;are&quot;</span><span class="p">,</span><span class="s">&quot;this&quot;</span><span class="p">,</span><span class="s">&quot;and&quot;</span><span class="p">,</span><span class="s">&quot;it&quot;</span><span class="p">,</span><span class="s">&quot;have&quot;</span><span class="p">,</span>
                <span class="s">&quot;from&quot;</span><span class="p">,</span><span class="s">&quot;at&quot;</span><span class="p">,</span><span class="s">&quot;my&quot;</span><span class="p">,</span><span class="s">&quot;be&quot;</span><span class="p">,</span><span class="s">&quot;by&quot;</span><span class="p">,</span><span class="s">&quot;not&quot;</span><span class="p">,</span><span class="s">&quot;that&quot;</span><span class="p">,</span><span class="s">&quot;to&quot;</span><span class="p">,</span><span class="s">&quot;from&quot;</span><span class="p">,</span><span class="s">&quot;com&quot;</span><span class="p">,</span><span class="s">&quot;org&quot;</span><span class="p">,</span><span class="s">&quot;like&quot;</span><span class="p">,</span><span class="s">&quot;likes&quot;</span><span class="p">,</span><span class="s">&quot;so&quot;</span><span class="p">)</span>
@@ -334,82 +335,82 @@ với mô hình vừa xây</li>
 
 <span class="c1"># Hàm tokenize trong H2O</span>
 
-<span class="n">tokenize</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">sentences</span><span class="p">,</span> <span class="n">stop.words</span> <span class="o">=</span> <span class="n">STOP_WORDS</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">tokenized</span> <span class="o">&lt;-</span> <span class="nf">h2o.tokenize</span><span class="p">(</span><span class="n">sentences</span><span class="p">,</span> <span class="s">&quot;\\\\W+&quot;</span><span class="p">)</span>
+tokenize <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>sentences<span class="p">,</span> stop.words <span class="o">=</span> STOP_WORDS<span class="p">)</span> <span class="p">{</span>
+  tokenized <span class="o">&lt;-</span> h2o.tokenize<span class="p">(</span>sentences<span class="p">,</span> <span class="s">&quot;\\\\W+&quot;</span><span class="p">)</span>
 
   <span class="c1"># convert to lower case</span>
-  <span class="n">tokenized.lower</span> <span class="o">&lt;-</span> <span class="nf">h2o.tolower</span><span class="p">(</span><span class="n">tokenized</span><span class="p">)</span>
+  tokenized.lower <span class="o">&lt;-</span> h2o.tolower<span class="p">(</span>tokenized<span class="p">)</span>
   <span class="c1"># remove short words (less than 2 characters)</span>
-  <span class="n">tokenized.lengths</span> <span class="o">&lt;-</span> <span class="nf">h2o.nchar</span><span class="p">(</span><span class="n">tokenized.lower</span><span class="p">)</span>
-  <span class="n">tokenized.filtered</span> <span class="o">&lt;-</span> <span class="n">tokenized.lower</span><span class="nf">[is.na</span><span class="p">(</span><span class="n">tokenized.lengths</span><span class="p">)</span> <span class="o">||</span> <span class="n">tokenized.lengths</span> <span class="o">&gt;=</span> <span class="m">2</span><span class="p">,</span><span class="n">]</span>
+  tokenized.lengths <span class="o">&lt;-</span> h2o.nchar<span class="p">(</span>tokenized.lower<span class="p">)</span>
+  tokenized.filtered <span class="o">&lt;-</span> tokenized.lower<span class="p">[</span><span class="kp">is.na</span><span class="p">(</span>tokenized.lengths<span class="p">)</span> <span class="o">||</span> tokenized.lengths <span class="o">&gt;=</span> <span class="m">2</span><span class="p">,]</span>
   <span class="c1"># remove words that contain numbers</span>
-  <span class="n">tokenized.words</span> <span class="o">&lt;-</span> <span class="n">tokenized.filtered</span><span class="nf">[h2o.grep</span><span class="p">(</span><span class="s">&quot;[0-9]&quot;</span><span class="p">,</span> <span class="n">tokenized.filtered</span><span class="p">,</span> <span class="n">invert</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span> <span class="n">output.logical</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">),</span><span class="n">]</span>
+  tokenized.words <span class="o">&lt;-</span> tokenized.filtered<span class="p">[</span>h2o.grep<span class="p">(</span><span class="s">&quot;[0-9]&quot;</span><span class="p">,</span> tokenized.filtered<span class="p">,</span> invert <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span> output.logical <span class="o">=</span> <span class="kc">TRUE</span><span class="p">),]</span>
 
   <span class="c1"># remove stop words</span>
-  <span class="n">tokenized.words</span><span class="nf">[is.na</span><span class="p">(</span><span class="n">tokenized.words</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="o">!</span> <span class="n">tokenized.words</span> <span class="o">%in%</span> <span class="n">STOP_WORDS</span><span class="p">),</span><span class="n">]</span>
+  tokenized.words<span class="p">[</span><span class="kp">is.na</span><span class="p">(</span>tokenized.words<span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="o">!</span> tokenized.words <span class="o">%in%</span> STOP_WORDS<span class="p">),]</span>
 <span class="p">}</span>
 
 <span class="c1"># Xây hàm mô hình dự báo với word2vec và GBM (mô hình phân loại)</span>
-<span class="n">predict</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">job.title</span><span class="p">,</span> <span class="n">w2v</span><span class="p">,</span> <span class="n">gbm</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">words</span> <span class="o">&lt;-</span> <span class="nf">tokenize</span><span class="p">(</span><span class="nf">as.character</span><span class="p">(</span><span class="nf">as.h2o</span><span class="p">(</span><span class="n">job.title</span><span class="p">)))</span>
-  <span class="n">job.title.vec</span> <span class="o">&lt;-</span> <span class="nf">h2o.transform</span><span class="p">(</span><span class="n">w2v</span><span class="p">,</span> <span class="n">words</span><span class="p">,</span> <span class="n">aggregate_method</span> <span class="o">=</span> <span class="s">&quot;AVERAGE&quot;</span><span class="p">)</span>
-  <span class="nf">h2o.predict</span><span class="p">(</span><span class="n">gbm</span><span class="p">,</span> <span class="n">job.title.vec</span><span class="p">)</span>
+predict <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>job.title<span class="p">,</span> w2v<span class="p">,</span> gbm<span class="p">)</span> <span class="p">{</span>
+  words <span class="o">&lt;-</span> tokenize<span class="p">(</span><span class="kp">as.character</span><span class="p">(</span>as.h2o<span class="p">(</span>job.title<span class="p">)))</span>
+  job.title.vec <span class="o">&lt;-</span> h2o.transform<span class="p">(</span>w2v<span class="p">,</span> words<span class="p">,</span> aggregate_method <span class="o">=</span> <span class="s">&quot;AVERAGE&quot;</span><span class="p">)</span>
+  h2o.predict<span class="p">(</span>gbm<span class="p">,</span> job.title.vec<span class="p">)</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li>Xây dựng mô hình <code class="docutils literal notranslate"><span class="pre">word2vec</span></code></li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">print</span><span class="p">(</span><span class="s">&quot;Break job titles into sequence of words&quot;</span><span class="p">)</span>
-<span class="n">words</span> <span class="o">&lt;-</span> <span class="nf">tokenize</span><span class="p">(</span><span class="n">job.titles</span><span class="o">$</span><span class="n">jobtitle</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kp">print</span><span class="p">(</span><span class="s">&quot;Break job titles into sequence of words&quot;</span><span class="p">)</span>
+words <span class="o">&lt;-</span> tokenize<span class="p">(</span>job.titles<span class="o">$</span>jobtitle<span class="p">)</span>
 
-<span class="nf">print</span><span class="p">(</span><span class="s">&quot;Build word2vec model&quot;</span><span class="p">)</span>
-<span class="n">w2v.model</span> <span class="o">&lt;-</span> <span class="nf">h2o.word2vec</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">sent_sample_rate</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">epochs</span> <span class="o">=</span> <span class="m">10</span><span class="p">)</span>
+<span class="kp">print</span><span class="p">(</span><span class="s">&quot;Build word2vec model&quot;</span><span class="p">)</span>
+w2v.model <span class="o">&lt;-</span> h2o.word2vec<span class="p">(</span>words<span class="p">,</span> sent_sample_rate <span class="o">=</span> <span class="m">0</span><span class="p">,</span> epochs <span class="o">=</span> <span class="m">10</span><span class="p">)</span>
 
 <span class="c1"># Kiểm tra lại mô hình</span>
-<span class="nf">print</span><span class="p">(</span><span class="s">&quot;Sanity check - find synonyms for the word &#39;teacher&#39;&quot;</span><span class="p">)</span>
-<span class="nf">h2o.findSynonyms</span><span class="p">(</span><span class="n">w2v.model</span><span class="p">,</span> <span class="s">&quot;supervisor&quot;</span><span class="p">,</span> <span class="n">count</span> <span class="o">=</span> <span class="m">5</span><span class="p">)</span>
+<span class="kp">print</span><span class="p">(</span><span class="s">&quot;Sanity check - find synonyms for the word &#39;teacher&#39;&quot;</span><span class="p">)</span>
+h2o.findSynonyms<span class="p">(</span>w2v.model<span class="p">,</span> <span class="s">&quot;supervisor&quot;</span><span class="p">,</span> count <span class="o">=</span> <span class="m">5</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li>Việc kiểm tra các từ gần nghĩa chỉ có tác dụng với các từ có trong mô
 hình</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">word.df</span> <span class="o">&lt;-</span> <span class="n">words</span> <span class="o">%&gt;%</span> <span class="nf">as.data.frame</span><span class="p">()</span> <span class="o">%&gt;%</span> <span class="nf">rename</span><span class="p">(</span><span class="n">word</span> <span class="o">=</span> <span class="n">C1</span><span class="p">)</span>
-<span class="nf">print</span><span class="p">(</span><span class="n">word.df</span> <span class="o">%&gt;%</span> <span class="nf">filter</span><span class="p">(</span><span class="n">word</span> <span class="o">==</span> <span class="s">&quot;hello&quot;</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>word.df <span class="o">&lt;-</span> words <span class="o">%&gt;%</span> <span class="kp">as.data.frame</span><span class="p">()</span> <span class="o">%&gt;%</span> rename<span class="p">(</span>word <span class="o">=</span> C1<span class="p">)</span>
+<span class="kp">print</span><span class="p">(</span>word.df <span class="o">%&gt;%</span> filter<span class="p">(</span>word <span class="o">==</span> <span class="s">&quot;hello&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li>Xây dựng mô hình phân loại công việc</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">print</span><span class="p">(</span><span class="s">&quot;Calculate a vector for each job title&quot;</span><span class="p">)</span>
-<span class="n">job.title.vecs</span> <span class="o">&lt;-</span> <span class="nf">h2o.transform</span><span class="p">(</span><span class="n">w2v.model</span><span class="p">,</span> <span class="n">words</span><span class="p">,</span> <span class="n">aggregate_method</span> <span class="o">=</span> <span class="s">&quot;AVERAGE&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kp">print</span><span class="p">(</span><span class="s">&quot;Calculate a vector for each job title&quot;</span><span class="p">)</span>
+job.title.vecs <span class="o">&lt;-</span> h2o.transform<span class="p">(</span>w2v.model<span class="p">,</span> words<span class="p">,</span> aggregate_method <span class="o">=</span> <span class="s">&quot;AVERAGE&quot;</span><span class="p">)</span>
 
-<span class="nf">print</span><span class="p">(</span><span class="s">&quot;Prepare training&amp;validation data (keep only job titles made of known words)&quot;</span><span class="p">)</span>
-<span class="n">job.title.vecs</span> <span class="o">%&gt;%</span> <span class="n">dim</span>
-<span class="n">valid.job.titles</span> <span class="o">&lt;-</span> <span class="o">!</span><span class="nf">is.na</span><span class="p">(</span><span class="n">job.title.vecs</span><span class="o">$</span><span class="n">C1</span><span class="p">)</span>
+<span class="kp">print</span><span class="p">(</span><span class="s">&quot;Prepare training&amp;validation data (keep only job titles made of known words)&quot;</span><span class="p">)</span>
+job.title.vecs <span class="o">%&gt;%</span> <span class="kp">dim</span>
+valid.job.titles <span class="o">&lt;-</span> <span class="o">!</span><span class="kp">is.na</span><span class="p">(</span>job.title.vecs<span class="o">$</span>C1<span class="p">)</span>
 
-<span class="n">data</span> <span class="o">&lt;-</span> <span class="nf">h2o.cbind</span><span class="p">(</span><span class="n">job.titles[valid.job.titles</span><span class="p">,</span> <span class="s">&quot;category&quot;</span><span class="n">]</span><span class="p">,</span> <span class="n">job.title.vecs[valid.job.titles</span><span class="p">,</span> <span class="n">]</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">%&gt;%</span> <span class="n">names</span>
+data <span class="o">&lt;-</span> h2o.cbind<span class="p">(</span>job.titles<span class="p">[</span>valid.job.titles<span class="p">,</span> <span class="s">&quot;category&quot;</span><span class="p">],</span> job.title.vecs<span class="p">[</span>valid.job.titles<span class="p">,</span> <span class="p">])</span>
+data <span class="o">%&gt;%</span> <span class="kp">names</span>
 
 <span class="c1"># Chia train và test</span>
-<span class="n">data.split</span> <span class="o">&lt;-</span> <span class="nf">h2o.splitFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ratios</span> <span class="o">=</span> <span class="m">0.8</span><span class="p">)</span>
+data.split <span class="o">&lt;-</span> h2o.splitFrame<span class="p">(</span>data<span class="p">,</span> ratios <span class="o">=</span> <span class="m">0.8</span><span class="p">)</span>
 
-<span class="nf">print</span><span class="p">(</span><span class="s">&quot;Build a basic GBM model&quot;</span><span class="p">)</span>
-<span class="n">gbm.model</span> <span class="o">&lt;-</span> <span class="nf">h2o.gbm</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="nf">names</span><span class="p">(</span><span class="n">job.title.vecs</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="s">&quot;category&quot;</span><span class="p">,</span>
-                     <span class="n">training_frame</span> <span class="o">=</span> <span class="n">data.split[[1]]</span><span class="p">,</span> <span class="n">validation_frame</span> <span class="o">=</span> <span class="n">data.split[[2]]</span><span class="p">)</span>
+<span class="kp">print</span><span class="p">(</span><span class="s">&quot;Build a basic GBM model&quot;</span><span class="p">)</span>
+gbm.model <span class="o">&lt;-</span> h2o.gbm<span class="p">(</span>x <span class="o">=</span> <span class="kp">names</span><span class="p">(</span>job.title.vecs<span class="p">),</span> y <span class="o">=</span> <span class="s">&quot;category&quot;</span><span class="p">,</span>
+                     training_frame <span class="o">=</span> data.split<span class="p">[[</span><span class="m">1</span><span class="p">]],</span> validation_frame <span class="o">=</span> data.split<span class="p">[[</span><span class="m">2</span><span class="p">]])</span>
 
 <span class="c1"># Dự báo với job description mới</span>
-<span class="nf">print</span><span class="p">(</span><span class="s">&quot;Predict!&quot;</span><span class="p">)</span>
-<span class="nf">print</span><span class="p">(</span><span class="nf">predict</span><span class="p">(</span><span class="s">&quot;school teacher having holidays every month&quot;</span><span class="p">,</span> <span class="n">w2v.model</span><span class="p">,</span> <span class="n">gbm.model</span><span class="p">))</span>
-<span class="nf">print</span><span class="p">(</span><span class="nf">predict</span><span class="p">(</span><span class="s">&quot;developer with 3+ Java experience, jumping&quot;</span><span class="p">,</span> <span class="n">w2v.model</span><span class="p">,</span> <span class="n">gbm.model</span><span class="p">))</span>
-<span class="nf">print</span><span class="p">(</span><span class="nf">predict</span><span class="p">(</span><span class="s">&quot;Financial accountant CPA preferred&quot;</span><span class="p">,</span> <span class="n">w2v.model</span><span class="p">,</span> <span class="n">gbm.model</span><span class="p">))</span>
-<span class="nf">print</span><span class="p">(</span><span class="nf">predict</span><span class="p">(</span><span class="s">&quot;strong finance background&quot;</span><span class="p">,</span> <span class="n">w2v.model</span><span class="p">,</span> <span class="n">gbm.model</span><span class="p">))</span>
-<span class="nf">print</span><span class="p">(</span><span class="nf">predict</span><span class="p">(</span><span class="s">&quot;Need someone who can sell beer&quot;</span><span class="p">,</span> <span class="n">w2v.model</span><span class="p">,</span> <span class="n">gbm.model</span><span class="p">))</span>
-<span class="nf">print</span><span class="p">(</span><span class="nf">predict</span><span class="p">(</span><span class="s">&quot;answer customer based on their request&quot;</span><span class="p">,</span> <span class="n">w2v.model</span><span class="p">,</span> <span class="n">gbm.model</span><span class="p">))</span>
+<span class="kp">print</span><span class="p">(</span><span class="s">&quot;Predict!&quot;</span><span class="p">)</span>
+<span class="kp">print</span><span class="p">(</span>predict<span class="p">(</span><span class="s">&quot;school teacher having holidays every month&quot;</span><span class="p">,</span> w2v.model<span class="p">,</span> gbm.model<span class="p">))</span>
+<span class="kp">print</span><span class="p">(</span>predict<span class="p">(</span><span class="s">&quot;developer with 3+ Java experience, jumping&quot;</span><span class="p">,</span> w2v.model<span class="p">,</span> gbm.model<span class="p">))</span>
+<span class="kp">print</span><span class="p">(</span>predict<span class="p">(</span><span class="s">&quot;Financial accountant CPA preferred&quot;</span><span class="p">,</span> w2v.model<span class="p">,</span> gbm.model<span class="p">))</span>
+<span class="kp">print</span><span class="p">(</span>predict<span class="p">(</span><span class="s">&quot;strong finance background&quot;</span><span class="p">,</span> w2v.model<span class="p">,</span> gbm.model<span class="p">))</span>
+<span class="kp">print</span><span class="p">(</span>predict<span class="p">(</span><span class="s">&quot;Need someone who can sell beer&quot;</span><span class="p">,</span> w2v.model<span class="p">,</span> gbm.model<span class="p">))</span>
+<span class="kp">print</span><span class="p">(</span>predict<span class="p">(</span><span class="s">&quot;answer customer based on their request&quot;</span><span class="p">,</span> w2v.model<span class="p">,</span> gbm.model<span class="p">))</span>
 
 <span class="c1"># Dự báo được cả các word không có trong mô hình bằng cách lấy trung bình tất cả các category</span>
-<span class="nf">print</span><span class="p">(</span><span class="nf">predict</span><span class="p">(</span><span class="s">&quot;việt nam&quot;</span><span class="p">,</span> <span class="n">w2v.model</span><span class="p">,</span> <span class="n">gbm.model</span><span class="p">))</span>
+<span class="kp">print</span><span class="p">(</span>predict<span class="p">(</span><span class="s">&quot;việt nam&quot;</span><span class="p">,</span> w2v.model<span class="p">,</span> gbm.model<span class="p">))</span>
 </pre></div>
 </div>
 </div>

@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -292,13 +293,13 @@ thời gian</p>
 </div>
 <div class="section" id="vi-du-co-ban">
 <h2>4.2. Ví dụ cơ bản<a class="headerlink" href="#vi-du-co-ban" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">prophet</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>prophet<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>ggplot2<span class="p">)</span>
 <span class="c1">#Step 1: Tạo data frame</span>
-<span class="n">history</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">ds</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="nf">as.Date</span><span class="p">(</span><span class="s">&#39;2015-01-01&#39;</span><span class="p">),</span> <span class="nf">as.Date</span><span class="p">(</span><span class="s">&#39;2016-01-01&#39;</span><span class="p">),</span> <span class="n">by</span> <span class="o">=</span> <span class="s">&#39;d&#39;</span><span class="p">),</span>
-                      <span class="n">y</span> <span class="o">=</span> <span class="nf">sin</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">366</span><span class="o">/</span><span class="m">200</span><span class="p">)</span> <span class="o">+</span> <span class="nf">rnorm</span><span class="p">(</span><span class="m">366</span><span class="p">)</span><span class="o">/</span><span class="m">10</span><span class="p">)</span>
-<span class="n">history</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+history <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>ds <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="kp">as.Date</span><span class="p">(</span><span class="s">&#39;2015-01-01&#39;</span><span class="p">),</span> <span class="kp">as.Date</span><span class="p">(</span><span class="s">&#39;2016-01-01&#39;</span><span class="p">),</span> by <span class="o">=</span> <span class="s">&#39;d&#39;</span><span class="p">),</span>
+                      y <span class="o">=</span> <span class="kp">sin</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">366</span><span class="o">/</span><span class="m">200</span><span class="p">)</span> <span class="o">+</span> rnorm<span class="p">(</span><span class="m">366</span><span class="p">)</span><span class="o">/</span><span class="m">10</span><span class="p">)</span>
+history <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##           ds            y</span>
@@ -311,10 +312,10 @@ thời gian</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Step 2: Tạo object prophet</span>
-<span class="n">m</span> <span class="o">&lt;-</span> <span class="nf">prophet</span><span class="p">(</span><span class="n">history</span><span class="p">)</span>
+m <span class="o">&lt;-</span> prophet<span class="p">(</span>history<span class="p">)</span>
 <span class="c1">#Step 3: Tạo future data frame</span>
-<span class="n">future</span> <span class="o">&lt;-</span> <span class="nf">make_future_dataframe</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">periods</span> <span class="o">=</span> <span class="m">365</span><span class="p">)</span>
-<span class="n">future</span> <span class="o">%&gt;%</span> <span class="n">str</span>
+future <span class="o">&lt;-</span> make_future_dataframe<span class="p">(</span>m<span class="p">,</span> periods <span class="o">=</span> <span class="m">365</span><span class="p">)</span>
+future <span class="o">%&gt;%</span> str
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## &#39;data.frame&#39;:    731 obs. of  1 variable:</span>
@@ -322,8 +323,8 @@ thời gian</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Step 4: Forecast</span>
-<span class="n">forecast</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">future</span><span class="p">)</span>
-<span class="n">forecast</span> <span class="o">%&gt;%</span> <span class="n">tail</span>
+forecast <span class="o">&lt;-</span> predict<span class="p">(</span>m<span class="p">,</span> future<span class="p">)</span>
+forecast <span class="o">%&gt;%</span> <span class="kp">tail</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##             ds    trend additive_terms additive_terms_lower</span>
@@ -364,33 +365,33 @@ thời gian</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Plot predictive</span>
-<span class="nf">plot</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">forecast</span><span class="p">)</span> <span class="o">+</span> <span class="nf">theme_bw</span><span class="p">()</span>
+plot<span class="p">(</span>m<span class="p">,</span> forecast<span class="p">)</span> <span class="o">+</span> theme_bw<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image0" src="p05-06-du-bao-ts-voi-prophet_files/figure-html/unnamed-chunk-2-1.png" /></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Plot component</span>
-<span class="nf">prophet_plot_components</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">forecast</span><span class="p">)</span>
+prophet_plot_components<span class="p">(</span>m<span class="p">,</span> forecast<span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image1" src="p05-06-du-bao-ts-voi-prophet_files/figure-html/unnamed-chunk-2-2.png" /></p>
 </div>
 <div class="section" id="dieu-chinh-mo-hinh-tang-truong">
 <h2>4.3. Điều chỉnh mô hình tăng trưởng<a class="headerlink" href="#dieu-chinh-mo-hinh-tang-truong" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">history</span><span class="o">$</span><span class="n">cap</span> <span class="o">&lt;-</span> <span class="m">8.5</span>
-<span class="n">m</span> <span class="o">&lt;-</span> <span class="nf">prophet</span><span class="p">(</span><span class="n">history</span><span class="p">,</span> <span class="n">growth</span> <span class="o">=</span> <span class="s">&quot;logistic&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>history<span class="o">$</span>cap <span class="o">&lt;-</span> <span class="m">8.5</span>
+m <span class="o">&lt;-</span> prophet<span class="p">(</span>history<span class="p">,</span> growth <span class="o">=</span> <span class="s">&quot;logistic&quot;</span><span class="p">)</span>
 <span class="c1">#Step 3: Tạo future data frame</span>
-<span class="n">future</span> <span class="o">&lt;-</span> <span class="nf">make_future_dataframe</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">periods</span> <span class="o">=</span> <span class="m">365</span><span class="p">)</span>
-<span class="n">future</span> <span class="o">%&gt;%</span> <span class="n">str</span>
+future <span class="o">&lt;-</span> make_future_dataframe<span class="p">(</span>m<span class="p">,</span> periods <span class="o">=</span> <span class="m">365</span><span class="p">)</span>
+future <span class="o">%&gt;%</span> str
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## &#39;data.frame&#39;:    731 obs. of  1 variable:</span>
 <span class="c1">##  $ ds: POSIXct, format: &quot;2015-01-01&quot; &quot;2015-01-02&quot; ...</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">future</span><span class="o">$</span><span class="n">cap</span> <span class="o">&lt;-</span> <span class="m">8.5</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>future<span class="o">$</span>cap <span class="o">&lt;-</span> <span class="m">8.5</span>
 <span class="c1">#Step 4: Forecast</span>
-<span class="n">forecast</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">future</span><span class="p">)</span>
-<span class="n">forecast</span> <span class="o">%&gt;%</span> <span class="n">tail</span>
+forecast <span class="o">&lt;-</span> predict<span class="p">(</span>m<span class="p">,</span> future<span class="p">)</span>
+forecast <span class="o">%&gt;%</span> <span class="kp">tail</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##             ds    trend cap additive_terms additive_terms_lower</span>
@@ -431,12 +432,12 @@ thời gian</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Plot predictive</span>
-<span class="nf">plot</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">forecast</span><span class="p">)</span> <span class="o">+</span> <span class="nf">theme_bw</span><span class="p">()</span>
+plot<span class="p">(</span>m<span class="p">,</span> forecast<span class="p">)</span> <span class="o">+</span> theme_bw<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image2" src="p05-06-du-bao-ts-voi-prophet_files/figure-html/unnamed-chunk-3-1.png" /></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Plot component</span>
-<span class="nf">prophet_plot_components</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">forecast</span><span class="p">)</span>
+prophet_plot_components<span class="p">(</span>m<span class="p">,</span> forecast<span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image3" src="p05-06-du-bao-ts-voi-prophet_files/figure-html/unnamed-chunk-3-2.png" /></p>

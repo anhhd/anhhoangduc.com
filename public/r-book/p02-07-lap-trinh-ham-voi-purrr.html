@@ -134,14 +134,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -308,29 +309,29 @@ một data.frame</li>
 </ul>
 <p>Cách triển khai trên có thể sử dụng vòng lặp trong R với phương án như
 sau</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">purrr</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>purrr<span class="p">)</span>
 
-<span class="n">category</span> <span class="o">&lt;-</span> <span class="n">iris</span><span class="o">$</span><span class="n">Species</span> <span class="o">%&gt;%</span> <span class="n">levels</span> <span class="o">%&gt;%</span> <span class="nf">as.character</span><span class="p">()</span>
-<span class="n">model_result</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">()</span>
-<span class="nf">for </span><span class="p">(</span><span class="n">i</span> <span class="n">in</span> <span class="n">category</span><span class="p">){</span>
-  <span class="n">df</span> <span class="o">&lt;-</span> <span class="n">iris</span> <span class="o">%&gt;%</span> <span class="nf">filter</span><span class="p">(</span><span class="n">Species</span> <span class="o">==</span> <span class="n">i</span><span class="p">)</span>
-  <span class="n">model</span> <span class="o">&lt;-</span> <span class="nf">lm</span><span class="p">(</span><span class="n">Sepal.Length</span> <span class="o">~</span> <span class="n">Sepal.Width</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="p">)</span>
-  <span class="n">model_summary</span> <span class="o">&lt;-</span> <span class="nf">summary</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-  <span class="n">df_temp</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">species</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span>
-                        <span class="n">r.square</span> <span class="o">=</span> <span class="n">model_summary</span><span class="o">$</span><span class="n">r.squared</span><span class="p">)</span>
-  <span class="n">model_result</span> <span class="o">&lt;-</span> <span class="nf">bind_rows</span><span class="p">(</span><span class="n">model_result</span><span class="p">,</span> <span class="n">df_temp</span><span class="p">)</span>
+<span class="kt">category</span> <span class="o">&lt;-</span> iris<span class="o">$</span>Species <span class="o">%&gt;%</span> levels <span class="o">%&gt;%</span> <span class="kp">as.character</span><span class="p">()</span>
+model_result <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">()</span>
+<span class="kr">for</span> <span class="p">(</span>i <span class="kr">in</span> <span class="kp">category</span><span class="p">){</span>
+  df <span class="o">&lt;-</span> iris <span class="o">%&gt;%</span> filter<span class="p">(</span>Species <span class="o">==</span> i<span class="p">)</span>
+  model <span class="o">&lt;-</span> lm<span class="p">(</span>Sepal.Length <span class="o">~</span> Sepal.Width<span class="p">,</span> data <span class="o">=</span> df<span class="p">)</span>
+  model_summary <span class="o">&lt;-</span> <span class="kp">summary</span><span class="p">(</span>model<span class="p">)</span>
+  df_temp <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>species <span class="o">=</span> i<span class="p">,</span>
+                        r.square <span class="o">=</span> model_summary<span class="o">$</span>r.squared<span class="p">)</span>
+  model_result <span class="o">&lt;-</span> bind_rows<span class="p">(</span>model_result<span class="p">,</span> df_temp<span class="p">)</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Tuy nhiên, với lập trình chức năng hàm, ta có thể làm rất đơn giản như
 sau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">purrr</span><span class="p">)</span>
-<span class="n">iris</span> <span class="o">%&gt;%</span>
-  <span class="nf">split</span><span class="p">(</span><span class="n">.$Species</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">map</span><span class="p">(</span><span class="o">~</span><span class="nf">lm</span><span class="p">(</span><span class="n">Sepal.Length</span> <span class="o">~</span> <span class="n">Sepal.Width</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">.)</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">map</span><span class="p">(</span><span class="n">summary</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">map_dbl</span><span class="p">(</span><span class="s">&quot;r.squared&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>purrr<span class="p">)</span>
+iris <span class="o">%&gt;%</span>
+  <span class="kp">split</span><span class="p">(</span><span class="m">.</span><span class="o">$</span>Species<span class="p">)</span> <span class="o">%&gt;%</span>
+  map<span class="p">(</span><span class="o">~</span>lm<span class="p">(</span>Sepal.Length <span class="o">~</span> Sepal.Width<span class="p">,</span> data <span class="o">=</span> <span class="m">.</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  map<span class="p">(</span><span class="kp">summary</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  map_dbl<span class="p">(</span><span class="s">&quot;r.squared&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##     setosa versicolor  virginica</span>
@@ -345,7 +346,7 @@ lạc hơn rất nhiều trong các bài toán khám phá dữ liệu</p>
 <div class="section" id="nhom-ham-map">
 <h2>5.1. Nhóm hàm map<a class="headerlink" href="#nhom-ham-map" title="Permalink to this headline">¶</a></h2>
 <p>Công thức tổng quát của nhóm hàm map</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">map</span><span class="p">(</span><span class="n">.x</span><span class="p">,</span> <span class="n">.f</span><span class="p">,</span> <span class="kc">...</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>map<span class="p">(</span><span class="m">.</span>x<span class="p">,</span> <span class="m">.</span>f<span class="p">,</span> <span class="kc">...</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Giải thích</strong>: Với mỗi giá trị của <code class="docutils literal notranslate"><span class="pre">.x</span></code>, thực hiện <code class="docutils literal notranslate"><span class="pre">.f</span></code>. Trong đó,
@@ -384,7 +385,7 @@ sau</p>
 </tbody>
 </table>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dạng list</span>
-<span class="n">iris</span> <span class="o">%&gt;%</span> <span class="nf">map</span><span class="p">(</span><span class="n">class</span><span class="p">)</span>
+iris <span class="o">%&gt;%</span> map<span class="p">(</span><span class="kp">class</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## $Sepal.Length</span>
@@ -404,7 +405,7 @@ sau</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dạng char</span>
-<span class="n">iris</span> <span class="o">%&gt;%</span> <span class="nf">map_chr</span><span class="p">(</span><span class="n">class</span><span class="p">)</span>
+iris <span class="o">%&gt;%</span> map_chr<span class="p">(</span><span class="kp">class</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species</span>
@@ -412,7 +413,7 @@ sau</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dạng data.frame</span>
-<span class="n">iris</span> <span class="o">%&gt;%</span> <span class="nf">map_df</span><span class="p">(</span><span class="n">class</span><span class="p">)</span>
+iris <span class="o">%&gt;%</span> map_df<span class="p">(</span><span class="kp">class</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 1 x 5</span>
@@ -425,10 +426,10 @@ sau</p>
 <p>Tương tự với <code class="docutils literal notranslate"><span class="pre">map</span></code>, nhóm <code class="docutils literal notranslate"><span class="pre">map_if</span></code> và <code class="docutils literal notranslate"><span class="pre">map_at</span></code> cho phép tính toán
 theo điều kiện hoặc vị trí của list. Xem ví dụ sau.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># map_if</span>
-<span class="n">iris</span> <span class="o">%&gt;%</span>
-  <span class="nf">map_if</span><span class="p">(</span><span class="n">is.numeric</span><span class="p">,</span> <span class="n">as.character</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">as.data.frame</span> <span class="o">%&gt;%</span>
-  <span class="n">str</span>
+iris <span class="o">%&gt;%</span>
+  map_if<span class="p">(</span><span class="kp">is.numeric</span><span class="p">,</span> <span class="kp">as.character</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  as.data.frame <span class="o">%&gt;%</span>
+  str
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## &#39;data.frame&#39;:    150 obs. of  5 variables:</span>
@@ -440,9 +441,9 @@ theo điều kiện hoặc vị trí của list. Xem ví dụ sau.</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># map_at</span>
-<span class="n">iris</span> <span class="o">%&gt;%</span>
-  <span class="nf">map_at</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">),</span> <span class="n">as.character</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">str</span>
+iris <span class="o">%&gt;%</span>
+  map_at<span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">),</span> <span class="kp">as.character</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  str
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## List of 5</span>
@@ -457,10 +458,10 @@ theo điều kiện hoặc vị trí của list. Xem ví dụ sau.</p>
 <p><strong>Lưu ý</strong>: Với trường hợp có hai biến đầu vào, có thể sử dụng nhóm hàm
 <code class="docutils literal notranslate"><span class="pre">map2</span></code>. Ví dụ</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Không chạy</span>
-<span class="nf">map_dbl</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="o">:</span><span class="m">6</span><span class="p">,</span> <span class="n">sum</span><span class="p">)</span>
+map_dbl<span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="o">:</span><span class="m">6</span><span class="p">,</span> <span class="kp">sum</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">map2_dbl</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="o">:</span><span class="m">6</span><span class="p">,</span> <span class="n">sum</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>map2_dbl<span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span> <span class="m">4</span><span class="o">:</span><span class="m">6</span><span class="p">,</span> <span class="kp">sum</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 5 7 9</span>
@@ -470,18 +471,18 @@ theo điều kiện hoặc vị trí của list. Xem ví dụ sau.</p>
 <p><strong>Ví dụ</strong>: Với mỗi dòng trong iris , tách thành dataframe riêng và xoay
 chiều dữ liêu. Tên các cột trở thành biến <code class="docutils literal notranslate"><span class="pre">attribute</span></code>, giá trị các cột
 trở thành biến <code class="docutils literal notranslate"><span class="pre">value</span></code>.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
-<span class="n">get_data</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">i</span><span class="p">){</span>
- <span class="n">df</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span>
-    <span class="nf">slice</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">t</span> <span class="o">%&gt;%</span>
-    <span class="n">as.data.frame</span>
- <span class="n">result</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">attribute</span> <span class="o">=</span> <span class="nf">rownames</span><span class="p">(</span><span class="n">df</span><span class="p">),</span>
-                      <span class="n">value</span> <span class="o">=</span> <span class="n">df[</span><span class="p">,</span><span class="m">1</span><span class="n">]</span><span class="p">)</span>
- <span class="nf">rownames</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">&lt;-</span> <span class="kc">NULL</span>
- <span class="nf">return</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
+get_data <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>data<span class="p">,</span> i<span class="p">){</span>
+ df <span class="o">&lt;-</span> data <span class="o">%&gt;%</span>
+    slice<span class="p">(</span>i<span class="p">)</span> <span class="o">%&gt;%</span> t <span class="o">%&gt;%</span>
+    <span class="kp">as.data.frame</span>
+ result <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>attribute <span class="o">=</span> <span class="kp">rownames</span><span class="p">(</span>df<span class="p">),</span>
+                      value <span class="o">=</span> df<span class="p">[,</span><span class="m">1</span><span class="p">])</span>
+ <span class="kp">rownames</span><span class="p">(</span>result<span class="p">)</span> <span class="o">&lt;-</span> <span class="kc">NULL</span>
+ <span class="kr">return</span><span class="p">(</span>result<span class="p">)</span>
 <span class="p">}</span>
 
-<span class="nf">get_data</span><span class="p">(</span><span class="n">mtcars</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
+get_data<span class="p">(</span>mtcars<span class="p">,</span> <span class="m">3</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    attribute  value</span>
@@ -498,7 +499,7 @@ trở thành biến <code class="docutils literal notranslate"><span class="pre"
 <span class="c1">## 11      carb   1.00</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">get_data</span><span class="p">(</span><span class="n">iris</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>get_data<span class="p">(</span>iris<span class="p">,</span> <span class="m">1</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##      attribute  value</span>
@@ -509,8 +510,8 @@ trở thành biến <code class="docutils literal notranslate"><span class="pre"
 <span class="c1">## 5      Species setosa</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">map2</span><span class="p">(</span><span class="nf">replicate</span><span class="p">(</span><span class="m">3</span><span class="p">,</span> <span class="n">iris</span><span class="p">,</span> <span class="n">simplify</span> <span class="o">=</span> <span class="bp">F</span><span class="p">),</span>
-     <span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">),</span> <span class="n">get_data</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>map2<span class="p">(</span><span class="kp">replicate</span><span class="p">(</span><span class="m">3</span><span class="p">,</span> iris<span class="p">,</span> simplify <span class="o">=</span> <span class="bp">F</span><span class="p">),</span>
+     <span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">),</span> get_data<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [[1]]</span>
@@ -545,9 +546,9 @@ trở thành biến <code class="docutils literal notranslate"><span class="pre"
 Tuy nhiên, khác với <code class="docutils literal notranslate"><span class="pre">map</span></code>, <code class="docutils literal notranslate"><span class="pre">modify</span></code> cho ra kết quả với cấu trúc dữ
 liệu ban đâu.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># map đổi cấu trúc của dataframe</span>
-<span class="n">iris</span> <span class="o">%&gt;%</span>
-  <span class="nf">map_if</span><span class="p">(</span><span class="n">is.factor</span><span class="p">,</span> <span class="n">as.character</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">str</span>
+iris <span class="o">%&gt;%</span>
+  map_if<span class="p">(</span><span class="kp">is.factor</span><span class="p">,</span> <span class="kp">as.character</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  str
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## List of 5</span>
@@ -559,9 +560,9 @@ liệu ban đâu.</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># modify giữ nguyên cấu trúc</span>
-<span class="n">iris</span> <span class="o">%&gt;%</span>
-  <span class="nf">modify_if</span><span class="p">(</span><span class="n">is.factor</span><span class="p">,</span> <span class="n">as.character</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">str</span>
+iris <span class="o">%&gt;%</span>
+  modify_if<span class="p">(</span><span class="kp">is.factor</span><span class="p">,</span> <span class="kp">as.character</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  str
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## &#39;data.frame&#39;:    150 obs. of  5 variables:</span>
@@ -579,28 +580,28 @@ liệu ban đâu.</p>
 tạo và sử dụng một hàm trong một vài trường hợp đặc biệt.</p>
 <p>Công thức tổng quát</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Với một tham số</span>
-<span class="nf">as_mapper</span><span class="p">(</span><span class="o">~</span><span class="nf">f</span><span class="p">(</span><span class="n">.x</span><span class="p">))</span>
+as_mapper<span class="p">(</span><span class="o">~</span>f<span class="p">(</span><span class="m">.</span>x<span class="p">))</span>
 <span class="c1"># Với hai tham số</span>
-<span class="nf">as_mapper</span><span class="p">(</span><span class="nf">f</span><span class="p">(</span><span class="n">.x</span><span class="p">,</span> <span class="n">.y</span><span class="p">))</span>
+as_mapper<span class="p">(</span>f<span class="p">(</span><span class="m">.</span>x<span class="p">,</span> <span class="m">.</span>y<span class="p">))</span>
 </pre></div>
 </div>
 <p>Xem các ví dụ sau:</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cộng 10 vào mỗi giá trị</span>
-<span class="nf">map_dbl</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span> <span class="o">~</span> <span class="n">.x</span><span class="m">+10</span><span class="p">)</span>
+map_dbl<span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span> <span class="o">~</span> <span class="m">.</span>x<span class="m">+10</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 11 12 13</span>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cộng hai vector với nhau</span>
-<span class="nf">map2_dbl</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span> <span class="m">5</span><span class="o">:</span><span class="m">7</span><span class="p">,</span> <span class="o">~</span><span class="n">.x</span> <span class="o">+</span> <span class="n">.y</span><span class="p">)</span>
+map2_dbl<span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span> <span class="m">5</span><span class="o">:</span><span class="m">7</span><span class="p">,</span> <span class="o">~</span><span class="m">.</span>x <span class="o">+</span> <span class="m">.</span>y<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1]  6  8 10</span>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cách viết khác</span>
-<span class="nf">map2_dbl</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span> <span class="m">5</span><span class="o">:</span><span class="m">7</span><span class="p">,</span> <span class="nf">as_mapper</span><span class="p">(</span><span class="o">~</span><span class="n">.x</span> <span class="o">+</span> <span class="n">.y</span><span class="p">))</span>
+map2_dbl<span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span> <span class="m">5</span><span class="o">:</span><span class="m">7</span><span class="p">,</span> as_mapper<span class="p">(</span><span class="o">~</span><span class="m">.</span>x <span class="o">+</span> <span class="m">.</span>y<span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1]  6  8 10</span>
@@ -611,16 +612,16 @@ tạo và sử dụng một hàm trong một vài trường hợp đặc biệt.
 <h2>5.4. Xây dựng chuỗi các hàm liên tiếp với <code class="docutils literal notranslate"><span class="pre">compose</span></code><a class="headerlink" href="#xay-dung-chuoi-cac-ham-lien-tiep-voi-compose" title="Permalink to this headline">¶</a></h2>
 <p>Hàm <code class="docutils literal notranslate"><span class="pre">compose</span></code> cho phép kết hợp nhiều hàm với nhau với hàm ở bên phải
 là input đầu vào cho hàm bên trái. Cấu trúc như sau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">compose</span><span class="p">(</span><span class="n">f_2</span><span class="p">,</span> <span class="n">f_1</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>compose<span class="p">(</span>f_2<span class="p">,</span> f_1<span class="p">)</span>
 <span class="c1"># Tương đương với</span>
-<span class="n">argument</span> <span class="o">%&gt;%</span> <span class="n">f_2</span> <span class="o">%&gt;%</span> <span class="n">f_1</span>
+argument <span class="o">%&gt;%</span> f_2 <span class="o">%&gt;%</span> f_1
 </pre></div>
 </div>
 <p>Xem ví dụ sau:</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">broom</span><span class="p">)</span>
-<span class="nf">lm</span><span class="p">(</span><span class="n">Sepal.Length</span> <span class="o">~</span> <span class="n">Sepal.Width</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">iris</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">tidy</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>broom<span class="p">)</span>
+lm<span class="p">(</span>Sepal.Length <span class="o">~</span> Sepal.Width<span class="p">,</span> data <span class="o">=</span> iris<span class="p">)</span> <span class="o">%&gt;%</span>
+  tidy
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 2 x 5</span>
@@ -631,8 +632,8 @@ là input đầu vào cho hàm bên trái. Cấu trúc như sau.</p>
 </pre></div>
 </div>
 <p>Cách viết trên có thể thay thế như sau</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">tidy_lm</span> <span class="o">&lt;-</span> <span class="nf">compose</span><span class="p">(</span><span class="n">tidy</span><span class="p">,</span> <span class="n">lm</span><span class="p">)</span>
-<span class="nf">tidy_lm</span><span class="p">(</span><span class="n">Sepal.Length</span> <span class="o">~</span> <span class="n">Sepal.Width</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">iris</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>tidy_lm <span class="o">&lt;-</span> compose<span class="p">(</span>tidy<span class="p">,</span> lm<span class="p">)</span>
+tidy_lm<span class="p">(</span>Sepal.Length <span class="o">~</span> Sepal.Width<span class="p">,</span> data <span class="o">=</span> iris<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 2 x 5</span>
@@ -643,11 +644,11 @@ là input đầu vào cho hàm bên trái. Cấu trúc như sau.</p>
 </pre></div>
 </div>
 <p>Ta có thể thêm các nhóm hàm khác đi cùng với <code class="docutils literal notranslate"><span class="pre">compose</span></code> như <code class="docutils literal notranslate"><span class="pre">filter</span></code></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">my_func</span> <span class="o">&lt;-</span> <span class="nf">compose</span><span class="p">(</span>
-  <span class="nf">as_mapper</span><span class="p">(</span><span class="o">~</span><span class="nf">filter</span><span class="p">(</span><span class="n">.x</span><span class="p">,</span> <span class="n">p.value</span> <span class="o">&lt;</span> <span class="m">0.05</span><span class="p">)),</span>
-  <span class="n">tidy</span><span class="p">,</span>
-  <span class="n">lm</span><span class="p">)</span>
-<span class="nf">my_func</span><span class="p">(</span><span class="n">Sepal.Length</span> <span class="o">~</span> <span class="n">Sepal.Width</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">iris</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>my_func <span class="o">&lt;-</span> compose<span class="p">(</span>
+  as_mapper<span class="p">(</span><span class="o">~</span>filter<span class="p">(</span><span class="m">.</span>x<span class="p">,</span> p.value <span class="o">&lt;</span> <span class="m">0.05</span><span class="p">)),</span>
+  tidy<span class="p">,</span>
+  lm<span class="p">)</span>
+my_func<span class="p">(</span>Sepal.Length <span class="o">~</span> Sepal.Width<span class="p">,</span> data <span class="o">=</span> iris<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 1 x 5</span>
@@ -665,14 +666,14 @@ là input đầu vào cho hàm bên trái. Cấu trúc như sau.</p>
 biến numeric trong data.frame. Với nhóm hàm của purrr, ta có thể thực
 hiện như sau</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tạo hàm</span>
-<span class="n">standardize_data</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">x</span><span class="p">){</span>
-  <span class="n">x</span> <span class="o">&lt;-</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="nf">min</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="nf">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="nf">min</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-  <span class="nf">return</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+standardize_data <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">){</span>
+  x <span class="o">&lt;-</span> <span class="p">(</span>x <span class="o">-</span> <span class="kp">min</span><span class="p">(</span>x<span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="kp">max</span><span class="p">(</span>x<span class="p">)</span> <span class="o">-</span> <span class="kp">min</span><span class="p">(</span>x<span class="p">))</span>
+  <span class="kr">return</span><span class="p">(</span>x<span class="p">)</span>
 <span class="p">}</span>
 <span class="c1"># Sử dụng map_df</span>
-<span class="n">df</span> <span class="o">&lt;-</span> <span class="n">iris</span>
-<span class="n">df[</span><span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="n">]</span> <span class="o">&lt;-</span> <span class="n">df[</span><span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="n">]</span> <span class="o">%&gt;%</span> <span class="nf">map_df</span><span class="p">(</span><span class="n">standardize_data</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+df <span class="o">&lt;-</span> iris
+df<span class="p">[,</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="p">]</span> <span class="o">&lt;-</span> df<span class="p">[,</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="p">]</span> <span class="o">%&gt;%</span> map_df<span class="p">(</span>standardize_data<span class="p">)</span>
+df <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species</span>
@@ -686,9 +687,9 @@ hiện như sau</p>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sử dụng modify</span>
 <span class="c1"># Sử dụng map_df</span>
-<span class="n">df</span> <span class="o">&lt;-</span> <span class="n">iris</span>
-<span class="n">df</span> <span class="o">&lt;-</span> <span class="n">df</span> <span class="o">%&gt;%</span> <span class="nf">modify_if</span><span class="p">(</span><span class="n">is.numeric</span><span class="p">,</span> <span class="n">standardize_data</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+df <span class="o">&lt;-</span> iris
+df <span class="o">&lt;-</span> df <span class="o">%&gt;%</span> modify_if<span class="p">(</span><span class="kp">is.numeric</span><span class="p">,</span> standardize_data<span class="p">)</span>
+df <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species</span>
@@ -720,25 +721,25 @@ khăn hơn rất nhiều và tốn thời gian. Tuy nhiên, với <code class="d
 <li>Vẽ đồ thị điểm giữa Sepal.Length vs.&nbsp;Petal.Length</li>
 <li>Xây dựng mô hình hồi quy Sepal.Length ~ Petal.Length</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
 <span class="c1"># Bước một: Xây dựng hàm</span>
-<span class="n">my_stat</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">data</span><span class="p">){</span>
-  <span class="nf">print</span><span class="p">(</span><span class="s">&quot;Summary data&quot;</span><span class="p">)</span>
-  <span class="nf">print</span><span class="p">(</span><span class="s">&quot;====================&quot;</span><span class="p">)</span>
-  <span class="nf">summary</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">print</span>
+my_stat <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>data<span class="p">){</span>
+  <span class="kp">print</span><span class="p">(</span><span class="s">&quot;Summary data&quot;</span><span class="p">)</span>
+  <span class="kp">print</span><span class="p">(</span><span class="s">&quot;====================&quot;</span><span class="p">)</span>
+  <span class="kp">summary</span><span class="p">(</span>data<span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">print</span>
 
-  <span class="n">p</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span>
-    <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">Sepal.Length</span><span class="p">,</span> <span class="n">Petal.Length</span><span class="p">))</span> <span class="o">+</span>
-    <span class="nf">geom_point</span><span class="p">()</span>
+  p <span class="o">&lt;-</span> data <span class="o">%&gt;%</span>
+    ggplot<span class="p">(</span>aes<span class="p">(</span>Sepal.Length<span class="p">,</span> Petal.Length<span class="p">))</span> <span class="o">+</span>
+    geom_point<span class="p">()</span>
 
-  <span class="nf">print</span><span class="p">(</span><span class="s">&quot;Summary model&quot;</span><span class="p">)</span>
-  <span class="nf">print</span><span class="p">(</span><span class="s">&quot;====================&quot;</span><span class="p">)</span>
-  <span class="n">model</span> <span class="o">&lt;-</span> <span class="nf">lm</span><span class="p">(</span><span class="n">Sepal.Length</span> <span class="o">~</span> <span class="n">Petal.Length</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">)</span>
-  <span class="nf">summary</span><span class="p">(</span><span class="n">model</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">print</span>
-  <span class="n">p</span> <span class="o">%&gt;%</span> <span class="n">print</span>
+  <span class="kp">print</span><span class="p">(</span><span class="s">&quot;Summary model&quot;</span><span class="p">)</span>
+  <span class="kp">print</span><span class="p">(</span><span class="s">&quot;====================&quot;</span><span class="p">)</span>
+  model <span class="o">&lt;-</span> lm<span class="p">(</span>Sepal.Length <span class="o">~</span> Petal.Length<span class="p">,</span> data <span class="o">=</span> data<span class="p">)</span>
+  <span class="kp">summary</span><span class="p">(</span>model<span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">print</span>
+  p <span class="o">%&gt;%</span> <span class="kp">print</span>
 <span class="p">}</span>
 <span class="c1"># Test hàm</span>
-<span class="nf">my_stat</span><span class="p">(</span><span class="n">iris</span><span class="p">)</span>
+my_stat<span class="p">(</span>iris<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;Summary data&quot;</span>
@@ -782,13 +783,13 @@ khăn hơn rất nhiều và tốn thời gian. Tuy nhiên, với <code class="d
 <p><img alt="image0" src="p02-07-lap-trinh-ham-voi-purrr_files/figure-html/unnamed-chunk-19-1.png" /></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bước 2: Xây dựng map</span>
 
-<span class="n">iris</span><span class="o">$</span><span class="n">Species</span> <span class="o">%&gt;%</span>
-  <span class="n">unique</span> <span class="o">%&gt;%</span>
-  <span class="nf">map</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">value</span><span class="p">){</span>
-    <span class="nf">print</span><span class="p">(</span><span class="nf">paste0</span><span class="p">(</span><span class="s">&quot;Analysis of &quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
-    <span class="n">iris</span> <span class="o">%&gt;%</span>
-      <span class="nf">filter</span><span class="p">(</span><span class="n">Species</span> <span class="o">==</span> <span class="n">value</span><span class="p">)</span> <span class="o">%&gt;%</span>
-      <span class="n">my_stat</span>
+iris<span class="o">$</span>Species <span class="o">%&gt;%</span>
+  unique <span class="o">%&gt;%</span>
+  map<span class="p">(</span><span class="kr">function</span><span class="p">(</span>value<span class="p">){</span>
+    <span class="kp">print</span><span class="p">(</span><span class="kp">paste0</span><span class="p">(</span><span class="s">&quot;Analysis of &quot;</span><span class="p">,</span> value<span class="p">))</span>
+    iris <span class="o">%&gt;%</span>
+      filter<span class="p">(</span>Species <span class="o">==</span> value<span class="p">)</span> <span class="o">%&gt;%</span>
+      my_stat
   <span class="p">})</span>
 </pre></div>
 </div>
@@ -938,22 +939,22 @@ cần phải sử dụng hàm <code class="docutils literal notranslate"><span c
 <code class="docutils literal notranslate"><span class="pre">Species</span></code></li>
 <li>Vẽ biểu đồ boxplot</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
 
 <span class="c1"># Bước 1: Xây dựng hàm</span>
 
-<span class="n">my_stat</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">x</span><span class="p">){</span>
-  <span class="n">x</span> <span class="o">&lt;-</span> <span class="nf">enquo</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-  <span class="n">iris</span> <span class="o">%&gt;%</span>
-    <span class="nf">group_by</span><span class="p">(</span><span class="n">Species</span><span class="p">)</span> <span class="o">%&gt;%</span>
-    <span class="nf">summarise</span><span class="p">(</span><span class="n">mean</span> <span class="o">=</span> <span class="nf">mean</span><span class="p">(</span><span class="o">!!</span><span class="n">x</span><span class="p">))</span> <span class="o">%&gt;%</span>
-    <span class="n">print</span>
-  <span class="n">iris</span> <span class="o">%&gt;%</span>
-    <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">Species</span><span class="p">,</span> <span class="o">!!</span><span class="n">x</span><span class="p">))</span> <span class="o">+</span>
-    <span class="nf">geom_boxplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="n">Species</span><span class="p">))</span> <span class="o">+</span>
-    <span class="nf">theme_minimal</span><span class="p">()</span>
+my_stat <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">){</span>
+  x <span class="o">&lt;-</span> enquo<span class="p">(</span>x<span class="p">)</span>
+  iris <span class="o">%&gt;%</span>
+    group_by<span class="p">(</span>Species<span class="p">)</span> <span class="o">%&gt;%</span>
+    summarise<span class="p">(</span>mean <span class="o">=</span> <span class="kp">mean</span><span class="p">(</span><span class="o">!!</span>x<span class="p">))</span> <span class="o">%&gt;%</span>
+    <span class="kp">print</span>
+  iris <span class="o">%&gt;%</span>
+    ggplot<span class="p">(</span>aes<span class="p">(</span>Species<span class="p">,</span> <span class="o">!!</span>x<span class="p">))</span> <span class="o">+</span>
+    geom_boxplot<span class="p">(</span>aes<span class="p">(</span>fill <span class="o">=</span> Species<span class="p">))</span> <span class="o">+</span>
+    theme_minimal<span class="p">()</span>
 <span class="p">}</span>
-<span class="nf">my_stat</span><span class="p">(</span><span class="n">Sepal.Length</span><span class="p">)</span>
+my_stat<span class="p">(</span>Sepal.Length<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 3 x 2</span>
@@ -966,11 +967,11 @@ cần phải sử dụng hàm <code class="docutils literal notranslate"><span c
 </div>
 <p><img alt="image7" src="p02-07-lap-trinh-ham-voi-purrr_files/figure-html/unnamed-chunk-20-1.png" /></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bước 2: Dùng map</span>
-<span class="n">iris</span> <span class="o">%&gt;%</span>
-  <span class="nf">select_if</span><span class="p">(</span><span class="n">is.numeric</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">names</span> <span class="o">%&gt;%</span>
-  <span class="n">syms</span> <span class="o">%&gt;%</span>
-  <span class="nf">map</span><span class="p">(</span><span class="n">my_stat</span><span class="p">)</span>
+iris <span class="o">%&gt;%</span>
+  select_if<span class="p">(</span><span class="kp">is.numeric</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  names <span class="o">%&gt;%</span>
+  syms <span class="o">%&gt;%</span>
+  map<span class="p">(</span>my_stat<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 3 x 2</span>

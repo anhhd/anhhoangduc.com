@@ -151,14 +151,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -337,15 +338,15 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 </div>
 <div class="section" id="cac-cau-lenh-co-ban">
 <h2>11.2. Các câu lệnh cơ bản<a class="headerlink" href="#cac-cau-lenh-co-ban" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span>
-                <span class="n">v1</span> <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">9</span><span class="p">,</span>
-                <span class="n">v2</span> <span class="o">=</span> <span class="nf">sample</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">),</span> <span class="m">9</span><span class="p">,</span> <span class="bp">T</span><span class="p">),</span>
-                <span class="n">v3</span> <span class="o">=</span> <span class="nf">round</span><span class="p">(</span><span class="nf">rnorm</span><span class="p">(</span><span class="m">3</span><span class="p">),</span><span class="m">2</span><span class="p">),</span>
-                <span class="n">v4</span> <span class="o">=</span> <span class="kc">letters</span><span class="n">[1</span><span class="o">:</span><span class="m">3</span><span class="n">]</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span> <span class="nf">setDT</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;v1&quot;</span><span class="p">))</span>
-<span class="n">data</span> <span class="o">%&gt;%</span> <span class="n">class</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>data.table<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+data <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>
+                v1 <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">9</span><span class="p">,</span>
+                v2 <span class="o">=</span> <span class="kp">sample</span><span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">),</span> <span class="m">9</span><span class="p">,</span> <span class="bp">T</span><span class="p">),</span>
+                v3 <span class="o">=</span> <span class="kp">round</span><span class="p">(</span>rnorm<span class="p">(</span><span class="m">3</span><span class="p">),</span><span class="m">2</span><span class="p">),</span>
+                v4 <span class="o">=</span> <span class="kc">letters</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">])</span>
+data <span class="o">&lt;-</span> data <span class="o">%&gt;%</span> setDT<span class="p">(</span>key <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;v1&quot;</span><span class="p">))</span>
+data <span class="o">%&gt;%</span> <span class="kp">class</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;data.table&quot; &quot;data.frame&quot;</span>
@@ -356,7 +357,7 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 <div class="section" id="loc-du-lieu-theo-vi-tri">
 <h4>11.2.1.1. Lọc dữ liệu theo vị trí<a class="headerlink" href="#loc-du-lieu-theo-vi-tri" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Theo vị trí</span>
-<span class="n">data[3</span><span class="o">:</span><span class="m">4</span><span class="p">,</span><span class="n">]</span>
+data<span class="p">[</span><span class="m">3</span><span class="o">:</span><span class="m">4</span><span class="p">,]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v1 v2    v3 v4</span>
@@ -364,7 +365,7 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 <span class="c1">## 2:  4  1 -1.92  a</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[3</span><span class="o">:</span><span class="m">4</span><span class="n">]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[</span><span class="m">3</span><span class="o">:</span><span class="m">4</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v1 v2    v3 v4</span>
@@ -375,7 +376,7 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 </div>
 <div class="section" id="theo-dau">
 <h4>11.2.1.2. Theo dấu <code class="docutils literal notranslate"><span class="pre">-</span></code><a class="headerlink" href="#theo-dau" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[</span><span class="o">!</span><span class="m">3</span><span class="o">:</span><span class="m">7</span><span class="p">,</span><span class="n">]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[</span><span class="o">!</span><span class="m">3</span><span class="o">:</span><span class="m">7</span><span class="p">,]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v1 v2    v3 v4</span>
@@ -385,7 +386,7 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 <span class="c1">## 4:  9  2 -0.07  c</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[</span><span class="o">-</span><span class="p">(</span><span class="m">3</span><span class="o">:</span><span class="m">7</span><span class="p">)</span><span class="n">]</span> <span class="c1"># same</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="m">3</span><span class="o">:</span><span class="m">7</span><span class="p">)]</span> <span class="c1"># same</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v1 v2    v3 v4</span>
@@ -398,7 +399,7 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 </div>
 <div class="section" id="loc-theo-dieu-kien-logic">
 <h4>11.2.1.3. Lọc theo điều kiện logic<a class="headerlink" href="#loc-theo-dieu-kien-logic" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[v1</span> <span class="o">&gt;</span> <span class="m">5</span><span class="n">]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[</span>v1 <span class="o">&gt;</span> <span class="m">5</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v1 v2    v3 v4</span>
@@ -408,7 +409,7 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 <span class="c1">## 4:  9  2 -0.07  c</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[v4</span> <span class="o">%in%</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">,</span><span class="s">&quot;c&quot;</span><span class="p">)</span><span class="n">]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[</span>v4 <span class="o">%in%</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">,</span><span class="s">&quot;c&quot;</span><span class="p">)]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v1 v2    v3 v4</span>
@@ -423,7 +424,7 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 </div>
 <div class="section" id="nhieu-dieu-kien">
 <h4>11.2.1.4. Nhiều điều kiện<a class="headerlink" href="#nhieu-dieu-kien" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[v1</span> <span class="o">&gt;</span> <span class="m">5</span> <span class="o">&amp;</span> <span class="n">v4</span> <span class="o">==</span> <span class="s">&quot;a&quot;</span><span class="n">]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[</span>v1 <span class="o">&gt;</span> <span class="m">5</span> <span class="o">&amp;</span> v4 <span class="o">==</span> <span class="s">&quot;a&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v1 v2    v3 v4</span>
@@ -433,7 +434,7 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 </div>
 <div class="section" id="lay-unique">
 <h4>11.2.1.5. Lấy unique<a class="headerlink" href="#lay-unique" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">unique</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kp">unique</span><span class="p">(</span>data<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v1 v2    v3 v4</span>
@@ -451,7 +452,7 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 </div>
 <div class="section" id="sort">
 <h4>11.2.1.6. Sort<a class="headerlink" href="#sort" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="nf">[order</span><span class="p">(</span><span class="n">v3</span><span class="p">)</span><span class="n">]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[</span><span class="kp">order</span><span class="p">(</span>v3<span class="p">)]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v1 v2    v3 v4</span>
@@ -466,7 +467,7 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 <span class="c1">## 9:  8  2  1.07  b</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="nf">[order</span><span class="p">(</span><span class="nf">desc</span><span class="p">(</span><span class="n">v3</span><span class="p">))</span><span class="n">]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[</span><span class="kp">order</span><span class="p">(</span>desc<span class="p">(</span>v3<span class="p">))]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v1 v2    v3 v4</span>
@@ -487,7 +488,7 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 <h3>11.2.2. Select cột<a class="headerlink" href="#select-cot" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="mot-cot">
 <h4>11.2.2.1. Một cột<a class="headerlink" href="#mot-cot" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[</span><span class="p">,</span><span class="s">&quot;v3&quot;</span><span class="n">]</span>  <span class="c1"># Trả ra DT</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[,</span><span class="s">&quot;v3&quot;</span><span class="p">]</span>  <span class="c1"># Trả ra DT</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##       v3</span>
@@ -502,7 +503,7 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 <span class="c1">## 9: -0.07</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[[</span><span class="s">&quot;v3&quot;</span><span class="n">]]</span> <span class="c1"># Trả ra vector</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[[</span><span class="s">&quot;v3&quot;</span><span class="p">]]</span> <span class="c1"># Trả ra vector</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] -1.92  1.07 -0.07 -1.92  1.07 -0.07 -1.92  1.07 -0.07</span>
@@ -511,7 +512,7 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 </div>
 <div class="section" id="nhieu-cot">
 <h4>11.2.2.2. Nhiều cột<a class="headerlink" href="#nhieu-cot" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[</span><span class="p">,</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;v3&quot;</span><span class="p">,</span> <span class="s">&quot;v2&quot;</span><span class="p">)</span><span class="n">]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[,</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;v3&quot;</span><span class="p">,</span> <span class="s">&quot;v2&quot;</span><span class="p">)]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##       v3 v2</span>
@@ -526,7 +527,7 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 <span class="c1">## 9: -0.07  2</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[</span><span class="p">,</span> <span class="n">.(v2</span><span class="p">,</span> <span class="n">v3</span><span class="p">)</span><span class="n">]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[,</span> <span class="m">.</span><span class="p">(</span>v2<span class="p">,</span> v3<span class="p">)]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v2    v3</span>
@@ -541,7 +542,7 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 <span class="c1">## 9:  2 -0.07</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[</span><span class="p">,</span> <span class="nf">list</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="n">v3</span><span class="p">)</span><span class="n">]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[,</span> <span class="kt">list</span><span class="p">(</span>v2<span class="p">,</span> v3<span class="p">)]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v2    v3</span>
@@ -556,7 +557,7 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 <span class="c1">## 9:  2 -0.07</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[</span><span class="p">,</span> <span class="o">!</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;v3&quot;</span><span class="p">,</span> <span class="s">&quot;v2&quot;</span><span class="p">)</span><span class="n">]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[,</span> <span class="o">!</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;v3&quot;</span><span class="p">,</span> <span class="s">&quot;v2&quot;</span><span class="p">)]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v1 v4</span>
@@ -574,8 +575,8 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 </div>
 <div class="section" id="theo-variable-cua-bien">
 <h4>11.2.2.3. Theo variable của biến<a class="headerlink" href="#theo-variable-cua-bien" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">cols</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;v2&quot;</span><span class="p">,</span> <span class="s">&quot;v3&quot;</span><span class="p">)</span>
-<span class="n">data[</span><span class="p">,</span> <span class="n">..cols]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>cols <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;v2&quot;</span><span class="p">,</span> <span class="s">&quot;v3&quot;</span><span class="p">)</span>
+data<span class="p">[,</span> <span class="m">..</span>cols<span class="p">]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v2    v3</span>
@@ -596,8 +597,8 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 <h3>11.2.3. Tổng hợp dữ liệu<a class="headerlink" href="#tong-hop-du-lieu" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="tong-hop-don-gian">
 <h4>11.2.3.1. Tổng hợp đơn giản<a class="headerlink" href="#tong-hop-don-gian" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[</span><span class="p">,</span> <span class="n">.(sum_v2</span> <span class="o">=</span> <span class="nf">sum</span><span class="p">(</span><span class="n">v2</span><span class="p">),</span>
-         <span class="n">sd_v2</span> <span class="o">=</span> <span class="nf">sd</span><span class="p">(</span><span class="n">v2</span><span class="p">)),</span> <span class="n">by</span> <span class="o">=</span> <span class="n">v4]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[,</span> <span class="m">.</span><span class="p">(</span>sum_v2 <span class="o">=</span> <span class="kp">sum</span><span class="p">(</span>v2<span class="p">),</span>
+         sd_v2 <span class="o">=</span> sd<span class="p">(</span>v2<span class="p">)),</span> by <span class="o">=</span> v4<span class="p">]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v4 sum_v2     sd_v2</span>
@@ -606,8 +607,8 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 <span class="c1">## 3:  c      5 0.5773503</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[1</span><span class="o">:</span><span class="m">7</span><span class="p">,</span> <span class="n">.(sum_v2</span> <span class="o">=</span> <span class="nf">sum</span><span class="p">(</span><span class="n">v1</span><span class="p">),</span>
-         <span class="n">sd_v2</span> <span class="o">=</span> <span class="nf">sd</span><span class="p">(</span><span class="n">v1</span><span class="p">)),</span> <span class="n">by</span> <span class="o">=</span> <span class="n">.(v2</span><span class="p">,</span> <span class="n">v4</span><span class="p">)</span><span class="n">]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">7</span><span class="p">,</span> <span class="m">.</span><span class="p">(</span>sum_v2 <span class="o">=</span> <span class="kp">sum</span><span class="p">(</span>v1<span class="p">),</span>
+         sd_v2 <span class="o">=</span> sd<span class="p">(</span>v1<span class="p">)),</span> by <span class="o">=</span> <span class="m">.</span><span class="p">(</span>v2<span class="p">,</span> v4<span class="p">)]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v2 v4 sum_v2   sd_v2</span>
@@ -623,8 +624,8 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 </div>
 <div class="section" id="update-du-lieu">
 <h3>11.2.4. Update dữ liệu<a class="headerlink" href="#update-du-lieu" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[</span><span class="p">,</span> <span class="n">v2_new</span> <span class="o">:=</span> <span class="n">v2^2]</span>
-<span class="n">data</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[,</span> v2_new <span class="o">:=</span> v2<span class="o">^</span><span class="m">2</span><span class="p">]</span>
+data
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v1 v2    v3 v4 v2_new</span>
@@ -646,14 +647,14 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 <li>Hàm <code class="docutils literal notranslate"><span class="pre">.SD</span></code> cho phép tính toán nhanh 1 hàm nhất định vào nhiều cột</li>
 <li><code class="docutils literal notranslate"><span class="pre">.SDcols</span></code> cho phép liệt kê các cột cần được tính toán</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[</span><span class="p">,</span> <span class="nf">lapply</span><span class="p">(</span><span class="n">.SD</span><span class="p">,</span> <span class="n">mean</span><span class="p">)</span><span class="n">]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[,</span> <span class="kp">lapply</span><span class="p">(</span><span class="m">.</span>SD<span class="p">,</span> <span class="kp">mean</span><span class="p">)]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v1       v2         v3 v4   v2_new</span>
 <span class="c1">## 1:  5 1.555556 -0.3066667 NA 2.666667</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[</span><span class="p">,</span> <span class="nf">lapply</span><span class="p">(</span><span class="n">.SD</span><span class="p">,</span> <span class="n">mean</span><span class="p">),</span> <span class="n">.SDcols</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;v1&quot;</span><span class="p">,</span> <span class="s">&quot;v2&quot;</span><span class="p">)</span><span class="n">]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[,</span> <span class="kp">lapply</span><span class="p">(</span><span class="m">.</span>SD<span class="p">,</span> <span class="kp">mean</span><span class="p">),</span> <span class="m">.</span>SDcols <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;v1&quot;</span><span class="p">,</span> <span class="s">&quot;v2&quot;</span><span class="p">)]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v1       v2</span>
@@ -663,11 +664,11 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 <ul class="simple">
 <li>Tổng hợp nhiều hàm với nhiều cột</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[</span><span class="p">,</span>
-     <span class="nf">c</span><span class="p">(</span><span class="nf">lapply</span><span class="p">(</span><span class="n">.SD</span><span class="p">,</span> <span class="n">mean</span><span class="p">),</span>
-       <span class="n">max</span> <span class="o">=</span> <span class="nf">lapply</span><span class="p">(</span><span class="n">.SD</span><span class="p">,</span> <span class="n">max</span><span class="p">)),</span>
-     <span class="n">by</span> <span class="o">=</span> <span class="n">v4</span><span class="p">,</span>
-     <span class="n">.SDcols</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;v1&quot;</span><span class="p">,</span> <span class="s">&quot;v2&quot;</span><span class="p">)</span><span class="n">]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[,</span>
+     <span class="kt">c</span><span class="p">(</span><span class="kp">lapply</span><span class="p">(</span><span class="m">.</span>SD<span class="p">,</span> <span class="kp">mean</span><span class="p">),</span>
+       max <span class="o">=</span> <span class="kp">lapply</span><span class="p">(</span><span class="m">.</span>SD<span class="p">,</span> <span class="kp">max</span><span class="p">)),</span>
+     by <span class="o">=</span> v4<span class="p">,</span>
+     <span class="m">.</span>SDcols <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;v1&quot;</span><span class="p">,</span> <span class="s">&quot;v2&quot;</span><span class="p">)]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v4 v1       v2 v1 v2</span>
@@ -679,10 +680,10 @@ lượng dữ liệu lớn (lớn hơn 3 triệu dòng)</li>
 </div>
 <div class="section" id="chain-operator">
 <h3>11.2.6. Chain operator<a class="headerlink" href="#chain-operator" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data[1</span><span class="o">:</span><span class="m">5</span><span class="n">][</span>
-  <span class="p">,</span> <span class="n">.(sum_v3</span> <span class="o">=</span> <span class="nf">sum</span><span class="p">(</span><span class="n">v3</span><span class="p">)),</span> <span class="n">by</span> <span class="o">=</span> <span class="n">v4][</span>
-    <span class="n">sum_v3</span> <span class="o">&gt;</span> <span class="m">0</span>
-  <span class="n">]</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data<span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">][</span>
+  <span class="p">,</span> <span class="m">.</span><span class="p">(</span>sum_v3 <span class="o">=</span> <span class="kp">sum</span><span class="p">(</span>v3<span class="p">)),</span> by <span class="o">=</span> v4<span class="p">][</span>
+    sum_v3 <span class="o">&gt;</span> <span class="m">0</span>
+  <span class="p">]</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    v4 sum_v3</span>

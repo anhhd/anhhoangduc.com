@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -301,11 +302,11 @@ chứng khoán, thông dụng nhất bao gồm:</p>
 <li>Báo cáo tài chính</li>
 <li>Cổ tức</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyquant</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">timetk</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>tidyquant<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>timetk<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
 <span class="c1"># Kiểm tra các option lấy dữ liệu</span>
-<span class="nf">tq_get_options</span><span class="p">()</span>
+tq_get_options<span class="p">()</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  [1] &quot;stock.prices&quot;       &quot;stock.prices.japan&quot; &quot;financials&quot;</span>
@@ -315,17 +316,17 @@ chứng khoán, thông dụng nhất bao gồm:</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lấy dữ liệu các công ty trên sàn chứng khoán</span>
-<span class="nf">tq_index</span><span class="p">(</span><span class="s">&quot;SP500&quot;</span><span class="p">)</span>
+tq_index<span class="p">(</span><span class="s">&quot;SP500&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Lấy dữ liệu chỉ số chứng khoán</strong></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lấy dữ liệu stock</span>
-<span class="n">aapl_price</span> <span class="o">&lt;-</span> <span class="nf">tq_get</span><span class="p">(</span><span class="s">&quot;AAPL&quot;</span><span class="p">,</span>
-       <span class="n">get</span> <span class="o">=</span> <span class="s">&quot;stock.prices&quot;</span><span class="p">,</span>
-       <span class="n">from</span> <span class="o">=</span> <span class="s">&quot;2010-01-01&quot;</span><span class="p">)</span>
+aapl_price <span class="o">&lt;-</span> tq_get<span class="p">(</span><span class="s">&quot;AAPL&quot;</span><span class="p">,</span>
+       get <span class="o">=</span> <span class="s">&quot;stock.prices&quot;</span><span class="p">,</span>
+       from <span class="o">=</span> <span class="s">&quot;2010-01-01&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">aapl_price</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>aapl_price <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 6 x 7</span>
@@ -342,24 +343,24 @@ chứng khoán, thông dụng nhất bao gồm:</p>
 </div>
 <div class="section" id="truc-quan-hoa-voi-geom-ma">
 <h2>3.2. Trực quan hóa với <code class="docutils literal notranslate"><span class="pre">geom_ma</span></code><a class="headerlink" href="#truc-quan-hoa-voi-geom-ma" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">aapl_price</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">close</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">close</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_line</span><span class="p">(</span><span class="n">col</span> <span class="o">=</span> <span class="s">&quot;grey&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_ma</span><span class="p">(</span><span class="n">ma_fun</span> <span class="o">=</span> <span class="n">SMA</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="m">30</span><span class="p">,</span>
-          <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_ma</span><span class="p">(</span><span class="n">ma_fun</span> <span class="o">=</span> <span class="n">SMA</span><span class="p">,</span><span class="n">n</span> <span class="o">=</span> <span class="m">300</span><span class="p">,</span>
-          <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">1.2</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme_bw</span><span class="p">()</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>aapl_price <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="kp">date</span><span class="p">,</span> <span class="kp">close</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span><span class="kp">date</span><span class="p">,</span> <span class="kp">close</span><span class="p">))</span> <span class="o">+</span>
+  geom_line<span class="p">(</span>col <span class="o">=</span> <span class="s">&quot;grey&quot;</span><span class="p">)</span> <span class="o">+</span>
+  geom_ma<span class="p">(</span>ma_fun <span class="o">=</span> SMA<span class="p">,</span> n <span class="o">=</span> <span class="m">30</span><span class="p">,</span>
+          color <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">+</span>
+  geom_ma<span class="p">(</span>ma_fun <span class="o">=</span> SMA<span class="p">,</span>n <span class="o">=</span> <span class="m">300</span><span class="p">,</span>
+          color <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">1.2</span><span class="p">)</span> <span class="o">+</span>
+  theme_bw<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image0" src="p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant_files/figure-html/unnamed-chunk-8-1.png" /></p>
 </div>
 <div class="section" id="chuyen-tu-dataframe-thanh-xts">
 <h2>3.3. Chuyển từ dataframe thành xts<a class="headerlink" href="#chuyen-tu-dataframe-thanh-xts" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">aapl_price</span> <span class="o">%&gt;%</span>
-  <span class="n">timetk</span><span class="o">::</span><span class="nf">tk_xts</span><span class="p">(</span><span class="n">date_var</span> <span class="o">=</span> <span class="n">date</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>aapl_price <span class="o">%&gt;%</span>
+  timetk<span class="o">::</span>tk_xts<span class="p">(</span>date_var <span class="o">=</span> <span class="kp">date</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##                open     high      low    close    volume adjusted</span>

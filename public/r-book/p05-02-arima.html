@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -373,23 +374,23 @@ về 0</td>
 </tbody>
 </table>
 <p>Xem xét ACF &amp; PACF trong các chuỗi sau</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">forecast</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">tseries</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">ggfortify</span><span class="p">)</span>
-<span class="n">ar1</span> <span class="o">&lt;-</span> <span class="nf">arima.sim</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="n">ar</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">0.89</span><span class="p">)),</span> <span class="n">n</span> <span class="o">=</span> <span class="m">100</span><span class="p">)</span>
-<span class="n">ar2</span> <span class="o">&lt;-</span> <span class="nf">arima.sim</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="n">ar</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">0.89</span><span class="p">,</span> <span class="m">-0.4858</span><span class="p">)),</span> <span class="n">n</span> <span class="o">=</span> <span class="m">100</span><span class="p">)</span>
-<span class="n">ma1</span> <span class="o">&lt;-</span> <span class="nf">arima.sim</span><span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="m">100</span><span class="p">,</span> <span class="nf">list</span><span class="p">(</span><span class="n">ma</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">-0.2279</span><span class="p">)))</span>
-<span class="n">ma2</span> <span class="o">&lt;-</span> <span class="nf">arima.sim</span><span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="m">100</span><span class="p">,</span> <span class="nf">list</span><span class="p">(</span><span class="n">ma</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">-0.2279</span><span class="p">,</span> <span class="m">0.2488</span><span class="p">)))</span>
-<span class="n">arma</span> <span class="o">&lt;-</span> <span class="nf">arima.sim</span><span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="m">100</span><span class="p">,</span> <span class="nf">list</span><span class="p">(</span><span class="n">ar</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.8897</span><span class="p">,</span> <span class="m">-0.4858</span><span class="p">),</span>
-                                <span class="n">ma</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">-0.2279</span><span class="p">,</span> <span class="m">0.2488</span><span class="p">)))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>forecast<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>tseries<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>ggfortify<span class="p">)</span>
+ar1 <span class="o">&lt;-</span> arima.sim<span class="p">(</span><span class="kt">list</span><span class="p">(</span>ar<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">0.89</span><span class="p">)),</span> n <span class="o">=</span> <span class="m">100</span><span class="p">)</span>
+ar2 <span class="o">&lt;-</span> arima.sim<span class="p">(</span><span class="kt">list</span><span class="p">(</span>ar<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">0.89</span><span class="p">,</span> <span class="m">-0.4858</span><span class="p">)),</span> n <span class="o">=</span> <span class="m">100</span><span class="p">)</span>
+ma1 <span class="o">&lt;-</span> arima.sim<span class="p">(</span>n <span class="o">=</span> <span class="m">100</span><span class="p">,</span> <span class="kt">list</span><span class="p">(</span>ma <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">-0.2279</span><span class="p">)))</span>
+ma2 <span class="o">&lt;-</span> arima.sim<span class="p">(</span>n <span class="o">=</span> <span class="m">100</span><span class="p">,</span> <span class="kt">list</span><span class="p">(</span>ma <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">-0.2279</span><span class="p">,</span> <span class="m">0.2488</span><span class="p">)))</span>
+arma <span class="o">&lt;-</span> arima.sim<span class="p">(</span>n <span class="o">=</span> <span class="m">100</span><span class="p">,</span> <span class="kt">list</span><span class="p">(</span>ar <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">0.8897</span><span class="p">,</span> <span class="m">-0.4858</span><span class="p">),</span>
+                                ma <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">-0.2279</span><span class="p">,</span> <span class="m">0.2488</span><span class="p">)))</span>
 <span class="c1">#Tạo function</span>
-<span class="n">tseries.plot</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">x</span><span class="p">){</span>
-  <span class="nf">par</span><span class="p">(</span><span class="n">mfrow</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">));</span>
-  <span class="nf">Acf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="n">main</span> <span class="o">=</span> <span class="nf">paste</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;ACF plot&quot;</span><span class="p">)));</span>
-  <span class="nf">Pacf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="n">main</span> <span class="o">=</span> <span class="nf">paste</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;PACF plot&quot;</span><span class="p">)));</span>
+tseries.plot <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">){</span>
+  par<span class="p">(</span>mfrow<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">));</span>
+  Acf<span class="p">(</span>x<span class="p">,</span> col <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> main <span class="o">=</span> <span class="kp">paste</span><span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;ACF plot&quot;</span><span class="p">)));</span>
+  Pacf<span class="p">(</span>x<span class="p">,</span> col <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> main <span class="o">=</span> <span class="kp">paste</span><span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;PACF plot&quot;</span><span class="p">)));</span>
 <span class="p">}</span>
-<span class="n">purrr</span><span class="o">::</span><span class="nf">map</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="n">ar1</span><span class="p">,</span> <span class="n">ar2</span><span class="p">,</span> <span class="n">ma1</span><span class="p">,</span> <span class="n">ma2</span><span class="p">,</span> <span class="n">arma</span><span class="p">),</span> <span class="n">tseries.plot</span><span class="p">)</span>
+purrr<span class="o">::</span>map<span class="p">(</span><span class="kt">list</span><span class="p">(</span>ar1<span class="p">,</span> ar2<span class="p">,</span> ma1<span class="p">,</span> ma2<span class="p">,</span> arma<span class="p">),</span> tseries.plot<span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image3" src="p05-02-arima_files/figure-html/unnamed-chunk-2-1.png" /></p>
@@ -446,25 +447,25 @@ về 0</td>
 </div>
 <div class="section" id="vi-du-voi-r">
 <h2>2.3. Ví dụ với R<a class="headerlink" href="#vi-du-voi-r" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">forecast</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">tseries</span><span class="p">)</span>
-<span class="nf">plot</span><span class="p">(</span><span class="n">Nile</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>forecast<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>tseries<span class="p">)</span>
+plot<span class="p">(</span>Nile<span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image8" src="p05-02-arima_files/figure-html/unnamed-chunk-3-1.png" /></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tìm giá trị tối ưu của d để loại trend</span>
-<span class="nf">ndiffs</span><span class="p">(</span><span class="n">Nile</span><span class="p">)</span>
+ndiffs<span class="p">(</span>Nile<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 1</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">dNile</span> <span class="o">&lt;-</span> <span class="nf">diff</span><span class="p">(</span><span class="n">Nile</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span>
-<span class="nf">plot</span><span class="p">(</span><span class="n">dNile</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>dNile <span class="o">&lt;-</span> <span class="kp">diff</span><span class="p">(</span>Nile<span class="p">,</span> <span class="m">1</span><span class="p">)</span>
+plot<span class="p">(</span>dNile<span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image9" src="p05-02-arima_files/figure-html/unnamed-chunk-3-2.png" /></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">adf.test</span><span class="p">(</span><span class="n">dNile</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>adf.test<span class="p">(</span>dNile<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -476,15 +477,15 @@ về 0</td>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Xem mô hình</span>
-<span class="nf">par</span><span class="p">(</span><span class="n">mfrow</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">))</span>
-<span class="nf">Acf</span><span class="p">(</span><span class="n">dNile</span><span class="p">)</span>
-<span class="nf">Pacf</span><span class="p">(</span><span class="n">dNile</span><span class="p">)</span>
+par<span class="p">(</span>mfrow<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">))</span>
+Acf<span class="p">(</span>dNile<span class="p">)</span>
+Pacf<span class="p">(</span>dNile<span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image10" src="p05-02-arima_files/figure-html/unnamed-chunk-3-3.png" /></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#ACF và PACF đưa ra gợi ý mô hình ARIMA(0,1,1): ACF giảm về 0 sau lag 1, PACF giảm dần về 0</span>
-<span class="n">fit</span> <span class="o">&lt;-</span> <span class="nf">arima</span><span class="p">(</span><span class="n">Nile</span><span class="p">,</span> <span class="n">order</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span>
-<span class="n">fit</span>
+fit <span class="o">&lt;-</span> arima<span class="p">(</span>Nile<span class="p">,</span> order <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span>
+fit
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -499,7 +500,7 @@ về 0</td>
 <span class="c1">## sigma^2 estimated as 20600:  log likelihood = -632.55,  aic = 1269.09</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">accuracy</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>accuracy<span class="p">(</span>fit<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##                    ME     RMSE      MAE       MPE     MAPE     MASE</span>
@@ -509,8 +510,8 @@ về 0</td>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Đánh giá mô hình</span>
-<span class="nf">par</span><span class="p">(</span><span class="n">mfrow</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span>
-<span class="nf">names</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span>
+par<span class="p">(</span>mfrow<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span>
+<span class="kp">names</span><span class="p">(</span>fit<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  [1] &quot;coef&quot;      &quot;sigma2&quot;    &quot;var.coef&quot;  &quot;mask&quot;      &quot;loglik&quot;</span>
@@ -518,12 +519,12 @@ về 0</td>
 <span class="c1">## [11] &quot;code&quot;      &quot;n.cond&quot;    &quot;nobs&quot;      &quot;model&quot;</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">qqnorm</span><span class="p">(</span><span class="n">fit</span><span class="o">$</span><span class="n">residuals</span><span class="p">)</span>
-<span class="nf">qqline</span><span class="p">(</span><span class="n">fit</span><span class="o">$</span><span class="n">residuals</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>qqnorm<span class="p">(</span>fit<span class="o">$</span>residuals<span class="p">)</span>
+qqline<span class="p">(</span>fit<span class="o">$</span>residuals<span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image11" src="p05-02-arima_files/figure-html/unnamed-chunk-3-4.png" /></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">Box.test</span><span class="p">(</span><span class="n">fit</span><span class="o">$</span><span class="n">residuals</span><span class="p">,</span> <span class="n">type</span> <span class="o">=</span> <span class="s">&quot;Ljung-Box&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>Box.test<span class="p">(</span>fit<span class="o">$</span>residuals<span class="p">,</span> type <span class="o">=</span> <span class="s">&quot;Ljung-Box&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -537,7 +538,7 @@ về 0</td>
 <span class="c1">#H1: Autocorrelation của residual khác 0</span>
 
 <span class="c1">#Dự báo</span>
-<span class="nf">forecast</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
+forecast<span class="p">(</span>fit<span class="p">,</span> <span class="m">3</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##      Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95</span>
@@ -546,12 +547,12 @@ về 0</td>
 <span class="c1">## 1973       798.3673 601.7495 994.9851 497.6663 1099.068</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">autoplot</span><span class="p">(</span><span class="nf">forecast</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span><span class="m">3</span><span class="p">))</span> <span class="o">+</span> <span class="nf">theme_classic</span><span class="p">()</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>autoplot<span class="p">(</span>forecast<span class="p">(</span>fit<span class="p">,</span><span class="m">3</span><span class="p">))</span> <span class="o">+</span> theme_classic<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image12" src="p05-02-arima_files/figure-html/unnamed-chunk-3-5.png" /></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tự động chọn mô hình</span>
-<span class="nf">auto.arima</span><span class="p">(</span><span class="n">Nile</span><span class="p">)</span>
+auto.arima<span class="p">(</span>Nile<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Series: Nile</span>

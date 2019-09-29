@@ -127,14 +127,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -302,9 +303,9 @@ thống kê cơ bản như: min, max, median, mean, quantile 25%, quantile 75%.<
 dữ liệu bao gồm kích thước chiều dài, chiều rộng cánh hoa và đài hoa của
 3 loài hoa khác nhau: setosa, versicolor, virginica (đơn vị đo: cm). Mỗi
 loài hoa có 50 bông hoa với kích thước khác nhau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="nf">data</span><span class="p">(</span><span class="s">&quot;iris&quot;</span><span class="p">)</span>
-<span class="n">iris</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+data<span class="p">(</span><span class="s">&quot;iris&quot;</span><span class="p">)</span>
+iris <span class="o">%&gt;%</span> <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   Sepal.Length    Sepal.Width     Petal.Length    Petal.Width</span>
@@ -336,9 +337,9 @@ hoặc nhiều biến số trong tập dữ liệu như:</p>
 <p>Để giải thích cách đọc hiểu các chỉ số thống kê nói trên, chúng ta sẽ
 cùng xem tổng quan kích thước chiều dài cánh hoa (biến <code class="docutils literal notranslate"><span class="pre">Petal.Length</span></code>)
 của các loài hoa trên.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="n">Petal.Length</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">summary</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>iris <span class="o">%&gt;%</span>
+  select<span class="p">(</span>Petal.Length<span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   Petal.Length</span>
@@ -385,7 +386,7 @@ hoặc 1 có nghĩa là 2 biến có mối liên hệ tương quan tuyến tính
 của từng cặp biến chiều dài, chiều rộng cánh hoa và đài hoa của các loài
 hoa để xem 4 biến trên có mối liên hệ với nhau như thế nào. Để tính hệ
 số tương quan trong <code class="docutils literal notranslate"><span class="pre">R</span></code>, chúng ta có thể sử dụng hàm <code class="docutils literal notranslate"><span class="pre">cor()</span></code>.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">cor</span><span class="p">(</span><span class="n">iris</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>cor<span class="p">(</span>iris <span class="o">%&gt;%</span> select<span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##              Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
@@ -415,7 +416,7 @@ không. Chúng ta có cặp giả thuyết sau:</p>
 <li>Ho: 2 biến không có mối liên hệ (hệ số tương quan = 0)</li>
 <li>H1: 2 biến có mối liên hệ (hệ số tương quan khác 0)</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">cor.test</span><span class="p">(</span><span class="n">iris</span><span class="o">$</span><span class="n">Sepal.Length</span><span class="p">,</span><span class="n">iris</span><span class="o">$</span><span class="n">Petal.Length</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>cor.test<span class="p">(</span>iris<span class="o">$</span>Sepal.Length<span class="p">,</span>iris<span class="o">$</span>Petal.Length<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -447,17 +448,17 @@ thích một cách dễ hiểu hơn, chúng ta sẽ làm ví dụ sau.</p>
 dữ liệu <code class="docutils literal notranslate"><span class="pre">iris</span></code>.</p>
 <p>Chúng ta sẽ vẽ biểu đồ boxplot so sánh <code class="docutils literal notranslate"><span class="pre">Sepal.Length</span></code> giữa các loài
 hoa (<code class="docutils literal notranslate"><span class="pre">Species</span></code>).</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span>
-<span class="n">iris</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">Species</span><span class="p">,</span> <span class="n">Sepal.Length</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="n">Species</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_boxplot</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">labs</span><span class="p">(</span>
-   <span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Overview of Iris Sepal Length by Species&quot;</span><span class="p">,</span>
-       <span class="n">x</span> <span class="o">=</span> <span class="s">&quot;Species&quot;</span><span class="p">,</span>
-       <span class="n">y</span> <span class="o">=</span> <span class="s">&quot;Sepal Length (cm)&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">scale_y_continuous</span><span class="p">(</span><span class="n">breaks</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">10</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">theme_bw</span><span class="p">()</span> <span class="o">+</span>  <span class="c1"># Background đen trắng</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span>  <span class="c1"># Bỏ legend</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>ggplot2<span class="p">)</span>
+iris <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>Species<span class="p">,</span> Sepal.Length<span class="p">,</span> fill <span class="o">=</span> Species<span class="p">))</span> <span class="o">+</span>
+  geom_boxplot<span class="p">()</span> <span class="o">+</span>
+  labs<span class="p">(</span>
+   title <span class="o">=</span> <span class="s">&quot;Overview of Iris Sepal Length by Species&quot;</span><span class="p">,</span>
+       x <span class="o">=</span> <span class="s">&quot;Species&quot;</span><span class="p">,</span>
+       y <span class="o">=</span> <span class="s">&quot;Sepal Length (cm)&quot;</span><span class="p">)</span> <span class="o">+</span>
+  scale_y_continuous<span class="p">(</span>breaks <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">10</span><span class="p">,</span> by <span class="o">=</span> <span class="m">0.5</span><span class="p">))</span> <span class="o">+</span>
+  theme_bw<span class="p">()</span> <span class="o">+</span>  <span class="c1"># Background đen trắng</span>
+  theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span>  <span class="c1"># Bỏ legend</span>
 </pre></div>
 </div>
 <p><img alt="image0" src="p02-05-cac-chi-so-thong-ke_files/figure-html/unnamed-chunk-6-1.png" /></p>
@@ -481,11 +482,11 @@ lệch chiều dài đài hoa trung bình khác 0)</li>
 </ul>
 <p>Trước tiên chúng ta sẽ so sánh chiều dài đài hoa trung bình của các loài
 hoa.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="n">iris</span> <span class="o">%&gt;%</span>
-  <span class="nf">group_by</span><span class="p">(</span><span class="n">Species</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">summarise</span><span class="p">(</span><span class="n">mean</span> <span class="o">=</span> <span class="nf">mean</span><span class="p">(</span><span class="n">Sepal.Length</span><span class="p">),</span>
-            <span class="n">sd</span> <span class="o">=</span> <span class="nf">sd</span><span class="p">(</span><span class="n">Sepal.Length</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+iris <span class="o">%&gt;%</span>
+  group_by<span class="p">(</span>Species<span class="p">)</span> <span class="o">%&gt;%</span>
+  summarise<span class="p">(</span>mean <span class="o">=</span> <span class="kp">mean</span><span class="p">(</span>Sepal.Length<span class="p">),</span>
+            sd <span class="o">=</span> sd<span class="p">(</span>Sepal.Length<span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 3 x 3</span>
@@ -503,8 +504,8 @@ là 6.59 cm.</p>
 có sự khác biệt giữa chiều dài đài hoa trung bình giữa các loài hoa hay
 không bằng việc sử dụng hàm <code class="docutils literal notranslate"><span class="pre">aov()</span></code></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#ANOVA</span>
-<span class="n">model</span> <span class="o">&lt;-</span> <span class="nf">aov</span><span class="p">(</span><span class="n">Sepal.Length</span> <span class="o">~</span> <span class="n">Species</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">iris</span><span class="p">)</span>
-<span class="n">model</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+model <span class="o">&lt;-</span> aov<span class="p">(</span>Sepal.Length <span class="o">~</span> Species<span class="p">,</span> data <span class="o">=</span> iris<span class="p">)</span>
+model <span class="o">%&gt;%</span> <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##              Df Sum Sq Mean Sq F value Pr(&gt;F)</span>
@@ -521,7 +522,7 @@ khác biệt của giá trị trung bình của <code class="docutils literal no
 ta còn phải trả lời câu hỏi: “Sự khác biệt là bao nhiêu?”</p>
 <p>Để trả lời cho câu hỏi trên, ta có thể sử dụng kiểm định <code class="docutils literal notranslate"><span class="pre">TukeyHSD</span></code> để
 tìm ra sự khác biệt giữa các nhóm.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">%&gt;%</span> <span class="n">TukeyHSD</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>model <span class="o">%&gt;%</span> TukeyHSD
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   Tukey multiple comparisons of means</span>
@@ -582,15 +583,15 @@ lập giữa hai biến</li>
 <strong>phương thức quảng cáo</strong> và <strong>thiết bị sử dụng</strong>. Dữ liệu trong một
 tháng về số lượt người dùng truy cập website được thể hiện như bảng dưới
 đây (đơn vị <em>nghìn user</em>)</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">order_dc</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Total&quot;</span><span class="p">,</span> <span class="s">&quot;Phone&quot;</span><span class="p">,</span> <span class="s">&quot;Tablet&quot;</span><span class="p">,</span> <span class="s">&quot;Desktop&quot;</span><span class="p">)</span>
-<span class="n">order_ch</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Organic Search&quot;</span><span class="p">,</span> <span class="s">&quot;Paid Search&quot;</span><span class="p">,</span> <span class="s">&quot;Email&quot;</span><span class="p">,</span> <span class="s">&quot;Display&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">device_category</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Desktop&quot;</span><span class="p">,</span> <span class="s">&quot;Tablet&quot;</span><span class="p">,</span> <span class="s">&quot;Phone&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">),</span>
-                 <span class="n">organic_search</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">25</span><span class="p">,</span><span class="m">20</span><span class="p">,</span><span class="m">35</span><span class="p">,</span><span class="m">80</span><span class="p">),</span>
-                 <span class="n">paid_search</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">20</span><span class="p">,</span><span class="m">30</span><span class="p">,</span><span class="m">15</span><span class="p">,</span><span class="m">65</span><span class="p">),</span>
-                 <span class="n">email</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">35</span><span class="p">,</span><span class="m">25</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">80</span><span class="p">),</span>
-                 <span class="n">display</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">20</span><span class="p">,</span><span class="m">25</span><span class="p">,</span><span class="m">40</span><span class="p">,</span><span class="m">85</span><span class="p">),</span>
-                 <span class="n">total</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">100</span><span class="p">,</span><span class="m">100</span><span class="p">,</span><span class="m">100</span><span class="p">,</span><span class="m">300</span><span class="p">))</span>
-<span class="n">df</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>order_dc <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Total&quot;</span><span class="p">,</span> <span class="s">&quot;Phone&quot;</span><span class="p">,</span> <span class="s">&quot;Tablet&quot;</span><span class="p">,</span> <span class="s">&quot;Desktop&quot;</span><span class="p">)</span>
+order_ch <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Organic Search&quot;</span><span class="p">,</span> <span class="s">&quot;Paid Search&quot;</span><span class="p">,</span> <span class="s">&quot;Email&quot;</span><span class="p">,</span> <span class="s">&quot;Display&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">)</span>
+df <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>device_category <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Desktop&quot;</span><span class="p">,</span> <span class="s">&quot;Tablet&quot;</span><span class="p">,</span> <span class="s">&quot;Phone&quot;</span><span class="p">,</span> <span class="s">&quot;Total&quot;</span><span class="p">),</span>
+                 organic_search <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">25</span><span class="p">,</span><span class="m">20</span><span class="p">,</span><span class="m">35</span><span class="p">,</span><span class="m">80</span><span class="p">),</span>
+                 paid_search <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">20</span><span class="p">,</span><span class="m">30</span><span class="p">,</span><span class="m">15</span><span class="p">,</span><span class="m">65</span><span class="p">),</span>
+                 email <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">35</span><span class="p">,</span><span class="m">25</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">80</span><span class="p">),</span>
+                 display <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">20</span><span class="p">,</span><span class="m">25</span><span class="p">,</span><span class="m">40</span><span class="p">,</span><span class="m">85</span><span class="p">),</span>
+                 total <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">100</span><span class="p">,</span><span class="m">100</span><span class="p">,</span><span class="m">100</span><span class="p">,</span><span class="m">300</span><span class="p">))</span>
+df
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   device_category organic_search paid_search email display total</span>
@@ -660,12 +661,12 @@ tế. Sau đó tính <span class="math notranslate">\(\chi^2\)</span> như sau:<
 <div class="math notranslate">
 \[\frac{2.78}{27} = 0.10\]</div>
 <p>Tương tự, ta tính được cho tất cả các biến như sau:</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df3</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">device_category</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Desktop&quot;</span><span class="p">,</span> <span class="s">&quot;Tablet&quot;</span><span class="p">,</span> <span class="s">&quot;Phone&quot;</span><span class="p">),</span>
-                 <span class="n">organic_search</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.1</span><span class="p">,</span> <span class="m">1.67</span><span class="p">,</span> <span class="m">2.6</span><span class="p">),</span>
-                 <span class="n">paid_search</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.13</span><span class="p">,</span> <span class="m">3.2</span><span class="p">,</span> <span class="m">2.05</span><span class="p">),</span>
-                 <span class="n">email</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">5.83</span><span class="p">,</span> <span class="m">0.12</span><span class="p">,</span> <span class="m">7.62</span><span class="p">),</span>
-                 <span class="n">display</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">2.45</span><span class="p">,</span> <span class="m">0.39</span><span class="p">,</span> <span class="m">4.8</span><span class="p">))</span>
-<span class="n">df3</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>df3 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>device_category <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Desktop&quot;</span><span class="p">,</span> <span class="s">&quot;Tablet&quot;</span><span class="p">,</span> <span class="s">&quot;Phone&quot;</span><span class="p">),</span>
+                 organic_search <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">0.1</span><span class="p">,</span> <span class="m">1.67</span><span class="p">,</span> <span class="m">2.6</span><span class="p">),</span>
+                 paid_search <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">0.13</span><span class="p">,</span> <span class="m">3.2</span><span class="p">,</span> <span class="m">2.05</span><span class="p">),</span>
+                 email <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">5.83</span><span class="p">,</span> <span class="m">0.12</span><span class="p">,</span> <span class="m">7.62</span><span class="p">),</span>
+                 display <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">2.45</span><span class="p">,</span> <span class="m">0.39</span><span class="p">,</span> <span class="m">4.8</span><span class="p">))</span>
+df3
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   device_category organic_search paid_search email display</span>
@@ -688,7 +689,7 @@ quan hệ giữa phương thức marketing và thiết bị sử dụng.</p>
 <p><strong>Ví dụ với R</strong></p>
 <p>Trong thực tế, khi phân tích dữ liệu, ta có thể ra quyết định nhanh
 chóng về mối quan hệ giữa hai biến rời rạc thông qua <code class="docutils literal notranslate"><span class="pre">p-value</span></code>.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="m">-1</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="nf">as.matrix</span><span class="p">()</span> <span class="o">%&gt;%</span> <span class="nf">chisq.test</span><span class="p">()</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>df <span class="o">%&gt;%</span> select<span class="p">(</span><span class="m">-1</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">as.matrix</span><span class="p">()</span> <span class="o">%&gt;%</span> chisq.test<span class="p">()</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>

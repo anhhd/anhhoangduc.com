@@ -121,14 +121,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -293,16 +294,16 @@ cách hiệu quả trên R.</p>
 <p>Trong mục này, tác giả sẽ hướng dẫn một ví dụ thực tiễn trực quan hóa
 phễu bán hàng một cách hiệu quả.</p>
 <p>Xem ví dụ điển hình về phễu bán hàng dưới đây</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">&lt;-</span> <span class="nf">read.table</span><span class="p">(</span><span class="nf">textConnection</span><span class="p">(</span>
-          <span class="nf">c</span><span class="p">(</span><span class="s">&quot;step;segment1;segment2;segment3;total</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">&lt;-</span> read.table<span class="p">(</span><span class="kp">textConnection</span><span class="p">(</span>
+          <span class="kt">c</span><span class="p">(</span><span class="s">&quot;step;segment1;segment2;segment3;total</span>
 <span class="s">          1_visit;1806;11663;12641;26110</span>
 <span class="s">          2_register;1143;6476;5372;12991</span>
 <span class="s">          3_login;1806;11663;2694;16163</span>
 <span class="s">          4_subscribe;21;3322;2694;6037</span>
 <span class="s">          5_paid;259;422;41;722&quot;</span><span class="p">)),</span>
-        <span class="n">header</span> <span class="o">=</span> <span class="bp">T</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s">&quot;;&quot;</span><span class="p">)</span>
+        header <span class="o">=</span> <span class="bp">T</span><span class="p">,</span> sep <span class="o">=</span> <span class="s">&quot;;&quot;</span><span class="p">)</span>
 <span class="c1"># Dữ liệu</span>
-<span class="n">data</span>
+data
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##                    step segment1 segment2 segment3 total</span>
@@ -330,96 +331,96 @@ hàng sẽ đi qua năm bước khác nhau:</p>
 <li>Kết hợp các biểu đồ để tạo thành phễu bán hàng hoàn chỉnh</li>
 </ul>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Gọi library</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">reshape2</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">forcats</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">ggthemes</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>reshape2<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>forcats<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>ggthemes<span class="p">)</span>
 
 <span class="c1"># Tạo theme trông cho chart</span>
-<span class="n">funnel_theme</span> <span class="o">&lt;-</span> <span class="nf">theme</span><span class="p">(</span><span class="n">axis.title</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
-        <span class="n">axis.ticks.x</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
-        <span class="n">axis.text.x</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
-        <span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">,</span>
-        <span class="n">panel.grid</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">()</span>
+funnel_theme <span class="o">&lt;-</span> theme<span class="p">(</span>axis.title <span class="o">=</span> element_blank<span class="p">(),</span>
+        axis.ticks.x <span class="o">=</span> element_blank<span class="p">(),</span>
+        axis.text.x <span class="o">=</span> element_blank<span class="p">(),</span>
+        legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">,</span>
+        panel.grid <span class="o">=</span> element_blank<span class="p">()</span>
         <span class="p">)</span>
 
 <span class="c1"># Phân rã dữ liệu</span>
-<span class="n">df</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span> <span class="nf">melt</span><span class="p">(</span><span class="n">id.vars</span> <span class="o">=</span> <span class="s">&quot;step&quot;</span><span class="p">)</span>
+df <span class="o">&lt;-</span> data <span class="o">%&gt;%</span> melt<span class="p">(</span>id.vars <span class="o">=</span> <span class="s">&quot;step&quot;</span><span class="p">)</span>
 
 <span class="c1"># Tạo biểu đồ chính</span>
-<span class="n">p1</span> <span class="o">&lt;-</span> <span class="n">df</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">step</span> <span class="o">=</span> <span class="nf">fct_rev</span><span class="p">(</span><span class="n">step</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">filter</span><span class="p">(</span><span class="n">variable</span> <span class="o">!=</span> <span class="s">&quot;total&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_bar</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="n">variable</span><span class="p">),</span> <span class="n">stat</span> <span class="o">=</span> <span class="s">&quot;identity&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">facet_grid</span><span class="p">(</span><span class="o">~</span><span class="n">variable</span><span class="p">,</span> <span class="n">scale</span> <span class="o">=</span> <span class="s">&quot;free&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">coord_flip</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">geom_text</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">label</span> <span class="o">=</span> <span class="n">value</span><span class="p">),</span>
-            <span class="n">position</span> <span class="o">=</span> <span class="nf">position_stack</span><span class="p">(</span><span class="n">vjust</span> <span class="o">=</span> <span class="m">.5</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">scale_fill_tableau</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">scale_y_sqrt</span><span class="p">()</span> <span class="o">+</span>
-  <span class="n">funnel_theme</span> <span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">plot.margin</span><span class="o">=</span><span class="n">grid</span><span class="o">::</span><span class="nf">unit</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">),</span> <span class="s">&quot;mm&quot;</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span>
-  <span class="n">axis.text.y</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
-  <span class="n">strip.text</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">14</span><span class="p">,</span>
-                            <span class="n">face</span> <span class="o">=</span> <span class="s">&quot;bold&quot;</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span>
-    <span class="n">panel.spacing</span> <span class="o">=</span> <span class="nf">unit</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="s">&quot;mm&quot;</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">annotate</span><span class="p">(</span><span class="s">&quot;rect&quot;</span><span class="p">,</span> <span class="n">xmin</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="m">1.5</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="kc">Inf</span><span class="p">,</span>
-           <span class="n">alpha</span> <span class="o">=</span> <span class="m">.2</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">annotate</span><span class="p">(</span><span class="s">&quot;rect&quot;</span><span class="p">,</span> <span class="n">xmin</span> <span class="o">=</span> <span class="m">2.5</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="m">3.5</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="kc">Inf</span><span class="p">,</span>
-           <span class="n">alpha</span> <span class="o">=</span> <span class="m">.2</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">annotate</span><span class="p">(</span><span class="s">&quot;rect&quot;</span><span class="p">,</span> <span class="n">xmin</span> <span class="o">=</span> <span class="m">4.5</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="m">5.5</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">=</span> <span class="m">0</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="kc">Inf</span><span class="p">,</span>
-           <span class="n">alpha</span> <span class="o">=</span> <span class="m">.2</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">axis.text.y</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">())</span>
-<span class="n">p1</span>
+p1 <span class="o">&lt;-</span> df <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>step <span class="o">=</span> fct_rev<span class="p">(</span>step<span class="p">))</span> <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>variable <span class="o">!=</span> <span class="s">&quot;total&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>step<span class="p">,</span> value<span class="p">))</span> <span class="o">+</span>
+  geom_bar<span class="p">(</span>aes<span class="p">(</span>fill <span class="o">=</span> variable<span class="p">),</span> stat <span class="o">=</span> <span class="s">&quot;identity&quot;</span><span class="p">)</span> <span class="o">+</span>
+  facet_grid<span class="p">(</span><span class="o">~</span>variable<span class="p">,</span> scale <span class="o">=</span> <span class="s">&quot;free&quot;</span><span class="p">)</span> <span class="o">+</span>
+  coord_flip<span class="p">()</span> <span class="o">+</span>
+  geom_text<span class="p">(</span>aes<span class="p">(</span>label <span class="o">=</span> value<span class="p">),</span>
+            position <span class="o">=</span> position_stack<span class="p">(</span>vjust <span class="o">=</span> <span class="m">.5</span><span class="p">))</span> <span class="o">+</span>
+  scale_fill_tableau<span class="p">()</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span>
+  scale_y_sqrt<span class="p">()</span> <span class="o">+</span>
+  funnel_theme <span class="o">+</span>
+  theme<span class="p">(</span>plot.margin<span class="o">=</span>grid<span class="o">::</span>unit<span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">),</span> <span class="s">&quot;mm&quot;</span><span class="p">))</span> <span class="o">+</span>
+  theme<span class="p">(</span>
+  axis.text.y <span class="o">=</span> element_blank<span class="p">(),</span>
+  strip.text <span class="o">=</span> element_text<span class="p">(</span>size <span class="o">=</span> <span class="m">14</span><span class="p">,</span>
+                            face <span class="o">=</span> <span class="s">&quot;bold&quot;</span><span class="p">))</span> <span class="o">+</span>
+  theme<span class="p">(</span>
+    panel.spacing <span class="o">=</span> unit<span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="s">&quot;mm&quot;</span><span class="p">))</span> <span class="o">+</span>
+  annotate<span class="p">(</span><span class="s">&quot;rect&quot;</span><span class="p">,</span> xmin <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> xmax <span class="o">=</span> <span class="m">1.5</span><span class="p">,</span> ymin <span class="o">=</span> <span class="m">0</span><span class="p">,</span> ymax <span class="o">=</span> <span class="kc">Inf</span><span class="p">,</span>
+           alpha <span class="o">=</span> <span class="m">.2</span><span class="p">)</span> <span class="o">+</span>
+  annotate<span class="p">(</span><span class="s">&quot;rect&quot;</span><span class="p">,</span> xmin <span class="o">=</span> <span class="m">2.5</span><span class="p">,</span> xmax <span class="o">=</span> <span class="m">3.5</span><span class="p">,</span> ymin <span class="o">=</span> <span class="m">0</span><span class="p">,</span> ymax <span class="o">=</span> <span class="kc">Inf</span><span class="p">,</span>
+           alpha <span class="o">=</span> <span class="m">.2</span><span class="p">)</span> <span class="o">+</span>
+  annotate<span class="p">(</span><span class="s">&quot;rect&quot;</span><span class="p">,</span> xmin <span class="o">=</span> <span class="m">4.5</span><span class="p">,</span> xmax <span class="o">=</span> <span class="m">5.5</span><span class="p">,</span> ymin <span class="o">=</span> <span class="m">0</span><span class="p">,</span> ymax <span class="o">=</span> <span class="kc">Inf</span><span class="p">,</span>
+           alpha <span class="o">=</span> <span class="m">.2</span><span class="p">)</span> <span class="o">+</span>
+  theme<span class="p">(</span>axis.text.y <span class="o">=</span> element_blank<span class="p">())</span>
+p1
 </pre></div>
 </div>
 <p><img alt="image0" src="p13-01-casestudy-truc-quan-hoa_files/figure-html/unnamed-chunk-3-1.png" /></p>
 <ul class="simple">
 <li>Tạo thêm phần <code class="docutils literal notranslate"><span class="pre">label</span></code> tổng theo từng segment</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">step</span> <span class="o">=</span> <span class="nf">fct_rev</span><span class="p">(</span><span class="n">step</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">filter</span><span class="p">(</span><span class="n">variable</span> <span class="o">==</span> <span class="s">&quot;total&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="m">0</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_label</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">label</span> <span class="o">=</span> <span class="n">value</span><span class="p">),</span>
-             <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;white&quot;</span><span class="p">,</span>
-             <span class="n">fill</span> <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span>
-             <span class="n">size</span> <span class="o">=</span> <span class="m">4</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">coord_flip</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">facet_wrap</span><span class="p">(</span><span class="o">~</span><span class="n">variable</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">axis.text</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">())</span> <span class="o">+</span>
-  <span class="n">funnel_theme</span> <span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span>
-    <span class="n">strip.text.x</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">()</span>
-  <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">p2</span>
-<span class="n">p2</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>df <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>step <span class="o">=</span> fct_rev<span class="p">(</span>step<span class="p">))</span> <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>variable <span class="o">==</span> <span class="s">&quot;total&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>step<span class="p">,</span> <span class="m">0</span><span class="p">))</span> <span class="o">+</span>
+  geom_label<span class="p">(</span>aes<span class="p">(</span>label <span class="o">=</span> value<span class="p">),</span>
+             col <span class="o">=</span> <span class="s">&quot;white&quot;</span><span class="p">,</span>
+             fill <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span>
+             size <span class="o">=</span> <span class="m">4</span><span class="p">)</span> <span class="o">+</span>
+  coord_flip<span class="p">()</span> <span class="o">+</span>
+  facet_wrap<span class="p">(</span><span class="o">~</span>variable<span class="p">)</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span>
+  theme<span class="p">(</span>axis.text <span class="o">=</span> element_blank<span class="p">())</span> <span class="o">+</span>
+  funnel_theme <span class="o">+</span>
+  theme<span class="p">(</span>
+    strip.text.x <span class="o">=</span> element_blank<span class="p">()</span>
+  <span class="p">)</span> <span class="o">-&gt;</span> p2
+p2
 </pre></div>
 </div>
 <p><img alt="image1" src="p13-01-casestudy-truc-quan-hoa_files/figure-html/unnamed-chunk-4-1.png" /></p>
 <ul class="simple">
 <li>Tạo thêm thứ tự các bước trong phễu bán hàng để dễ theo dõi hơn</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df2</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">step</span> <span class="o">=</span> <span class="n">data</span><span class="o">$</span><span class="n">step</span><span class="p">,</span>
-                  <span class="n">value</span> <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">)</span>
-<span class="n">df2</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">step</span> <span class="o">=</span> <span class="nf">fct_rev</span><span class="p">(</span><span class="n">step</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="m">1</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">10</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;darkgreen&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_text</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">label</span> <span class="o">=</span> <span class="n">value</span><span class="p">),</span>
-            <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;white&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">coord_flip</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
-  <span class="n">funnel_theme</span> <span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span>
-    <span class="n">axis.text</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">14</span><span class="p">)</span>
-  <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">p3</span>
-<span class="n">p3</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>df2 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>step <span class="o">=</span> data<span class="o">$</span>step<span class="p">,</span>
+                  value <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">)</span>
+df2 <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>step <span class="o">=</span> fct_rev<span class="p">(</span>step<span class="p">))</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>step<span class="p">,</span> <span class="m">1</span><span class="p">))</span> <span class="o">+</span>
+  geom_hline<span class="p">(</span>yintercept <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>size <span class="o">=</span> <span class="m">10</span><span class="p">,</span> col <span class="o">=</span> <span class="s">&quot;darkgreen&quot;</span><span class="p">)</span> <span class="o">+</span>
+  geom_text<span class="p">(</span>aes<span class="p">(</span>label <span class="o">=</span> value<span class="p">),</span>
+            col <span class="o">=</span> <span class="s">&quot;white&quot;</span><span class="p">)</span> <span class="o">+</span>
+  coord_flip<span class="p">()</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span>
+  funnel_theme <span class="o">+</span>
+  theme<span class="p">(</span>
+    axis.text <span class="o">=</span> element_text<span class="p">(</span>size <span class="o">=</span> <span class="m">14</span><span class="p">)</span>
+  <span class="p">)</span> <span class="o">-&gt;</span> p3
+p3
 </pre></div>
 </div>
 <p><img alt="image2" src="p13-01-casestudy-truc-quan-hoa_files/figure-html/unnamed-chunk-5-1.png" /></p>
@@ -429,11 +430,11 @@ bán hàng hoàn chỉnh. Việc kết hợp các biểu đồ trên <code class
 hoàn thành một cách đơn giản với <code class="docutils literal notranslate"><span class="pre">ggplot2</span></code></li>
 </ul>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#devtools::install_github(&quot;thomasp85/patchwork&quot;)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">patchwork</span><span class="p">)</span>
-<span class="n">p3</span> <span class="o">+</span>
-  <span class="nf">labs</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Sale funnel for 3 segments&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="n">p1</span> <span class="o">+</span> <span class="n">p2</span> <span class="o">+</span>
-  <span class="nf">plot_layout</span><span class="p">(</span><span class="n">nrow</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">widths</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">8</span><span class="p">,</span> <span class="m">1</span><span class="p">))</span>
+<span class="kn">library</span><span class="p">(</span>patchwork<span class="p">)</span>
+p3 <span class="o">+</span>
+  labs<span class="p">(</span>title <span class="o">=</span> <span class="s">&quot;Sale funnel for 3 segments&quot;</span><span class="p">)</span> <span class="o">+</span>
+  p1 <span class="o">+</span> p2 <span class="o">+</span>
+  plot_layout<span class="p">(</span>nrow <span class="o">=</span> <span class="m">1</span><span class="p">,</span> widths <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">8</span><span class="p">,</span> <span class="m">1</span><span class="p">))</span>
 </pre></div>
 </div>
 <p><img alt="image3" src="p13-01-casestudy-truc-quan-hoa_files/figure-html/unnamed-chunk-6-1.png" /></p>
@@ -454,24 +455,24 @@ thời gian <em>t</em> được tính như sau:</p>
 <p>Trong case study này, chúng ta sẽ tìm cách xây dựng một biểu đồ
 waterfall chart tương tự</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load library</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">reshape2</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">lubridate</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">gridExtra</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>ggplot2<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>reshape2<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>lubridate<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>grid<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>gridExtra<span class="p">)</span>
 
 <span class="c1"># Tạo dữ liệu giả lập</span>
-<span class="nf">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">date</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">372</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="m">31</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">as_date</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">new</span> <span class="o">=</span> <span class="nf">abs</span><span class="p">(</span><span class="nf">rnorm</span><span class="p">(</span><span class="m">12</span><span class="p">,</span> <span class="m">100</span><span class="p">,</span> <span class="m">10</span><span class="p">))</span> <span class="o">%&gt;%</span> <span class="nf">round</span><span class="p">(</span><span class="m">0</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">churn</span> <span class="o">=</span> <span class="nf">abs</span><span class="p">(</span><span class="nf">rnorm</span><span class="p">(</span><span class="m">12</span><span class="p">,</span> <span class="m">50</span><span class="p">,</span> <span class="m">30</span><span class="p">))</span> <span class="o">%&gt;%</span> <span class="nf">round</span><span class="p">(</span><span class="m">0</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">net</span> <span class="o">=</span> <span class="n">new</span> <span class="o">-</span> <span class="n">churn</span><span class="p">)</span>  <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">eop</span> <span class="o">=</span> <span class="nf">cumsum</span><span class="p">(</span><span class="n">net</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">net</span><span class="p">)</span>
+<span class="kp">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
+data <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>date <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">372</span><span class="p">,</span> by <span class="o">=</span> <span class="m">31</span><span class="p">)</span> <span class="o">%&gt;%</span> as_date<span class="p">)</span>
+data <span class="o">&lt;-</span> data <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>new <span class="o">=</span> <span class="kp">abs</span><span class="p">(</span>rnorm<span class="p">(</span><span class="m">12</span><span class="p">,</span> <span class="m">100</span><span class="p">,</span> <span class="m">10</span><span class="p">))</span> <span class="o">%&gt;%</span> <span class="kp">round</span><span class="p">(</span><span class="m">0</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>churn <span class="o">=</span> <span class="kp">abs</span><span class="p">(</span>rnorm<span class="p">(</span><span class="m">12</span><span class="p">,</span> <span class="m">50</span><span class="p">,</span> <span class="m">30</span><span class="p">))</span> <span class="o">%&gt;%</span> <span class="kp">round</span><span class="p">(</span><span class="m">0</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>net <span class="o">=</span> new <span class="o">-</span> churn<span class="p">)</span>  <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>eop <span class="o">=</span> <span class="kp">cumsum</span><span class="p">(</span>net<span class="p">))</span> <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="o">-</span>net<span class="p">)</span>
 
-<span class="n">data</span>
+data
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##          date new churn eop</span>
@@ -494,110 +495,110 @@ waterfall chart tương tự</p>
 thêm số lượng mới và trừ đi lượng khách hàng rời bỏ (<code class="docutils literal notranslate"><span class="pre">churn</span></code>).</p>
 <p>Để tạo waterfall chart, ta có thể sử dụng <code class="docutils literal notranslate"><span class="pre">geom_segment</span></code> trong ggplot2</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Xác định độ rộng của segment</span>
-<span class="n">step</span> <span class="o">&lt;-</span> <span class="m">0.4</span><span class="o">*</span><span class="p">(</span><span class="nf">max</span><span class="p">(</span><span class="n">data</span><span class="o">$</span><span class="n">date</span><span class="p">)</span> <span class="o">-</span> <span class="nf">min</span><span class="p">(</span><span class="n">data</span><span class="o">$</span><span class="n">date</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="nf">nrow</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">-</span> <span class="m">1</span><span class="p">)</span>
+step <span class="o">&lt;-</span> <span class="m">0.4</span><span class="o">*</span><span class="p">(</span><span class="kp">max</span><span class="p">(</span>data<span class="o">$</span><span class="kp">date</span><span class="p">)</span> <span class="o">-</span> <span class="kp">min</span><span class="p">(</span>data<span class="o">$</span><span class="kp">date</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="kp">nrow</span><span class="p">(</span>data<span class="p">)</span> <span class="o">-</span> <span class="m">1</span><span class="p">)</span>
 
 <span class="c1"># Xác định ymax</span>
-<span class="n">data</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">ymax</span> <span class="o">=</span> <span class="n">eop</span> <span class="o">+</span> <span class="n">churn</span><span class="p">)</span>
+data <span class="o">&lt;-</span> data <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>ymax <span class="o">=</span> eop <span class="o">+</span> churn<span class="p">)</span>
 
 <span class="c1"># Xác định ymin</span>
-<span class="n">df</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span>
-  <span class="nf">melt</span><span class="p">(</span><span class="n">id.vars</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">,</span> <span class="s">&quot;eop&quot;</span><span class="p">,</span> <span class="s">&quot;ymax&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">ymin</span> <span class="o">=</span> <span class="n">ymax</span> <span class="o">-</span> <span class="n">value</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">rename</span><span class="p">(</span><span class="n">group</span> <span class="o">=</span> <span class="n">variable</span><span class="p">)</span>
+df <span class="o">&lt;-</span> data <span class="o">%&gt;%</span>
+  melt<span class="p">(</span>id.vars <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;date&quot;</span><span class="p">,</span> <span class="s">&quot;eop&quot;</span><span class="p">,</span> <span class="s">&quot;ymax&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>ymin <span class="o">=</span> ymax <span class="o">-</span> value<span class="p">)</span> <span class="o">%&gt;%</span>
+  rename<span class="p">(</span>group <span class="o">=</span> variable<span class="p">)</span>
 
 <span class="c1"># Xác định xmin và xmax</span>
-<span class="n">df</span> <span class="o">&lt;-</span> <span class="n">df</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">xmin</span> <span class="o">=</span> <span class="nf">case_when</span><span class="p">(</span>
-    <span class="n">group</span> <span class="o">==</span> <span class="s">&quot;new&quot;</span> <span class="o">~</span> <span class="n">date</span> <span class="o">-</span> <span class="n">step</span><span class="p">,</span>
-    <span class="kc">TRUE</span> <span class="o">~</span> <span class="n">date</span>
+df <span class="o">&lt;-</span> df <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>xmin <span class="o">=</span> case_when<span class="p">(</span>
+    group <span class="o">==</span> <span class="s">&quot;new&quot;</span> <span class="o">~</span> date <span class="o">-</span> step<span class="p">,</span>
+    <span class="kc">TRUE</span> <span class="o">~</span> <span class="kp">date</span>
   <span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">xmax</span> <span class="o">=</span> <span class="nf">case_when</span><span class="p">(</span>
-    <span class="n">group</span> <span class="o">==</span> <span class="s">&quot;new&quot;</span> <span class="o">~</span> <span class="n">date</span><span class="p">,</span>
-    <span class="kc">TRUE</span> <span class="o">~</span> <span class="n">date</span> <span class="o">+</span> <span class="n">step</span>
+  mutate<span class="p">(</span>xmax <span class="o">=</span> case_when<span class="p">(</span>
+    group <span class="o">==</span> <span class="s">&quot;new&quot;</span> <span class="o">~</span> <span class="kp">date</span><span class="p">,</span>
+    <span class="kc">TRUE</span> <span class="o">~</span> date <span class="o">+</span> step
   <span class="p">))</span>
 
 
 <span class="c1"># Create waterfall chart</span>
-<span class="n">p1</span> <span class="o">&lt;-</span> <span class="n">df</span> <span class="o">%&gt;%</span>
-  <span class="nf">arrange</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">geom_rect</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">xmin</span> <span class="o">=</span> <span class="n">xmin</span><span class="p">,</span>
-                <span class="n">xmax</span> <span class="o">=</span> <span class="n">xmax</span><span class="p">,</span>
-                <span class="n">ymin</span> <span class="o">=</span> <span class="n">ymin</span><span class="p">,</span>
-                <span class="n">ymax</span> <span class="o">=</span> <span class="n">ymax</span><span class="p">,</span>
-                <span class="n">fill</span> <span class="o">=</span> <span class="n">group</span><span class="p">))</span>
-<span class="n">p1</span>
+p1 <span class="o">&lt;-</span> df <span class="o">%&gt;%</span>
+  arrange<span class="p">(</span><span class="kp">date</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">()</span> <span class="o">+</span>
+  geom_rect<span class="p">(</span>aes<span class="p">(</span>xmin <span class="o">=</span> xmin<span class="p">,</span>
+                xmax <span class="o">=</span> xmax<span class="p">,</span>
+                ymin <span class="o">=</span> ymin<span class="p">,</span>
+                ymax <span class="o">=</span> ymax<span class="p">,</span>
+                fill <span class="o">=</span> group<span class="p">))</span>
+p1
 </pre></div>
 </div>
 <p><img alt="image4" src="p13-01-casestudy-truc-quan-hoa_files/figure-html/unnamed-chunk-8-1.png" /></p>
 <p>Như vậy, ta đã tạo xong biểu đồ water-fall đơn giản. Ở bước tiếp theo,
 chúng ta cần điều chỉnh lại các thành phần cho biểu đồ.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tạo dữ liệu cho biểu đồ đường</span>
-<span class="n">df2</span> <span class="o">&lt;-</span> <span class="n">df</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">eop</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="nf">distinct</span><span class="p">()</span>
+df2 <span class="o">&lt;-</span> df <span class="o">%&gt;%</span> select<span class="p">(</span><span class="kp">date</span><span class="p">,</span> eop<span class="p">)</span> <span class="o">%&gt;%</span> distinct<span class="p">()</span>
 
 <span class="c1"># Điều chỉnh theme</span>
-<span class="n">p2</span> <span class="o">&lt;-</span> <span class="n">p1</span>  <span class="o">+</span>
-  <span class="nf">geom_line</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">eop</span><span class="p">),</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;dodgerblue4&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">eop</span><span class="p">),</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;dodgerblue4&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">2.5</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_text</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">eop</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">eop</span><span class="p">),</span> <span class="n">vjust</span> <span class="o">=</span> <span class="m">1.2</span><span class="p">,</span>
-            <span class="n">hjust</span> <span class="o">=</span> <span class="m">-0.1</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">values</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;grey60&quot;</span><span class="p">,</span> <span class="s">&quot;coral2&quot;</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span>
-    <span class="n">axis.line</span> <span class="o">=</span> <span class="nf">element_line</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s">&quot;gray40&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">),</span>
-    <span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;top&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">scale_x_date</span><span class="p">(</span><span class="n">breaks</span> <span class="o">=</span> <span class="n">data</span><span class="o">$</span><span class="n">date</span><span class="p">,</span>
-               <span class="n">date_labels</span> <span class="o">=</span> <span class="s">&quot;%b&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">panel.grid.minor.x</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
-        <span class="n">legend.title</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">())</span> <span class="o">+</span>
-  <span class="nf">ggtitle</span><span class="p">(</span><span class="s">&quot;Overview of active users&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">xlab</span><span class="p">(</span><span class="s">&quot;Date&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">ylab</span><span class="p">(</span><span class="s">&quot;Number of active users&quot;</span><span class="p">)</span>
-<span class="n">p2</span>
+p2 <span class="o">&lt;-</span> p1  <span class="o">+</span>
+  geom_line<span class="p">(</span>aes<span class="p">(</span><span class="kp">date</span><span class="p">,</span> eop<span class="p">),</span> col <span class="o">=</span> <span class="s">&quot;dodgerblue4&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">1</span><span class="p">)</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span><span class="kp">date</span><span class="p">,</span> eop<span class="p">),</span> col <span class="o">=</span> <span class="s">&quot;dodgerblue4&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">2.5</span><span class="p">)</span> <span class="o">+</span>
+  geom_text<span class="p">(</span>aes<span class="p">(</span><span class="kp">date</span><span class="p">,</span> eop<span class="p">,</span> label <span class="o">=</span> eop<span class="p">),</span> vjust <span class="o">=</span> <span class="m">1.2</span><span class="p">,</span>
+            hjust <span class="o">=</span> <span class="m">-0.1</span><span class="p">)</span> <span class="o">+</span>
+  scale_fill_manual<span class="p">(</span>values <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;grey60&quot;</span><span class="p">,</span> <span class="s">&quot;coral2&quot;</span><span class="p">))</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span>
+  theme<span class="p">(</span>
+    axis.line <span class="o">=</span> element_line<span class="p">(</span>color <span class="o">=</span> <span class="s">&quot;gray40&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">0.5</span><span class="p">),</span>
+    legend.position <span class="o">=</span> <span class="s">&quot;top&quot;</span><span class="p">)</span> <span class="o">+</span>
+  scale_x_date<span class="p">(</span>breaks <span class="o">=</span> data<span class="o">$</span><span class="kp">date</span><span class="p">,</span>
+               date_labels <span class="o">=</span> <span class="s">&quot;%b&quot;</span><span class="p">)</span> <span class="o">+</span>
+  theme<span class="p">(</span>panel.grid.minor.x <span class="o">=</span> element_blank<span class="p">(),</span>
+        legend.title <span class="o">=</span> element_blank<span class="p">())</span> <span class="o">+</span>
+  ggtitle<span class="p">(</span><span class="s">&quot;Overview of active users&quot;</span><span class="p">)</span> <span class="o">+</span>
+  xlab<span class="p">(</span><span class="s">&quot;Date&quot;</span><span class="p">)</span> <span class="o">+</span>
+  ylab<span class="p">(</span><span class="s">&quot;Number of active users&quot;</span><span class="p">)</span>
+p2
 </pre></div>
 </div>
 <p><img alt="image5" src="p13-01-casestudy-truc-quan-hoa_files/figure-html/unnamed-chunk-9-1.png" /></p>
 <p>Bước tiếp theo, ta cần xây dựng biểu đồ bar đơn giản để có thể đưa vào
 góc phần tư bên trái của biểu đồ vừa tạo.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">p3</span> <span class="o">&lt;-</span> <span class="n">df</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">value</span> <span class="o">=</span> <span class="nf">case_when</span><span class="p">(</span>
-    <span class="n">group</span> <span class="o">==</span> <span class="s">&quot;churn&quot;</span> <span class="o">~</span> <span class="m">-1</span> <span class="o">*</span> <span class="n">value</span><span class="p">,</span>
-    <span class="kc">TRUE</span> <span class="o">~</span> <span class="n">value</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>p3 <span class="o">&lt;-</span> df <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>value <span class="o">=</span> case_when<span class="p">(</span>
+    group <span class="o">==</span> <span class="s">&quot;churn&quot;</span> <span class="o">~</span> <span class="m">-1</span> <span class="o">*</span> value<span class="p">,</span>
+    <span class="kc">TRUE</span> <span class="o">~</span> value
   <span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_bar</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="n">group</span><span class="p">),</span> <span class="n">stat</span> <span class="o">=</span> <span class="s">&quot;identity&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">scale_fill_manual</span><span class="p">(</span><span class="n">values</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;grey60&quot;</span><span class="p">,</span> <span class="s">&quot;coral2&quot;</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span>
-    <span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">,</span>
-    <span class="n">axis.title.x</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
-    <span class="n">axis.title.y</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
-    <span class="n">axis.ticks.y</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
-    <span class="n">axis.text.y</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
-    <span class="n">panel.grid.minor</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
-    <span class="n">panel.grid.major</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">(),</span>
-    <span class="n">axis.text.x</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">angle</span> <span class="o">=</span> <span class="m">90</span><span class="p">)</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span><span class="kp">date</span><span class="p">,</span> value<span class="p">))</span> <span class="o">+</span>
+  geom_bar<span class="p">(</span>aes<span class="p">(</span>fill <span class="o">=</span> group<span class="p">),</span> stat <span class="o">=</span> <span class="s">&quot;identity&quot;</span><span class="p">)</span> <span class="o">+</span>
+  scale_fill_manual<span class="p">(</span>values <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;grey60&quot;</span><span class="p">,</span> <span class="s">&quot;coral2&quot;</span><span class="p">))</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span>
+  theme<span class="p">(</span>
+    legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">,</span>
+    axis.title.x <span class="o">=</span> element_blank<span class="p">(),</span>
+    axis.title.y <span class="o">=</span> element_blank<span class="p">(),</span>
+    axis.ticks.y <span class="o">=</span> element_blank<span class="p">(),</span>
+    axis.text.y <span class="o">=</span> element_blank<span class="p">(),</span>
+    panel.grid.minor <span class="o">=</span> element_blank<span class="p">(),</span>
+    panel.grid.major <span class="o">=</span> element_blank<span class="p">(),</span>
+    axis.text.x <span class="o">=</span> element_text<span class="p">(</span>angle <span class="o">=</span> <span class="m">90</span><span class="p">)</span>
   <span class="p">)</span> <span class="o">+</span>
-  <span class="nf">scale_x_date</span><span class="p">(</span><span class="n">breaks</span> <span class="o">=</span> <span class="n">data</span><span class="o">$</span><span class="n">date</span><span class="p">,</span>
-               <span class="n">date_labels</span> <span class="o">=</span> <span class="s">&quot;%b&quot;</span><span class="p">)</span>
-<span class="n">p3</span>
+  scale_x_date<span class="p">(</span>breaks <span class="o">=</span> data<span class="o">$</span><span class="kp">date</span><span class="p">,</span>
+               date_labels <span class="o">=</span> <span class="s">&quot;%b&quot;</span><span class="p">)</span>
+p3
 </pre></div>
 </div>
 <p><img alt="image6" src="p13-01-casestudy-truc-quan-hoa_files/figure-html/unnamed-chunk-10-1.png" /></p>
 <p>Cuối cùng, ta có thể nhóm hai biểu đồ trên với <code class="docutils literal notranslate"><span class="pre">grid</span></code> &amp; <code class="docutils literal notranslate"><span class="pre">gridExtra</span></code>.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">grid.newpage</span><span class="p">()</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>grid.newpage<span class="p">()</span>
 
 <span class="c1"># Xác định vị trí cho biểu đồ chính</span>
-<span class="n">position_1</span> <span class="o">&lt;-</span> <span class="nf">viewport</span><span class="p">(</span><span class="n">width</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
-                       <span class="n">x</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span>
+position_1 <span class="o">&lt;-</span> viewport<span class="p">(</span>width <span class="o">=</span> <span class="m">1</span><span class="p">,</span> height <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
+                       x <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> y <span class="o">=</span> <span class="m">0.5</span><span class="p">)</span>
 
 <span class="c1"># Vị trí cho biểu đồ phụ</span>
-<span class="n">position_2</span> <span class="o">&lt;-</span> <span class="nf">viewport</span><span class="p">(</span><span class="n">width</span> <span class="o">=</span> <span class="m">0.35</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="m">0.25</span><span class="p">,</span>
-                       <span class="n">x</span> <span class="o">=</span> <span class="m">0.25</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="m">0.75</span><span class="p">)</span>
+position_2 <span class="o">&lt;-</span> viewport<span class="p">(</span>width <span class="o">=</span> <span class="m">0.35</span><span class="p">,</span> height <span class="o">=</span> <span class="m">0.25</span><span class="p">,</span>
+                       x <span class="o">=</span> <span class="m">0.25</span><span class="p">,</span> y <span class="o">=</span> <span class="m">0.75</span><span class="p">)</span>
 
-<span class="nf">print</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">vp</span> <span class="o">=</span> <span class="n">position_1</span><span class="p">)</span>
-<span class="nf">print</span><span class="p">(</span><span class="n">p3</span><span class="p">,</span> <span class="n">vp</span> <span class="o">=</span> <span class="n">position_2</span><span class="p">)</span>
+<span class="kp">print</span><span class="p">(</span>p2<span class="p">,</span> vp <span class="o">=</span> position_1<span class="p">)</span>
+<span class="kp">print</span><span class="p">(</span>p3<span class="p">,</span> vp <span class="o">=</span> position_2<span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image7" src="p13-01-casestudy-truc-quan-hoa_files/figure-html/unnamed-chunk-11-1.png" /></p>
@@ -609,21 +610,21 @@ trong những biểu đồ phổ biến nhưng lại rất hiệu quả khi mu�
 dịch thay đổi của một chỉ số giữa hai điểm thời gian. Trong case study
 này, ta xây dựng biểu đồ <code class="docutils literal notranslate"><span class="pre">lollipop</span> <span class="pre">chart</span></code> với <code class="docutils literal notranslate"><span class="pre">ggplot2</span></code>.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load library</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">gapminder</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>gapminder<span class="p">)</span>
 </pre></div>
 </div>
 <p>Để xây dựng biểu đồ, ta sử dụng dữ liệu <code class="docutils literal notranslate"><span class="pre">gapminder</span></code> từ tập dữ liệu
 gapminder. Mục tiêu là xây dựng biểu đồ thể hiện được sự thay đổi
 GDP/đầu người của các nước châu Âu trong năm 1952 so với năm 1977.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">&lt;-</span> <span class="n">gapminder</span> <span class="o">%&gt;%</span>
-  <span class="nf">filter</span><span class="p">(</span><span class="n">continent</span> <span class="o">==</span> <span class="s">&quot;Europe&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">filter</span><span class="p">(</span><span class="n">year</span> <span class="o">%in%</span> <span class="nf">c</span><span class="p">(</span><span class="m">1952</span><span class="p">,</span> <span class="m">1977</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="n">country</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">gdpPercap</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">spread</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">gdpPercap</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">rename</span><span class="p">(</span><span class="n">y1952</span> <span class="o">=</span> <span class="n">`1952`</span><span class="p">,</span>
-         <span class="n">y1977</span> <span class="o">=</span> <span class="n">`1977`</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">%&gt;%</span> <span class="nf">head</span><span class="p">(</span><span class="m">10</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">&lt;-</span> gapminder <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>continent <span class="o">==</span> <span class="s">&quot;Europe&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>year <span class="o">%in%</span> <span class="kt">c</span><span class="p">(</span><span class="m">1952</span><span class="p">,</span> <span class="m">1977</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  select<span class="p">(</span>country<span class="p">,</span> year<span class="p">,</span> gdpPercap<span class="p">)</span> <span class="o">%&gt;%</span>
+  spread<span class="p">(</span>year<span class="p">,</span> gdpPercap<span class="p">)</span> <span class="o">%&gt;%</span>
+  rename<span class="p">(</span>y1952 <span class="o">=</span> <span class="sb">`1952`</span><span class="p">,</span>
+         y1977 <span class="o">=</span> <span class="sb">`1977`</span><span class="p">)</span>
+data <span class="o">%&gt;%</span> <span class="kp">head</span><span class="p">(</span><span class="m">10</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 10 x 3</span>
@@ -644,18 +645,18 @@ GDP/đầu người của các nước châu Âu trong năm 1952 so với năm 1
 <p>Biểu đồ lollipop có thể xây dựng dựa trên <code class="docutils literal notranslate"><span class="pre">geom_point</span></code> và
 <code class="docutils literal notranslate"><span class="pre">geom_segment</span></code> như sau.</p>
 <p><strong>Biểu đồ đầu tiên</strong></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span>  <span class="o">=</span> <span class="n">country</span><span class="p">))</span> <span class="o">+</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x  <span class="o">=</span> country<span class="p">))</span> <span class="o">+</span>
   <span class="c1"># Tạo đường nối giữa hai điểm</span>
-  <span class="nf">geom_segment</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="n">y1952</span><span class="p">,</span> <span class="n">yend</span> <span class="o">=</span> <span class="n">y1977</span><span class="p">,</span>
-               <span class="n">x</span> <span class="o">=</span> <span class="n">country</span><span class="p">,</span> <span class="n">xend</span> <span class="o">=</span> <span class="n">country</span><span class="p">),</span> <span class="n">size</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
-               <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;grey50&quot;</span><span class="p">)</span> <span class="o">+</span>
+  geom_segment<span class="p">(</span>aes<span class="p">(</span>y <span class="o">=</span> y1952<span class="p">,</span> yend <span class="o">=</span> y1977<span class="p">,</span>
+               x <span class="o">=</span> country<span class="p">,</span> xend <span class="o">=</span> country<span class="p">),</span> size <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
+               col <span class="o">=</span> <span class="s">&quot;grey50&quot;</span><span class="p">)</span> <span class="o">+</span>
   <span class="c1"># Tạo điểm đầu</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">country</span><span class="p">,</span> <span class="n">y1952</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;1952&quot;</span><span class="p">),</span> <span class="n">size</span> <span class="o">=</span> <span class="m">3.5</span><span class="p">)</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>country<span class="p">,</span> y1952<span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;1952&quot;</span><span class="p">),</span> size <span class="o">=</span> <span class="m">3.5</span><span class="p">)</span> <span class="o">+</span>
   <span class="c1"># Tạo điểm cuối</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">country</span><span class="p">,</span> <span class="n">y1977</span><span class="p">,</span>
-             <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;1977&quot;</span><span class="p">),</span> <span class="n">size</span> <span class="o">=</span> <span class="m">3.5</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">coord_flip</span><span class="p">()</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>country<span class="p">,</span> y1977<span class="p">,</span>
+             color <span class="o">=</span> <span class="s">&quot;1977&quot;</span><span class="p">),</span> size <span class="o">=</span> <span class="m">3.5</span><span class="p">)</span> <span class="o">+</span>
+  coord_flip<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image8" src="p13-01-casestudy-truc-quan-hoa_files/figure-html/unnamed-chunk-14-1.png" /></p>
@@ -671,66 +672,66 @@ hơn.</li>
 </ul>
 <p>Ta có thể chỉnh lại biểu đồ như sau.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tinh chỉnh theme cho biểu đồ</span>
-<span class="n">my_theme</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="kc">...</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nf">theme_bw</span><span class="p">()</span> <span class="o">+</span>
-    <span class="nf">theme</span><span class="p">(</span><span class="n">plot.background</span> <span class="o">=</span> <span class="nf">element_rect</span><span class="p">(</span><span class="n">fill</span> <span class="o">=</span> <span class="s">&quot;white&quot;</span><span class="p">))</span> <span class="o">+</span>
-    <span class="nf">theme</span><span class="p">(</span><span class="n">panel.grid.minor</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">())</span> <span class="o">+</span>
-    <span class="nf">theme</span><span class="p">(</span><span class="n">panel.grid.major.y</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">())</span> <span class="o">+</span>
-    <span class="nf">theme</span><span class="p">(</span><span class="n">panel.grid.major.x</span> <span class="o">=</span> <span class="nf">element_line</span><span class="p">())</span> <span class="o">+</span>
-    <span class="nf">theme</span><span class="p">(</span><span class="n">axis.ticks</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">())</span> <span class="o">+</span>
-    <span class="nf">theme</span><span class="p">(</span><span class="n">panel.border</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">())</span> <span class="o">+</span>
-    <span class="nf">theme</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">13</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">))</span> <span class="o">+</span>
-    <span class="nf">theme</span><span class="p">(</span><span class="n">plot.subtitle</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">color</span> <span class="o">=</span> <span class="s">&quot;gray20&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">10</span><span class="p">,</span> <span class="n">face</span> <span class="o">=</span> <span class="s">&quot;italic&quot;</span><span class="p">))</span> <span class="o">+</span>
-    <span class="nf">theme</span><span class="p">(</span><span class="n">legend.title</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">size</span> <span class="o">=</span> <span class="m">10</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;gray20&quot;</span><span class="p">))</span> <span class="o">+</span>
-    <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;top&quot;</span><span class="p">)</span>
+my_theme <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span><span class="kc">...</span><span class="p">)</span> <span class="p">{</span>
+  theme_bw<span class="p">()</span> <span class="o">+</span>
+    theme<span class="p">(</span>plot.background <span class="o">=</span> element_rect<span class="p">(</span>fill <span class="o">=</span> <span class="s">&quot;white&quot;</span><span class="p">))</span> <span class="o">+</span>
+    theme<span class="p">(</span>panel.grid.minor <span class="o">=</span> element_blank<span class="p">())</span> <span class="o">+</span>
+    theme<span class="p">(</span>panel.grid.major.y <span class="o">=</span> element_blank<span class="p">())</span> <span class="o">+</span>
+    theme<span class="p">(</span>panel.grid.major.x <span class="o">=</span> element_line<span class="p">())</span> <span class="o">+</span>
+    theme<span class="p">(</span>axis.ticks <span class="o">=</span> element_blank<span class="p">())</span> <span class="o">+</span>
+    theme<span class="p">(</span>panel.border <span class="o">=</span> element_blank<span class="p">())</span> <span class="o">+</span>
+    theme<span class="p">(</span>text <span class="o">=</span> element_text<span class="p">(</span>size <span class="o">=</span> <span class="m">13</span><span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">))</span> <span class="o">+</span>
+    theme<span class="p">(</span>plot.subtitle <span class="o">=</span> element_text<span class="p">(</span>color <span class="o">=</span> <span class="s">&quot;gray20&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">10</span><span class="p">,</span> face <span class="o">=</span> <span class="s">&quot;italic&quot;</span><span class="p">))</span> <span class="o">+</span>
+    theme<span class="p">(</span>legend.title <span class="o">=</span> element_text<span class="p">(</span>size <span class="o">=</span> <span class="m">10</span><span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;gray20&quot;</span><span class="p">))</span> <span class="o">+</span>
+    theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;top&quot;</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="c1"># Tạo biểu đồ mới</span>
-<span class="n">p1</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">country</span> <span class="o">=</span> <span class="nf">fct_reorder</span><span class="p">(</span><span class="n">country</span><span class="p">,</span> <span class="n">y1977</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span>  <span class="o">=</span> <span class="n">country</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_segment</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="n">y1952</span><span class="p">,</span> <span class="n">yend</span> <span class="o">=</span> <span class="n">y1977</span><span class="p">,</span>
-               <span class="n">x</span> <span class="o">=</span> <span class="n">country</span><span class="p">,</span> <span class="n">xend</span> <span class="o">=</span> <span class="n">country</span><span class="p">),</span> <span class="n">size</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
-               <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;grey50&quot;</span><span class="p">,</span>
-               <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.7</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">country</span><span class="p">,</span> <span class="n">y1952</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;1952&quot;</span><span class="p">),</span>
-             <span class="n">size</span> <span class="o">=</span> <span class="m">3.5</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.7</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">country</span><span class="p">,</span> <span class="n">y1977</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;1977&quot;</span><span class="p">),</span>
-             <span class="n">size</span> <span class="o">=</span> <span class="m">3.5</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.7</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">coord_flip</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">my_theme</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">scale_y_continuous</span><span class="p">(</span><span class="n">breaks</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">30000</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="m">5000</span><span class="p">),</span>
-                     <span class="n">limits</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">800</span><span class="p">,</span> <span class="m">27000</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">scale_color_manual</span><span class="p">(</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Year&quot;</span><span class="p">,</span>
-    <span class="n">labels</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;1952&quot;</span><span class="p">,</span> <span class="s">&quot;1977&quot;</span><span class="p">),</span>
-    <span class="n">values</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;darkblue&quot;</span><span class="p">,</span> <span class="s">&quot;darkred&quot;</span><span class="p">)</span>
+p1 <span class="o">&lt;-</span> data <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>country <span class="o">=</span> fct_reorder<span class="p">(</span>country<span class="p">,</span> y1977<span class="p">))</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x  <span class="o">=</span> country<span class="p">))</span> <span class="o">+</span>
+  geom_segment<span class="p">(</span>aes<span class="p">(</span>y <span class="o">=</span> y1952<span class="p">,</span> yend <span class="o">=</span> y1977<span class="p">,</span>
+               x <span class="o">=</span> country<span class="p">,</span> xend <span class="o">=</span> country<span class="p">),</span> size <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
+               col <span class="o">=</span> <span class="s">&quot;grey50&quot;</span><span class="p">,</span>
+               alpha <span class="o">=</span> <span class="m">0.7</span><span class="p">)</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>country<span class="p">,</span> y1952<span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;1952&quot;</span><span class="p">),</span>
+             size <span class="o">=</span> <span class="m">3.5</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">0.7</span><span class="p">)</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>country<span class="p">,</span> y1977<span class="p">,</span> color <span class="o">=</span> <span class="s">&quot;1977&quot;</span><span class="p">),</span>
+             size <span class="o">=</span> <span class="m">3.5</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">0.7</span><span class="p">)</span> <span class="o">+</span>
+  coord_flip<span class="p">()</span> <span class="o">+</span>
+  my_theme<span class="p">()</span> <span class="o">+</span>
+  scale_y_continuous<span class="p">(</span>breaks <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">30000</span><span class="p">,</span> by <span class="o">=</span> <span class="m">5000</span><span class="p">),</span>
+                     limits <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">800</span><span class="p">,</span> <span class="m">27000</span><span class="p">))</span> <span class="o">+</span>
+  scale_color_manual<span class="p">(</span>
+    name <span class="o">=</span> <span class="s">&quot;Year&quot;</span><span class="p">,</span>
+    labels <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;1952&quot;</span><span class="p">,</span> <span class="s">&quot;1977&quot;</span><span class="p">),</span>
+    values <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;darkblue&quot;</span><span class="p">,</span> <span class="s">&quot;darkred&quot;</span><span class="p">)</span>
   <span class="p">)</span> <span class="o">+</span>
-  <span class="nf">labs</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
-       <span class="n">title</span> <span class="o">=</span> <span class="s">&quot;An example of lollipop chart&quot;</span><span class="p">,</span>
-       <span class="n">subtitle</span> <span class="o">=</span> <span class="s">&quot;Changes of GDP per capita in Europe&quot;</span><span class="p">,</span>
-       <span class="n">caption</span> <span class="o">=</span> <span class="s">&quot;Created by RAnalytics.vn&quot;</span><span class="p">)</span>
-<span class="n">p1</span>
+  labs<span class="p">(</span>x <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span> y <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+       title <span class="o">=</span> <span class="s">&quot;An example of lollipop chart&quot;</span><span class="p">,</span>
+       subtitle <span class="o">=</span> <span class="s">&quot;Changes of GDP per capita in Europe&quot;</span><span class="p">,</span>
+       caption <span class="o">=</span> <span class="s">&quot;Created by RAnalytics.vn&quot;</span><span class="p">)</span>
+p1
 </pre></div>
 </div>
 <p><img alt="image9" src="p13-01-casestudy-truc-quan-hoa_files/figure-html/unnamed-chunk-15-1.png" /></p>
 <p><strong>Bonus</strong>: Để nhấn mạnh hơn sự thay đổi của GDP per capita, ta có thể vẽ
 thêm các đường nối các điểm trong biểu đồ như sau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">p2</span> <span class="o">&lt;-</span> <span class="n">p1</span> <span class="o">+</span> <span class="nf">geom_line</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">country</span><span class="p">),</span> <span class="n">y1977</span><span class="p">),</span>
-               <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">)</span>
-<span class="n">p2</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>p2 <span class="o">&lt;-</span> p1 <span class="o">+</span> geom_line<span class="p">(</span>aes<span class="p">(</span><span class="kp">as.numeric</span><span class="p">(</span>country<span class="p">),</span> y1977<span class="p">),</span>
+               col <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">)</span>
+p2
 </pre></div>
 </div>
 <p><img alt="image10" src="p13-01-casestudy-truc-quan-hoa_files/figure-html/unnamed-chunk-16-1.png" /></p>
 </div>
 <div class="section" id="truc-quan-hoa-cac-phan-trung-lap-nhau">
 <h2>1.4. Trực quan hóa các phần trùng lặp nhau<a class="headerlink" href="#truc-quan-hoa-cac-phan-trung-lap-nhau" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">UpSetR</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>UpSetR<span class="p">)</span>
 
-<span class="n">movies</span> <span class="o">&lt;-</span> <span class="nf">read.csv</span><span class="p">(</span> <span class="nf">system.file</span><span class="p">(</span><span class="s">&quot;extdata&quot;</span><span class="p">,</span> <span class="s">&quot;movies.csv&quot;</span><span class="p">,</span> <span class="n">package</span> <span class="o">=</span> <span class="s">&quot;UpSetR&quot;</span><span class="p">),</span> <span class="n">header</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s">&quot;;&quot;</span> <span class="p">)</span>
+movies <span class="o">&lt;-</span> read.csv<span class="p">(</span> <span class="kp">system.file</span><span class="p">(</span><span class="s">&quot;extdata&quot;</span><span class="p">,</span> <span class="s">&quot;movies.csv&quot;</span><span class="p">,</span> package <span class="o">=</span> <span class="s">&quot;UpSetR&quot;</span><span class="p">),</span> header<span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span> sep<span class="o">=</span><span class="s">&quot;;&quot;</span> <span class="p">)</span>
 
-<span class="n">movies</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+movies <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##                                 Name ReleaseDate Action Adventure Children</span>
@@ -756,22 +757,22 @@ thêm các đường nối các điểm trong biểu đồ như sau.</p>
 <span class="c1">## 6       0     0        1   0       0      3.88     940</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">upset</span><span class="p">(</span><span class="n">movies</span><span class="p">,</span> <span class="n">nsets</span> <span class="o">=</span> <span class="m">3</span><span class="p">,</span> <span class="n">nintersects</span> <span class="o">=</span> <span class="m">30</span><span class="p">,</span> <span class="n">mb.ratio</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.55</span><span class="p">,</span> <span class="m">0.45</span><span class="p">),</span>
-      <span class="n">order.by</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;freq&quot;</span><span class="p">,</span> <span class="s">&quot;degree&quot;</span><span class="p">),</span> <span class="n">decreasing</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="kc">TRUE</span><span class="p">,</span><span class="kc">FALSE</span><span class="p">),</span>
-      <span class="n">mainbar.y.label</span> <span class="o">=</span> <span class="s">&quot;# of users by groups&quot;</span><span class="p">,</span>
-      <span class="n">sets.x.label</span> <span class="o">=</span> <span class="s">&quot;# of users by platforms&quot;</span><span class="p">,</span>
-      <span class="n">queries</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="n">query</span> <span class="o">=</span> <span class="n">intersects</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="s">&quot;Drama&quot;</span><span class="p">,</span> <span class="s">&quot;Action&quot;</span><span class="p">),</span>
-                          <span class="n">color</span> <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> <span class="n">active</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)),</span>
-      <span class="n">main.bar.color</span> <span class="o">=</span> <span class="s">&quot;darkgreen&quot;</span><span class="p">,</span>
-      <span class="n">text.scale</span> <span class="o">=</span> <span class="m">1.4</span><span class="p">,</span>
-      <span class="n">shade.alpha</span> <span class="o">=</span> <span class="m">0.55</span><span class="p">,</span>
-      <span class="n">point.size</span> <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>upset<span class="p">(</span>movies<span class="p">,</span> nsets <span class="o">=</span> <span class="m">3</span><span class="p">,</span> nintersects <span class="o">=</span> <span class="m">30</span><span class="p">,</span> mb.ratio <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">0.55</span><span class="p">,</span> <span class="m">0.45</span><span class="p">),</span>
+      order.by <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;freq&quot;</span><span class="p">,</span> <span class="s">&quot;degree&quot;</span><span class="p">),</span> decreasing <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="kc">TRUE</span><span class="p">,</span><span class="kc">FALSE</span><span class="p">),</span>
+      mainbar.y.label <span class="o">=</span> <span class="s">&quot;# of users by groups&quot;</span><span class="p">,</span>
+      sets.x.label <span class="o">=</span> <span class="s">&quot;# of users by platforms&quot;</span><span class="p">,</span>
+      queries <span class="o">=</span> <span class="kt">list</span><span class="p">(</span><span class="kt">list</span><span class="p">(</span>query <span class="o">=</span> intersects<span class="p">,</span> params <span class="o">=</span> <span class="kt">list</span><span class="p">(</span><span class="s">&quot;Drama&quot;</span><span class="p">,</span> <span class="s">&quot;Action&quot;</span><span class="p">),</span>
+                          color <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> active <span class="o">=</span> <span class="bp">T</span><span class="p">)),</span>
+      main.bar.color <span class="o">=</span> <span class="s">&quot;darkgreen&quot;</span><span class="p">,</span>
+      text.scale <span class="o">=</span> <span class="m">1.4</span><span class="p">,</span>
+      shade.alpha <span class="o">=</span> <span class="m">0.55</span><span class="p">,</span>
+      point.size <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image11" src="p13-01-casestudy-truc-quan-hoa_files/figure-html/unnamed-chunk-17-1.png" /></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lưu file về máy</span>
-<span class="nf">dev.copy</span><span class="p">(</span><span class="n">png</span><span class="p">,</span><span class="s">&#39;myplot.png&#39;</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="m">600</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="m">400</span><span class="p">)</span>
-<span class="nf">dev.off</span><span class="p">()</span>
+dev.copy<span class="p">(</span>png<span class="p">,</span><span class="s">&#39;myplot.png&#39;</span><span class="p">,</span> width <span class="o">=</span> <span class="m">600</span><span class="p">,</span> height <span class="o">=</span> <span class="m">400</span><span class="p">)</span>
+dev.off<span class="p">()</span>
 </pre></div>
 </div>
 </div>

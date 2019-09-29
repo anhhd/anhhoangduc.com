@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -292,61 +293,61 @@
 <span class="c1">#Key 1: 01d3b74966574fee929ee6b6462ff2f3</span>
 <span class="c1">#Key 2: 80a9b1f8d635412b9f4804e51bfbcef6</span>
 
-<span class="n">my_subscription_key</span> <span class="o">&lt;-</span> <span class="s">&quot;01d3b74966574fee929ee6b6462ff2f3&quot;</span>
+my_subscription_key <span class="o">&lt;-</span> <span class="s">&quot;01d3b74966574fee929ee6b6462ff2f3&quot;</span>
 <span class="c1">#Packages</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">httr</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">jsonlite</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>httr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>jsonlite<span class="p">)</span>
 
 <span class="c1"># Below is the Request body for the API having text</span>
 <span class="c1"># id 1 = Negative sentiments, id 2 = Positive sentiments</span>
 
-<span class="n">request_body</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span>
-  <span class="n">language</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;en&quot;</span><span class="p">,</span><span class="s">&quot;en&quot;</span><span class="p">),</span>
-  <span class="n">id</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;1&quot;</span><span class="p">,</span><span class="s">&quot;2&quot;</span><span class="p">),</span>
-  <span class="n">text</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;This is wasted! I&#39;m angry&quot;</span><span class="p">,</span>
+request_body <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>
+  language <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;en&quot;</span><span class="p">,</span><span class="s">&quot;en&quot;</span><span class="p">),</span>
+  id <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;1&quot;</span><span class="p">,</span><span class="s">&quot;2&quot;</span><span class="p">),</span>
+  text <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;This is wasted! I&#39;m angry&quot;</span><span class="p">,</span>
            <span class="s">&quot;This is awesome! Good Job Team! appreciated&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 
 <span class="c1"># Converting the Request body(Dataframe) to Request body(JSON)</span>
 
-<span class="n">request_body_json</span> <span class="o">&lt;-</span> <span class="nf">toJSON</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="n">documents</span> <span class="o">=</span> <span class="n">request_body</span><span class="p">),</span> <span class="n">auto_unbox</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+request_body_json <span class="o">&lt;-</span> toJSON<span class="p">(</span><span class="kt">list</span><span class="p">(</span>documents <span class="o">=</span> request_body<span class="p">),</span> auto_unbox <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
 
 <span class="c1"># Below we are calling API (Adding Request headers using add_headers)</span>
 
-<span class="n">result</span> <span class="o">&lt;-</span> <span class="nf">POST</span><span class="p">(</span><span class="s">&quot;https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment&quot;</span><span class="p">,</span>
-               <span class="n">body</span> <span class="o">=</span> <span class="n">request_body_json</span><span class="p">,</span>
-               <span class="nf">add_headers</span><span class="p">(</span><span class="n">.headers</span> <span class="o">=</span>
-                             <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Content-Type&quot;</span><span class="o">=</span><span class="s">&quot;application/json&quot;</span><span class="p">,</span>
+result <span class="o">&lt;-</span> POST<span class="p">(</span><span class="s">&quot;https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/sentiment&quot;</span><span class="p">,</span>
+               body <span class="o">=</span> request_body_json<span class="p">,</span>
+               add_headers<span class="p">(</span><span class="m">.</span>headers <span class="o">=</span>
+                             <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Content-Type&quot;</span><span class="o">=</span><span class="s">&quot;application/json&quot;</span><span class="p">,</span>
                                <span class="s">&quot;Ocp-Apim-Subscription-Key&quot;</span><span class="o">=</span><span class="s">&quot;01d3b74966574fee929ee6b6462ff2f3&quot;</span><span class="p">)))</span>
-<span class="n">Output</span> <span class="o">&lt;-</span> <span class="nf">content</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+Output <span class="o">&lt;-</span> content<span class="p">(</span>result<span class="p">)</span>
 
 <span class="c1"># Show Output</span>
-<span class="n">Output</span>
+Output
 
 
 
 <span class="c1"># Detect language ---------------------------------------------------------</span>
 
 <span class="c1"># Below is the Request body for the API</span>
-<span class="n">request_body</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span>
-  <span class="n">id</span> <span class="o">=</span> <span class="s">&quot;1&quot;</span><span class="p">,</span>
-  <span class="n">text</span> <span class="o">=</span> <span class="s">&quot;Bài báo như dở hơi! Thật là khốn nạn! Làm như kít&quot;</span><span class="p">,</span>
-  <span class="n">stringsAsFactors</span> <span class="o">=</span> <span class="kc">FALSE</span>
+request_body <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>
+  id <span class="o">=</span> <span class="s">&quot;1&quot;</span><span class="p">,</span>
+  text <span class="o">=</span> <span class="s">&quot;Bài báo như dở hơi! Thật là khốn nạn! Làm như kít&quot;</span><span class="p">,</span>
+  stringsAsFactors <span class="o">=</span> <span class="kc">FALSE</span>
 <span class="p">)</span>
 
 <span class="c1"># Converting the Request body(Dataframe) to Request body(JSON)</span>
-<span class="n">request_body_json</span> <span class="o">&lt;-</span> <span class="nf">toJSON</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="n">documents</span> <span class="o">=</span> <span class="n">request_body</span><span class="p">),</span> <span class="n">auto_unbox</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
+request_body_json <span class="o">&lt;-</span> toJSON<span class="p">(</span><span class="kt">list</span><span class="p">(</span>documents <span class="o">=</span> request_body<span class="p">),</span> auto_unbox <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span>
 
 <span class="c1"># Below we are calling API (Adding Request headers using add_headers)</span>
 <span class="c1"># Here parameter numberOfLanguagesToDetect=1</span>
 
-<span class="n">result</span> <span class="o">&lt;-</span> <span class="nf">POST</span><span class="p">(</span><span class="s">&quot;https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/languages?numberOfLanguagesToDetect=1&quot;</span><span class="p">,</span>
-               <span class="n">body</span> <span class="o">=</span> <span class="n">request_body_json</span> <span class="p">,</span>
-               <span class="nf">add_headers</span><span class="p">(</span><span class="n">.headers</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Content-Type&quot;</span><span class="o">=</span><span class="s">&quot;application/json&quot;</span><span class="p">,</span>
-                                        <span class="s">&quot;Ocp-Apim-Subscription-Key&quot;</span><span class="o">=</span><span class="n">my_subscription_key</span><span class="p">))</span>
+result <span class="o">&lt;-</span> POST<span class="p">(</span><span class="s">&quot;https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/languages?numberOfLanguagesToDetect=1&quot;</span><span class="p">,</span>
+               body <span class="o">=</span> request_body_json <span class="p">,</span>
+               add_headers<span class="p">(</span><span class="m">.</span>headers <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Content-Type&quot;</span><span class="o">=</span><span class="s">&quot;application/json&quot;</span><span class="p">,</span>
+                                        <span class="s">&quot;Ocp-Apim-Subscription-Key&quot;</span><span class="o">=</span>my_subscription_key<span class="p">))</span>
 <span class="p">)</span>
-<span class="n">Output</span> <span class="o">&lt;-</span> <span class="nf">content</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-<span class="n">Output</span>
+Output <span class="o">&lt;-</span> content<span class="p">(</span>result<span class="p">)</span>
+Output
 </pre></div>
 </div>
 </div>

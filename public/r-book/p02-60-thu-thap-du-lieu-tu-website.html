@@ -129,14 +129,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -300,77 +301,77 @@ thuộc tag nào:</p>
 <li>Sử dụng <code class="docutils literal notranslate"><span class="pre">Chrome</span> <span class="pre">&gt;&gt;</span> <span class="pre">F12</span></code></li>
 <li>Sử dụng selectorgadget addin của chrome để xác định node</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">vignette</span><span class="p">(</span><span class="s">&quot;selectorgadget&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>vignette<span class="p">(</span><span class="s">&quot;selectorgadget&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Ví dụ 1</strong>:</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">&lt;-</span> <span class="s">&#39;http://www.imdb.com/search/title?count=100&amp;release_date=2016,2016&amp;title_type=feature&#39;</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>url <span class="o">&lt;-</span> <span class="s">&#39;http://www.imdb.com/search/title?count=100&amp;release_date=2016,2016&amp;title_type=feature&#39;</span>
 
-<span class="n">webpage</span> <span class="o">&lt;-</span> <span class="nf">read_html</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-<span class="n">webpage</span> <span class="o">%&gt;%</span>
-  <span class="nf">html_nodes</span><span class="p">(</span><span class="s">&quot;.text-primary&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">html_text</span> <span class="o">%&gt;%</span>
-  <span class="n">as.numeric</span>
+webpage <span class="o">&lt;-</span> read_html<span class="p">(</span><span class="kp">url</span><span class="p">)</span>
+webpage <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span><span class="s">&quot;.text-primary&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text <span class="o">%&gt;%</span>
+  <span class="kp">as.numeric</span>
 
-<span class="n">webpage</span> <span class="o">%&gt;%</span>
-  <span class="nf">html_nodes</span><span class="p">(</span><span class="s">&#39;.lister-item-header a&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">html_text</span>
+webpage <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span><span class="s">&#39;.lister-item-header a&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text
 
-<span class="n">webpage</span> <span class="o">%&gt;%</span>
-  <span class="nf">html_nodes</span><span class="p">(</span><span class="s">&#39;.ratings-bar+ .text-muted&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">html_text</span>
+webpage <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span><span class="s">&#39;.ratings-bar+ .text-muted&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text
 
-<span class="n">webpage</span> <span class="o">%&gt;%</span>
-  <span class="nf">html_nodes</span><span class="p">(</span><span class="s">&#39;table&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">html_text</span>
+webpage <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span><span class="s">&#39;table&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text
 </pre></div>
 </div>
 <p><strong>Ví dụ 2</strong></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">rvest</span><span class="p">)</span>
-<span class="n">lego_movie</span> <span class="o">&lt;-</span> <span class="nf">read_html</span><span class="p">(</span><span class="s">&quot;http://www.imdb.com/title/tt1490017/&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>rvest<span class="p">)</span>
+lego_movie <span class="o">&lt;-</span> read_html<span class="p">(</span><span class="s">&quot;http://www.imdb.com/title/tt1490017/&quot;</span><span class="p">)</span>
 
-<span class="n">lego_movie</span> <span class="o">%&gt;%</span>
-  <span class="nf">html_nodes</span><span class="p">(</span><span class="s">&quot;table&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">html_table</span><span class="p">()</span> <span class="o">%&gt;%</span>
-  <span class="n">as.data.frame</span> <span class="o">%&gt;%</span> <span class="n">View</span>
+lego_movie <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span><span class="s">&quot;table&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_table<span class="p">()</span> <span class="o">%&gt;%</span>
+  as.data.frame <span class="o">%&gt;%</span> View
 </pre></div>
 </div>
 </div>
 <div class="section" id="ung-dung-scrape-techcombank-atm">
 <h2>12.2. Ứng dụng - Scrape Techcombank ATM<a class="headerlink" href="#ung-dung-scrape-techcombank-atm" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">branch_full</span> <span class="o">&lt;-</span> <span class="nf">character</span><span class="p">()</span>
-<span class="nf">for </span><span class="p">(</span><span class="n">i</span> <span class="n">in</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="p">){</span>
-<span class="n">url</span> <span class="o">&lt;-</span> <span class="nf">paste0</span><span class="p">(</span><span class="s">&#39;https://www.techcombank.com.vn/mang-luoi-dia-diem-atm/danh-sach-chi-nhanh-phong-giao-dich-va-atm?page=&#39;</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>branch_full <span class="o">&lt;-</span> <span class="kt">character</span><span class="p">()</span>
+<span class="kr">for</span> <span class="p">(</span>i <span class="kr">in</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="p">){</span>
+url <span class="o">&lt;-</span> <span class="kp">paste0</span><span class="p">(</span><span class="s">&#39;https://www.techcombank.com.vn/mang-luoi-dia-diem-atm/danh-sach-chi-nhanh-phong-giao-dich-va-atm?page=&#39;</span><span class="p">,</span>i<span class="p">)</span>
 
-<span class="n">webpage</span> <span class="o">&lt;-</span> <span class="nf">read_html</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">encoding</span> <span class="o">=</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
-<span class="n">webpage</span> <span class="o">%&gt;%</span>
-  <span class="nf">html_nodes</span><span class="p">(</span><span class="s">&quot;.title-entries a&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">html_text</span> <span class="o">%&gt;%</span>
-  <span class="n">as.character</span> <span class="o">-&gt;</span> <span class="n">branch</span>
-<span class="n">branch_full</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="n">branch_full</span><span class="p">,</span> <span class="n">branch</span><span class="p">)</span>
+webpage <span class="o">&lt;-</span> read_html<span class="p">(</span><span class="kp">url</span><span class="p">,</span> encoding <span class="o">=</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
+webpage <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span><span class="s">&quot;.title-entries a&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text <span class="o">%&gt;%</span>
+  as.character <span class="o">-&gt;</span> branch
+branch_full <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span>branch_full<span class="p">,</span> branch<span class="p">)</span>
 <span class="p">}</span>
-<span class="n">df</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">branch</span> <span class="o">=</span> <span class="n">branch_full</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">%&gt;%</span> <span class="n">DT</span><span class="o">::</span><span class="nf">datatable</span><span class="p">()</span>
+df <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>branch <span class="o">=</span> branch_full<span class="p">)</span>
+df <span class="o">%&gt;%</span> DT<span class="o">::</span>datatable<span class="p">()</span>
 
-<span class="nf">library</span><span class="p">(</span><span class="n">rvest</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="n">i</span> <span class="o">&lt;-</span> <span class="m">1</span>
-<span class="n">url</span> <span class="o">&lt;-</span> <span class="nf">paste0</span><span class="p">(</span><span class="s">&#39;https://www.techcombank.com.vn/mang-luoi-dia-diem-atm/danh-sach-chi-nhanh-phong-giao-dich-va-atm?page=&#39;</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>rvest<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+i <span class="o">&lt;-</span> <span class="m">1</span>
+url <span class="o">&lt;-</span> <span class="kp">paste0</span><span class="p">(</span><span class="s">&#39;https://www.techcombank.com.vn/mang-luoi-dia-diem-atm/danh-sach-chi-nhanh-phong-giao-dich-va-atm?page=&#39;</span><span class="p">,</span>i<span class="p">)</span>
 
-<span class="n">webpage</span> <span class="o">&lt;-</span> <span class="nf">read_html</span><span class="p">(</span><span class="nf">iconv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span>  <span class="n">from</span> <span class="o">=</span> <span class="s">&quot;ISO-8859-1&quot;</span><span class="p">,</span> <span class="n">to</span> <span class="o">=</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">),</span> <span class="n">encoding</span> <span class="o">=</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
-<span class="n">webpage</span> <span class="o">&lt;-</span> <span class="nf">read_html</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">encoding</span> <span class="o">=</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
+webpage <span class="o">&lt;-</span> read_html<span class="p">(</span><span class="kp">iconv</span><span class="p">(</span><span class="kp">url</span><span class="p">,</span>  from <span class="o">=</span> <span class="s">&quot;ISO-8859-1&quot;</span><span class="p">,</span> to <span class="o">=</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">),</span> encoding <span class="o">=</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
+webpage <span class="o">&lt;-</span> read_html<span class="p">(</span><span class="kp">url</span><span class="p">,</span> encoding <span class="o">=</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">)</span>
 
-<span class="n">webpage</span> <span class="o">&lt;-</span> <span class="nf">read_html</span><span class="p">(</span><span class="nf">iconv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span>
+webpage <span class="o">&lt;-</span> read_html<span class="p">(</span><span class="kp">iconv</span><span class="p">(</span><span class="kp">url</span><span class="p">,</span>
                           <span class="c1"># from = &quot;ISO-8859-1&quot;,</span>
-                           <span class="n">to</span> <span class="o">=</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">),</span> <span class="n">encoding</span> <span class="o">=</span> <span class="s">&quot;utf8&quot;</span><span class="p">)</span>
+                           to <span class="o">=</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">),</span> encoding <span class="o">=</span> <span class="s">&quot;utf8&quot;</span><span class="p">)</span>
 
-<span class="n">webpage</span> <span class="o">%&gt;%</span>
-  <span class="nf">html_nodes</span><span class="p">(</span><span class="s">&quot;.title-entries a&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">html_text</span> <span class="o">%&gt;%</span>
-  <span class="n">as.character</span> <span class="o">%&gt;%</span>
-  <span class="nf">repair_encoding</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">branch</span>
-<span class="n">df</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">branch</span> <span class="o">=</span> <span class="n">branch</span><span class="p">)</span>
-<span class="n">df</span>
+webpage <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span><span class="s">&quot;.title-entries a&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text <span class="o">%&gt;%</span>
+  as.character <span class="o">%&gt;%</span>
+  repair_encoding<span class="p">()</span> <span class="o">-&gt;</span> branch
+df <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>branch <span class="o">=</span> branch<span class="p">)</span>
+df
 </pre></div>
 </div>
 </div>
@@ -397,8 +398,8 @@ driver</a></li>
 <ul class="simple">
 <li><strong>Cách 1</strong>: Khởi động server tự động</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">selServ</span> <span class="o">&lt;-</span> <span class="nf">selenium</span><span class="p">(</span><span class="n">verbose</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span> <span class="c1">#installs selenium</span>
-<span class="n">selServ</span><span class="o">$</span><span class="n">process</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>selServ <span class="o">&lt;-</span> selenium<span class="p">(</span>verbose <span class="o">=</span> <span class="kc">TRUE</span><span class="p">)</span> <span class="c1">#installs selenium</span>
+selServ<span class="o">$</span>process
 </pre></div>
 </div>
 <ul class="simple">
@@ -415,64 +416,64 @@ java -jar selenium-server-standalone-2.47.0.jar -Dwebdriver.chrome.driver=./chro
 <li>Sử dụng Selenium để điều hướng web</li>
 </ul>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Step 1: Khởi động server</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">RSelenium</span><span class="p">)</span>
-<span class="n">remDr</span> <span class="o">&lt;-</span> <span class="nf">remoteDriver</span><span class="p">(</span><span class="n">remoteServerAddr</span> <span class="o">=</span> <span class="s">&quot;127.0.0.1&quot;</span>
-                      <span class="p">,</span> <span class="n">port</span> <span class="o">=</span> <span class="m">4444</span>
-                      <span class="p">,</span> <span class="n">browserName</span> <span class="o">=</span> <span class="s">&quot;chrome&quot;</span><span class="p">)</span>
-<span class="n">remDr</span><span class="o">$</span><span class="nf">open</span><span class="p">(</span><span class="n">silent</span> <span class="o">=</span> <span class="bp">F</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>RSelenium<span class="p">)</span>
+remDr <span class="o">&lt;-</span> remoteDriver<span class="p">(</span>remoteServerAddr <span class="o">=</span> <span class="s">&quot;127.0.0.1&quot;</span>
+                      <span class="p">,</span> port <span class="o">=</span> <span class="m">4444</span>
+                      <span class="p">,</span> browserName <span class="o">=</span> <span class="s">&quot;chrome&quot;</span><span class="p">)</span>
+remDr<span class="o">$</span><span class="kp">open</span><span class="p">(</span>silent <span class="o">=</span> <span class="bp">F</span><span class="p">)</span>
 
 <span class="c1">#Gọi website</span>
-<span class="n">remDr</span><span class="o">$</span><span class="nf">navigate</span><span class="p">(</span><span class="s">&quot;http://www.facebook.com&quot;</span><span class="p">)</span>
-<span class="n">remDr</span><span class="o">$</span><span class="nf">navigate</span><span class="p">(</span><span class="s">&quot;http://vietnamnet.vn/&quot;</span><span class="p">)</span>
-<span class="n">remDr</span><span class="o">$</span><span class="nf">getCurrentUrl</span><span class="p">()</span>
-<span class="n">remDr</span><span class="o">$</span><span class="nf">goBack</span><span class="p">()</span>
-<span class="n">remDr</span><span class="o">$</span><span class="nf">goForward</span><span class="p">()</span>
+remDr<span class="o">$</span>navigate<span class="p">(</span><span class="s">&quot;http://www.facebook.com&quot;</span><span class="p">)</span>
+remDr<span class="o">$</span>navigate<span class="p">(</span><span class="s">&quot;http://vietnamnet.vn/&quot;</span><span class="p">)</span>
+remDr<span class="o">$</span>getCurrentUrl<span class="p">()</span>
+remDr<span class="o">$</span>goBack<span class="p">()</span>
+remDr<span class="o">$</span>goForward<span class="p">()</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li>Chèn các đối tượng vào server</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">&lt;-</span> <span class="s">&quot;http://email-dbs.vpbank.com.vn/admin/index.php&quot;</span>
-<span class="n">remDr</span><span class="o">$</span><span class="nf">navigate</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>url <span class="o">&lt;-</span> <span class="s">&quot;http://email-dbs.vpbank.com.vn/admin/index.php&quot;</span>
+remDr<span class="o">$</span>navigate<span class="p">(</span><span class="kp">url</span><span class="p">)</span>
 <span class="c1">#Loại 1: Chèn thông tin</span>
-<span class="n">webElem_1</span> <span class="o">&lt;-</span> <span class="n">remDr</span><span class="o">$</span><span class="nf">findElement</span><span class="p">(</span><span class="n">using</span> <span class="o">=</span> <span class="s">&quot;css&quot;</span><span class="p">,</span> <span class="s">&quot;[name = &#39;ss_username&#39;]&quot;</span><span class="p">)</span>
-<span class="n">webElem_1</span><span class="o">$</span><span class="nf">sendKeysToElement</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="s">&#39;Ebank&#39;</span><span class="p">))</span>
-<span class="n">webElem_2</span> <span class="o">&lt;-</span> <span class="n">remDr</span><span class="o">$</span><span class="nf">findElement</span><span class="p">(</span><span class="n">using</span> <span class="o">=</span> <span class="s">&quot;css&quot;</span><span class="p">,</span> <span class="s">&quot;[name = &#39;ss_password&#39;]&quot;</span><span class="p">)</span>
-<span class="n">webElem_2</span><span class="o">$</span><span class="nf">sendKeysToElement</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="s">&#39;NganHangSo@15092016&#39;</span><span class="p">))</span>
-<span class="n">webElem_3</span> <span class="o">&lt;-</span> <span class="n">remDr</span><span class="o">$</span><span class="nf">findElement</span><span class="p">(</span><span class="n">using</span> <span class="o">=</span> <span class="s">&quot;css&quot;</span><span class="p">,</span> <span class="s">&quot;[name = &#39;ss_takemeto&#39;]&quot;</span><span class="p">)</span>
-<span class="n">webElem_3</span><span class="o">$</span><span class="nf">sendKeysToElement</span><span class="p">(</span><span class="nf">list</span><span class="p">(</span><span class="s">&#39;My Campaign Statistics&#39;</span><span class="p">))</span>
+webElem_1 <span class="o">&lt;-</span> remDr<span class="o">$</span>findElement<span class="p">(</span>using <span class="o">=</span> <span class="s">&quot;css&quot;</span><span class="p">,</span> <span class="s">&quot;[name = &#39;ss_username&#39;]&quot;</span><span class="p">)</span>
+webElem_1<span class="o">$</span>sendKeysToElement<span class="p">(</span><span class="kt">list</span><span class="p">(</span><span class="s">&#39;Ebank&#39;</span><span class="p">))</span>
+webElem_2 <span class="o">&lt;-</span> remDr<span class="o">$</span>findElement<span class="p">(</span>using <span class="o">=</span> <span class="s">&quot;css&quot;</span><span class="p">,</span> <span class="s">&quot;[name = &#39;ss_password&#39;]&quot;</span><span class="p">)</span>
+webElem_2<span class="o">$</span>sendKeysToElement<span class="p">(</span><span class="kt">list</span><span class="p">(</span><span class="s">&#39;NganHangSo@15092016&#39;</span><span class="p">))</span>
+webElem_3 <span class="o">&lt;-</span> remDr<span class="o">$</span>findElement<span class="p">(</span>using <span class="o">=</span> <span class="s">&quot;css&quot;</span><span class="p">,</span> <span class="s">&quot;[name = &#39;ss_takemeto&#39;]&quot;</span><span class="p">)</span>
+webElem_3<span class="o">$</span>sendKeysToElement<span class="p">(</span><span class="kt">list</span><span class="p">(</span><span class="s">&#39;My Campaign Statistics&#39;</span><span class="p">))</span>
 
 <span class="c1">#Loại 2: Chèn click</span>
-<span class="n">webElem_4</span> <span class="o">&lt;-</span> <span class="n">remDr</span><span class="o">$</span><span class="nf">findElement</span><span class="p">(</span><span class="n">using</span> <span class="o">=</span> <span class="s">&quot;css&quot;</span><span class="p">,</span> <span class="s">&quot;[name = &#39;SubmitButton&#39;]&quot;</span><span class="p">)</span>
-<span class="n">webElem_4</span><span class="o">$</span><span class="nf">clickElement</span><span class="p">()</span>
+webElem_4 <span class="o">&lt;-</span> remDr<span class="o">$</span>findElement<span class="p">(</span>using <span class="o">=</span> <span class="s">&quot;css&quot;</span><span class="p">,</span> <span class="s">&quot;[name = &#39;SubmitButton&#39;]&quot;</span><span class="p">)</span>
+webElem_4<span class="o">$</span>clickElement<span class="p">()</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li>Crawl data bằng rvest hoặc save toàn bộ dữ liệu</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">&lt;-</span> <span class="s">&quot;http://email-dbs.vpbank.com.vn/admin/index.php?Page=Stats&amp;Action=Newsletters&amp;SubAction=ViewSummary&amp;id=763#&quot;</span>
-<span class="n">remDr</span><span class="o">$</span><span class="nf">navigate</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>url <span class="o">&lt;-</span> <span class="s">&quot;http://email-dbs.vpbank.com.vn/admin/index.php?Page=Stats&amp;Action=Newsletters&amp;SubAction=ViewSummary&amp;id=763#&quot;</span>
+remDr<span class="o">$</span>navigate<span class="p">(</span><span class="kp">url</span><span class="p">)</span>
 
-<span class="nf">library</span><span class="p">(</span><span class="n">XML</span><span class="p">)</span>
-<span class="n">html_source</span> <span class="o">&lt;-</span> <span class="n">remDr</span><span class="o">$</span><span class="nf">getPageSource</span><span class="p">()</span><span class="n">[[1]]</span>
-<span class="n">html_parse</span> <span class="o">&lt;-</span> <span class="n">html_source</span> <span class="o">%&gt;%</span> <span class="n">htmlParse</span>
-<span class="n">doc</span> <span class="o">&lt;-</span> <span class="nf">readHTMLTable</span><span class="p">(</span><span class="n">html_parse</span><span class="p">)</span>
-<span class="n">doc[[8]]</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+<span class="kn">library</span><span class="p">(</span>XML<span class="p">)</span>
+html_source <span class="o">&lt;-</span> remDr<span class="o">$</span>getPageSource<span class="p">()[[</span><span class="m">1</span><span class="p">]]</span>
+html_parse <span class="o">&lt;-</span> html_source <span class="o">%&gt;%</span> htmlParse
+doc <span class="o">&lt;-</span> readHTMLTable<span class="p">(</span>html_parse<span class="p">)</span>
+doc<span class="p">[[</span><span class="m">8</span><span class="p">]]</span> <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <p><strong>Cách 2</strong></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">html_source</span> <span class="o">&lt;-</span> <span class="n">remDr</span><span class="o">$</span><span class="nf">getPageSource</span><span class="p">()</span><span class="n">[[1]]</span>
-<span class="n">html_source</span> <span class="o">%&gt;%</span>
-  <span class="nf">write.table</span><span class="p">(</span><span class="n">file</span> <span class="o">=</span> <span class="s">&quot;my_html.html&quot;</span><span class="p">,</span>
-                           <span class="n">row.names</span> <span class="o">=</span> <span class="bp">F</span><span class="p">,</span>
-                           <span class="n">quote</span> <span class="o">=</span> <span class="bp">F</span><span class="p">,</span>
-                           <span class="n">col.names</span> <span class="o">=</span> <span class="bp">F</span><span class="p">,</span>
-                           <span class="n">fileEncoding</span> <span class="o">=</span> <span class="s">&quot;utf8&quot;</span><span class="p">)</span>
-<span class="n">html_source</span> <span class="o">%&gt;%</span> <span class="n">class</span>
-<span class="nf">read_html</span><span class="p">(</span><span class="s">&quot;my_html.html&quot;</span><span class="p">,</span> <span class="n">encoding</span> <span class="o">=</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">html_nodes</span><span class="p">(</span><span class="s">&quot;table&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">my_table</span>
-<span class="n">my_table[[8]]</span> <span class="o">%&gt;%</span> <span class="n">html_table</span> <span class="o">-&gt;</span> <span class="n">pop</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>html_source <span class="o">&lt;-</span> remDr<span class="o">$</span>getPageSource<span class="p">()[[</span><span class="m">1</span><span class="p">]]</span>
+html_source <span class="o">%&gt;%</span>
+  write.table<span class="p">(</span>file <span class="o">=</span> <span class="s">&quot;my_html.html&quot;</span><span class="p">,</span>
+                           row.names <span class="o">=</span> <span class="bp">F</span><span class="p">,</span>
+                           quote <span class="o">=</span> <span class="bp">F</span><span class="p">,</span>
+                           col.names <span class="o">=</span> <span class="bp">F</span><span class="p">,</span>
+                           fileEncoding <span class="o">=</span> <span class="s">&quot;utf8&quot;</span><span class="p">)</span>
+html_source <span class="o">%&gt;%</span> <span class="kp">class</span>
+read_html<span class="p">(</span><span class="s">&quot;my_html.html&quot;</span><span class="p">,</span> encoding <span class="o">=</span> <span class="s">&quot;UTF-8&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span><span class="s">&quot;table&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> my_table
+my_table<span class="p">[[</span><span class="m">8</span><span class="p">]]</span> <span class="o">%&gt;%</span> html_table <span class="o">-&gt;</span> pop
 </pre></div>
 </div>
 </div>
@@ -480,12 +481,12 @@ java -jar selenium-server-standalone-2.47.0.jar -Dwebdriver.chrome.driver=./chro
 <h2>12.4. Sử dụng SeleniumPipe<a class="headerlink" href="#su-dung-seleniumpipe" title="Permalink to this headline">¶</a></h2>
 <p>Bên cạnh <code class="docutils literal notranslate"><span class="pre">RSelenium</span></code>, ta có thể sử dụng <code class="docutils literal notranslate"><span class="pre">SeleniumPipe</span></code> để điều hướng
 website sử dụng toán tử <code class="docutils literal notranslate"><span class="pre">%&gt;%</span></code></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">remDr</span> <span class="o">&lt;-</span> <span class="nf">remoteDr</span><span class="p">(</span><span class="n">port</span> <span class="o">=</span> <span class="m">4444</span>
-                      <span class="p">,</span> <span class="n">browserName</span> <span class="o">=</span> <span class="s">&quot;chrome&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>remDr <span class="o">&lt;-</span> remoteDr<span class="p">(</span>port <span class="o">=</span> <span class="m">4444</span>
+                      <span class="p">,</span> browserName <span class="o">=</span> <span class="s">&quot;chrome&quot;</span><span class="p">)</span>
 
-<span class="n">remDr</span> <span class="o">%&gt;%</span> <span class="nf">go</span><span class="p">(</span><span class="s">&quot;http://www.google.com/ncr&quot;</span><span class="p">)</span>
+remDr <span class="o">%&gt;%</span> go<span class="p">(</span><span class="s">&quot;http://www.google.com/ncr&quot;</span><span class="p">)</span>
 
-<span class="n">webElem</span> <span class="o">&lt;-</span> <span class="n">remDr</span> <span class="o">%&gt;%</span> <span class="nf">findElement</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="s">&quot;q&quot;</span><span class="p">)</span>
+webElem <span class="o">&lt;-</span> remDr <span class="o">%&gt;%</span> findElement<span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="s">&quot;q&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

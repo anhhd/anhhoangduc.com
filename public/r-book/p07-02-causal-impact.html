@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -311,7 +312,7 @@ quan hệ giữa Y &amp; X có các giả định sau:<ul>
 </li>
 </ul>
 <p><strong>Packages CausalImpact</strong>:</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">devtools</span><span class="o">::</span><span class="nf">install_github</span><span class="p">(</span><span class="s">&quot;google/CausalImpact&quot;</span><span class="p">,</span> <span class="n">force</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>devtools<span class="o">::</span>install_github<span class="p">(</span><span class="s">&quot;google/CausalImpact&quot;</span><span class="p">,</span> force <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -320,17 +321,17 @@ quan hệ giữa Y &amp; X có các giả định sau:<ul>
 <p>Tạo dữ liệu với 100 quan sát có tương quan không đổi theo thời gian x và
 y. Từ quan sát thứ 71, xảy ra sự kiện A khiến y tăng thêm trung bình 10
 đơn vị nhưng không ảnh hưởng đến x.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">CausalImpact</span><span class="p">)</span>
-<span class="nf">set.seed</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>CausalImpact<span class="p">)</span>
+<span class="kp">set.seed</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
 <span class="c1">#Tạo mô hình ARIMA(0.999,0,0) hay AR(0.999)</span>
-<span class="n">x</span> <span class="o">&lt;-</span> <span class="m">100</span> <span class="o">+</span> <span class="nf">arima.sim</span><span class="p">(</span><span class="n">model</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">ar</span> <span class="o">=</span> <span class="m">0.999</span><span class="p">),</span> <span class="n">n</span> <span class="o">=</span> <span class="m">100</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">&lt;-</span> <span class="m">1.2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="nf">rnorm</span><span class="p">(</span><span class="m">100</span><span class="p">)</span>
-<span class="n">y[71</span><span class="o">:</span><span class="m">100</span><span class="n">]</span> <span class="o">&lt;-</span> <span class="n">y[71</span><span class="o">:</span><span class="m">100</span><span class="n">]</span> <span class="o">+</span> <span class="m">10</span>
+x <span class="o">&lt;-</span> <span class="m">100</span> <span class="o">+</span> arima.sim<span class="p">(</span>model <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>ar <span class="o">=</span> <span class="m">0.999</span><span class="p">),</span> n <span class="o">=</span> <span class="m">100</span><span class="p">)</span>
+y <span class="o">&lt;-</span> <span class="m">1.2</span> <span class="o">*</span> x <span class="o">+</span> rnorm<span class="p">(</span><span class="m">100</span><span class="p">)</span>
+y<span class="p">[</span><span class="m">71</span><span class="o">:</span><span class="m">100</span><span class="p">]</span> <span class="o">&lt;-</span> y<span class="p">[</span><span class="m">71</span><span class="o">:</span><span class="m">100</span><span class="p">]</span> <span class="o">+</span> <span class="m">10</span>
 <span class="c1">#Tạo thời gian</span>
-<span class="n">time.points</span> <span class="o">&lt;-</span> <span class="nf">seq.Date</span><span class="p">(</span><span class="nf">as.Date</span><span class="p">(</span><span class="s">&quot;2016-01-01&quot;</span><span class="p">),</span> <span class="n">by</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">length.out</span> <span class="o">=</span> <span class="m">100</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">&lt;-</span> <span class="nf">zoo</span><span class="p">(</span><span class="nf">cbind</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span><span class="n">time.points</span><span class="p">)</span>
-<span class="nf">head</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+time.points <span class="o">&lt;-</span> <span class="kp">seq.Date</span><span class="p">(</span><span class="kp">as.Date</span><span class="p">(</span><span class="s">&quot;2016-01-01&quot;</span><span class="p">),</span> by <span class="o">=</span> <span class="m">1</span><span class="p">,</span> length.out <span class="o">=</span> <span class="m">100</span><span class="p">)</span>
+data <span class="o">&lt;-</span> zoo<span class="p">(</span><span class="kp">cbind</span><span class="p">(</span>y<span class="p">,</span> x<span class="p">),</span>time.points<span class="p">)</span>
+<span class="kp">head</span><span class="p">(</span>data<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##                   y        x</span>
@@ -342,7 +343,7 @@ y. Từ quan sát thứ 71, xảy ra sự kiện A khiến y tăng thêm trung b
 <span class="c1">## 2016-01-06 101.4484 84.60650</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">tail</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kp">tail</span><span class="p">(</span>data<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##                   y        x</span>
@@ -354,20 +355,20 @@ y. Từ quan sát thứ 71, xảy ra sự kiện A khiến y tăng thêm trung b
 <span class="c1">## 2016-04-09 114.3264 85.10503</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">matplot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">type</span> <span class="o">=</span> <span class="s">&quot;l&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>matplot<span class="p">(</span>data<span class="p">,</span> type <span class="o">=</span> <span class="s">&quot;l&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image0" src="p07-02-causal-impact_files/figure-html/unnamed-chunk-3-1.png" /></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Xác định thời gian xảy ra sự kiện</span>
-<span class="n">pre.period</span> <span class="o">&lt;-</span> <span class="nf">as.Date</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;2016-01-01&quot;</span><span class="p">,</span> <span class="s">&quot;2016-03-11&quot;</span><span class="p">))</span>
-<span class="n">post.period</span> <span class="o">&lt;-</span> <span class="nf">as.Date</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;2016-03-12&quot;</span><span class="p">,</span> <span class="s">&quot;2016-04-09&quot;</span><span class="p">))</span>
+pre.period <span class="o">&lt;-</span> <span class="kp">as.Date</span><span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;2016-01-01&quot;</span><span class="p">,</span> <span class="s">&quot;2016-03-11&quot;</span><span class="p">))</span>
+post.period <span class="o">&lt;-</span> <span class="kp">as.Date</span><span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;2016-03-12&quot;</span><span class="p">,</span> <span class="s">&quot;2016-04-09&quot;</span><span class="p">))</span>
 <span class="c1">#Chạy mô hình</span>
-<span class="n">impact</span> <span class="o">&lt;-</span> <span class="nf">CausalImpact</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pre.period</span><span class="p">,</span> <span class="n">post.period</span><span class="p">)</span>
-<span class="nf">plot</span><span class="p">(</span><span class="n">impact</span><span class="p">)</span>
+impact <span class="o">&lt;-</span> CausalImpact<span class="p">(</span>data<span class="p">,</span> pre.period<span class="p">,</span> post.period<span class="p">)</span>
+plot<span class="p">(</span>impact<span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image1" src="p07-02-causal-impact_files/figure-html/unnamed-chunk-3-2.png" /></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">summary</span><span class="p">(</span><span class="n">impact</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kp">summary</span><span class="p">(</span>impact<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Posterior inference {CausalImpact}</span>
@@ -389,7 +390,7 @@ y. Từ quan sát thứ 71, xảy ra sự kiện A khiến y tăng thêm trung b
 <span class="c1">## For more details, type: summary(impact, &quot;report&quot;)</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">summary</span><span class="p">(</span><span class="n">impact</span><span class="p">,</span> <span class="s">&quot;report&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kp">summary</span><span class="p">(</span>impact<span class="p">,</span> <span class="s">&quot;report&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Analysis report {CausalImpact}</span>
@@ -416,19 +417,19 @@ không xảy ra A, y chỉ có gia trị 107</li>
 </div>
 <div class="section" id="vi-du-2">
 <h2>2.3. Ví dụ 2<a class="headerlink" href="#vi-du-2" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">&lt;-</span> <span class="m">100</span> <span class="o">+</span> <span class="nf">arima.sim</span><span class="p">(</span><span class="n">model</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">ar</span> <span class="o">=</span> <span class="m">0.999</span><span class="p">),</span> <span class="n">n</span> <span class="o">=</span> <span class="m">120</span><span class="p">)</span>
-<span class="n">x[101</span><span class="o">:</span><span class="m">120</span><span class="n">]</span> <span class="o">&lt;-</span> <span class="m">110</span> <span class="o">+</span> <span class="nf">arima.sim</span><span class="p">(</span><span class="n">model</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">ar</span> <span class="o">=</span> <span class="m">0.999</span><span class="p">),</span> <span class="n">n</span> <span class="o">=</span> <span class="m">20</span><span class="p">)</span>
-<span class="nf">plot</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>x <span class="o">&lt;-</span> <span class="m">100</span> <span class="o">+</span> arima.sim<span class="p">(</span>model <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>ar <span class="o">=</span> <span class="m">0.999</span><span class="p">),</span> n <span class="o">=</span> <span class="m">120</span><span class="p">)</span>
+x<span class="p">[</span><span class="m">101</span><span class="o">:</span><span class="m">120</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="m">110</span> <span class="o">+</span> arima.sim<span class="p">(</span>model <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>ar <span class="o">=</span> <span class="m">0.999</span><span class="p">),</span> n <span class="o">=</span> <span class="m">20</span><span class="p">)</span>
+plot<span class="p">(</span>x<span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image2" src="p07-02-causal-impact_files/figure-html/unnamed-chunk-4-1.png" /></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">y</span> <span class="o">&lt;-</span> <span class="m">1.2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="nf">rnorm</span><span class="p">(</span><span class="m">120</span><span class="p">)</span>
-<span class="n">y[101</span><span class="o">:</span><span class="m">120</span><span class="n">]</span> <span class="o">&lt;-</span> <span class="m">1.1</span><span class="o">*</span><span class="n">y[101</span><span class="o">:</span><span class="m">120</span><span class="n">]</span> <span class="o">+</span> <span class="m">10</span>
-<span class="n">data</span> <span class="o">&lt;-</span> <span class="nf">cbind</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-<span class="n">pre.period</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">100</span><span class="p">)</span>
-<span class="n">post.period</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="m">101</span><span class="p">,</span> <span class="m">120</span><span class="p">)</span>
-<span class="n">impact</span> <span class="o">&lt;-</span> <span class="nf">CausalImpact</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pre.period</span><span class="p">,</span> <span class="n">post.period</span><span class="p">)</span>
-<span class="nf">plot</span><span class="p">(</span><span class="n">impact</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>y <span class="o">&lt;-</span> <span class="m">1.2</span> <span class="o">*</span> x <span class="o">+</span> rnorm<span class="p">(</span><span class="m">120</span><span class="p">)</span>
+y<span class="p">[</span><span class="m">101</span><span class="o">:</span><span class="m">120</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="m">1.1</span><span class="o">*</span>y<span class="p">[</span><span class="m">101</span><span class="o">:</span><span class="m">120</span><span class="p">]</span> <span class="o">+</span> <span class="m">10</span>
+data <span class="o">&lt;-</span> <span class="kp">cbind</span><span class="p">(</span>y<span class="p">,</span> x<span class="p">)</span>
+pre.period <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">100</span><span class="p">)</span>
+post.period <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="m">101</span><span class="p">,</span> <span class="m">120</span><span class="p">)</span>
+impact <span class="o">&lt;-</span> CausalImpact<span class="p">(</span>data<span class="p">,</span> pre.period<span class="p">,</span> post.period<span class="p">)</span>
+plot<span class="p">(</span>impact<span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image3" src="p07-02-causal-impact_files/figure-html/unnamed-chunk-4-2.png" /></p>

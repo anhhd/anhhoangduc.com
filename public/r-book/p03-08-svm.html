@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>6. Support Vector Machine &mdash; Tài liệu Phân tích dữ liệu với R 2019</title>
+  <title>7. Support Vector Machine &mdash; Tài liệu Phân tích dữ liệu với R 2019</title>
   
 
   
@@ -50,8 +50,8 @@
   <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Tìm Kiếm" href="search.html" />
-    <link rel="next" title="7. Feature Engineering" href="p03-09-feature-engineering.html" />
-    <link rel="prev" title="5. Bagging, RandomForest và Boosting" href="p03-05-bagging-boosting.html" /> 
+    <link rel="next" title="8. Feature Engineering" href="p03-09-feature-engineering.html" />
+    <link rel="prev" title="6. Xây dựng mô hình với H2O" href="p03-07-xay-dung-mo-hinh-voi-h2o.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -122,18 +122,19 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">6. Support Vector Machine</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#gioi-thieu">6.1. Giới thiệu</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#maximal-margin-classifier">6.2. Maximal Margin Classifier</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">7. Support Vector Machine</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gioi-thieu">7.1. Giới thiệu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#maximal-margin-classifier">7.2. Maximal Margin Classifier</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -238,7 +239,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>6. Support Vector Machine</li>
+      <li>7. Support Vector Machine</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -282,9 +283,9 @@
 }
 </style>
 <div class="section" id="support-vector-machine">
-<h1>6. Support Vector Machine<a class="headerlink" href="#support-vector-machine" title="Permalink to this headline">¶</a></h1>
+<h1>7. Support Vector Machine<a class="headerlink" href="#support-vector-machine" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="gioi-thieu">
-<h2>6.1. Giới thiệu<a class="headerlink" href="#gioi-thieu" title="Permalink to this headline">¶</a></h2>
+<h2>7.1. Giới thiệu<a class="headerlink" href="#gioi-thieu" title="Permalink to this headline">¶</a></h2>
 <p>Support Vector Machine (SVM) là một phương pháp mới được phát triển từ
 những năm 1990 và được coi là 1 trong những thuật toán dự báo tốt nhất
 hiện nay</p>
@@ -296,7 +297,7 @@ classifier). Cần phân biệt 2 loại sau:</p>
 </ul>
 </div>
 <div class="section" id="maximal-margin-classifier">
-<h2>6.2. Maximal Margin Classifier<a class="headerlink" href="#maximal-margin-classifier" title="Permalink to this headline">¶</a></h2>
+<h2>7.2. Maximal Margin Classifier<a class="headerlink" href="#maximal-margin-classifier" title="Permalink to this headline">¶</a></h2>
 <p>Trong không gian p chiều, hyperlane là một không gian con có p-1 chiều.
 VD: Trong không gian 2 chiều, hyperlane là 1 đường thẳng. Trong không
 gian ba chiều, hyperlane là 1 mặt phẳng</p>
@@ -328,10 +329,10 @@ classifier</em></p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="p03-09-feature-engineering.html" class="btn btn-neutral float-right" title="7. Feature Engineering" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="p03-09-feature-engineering.html" class="btn btn-neutral float-right" title="8. Feature Engineering" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="p03-05-bagging-boosting.html" class="btn btn-neutral float-left" title="5. Bagging, RandomForest và Boosting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="p03-07-xay-dung-mo-hinh-voi-h2o.html" class="btn btn-neutral float-left" title="6. Xây dựng mô hình với H2O" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

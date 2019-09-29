@@ -128,14 +128,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -318,20 +319,20 @@ liệu này (dữ liệu ngang và dữ liệu dọc). Trong chương này, chú
 học cách sử dụng và biến đổi dữ liệu giữa hai định dạng với <code class="docutils literal notranslate"><span class="pre">tidyr</span></code>.</p>
 <div class="section" id="phan-ra-du-lieu-thanh-dang-doc-voi-gather">
 <h2>2.1. Phân rã dữ liệu thành dạng dọc với <code class="docutils literal notranslate"><span class="pre">gather</span></code><a class="headerlink" href="#phan-ra-du-lieu-thanh-dang-doc-voi-gather" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyr</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">%&gt;%</span>
-  <span class="nf">gather</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="n">name_of_key</span><span class="p">,</span>
-         <span class="n">value</span> <span class="o">=</span> <span class="n">name_of_value_variable</span><span class="p">,</span>
-         <span class="n">gather</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="n">list_of_var</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>tidyr<span class="p">)</span>
+data <span class="o">%&gt;%</span>
+  gather<span class="p">(</span>key <span class="o">=</span> name_of_key<span class="p">,</span>
+         value <span class="o">=</span> name_of_value_variable<span class="p">,</span>
+         gather <span class="o">=</span> <span class="kt">c</span><span class="p">(</span>list_of_var<span class="p">))</span>
 </pre></div>
 </div>
 <p>Xem ví dụ sau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">&lt;-</span> <span class="n">iris</span> <span class="o">%&gt;%</span>
-  <span class="nf">head</span><span class="p">(</span><span class="m">2</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">id</span> <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="nf">nrow</span><span class="p">(</span><span class="n">.)</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="m">6</span><span class="p">,</span> <span class="m">5</span><span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="p">)</span>
-<span class="n">df</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+df <span class="o">&lt;-</span> iris <span class="o">%&gt;%</span>
+  <span class="kp">head</span><span class="p">(</span><span class="m">2</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>id <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="kp">nrow</span><span class="p">(</span><span class="m">.</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="m">6</span><span class="p">,</span> <span class="m">5</span><span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="p">)</span>
+df
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   id Species Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
@@ -340,11 +341,11 @@ học cách sử dụng và biến đổi dữ liệu giữa hai định dạng 
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Xoay dữ liệu sang dạng dọc</span>
-<span class="n">df2</span> <span class="o">&lt;-</span> <span class="n">df</span> <span class="o">%&gt;%</span>
-  <span class="nf">gather</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="n">Measurement</span><span class="p">,</span>
-       <span class="n">value</span> <span class="o">=</span> <span class="n">Value</span><span class="p">,</span>
-       <span class="nf">c</span><span class="p">(</span><span class="m">3</span><span class="o">:</span><span class="m">6</span><span class="p">))</span> <span class="c1"># Các biến được phân rã</span>
-<span class="n">df2</span>
+df2 <span class="o">&lt;-</span> df <span class="o">%&gt;%</span>
+  gather<span class="p">(</span>key <span class="o">=</span> Measurement<span class="p">,</span>
+       value <span class="o">=</span> Value<span class="p">,</span>
+       <span class="kt">c</span><span class="p">(</span><span class="m">3</span><span class="o">:</span><span class="m">6</span><span class="p">))</span> <span class="c1"># Các biến được phân rã</span>
+df2
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   id Species  Measurement Value</span>
@@ -367,15 +368,15 @@ sát, nên dữ liệu mới sau khi phân rã sẽ có 8 quan sát.</p>
 <p>Ngược lại với phân rã dữ liệu là xoay chiều dữ liệu. Trong <code class="docutils literal notranslate"><span class="pre">tidyr</span></code>, ta
 có thể sử dụng hàm <code class="docutils literal notranslate"><span class="pre">spread</span></code>. Công thức tổng quát để xoay chiều dữ liệu
 như sau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">%&gt;%</span>
   <span class="c1">#Biến được xoay thành cột</span>
-  <span class="nf">spread</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="n">key_variable</span><span class="p">,</span>
+  spread<span class="p">(</span>key <span class="o">=</span> key_variable<span class="p">,</span>
          <span class="c1"># Biến giá trị</span>
-         <span class="n">value</span> <span class="o">=</span> <span class="n">value_variable</span><span class="p">)</span>
+         value <span class="o">=</span> value_variable<span class="p">)</span>
 </pre></div>
 </div>
 <p>Ta quay trở lại ví dụ ở phần trước vói dữ liệu <code class="docutils literal notranslate"><span class="pre">df2</span></code> đã được phân rã.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df2</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>df2
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   id Species  Measurement Value</span>
@@ -390,9 +391,9 @@ như sau.</p>
 </pre></div>
 </div>
 <p>Ta có thể xoay chiều dữ liệu lại như sau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df2</span> <span class="o">%&gt;%</span>
-  <span class="nf">spread</span><span class="p">(</span><span class="n">key</span> <span class="o">=</span> <span class="n">Measurement</span><span class="p">,</span>
-         <span class="n">value</span> <span class="o">=</span> <span class="n">Value</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>df2 <span class="o">%&gt;%</span>
+  spread<span class="p">(</span>key <span class="o">=</span> Measurement<span class="p">,</span>
+         value <span class="o">=</span> Value<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   id Species Petal.Length Petal.Width Sepal.Length Sepal.Width</span>
@@ -406,15 +407,15 @@ như sau.</p>
 <p>Khi phân tích dữ liệu, ta thường xuyên phải tách một biến thành nhiều
 biến. Khi đó, việc tách biến sẽ trở nên rất đơn giản với hàm
 <code class="docutils literal notranslate"><span class="pre">separate</span></code>. Công thức tổng quát của <code class="docutils literal notranslate"><span class="pre">separate</span></code> như sau:</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span>
-  <span class="nf">separate</span><span class="p">(</span><span class="n">var_to_spread</span><span class="p">,</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;new_var1&quot;</span><span class="p">,</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">%&gt;%</span>
+  separate<span class="p">(</span>var_to_spread<span class="p">,</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;new_var1&quot;</span><span class="p">,</span>
                             <span class="s">&quot;new_var2&quot;</span><span class="p">,</span> <span class="kc">...</span><span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">date</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="kc">NA</span><span class="p">,</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>df <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>date <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="kc">NA</span><span class="p">,</span>
                           <span class="s">&quot;2018-07-01&quot;</span><span class="p">,</span>
                           <span class="s">&quot;2018-09-02&quot;</span><span class="p">))</span>
-<span class="n">df</span>
+df
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##         date</span>
@@ -424,8 +425,8 @@ biến. Khi đó, việc tách biến sẽ trở nên rất đơn giản với h
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tách biến date thành 3 biến</span>
-<span class="n">df</span> <span class="o">%&gt;%</span>
-  <span class="nf">separate</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;year&quot;</span><span class="p">,</span> <span class="s">&quot;month&quot;</span><span class="p">,</span> <span class="s">&quot;date&quot;</span><span class="p">))</span>
+df <span class="o">%&gt;%</span>
+  separate<span class="p">(</span><span class="kp">date</span><span class="p">,</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;year&quot;</span><span class="p">,</span> <span class="s">&quot;month&quot;</span><span class="p">,</span> <span class="s">&quot;date&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   year month date</span>
@@ -439,15 +440,15 @@ biến. Khi đó, việc tách biến sẽ trở nên rất đơn giản với h
 <h2>2.4. Gộp nhiều biến thành một biến với <code class="docutils literal notranslate"><span class="pre">unite</span></code><a class="headerlink" href="#gop-nhieu-bien-thanh-mot-bien-voi-unite" title="Permalink to this headline">¶</a></h2>
 <p>Ngược lại với <code class="docutils literal notranslate"><span class="pre">spread</span></code>, ta có thể gộp nhiều biến thành một với
 <code class="docutils literal notranslate"><span class="pre">unite</span></code>. Công thức tổng quát của <code class="docutils literal notranslate"><span class="pre">unite</span></code> như sau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">%&gt;%</span>
-  <span class="nf">unite</span><span class="p">(</span><span class="n">new_var</span><span class="p">,</span> <span class="n">var_1</span><span class="p">,</span> <span class="n">var2</span><span class="p">,</span><span class="kc">...</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">%&gt;%</span>
+  unite<span class="p">(</span>new_var<span class="p">,</span> var_1<span class="p">,</span> var2<span class="p">,</span><span class="kc">...</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Trong đó, <code class="docutils literal notranslate"><span class="pre">var_1</span></code>, <code class="docutils literal notranslate"><span class="pre">var_2</span></code> là tên các biến sẽ được gộp. <code class="docutils literal notranslate"><span class="pre">new_var</span></code>
 là tên biến mới được tạo thành.</p>
 <p>Quay trở lại ví dụ trên.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">date</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;2018-07-01&quot;</span><span class="p">,</span> <span class="s">&quot;2018-09-02&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>   <span class="nf">separate</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;year&quot;</span><span class="p">,</span> <span class="s">&quot;month&quot;</span><span class="p">,</span> <span class="s">&quot;date&quot;</span><span class="p">))</span>
-<span class="n">df</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>df <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>date <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;2018-07-01&quot;</span><span class="p">,</span> <span class="s">&quot;2018-09-02&quot;</span><span class="p">))</span> <span class="o">%&gt;%</span>   separate<span class="p">(</span><span class="kp">date</span><span class="p">,</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;year&quot;</span><span class="p">,</span> <span class="s">&quot;month&quot;</span><span class="p">,</span> <span class="s">&quot;date&quot;</span><span class="p">))</span>
+df
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   year month date</span>
@@ -456,10 +457,10 @@ là tên biến mới được tạo thành.</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Gộp nhiều biến</span>
-<span class="n">df</span> <span class="o">%&gt;%</span>
-  <span class="nf">unite</span><span class="p">(</span><span class="n">full_date</span><span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span>
-        <span class="n">sep</span> <span class="o">=</span> <span class="s">&quot;/&quot;</span><span class="p">,</span>
-        <span class="n">remove</span> <span class="o">=</span> <span class="bp">F</span><span class="p">)</span>
+df <span class="o">%&gt;%</span>
+  unite<span class="p">(</span>full_date<span class="p">,</span> <span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span>
+        sep <span class="o">=</span> <span class="s">&quot;/&quot;</span><span class="p">,</span>
+        remove <span class="o">=</span> <span class="bp">F</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    full_date year month date</span>

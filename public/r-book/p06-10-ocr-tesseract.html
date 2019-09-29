@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -291,15 +292,15 @@
 scan và chuyển đổi thành dữ liệu. Với R, ta có thể dùng package
 <code class="docutils literal notranslate"><span class="pre">tesseract</span></code> để sử dụng công nghệ OCR.</p>
 <p>Xem ví dụ dưới đây.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tesseract</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>tesseract<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Warning: package &#39;tesseract&#39; was built under R version 3.4.4</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">eng</span> <span class="o">&lt;-</span> <span class="nf">tesseract</span><span class="p">(</span><span class="s">&quot;eng&quot;</span><span class="p">)</span>
-<span class="n">text</span> <span class="o">&lt;-</span> <span class="n">tesseract</span><span class="o">::</span><span class="nf">ocr</span><span class="p">(</span><span class="s">&quot;data/ocr-image-en.png&quot;</span><span class="p">,</span> <span class="n">engine</span> <span class="o">=</span> <span class="n">eng</span><span class="p">)</span>
-<span class="nf">cat</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>eng <span class="o">&lt;-</span> tesseract<span class="p">(</span><span class="s">&quot;eng&quot;</span><span class="p">)</span>
+text <span class="o">&lt;-</span> tesseract<span class="o">::</span>ocr<span class="p">(</span><span class="s">&quot;data/ocr-image-en.png&quot;</span><span class="p">,</span> engine <span class="o">=</span> eng<span class="p">)</span>
+<span class="kp">cat</span><span class="p">(</span>text<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## This is a lot of 12 point text to test the</span>
@@ -320,20 +321,20 @@ scan và chuyển đổi thành dữ liệu. Với R, ta có thể dùng package
 [<a class="reference external" href="https://github.com/tesseract-ocr/tessdata">https://github.com/tesseract-ocr/tessdata</a>]. Ta có thể download các ngôn
 ngữ khác với câu lệnh sau.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download tiếng Việt</span>
-<span class="nf">tesseract_download</span><span class="p">(</span><span class="s">&quot;vie&quot;</span><span class="p">)</span>
+tesseract_download<span class="p">(</span><span class="s">&quot;vie&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Trong trường hợp không download trực tiếp được từ R, ta có thể download
 thủ công và copy dữ liệu download vào đường dẫn sau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">tesseract_info</span><span class="p">()</span><span class="o">$</span><span class="n">datapath</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>tesseract_info<span class="p">()</span><span class="o">$</span>datapath
 </pre></div>
 </div>
 <p><strong>Lưu ý</strong>: file dữ liệu là <code class="docutils literal notranslate"><span class="pre">vie.traineddata</span></code> trong thư mục <code class="docutils literal notranslate"><span class="pre">data</span></code></p>
 <p>Kiểm tra thử tiếng Việt.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># tesseract_download(&quot;vie&quot;)</span>
-<span class="n">vie</span> <span class="o">&lt;-</span> <span class="nf">tesseract</span><span class="p">(</span><span class="s">&quot;vie&quot;</span><span class="p">)</span>
-<span class="n">text</span> <span class="o">&lt;-</span> <span class="n">tesseract</span><span class="o">::</span><span class="nf">ocr</span><span class="p">(</span><span class="s">&quot;data/ocr-image-vn.png&quot;</span><span class="p">,</span> <span class="n">engine</span> <span class="o">=</span> <span class="n">vie</span><span class="p">)</span>
-<span class="nf">cat</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+vie <span class="o">&lt;-</span> tesseract<span class="p">(</span><span class="s">&quot;vie&quot;</span><span class="p">)</span>
+text <span class="o">&lt;-</span> tesseract<span class="o">::</span>ocr<span class="p">(</span><span class="s">&quot;data/ocr-image-vn.png&quot;</span><span class="p">,</span> engine <span class="o">=</span> vie<span class="p">)</span>
+<span class="kp">cat</span><span class="p">(</span>text<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -343,13 +344,13 @@ thủ công và copy dữ liệu download vào đường dẫn sau.</p>
 lý như bình thường. Lưu ý: Hệ thống chữ viết tay được scan vẫn là vấn đề
 khó khăn lớn trong lĩnh vực OCR.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scan pdf file</span>
-<span class="n">pngfile</span> <span class="o">&lt;-</span> <span class="n">pdftools</span><span class="o">::</span><span class="nf">pdf_convert</span><span class="p">(</span><span class="s">&#39;data/ocr-scan.pdf&#39;</span><span class="p">,</span> <span class="n">dpi</span> <span class="o">=</span> <span class="m">600</span><span class="p">)</span>
+pngfile <span class="o">&lt;-</span> pdftools<span class="o">::</span>pdf_convert<span class="p">(</span><span class="s">&#39;data/ocr-scan.pdf&#39;</span><span class="p">,</span> dpi <span class="o">=</span> <span class="m">600</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">text1</span> <span class="o">&lt;-</span> <span class="n">tesseract</span><span class="o">::</span><span class="nf">ocr</span><span class="p">(</span><span class="s">&quot;data/ocr-scan-01.png&quot;</span><span class="p">,</span> <span class="n">engine</span> <span class="o">=</span> <span class="n">vie</span><span class="p">)</span>
-<span class="nf">cat</span><span class="p">(</span><span class="n">text1</span><span class="p">)</span>
-<span class="n">text2</span> <span class="o">&lt;-</span> <span class="n">tesseract</span><span class="o">::</span><span class="nf">ocr</span><span class="p">(</span><span class="s">&quot;data/ocr-scan-02.png&quot;</span><span class="p">,</span> <span class="n">engine</span> <span class="o">=</span> <span class="n">vie</span><span class="p">)</span>
-<span class="nf">cat</span><span class="p">(</span><span class="n">text2</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>text1 <span class="o">&lt;-</span> tesseract<span class="o">::</span>ocr<span class="p">(</span><span class="s">&quot;data/ocr-scan-01.png&quot;</span><span class="p">,</span> engine <span class="o">=</span> vie<span class="p">)</span>
+<span class="kp">cat</span><span class="p">(</span>text1<span class="p">)</span>
+text2 <span class="o">&lt;-</span> tesseract<span class="o">::</span>ocr<span class="p">(</span><span class="s">&quot;data/ocr-scan-02.png&quot;</span><span class="p">,</span> engine <span class="o">=</span> vie<span class="p">)</span>
+<span class="kp">cat</span><span class="p">(</span>text2<span class="p">)</span>
 </pre></div>
 </div>
 </div>

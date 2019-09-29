@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul class="current">
@@ -357,16 +358,16 @@ quan giữa các sản phẩm.</li>
 </div>
 <div class="section" id="cach-thuc-hien-mo-hinh">
 <h2>4.2. Cách thực hiện mô hình<a class="headerlink" href="#cach-thuc-hien-mo-hinh" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">arules</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">arulesViz</span><span class="p">)</span>
-<span class="nf">data</span><span class="p">(</span><span class="s">&quot;Groceries&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>dplyr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>arules<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>arulesViz<span class="p">)</span>
+data<span class="p">(</span><span class="s">&quot;Groceries&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Dữ liệu <code class="docutils literal notranslate"><span class="pre">Groceries</span></code> chứa gần 10,000 giao dịch với hơn 160 sản phẩm
 khác nhau. Ta có thể xem chi tiết dưới đây.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Thống kê giao dịch</span>
-<span class="nf">summary</span><span class="p">(</span><span class="n">Groceries</span><span class="p">)</span>
+<span class="kp">summary</span><span class="p">(</span>Groceries<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## transactions as itemMatrix in sparse format with</span>
@@ -399,7 +400,7 @@ khác nhau. Ta có thể xem chi tiết dưới đây.</p>
 <p><strong>Lưu ý</strong>: Dữ liệu phục vụ phân tích giỏ hàng không phải là dữ liệu dạng
 dataframe thông thường mà được cấu trúc định dạng <code class="docutils literal notranslate"><span class="pre">transaction</span></code>.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sử dụng dữ liệu groceries</span>
-<span class="nf">class</span><span class="p">(</span><span class="n">Groceries</span><span class="p">)</span>
+<span class="kp">class</span><span class="p">(</span>Groceries<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;transactions&quot;</span>
@@ -407,7 +408,7 @@ dataframe thông thường mà được cấu trúc định dạng <code class="
 <span class="c1">## [1] &quot;arules&quot;</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">str</span><span class="p">(</span><span class="n">Groceries</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>str<span class="p">(</span>Groceries<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Formal class &#39;transactions&#39; [package &quot;arules&quot;] with 3 slots</span>
@@ -427,7 +428,7 @@ dataframe thông thường mà được cấu trúc định dạng <code class="
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Xem 5 giao dịch đầu tiên</span>
-<span class="n">Groceries[1</span><span class="o">:</span><span class="m">5</span><span class="n">]</span> <span class="o">%&gt;%</span> <span class="n">inspect</span>
+Groceries<span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">]</span> <span class="o">%&gt;%</span> inspect
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   items</span>
@@ -452,12 +453,12 @@ dataframe thông thường mà được cấu trúc định dạng <code class="
 <p>Trong thực tế, khi triển khai phân tích, việc đầu tiên ta cần làm là
 biến đổi từ định dạng dataframe sang định dạng <code class="docutils literal notranslate"><span class="pre">transactions</span></code>. Ta có
 thể biến đổi định dạng của dataframe về <code class="docutils literal notranslate"><span class="pre">transactions</span></code> với hàm <code class="docutils literal notranslate"><span class="pre">as</span></code>.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span>
-  <span class="n">prod_1</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">as.factor</span><span class="p">,</span>
-  <span class="n">prod_2</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">as.factor</span><span class="p">,</span>
-  <span class="n">prod_3</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">as.factor</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>df <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>
+  prod_1 <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">as.factor</span><span class="p">,</span>
+  prod_2 <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span> <span class="m">1</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">as.factor</span><span class="p">,</span>
+  prod_3 <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">as.factor</span>
 <span class="p">)</span>
-<span class="n">df</span>
+df
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   prod_1 prod_2 prod_3</span>
@@ -466,7 +467,7 @@ thể biến đổi định dạng của dataframe về <code class="docutils li
 <span class="c1">## 3      1      1      0</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">%&gt;%</span> <span class="nf">select</span><span class="p">(</span><span class="m">-1</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="nf">as</span><span class="p">(</span><span class="s">&quot;transactions&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">inspect</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>df <span class="o">%&gt;%</span> select<span class="p">(</span><span class="m">-1</span><span class="p">)</span> <span class="o">%&gt;%</span> as<span class="p">(</span><span class="s">&quot;transactions&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span> inspect
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   items               transactionID</span>
@@ -477,9 +478,9 @@ thể biến đổi định dạng của dataframe về <code class="docutils li
 </div>
 <p>Phân tích khám phá nhanh các sản phẩm được mua nhiều nhất.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Vẽ barchart đơn giản về các item phổ biến nhất</span>
-<span class="nf">itemFrequencyPlot</span><span class="p">(</span><span class="n">Groceries</span><span class="p">,</span>
-                  <span class="n">type</span> <span class="o">=</span> <span class="s">&quot;absolute&quot;</span><span class="p">,</span>
-                  <span class="n">topN</span> <span class="o">=</span> <span class="m">20</span><span class="p">,</span> <span class="n">decreasing</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+itemFrequencyPlot<span class="p">(</span>Groceries<span class="p">,</span>
+                  type <span class="o">=</span> <span class="s">&quot;absolute&quot;</span><span class="p">,</span>
+                  topN <span class="o">=</span> <span class="m">20</span><span class="p">,</span> decreasing <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image0" src="p04-04-basket-analysis_files/figure-html/unnamed-chunk-6-1.png" /></p>
@@ -495,10 +496,10 @@ kinh doanh cần phải trả lời là:</p>
 </ul>
 <div class="section" id="cac-san-pham-nao-hay-duoc-mua-cung-nhau">
 <h3>4.3.1. Các sản phẩm nào hay được mua cùng nhau<a class="headerlink" href="#cac-san-pham-nao-hay-duoc-mua-cung-nhau" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">rules</span> <span class="o">&lt;-</span> <span class="nf">apriori</span><span class="p">(</span><span class="n">Groceries</span><span class="p">,</span>
-                 <span class="n">parameter</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">supp</span> <span class="o">=</span> <span class="m">0.001</span><span class="p">,</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>rules <span class="o">&lt;-</span> apriori<span class="p">(</span>Groceries<span class="p">,</span>
+                 parameter <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>supp <span class="o">=</span> <span class="m">0.001</span><span class="p">,</span>
                             <span class="c1"># support &gt;= 0.1%</span>
-                                  <span class="n">conf</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">))</span>
+                                  conf <span class="o">=</span> <span class="m">0.5</span><span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Apriori</span>
@@ -526,7 +527,7 @@ kinh doanh cần phải trả lời là:</p>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span>                            <span class="c1"># confidence &gt;= 50%</span>
 <span class="c1"># Tổng hợp các rules</span>
-<span class="n">rules</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+rules <span class="o">%&gt;%</span> <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## set of 5668 rules</span>
@@ -559,10 +560,10 @@ rules thỏa mãn hai điều kiện:</p>
 <li>Confidence của rule đạt ít nhất 50%</li>
 </ul>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Top 5 rules có lift cao nhất</span>
-<span class="n">rules</span> <span class="o">%&gt;%</span>
-  <span class="nf">sort</span><span class="p">(</span><span class="n">by</span> <span class="o">=</span> <span class="s">&quot;lift&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">head</span><span class="p">(</span><span class="m">5</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">as</span><span class="p">(</span><span class="s">&quot;data.frame&quot;</span><span class="p">)</span>
+rules <span class="o">%&gt;%</span>
+  <span class="kp">sort</span><span class="p">(</span>by <span class="o">=</span> <span class="s">&quot;lift&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="kp">head</span><span class="p">(</span><span class="m">5</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  as<span class="p">(</span><span class="s">&quot;data.frame&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##                                                      rules     support</span>
@@ -602,12 +603,12 @@ hơn rule A</p>
 nếu <span class="math notranslate">\(conf(A) &gt;= conf(B)\)</span></li>
 </ul>
 <p>Cách loại bỏ rule thừa trong R</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">subset.matrix</span> <span class="o">&lt;-</span> <span class="nf">is.subset</span><span class="p">(</span><span class="n">rules</span><span class="p">,</span> <span class="n">rules</span><span class="p">)</span>
-<span class="n">subset.matrix</span><span class="nf">[lower.tri</span><span class="p">(</span><span class="n">subset.matrix</span><span class="p">,</span> <span class="n">diag</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span><span class="n">]</span> <span class="o">&lt;-</span> <span class="kc">NA</span>
-<span class="n">redundant</span> <span class="o">&lt;-</span> <span class="nf">colSums</span><span class="p">(</span><span class="n">subset.matrix</span><span class="p">,</span> <span class="n">na.rm</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="m">1</span>
-<span class="n">rules.pruned</span> <span class="o">&lt;-</span> <span class="n">rules[</span><span class="o">!</span><span class="n">redundant]</span>
-<span class="n">rules</span> <span class="o">&lt;-</span> <span class="n">rules.pruned</span>
-<span class="n">rules</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>subset.matrix <span class="o">&lt;-</span> is.subset<span class="p">(</span>rules<span class="p">,</span> rules<span class="p">)</span>
+<span class="kp">subset.matrix</span><span class="p">[</span><span class="kp">lower.tri</span><span class="p">(</span><span class="kp">subset.matrix</span><span class="p">,</span> diag <span class="o">=</span> <span class="bp">T</span><span class="p">)]</span> <span class="o">&lt;-</span> <span class="kc">NA</span>
+redundant <span class="o">&lt;-</span> <span class="kp">colSums</span><span class="p">(</span><span class="kp">subset.matrix</span><span class="p">,</span> na.rm <span class="o">=</span> <span class="bp">T</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="m">1</span>
+rules.pruned <span class="o">&lt;-</span> rules<span class="p">[</span><span class="o">!</span>redundant<span class="p">]</span>
+rules <span class="o">&lt;-</span> rules.pruned
+rules <span class="o">%&gt;%</span> <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## set of 1904 rules</span>
@@ -636,26 +637,26 @@ nếu <span class="math notranslate">\(conf(A) &gt;= conf(B)\)</span></li>
 <p>Như vậy, sau khi lọc bỏ các rule thừa, số lượng rule trong dữ liệu giảm
 đi gần 3 lần xuống còn 1904 rules khác nhau. Ta có thể vẽ biểu đồ cho
 nhóm 10 rules có lift cao nhất như sau.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">rules</span> <span class="o">%&gt;%</span>
-  <span class="nf">head</span><span class="p">(</span><span class="m">10</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">plot</span><span class="p">(</span><span class="n">method</span> <span class="o">=</span> <span class="s">&quot;graph&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>rules <span class="o">%&gt;%</span>
+  <span class="kp">head</span><span class="p">(</span><span class="m">10</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  plot<span class="p">(</span>method <span class="o">=</span> <span class="s">&quot;graph&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image1" src="p04-04-basket-analysis_files/figure-html/unnamed-chunk-10-1.png" /></p>
 </div>
 <div class="section" id="khach-hang-mua-san-pham-a-thi-se-mua-san-pham-nao-tiep-theo">
 <h3>4.3.2. Khách hàng mua sản phẩm A thì sẽ mua sản phẩm nào tiếp theo?<a class="headerlink" href="#khach-hang-mua-san-pham-a-thi-se-mua-san-pham-nao-tiep-theo" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">rules</span> <span class="o">&lt;-</span> <span class="nf">apriori</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">Groceries</span><span class="p">,</span>
-                  <span class="n">parameter</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">supp</span> <span class="o">=</span> <span class="m">0.001</span><span class="p">,</span>
-                                   <span class="n">conf</span> <span class="o">=</span> <span class="m">0.15</span><span class="p">,</span>
-                                   <span class="n">minlen</span> <span class="o">=</span> <span class="m">2</span><span class="p">),</span>
-                  <span class="n">appearance</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">default</span> <span class="o">=</span> <span class="s">&quot;rhs&quot;</span><span class="p">,</span>
-                                    <span class="n">lhs</span> <span class="o">=</span> <span class="s">&quot;whole milk&quot;</span><span class="p">),</span>
-                  <span class="n">control</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">verbose</span> <span class="o">=</span> <span class="bp">F</span><span class="p">))</span>
-<span class="n">rules</span> <span class="o">%&gt;%</span>
-  <span class="nf">sort</span><span class="p">(</span><span class="n">by</span> <span class="o">=</span> <span class="s">&quot;lift&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">head</span> <span class="o">%&gt;%</span>
-  <span class="nf">as</span><span class="p">(</span><span class="s">&quot;data.frame&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>rules <span class="o">&lt;-</span> apriori<span class="p">(</span>data <span class="o">=</span> Groceries<span class="p">,</span>
+                  parameter <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>supp <span class="o">=</span> <span class="m">0.001</span><span class="p">,</span>
+                                   conf <span class="o">=</span> <span class="m">0.15</span><span class="p">,</span>
+                                   minlen <span class="o">=</span> <span class="m">2</span><span class="p">),</span>
+                  appearance <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>default <span class="o">=</span> <span class="s">&quot;rhs&quot;</span><span class="p">,</span>
+                                    lhs <span class="o">=</span> <span class="s">&quot;whole milk&quot;</span><span class="p">),</span>
+                  control <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>verbose <span class="o">=</span> <span class="bp">F</span><span class="p">))</span>
+rules <span class="o">%&gt;%</span>
+  <span class="kp">sort</span><span class="p">(</span>by <span class="o">=</span> <span class="s">&quot;lift&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  head <span class="o">%&gt;%</span>
+  as<span class="p">(</span><span class="s">&quot;data.frame&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##                                rules    support confidence      lift</span>
@@ -675,16 +676,16 @@ hương mua thêm rau củ quả (root vegetables)</p>
 <h3>4.3.3. Khách hàng mua sản phẩm gì thì sẽ mua tiếp sản phẩm A?<a class="headerlink" href="#khach-hang-mua-san-pham-gi-thi-se-mua-tiep-san-pham-a" title="Permalink to this headline">¶</a></h3>
 <p>Tương tự với <code class="docutils literal notranslate"><span class="pre">lhs</span></code>, ta có thể sử dụng tham số <code class="docutils literal notranslate"><span class="pre">rhs</span></code> để tìm kiếm các
 khách hàng tiềm năng cho một sản phẩm đã xác định trước.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">rules</span> <span class="o">&lt;-</span> <span class="nf">apriori</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">Groceries</span><span class="p">,</span>
-                 <span class="n">parameter</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">supp</span> <span class="o">=</span> <span class="m">0.001</span><span class="p">,</span>
-                                  <span class="n">conf</span> <span class="o">=</span> <span class="m">0.08</span><span class="p">),</span>
-                 <span class="n">appearance</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">default</span> <span class="o">=</span> <span class="s">&quot;lhs&quot;</span><span class="p">,</span>
-                                   <span class="n">rhs</span> <span class="o">=</span> <span class="s">&quot;whole milk&quot;</span><span class="p">),</span>
-                 <span class="n">control</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="n">verbose</span> <span class="o">=</span> <span class="bp">F</span><span class="p">))</span>
-<span class="n">rules</span> <span class="o">%&gt;%</span>
-  <span class="nf">sort</span><span class="p">(</span><span class="n">by</span> <span class="o">=</span> <span class="s">&quot;lift&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">head</span> <span class="o">%&gt;%</span>
-  <span class="nf">as</span><span class="p">(</span><span class="s">&quot;data.frame&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>rules <span class="o">&lt;-</span> apriori<span class="p">(</span>data <span class="o">=</span> Groceries<span class="p">,</span>
+                 parameter <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>supp <span class="o">=</span> <span class="m">0.001</span><span class="p">,</span>
+                                  conf <span class="o">=</span> <span class="m">0.08</span><span class="p">),</span>
+                 appearance <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>default <span class="o">=</span> <span class="s">&quot;lhs&quot;</span><span class="p">,</span>
+                                   rhs <span class="o">=</span> <span class="s">&quot;whole milk&quot;</span><span class="p">),</span>
+                 control <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>verbose <span class="o">=</span> <span class="bp">F</span><span class="p">))</span>
+rules <span class="o">%&gt;%</span>
+  <span class="kp">sort</span><span class="p">(</span>by <span class="o">=</span> <span class="s">&quot;lift&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  head <span class="o">%&gt;%</span>
+  as<span class="p">(</span><span class="s">&quot;data.frame&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##                                                           rules</span>

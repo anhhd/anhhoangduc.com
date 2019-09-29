@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -314,14 +315,14 @@ các nhóm mô hình dự báo</li>
 <h2>1.2. <code class="docutils literal notranslate"><span class="pre">Unnest_tokens</span></code><a class="headerlink" href="#unnest-tokens" title="Permalink to this headline">¶</a></h2>
 <p>Unnest tokens là một kỹ thuật cho phép tách các từ trong words thành
 từng dòng</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidytext</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
-<span class="n">text</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Because I could not stop for Death -&quot;</span><span class="p">,</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>tidytext<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
+text <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Because I could not stop for Death -&quot;</span><span class="p">,</span>
           <span class="s">&quot;He kindly stopped for me -&quot;</span><span class="p">,</span>
           <span class="s">&quot;The Carriage held but just Ourselves -&quot;</span><span class="p">,</span>
           <span class="s">&quot;and Immortality&quot;</span><span class="p">)</span>
-<span class="n">text_df</span> <span class="o">&lt;-</span> <span class="nf">data_frame</span><span class="p">(</span><span class="n">line</span> <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="p">,</span> <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="p">)</span>
-<span class="n">text_df</span>
+text_df <span class="o">&lt;-</span> <span class="kt">data_frame</span><span class="p">(</span>line <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">4</span><span class="p">,</span> text <span class="o">=</span> text<span class="p">)</span>
+text_df
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 4 x 2</span>
@@ -335,8 +336,8 @@ từng dòng</p>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Sử dụng tokens</span>
 <span class="c1">#Tokens theo từ</span>
-<span class="n">text_df</span> <span class="o">%&gt;%</span>
-  <span class="nf">unnest_tokens</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+text_df <span class="o">%&gt;%</span>
+  unnest_tokens<span class="p">(</span>word<span class="p">,</span> text<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 20 x 2</span>
@@ -365,8 +366,8 @@ từng dòng</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Tokens theo cụm 2 từ</span>
-<span class="n">text_df</span> <span class="o">%&gt;%</span>
-  <span class="nf">unnest_tokens</span><span class="p">(</span><span class="n">ngram</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">token</span> <span class="o">=</span> <span class="s">&quot;ngrams&quot;</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="m">2</span><span class="p">)</span>
+text_df <span class="o">%&gt;%</span>
+  unnest_tokens<span class="p">(</span>ngram<span class="p">,</span> text<span class="p">,</span> token <span class="o">=</span> <span class="s">&quot;ngrams&quot;</span><span class="p">,</span> n <span class="o">=</span> <span class="m">2</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 16 x 2</span>
@@ -395,13 +396,13 @@ từng dòng</p>
 <h2>1.3. Loại bỏ các từ thưa<a class="headerlink" href="#loai-bo-cac-tu-thua" title="Permalink to this headline">¶</a></h2>
 <p>Trong ví dụ trên, ta chưa loại bỏ các cụm từ không cần thiết. Khi phân
 tích, cần loại bỏ các từ này để tránh bị nhiễu</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">stop_words</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">word</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;i&quot;</span><span class="p">,</span> <span class="s">&quot;not&quot;</span><span class="p">,</span> <span class="s">&quot;but&quot;</span><span class="p">,</span> <span class="s">&quot;and&quot;</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>stop_words <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>word <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;i&quot;</span><span class="p">,</span> <span class="s">&quot;not&quot;</span><span class="p">,</span> <span class="s">&quot;but&quot;</span><span class="p">,</span> <span class="s">&quot;and&quot;</span><span class="p">))</span>
 
 <span class="c1">#Loại bỏ stopword</span>
-<span class="n">text_df</span> <span class="o">%&gt;%</span>
-  <span class="nf">unnest_tokens</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">anti_join</span><span class="p">(</span><span class="n">stop_words</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">arrange</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+text_df <span class="o">%&gt;%</span>
+  unnest_tokens<span class="p">(</span>word<span class="p">,</span> text<span class="p">)</span> <span class="o">%&gt;%</span>
+  anti_join<span class="p">(</span>stop_words<span class="p">)</span> <span class="o">%&gt;%</span>
+  arrange<span class="p">(</span>line<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 16 x 2</span>
@@ -426,9 +427,9 @@ tích, cần loại bỏ các từ này để tránh bị nhiễu</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#Đếm tần xuất</span>
-<span class="n">text_df</span> <span class="o">%&gt;%</span>
-  <span class="nf">unnest_tokens</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">count</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">sort</span> <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+text_df <span class="o">%&gt;%</span>
+  unnest_tokens<span class="p">(</span>word<span class="p">,</span> text<span class="p">)</span> <span class="o">%&gt;%</span>
+  count<span class="p">(</span>word<span class="p">,</span> sort <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 19 x 2</span>
@@ -458,24 +459,24 @@ tích, cần loại bỏ các từ này để tránh bị nhiễu</p>
 </div>
 <div class="section" id="xay-dung-wordcloud">
 <h2>1.4. Xây dựng wordcloud<a class="headerlink" href="#xay-dung-wordcloud" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">wordcloud</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">janeaustenr</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">stringr</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>wordcloud<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>janeaustenr<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>stringr<span class="p">)</span>
 
-<span class="n">tidy_books</span> <span class="o">&lt;-</span> <span class="nf">austen_books</span><span class="p">()</span> <span class="o">%&gt;%</span>
-  <span class="nf">group_by</span><span class="p">(</span><span class="n">book</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">linenumber</span> <span class="o">=</span> <span class="nf">row_number</span><span class="p">(),</span>
-         <span class="n">chapter</span> <span class="o">=</span> <span class="nf">cumsum</span><span class="p">(</span><span class="nf">str_detect</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nf">regex</span><span class="p">(</span><span class="s">&quot;^chapter [\\divxlc]&quot;</span><span class="p">,</span>
-                                                 <span class="n">ignore_case</span> <span class="o">=</span> <span class="kc">TRUE</span><span class="p">))))</span> <span class="o">%&gt;%</span>
-  <span class="nf">ungroup</span><span class="p">()</span> <span class="o">%&gt;%</span>
-  <span class="nf">unnest_tokens</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+tidy_books <span class="o">&lt;-</span> austen_books<span class="p">()</span> <span class="o">%&gt;%</span>
+  group_by<span class="p">(</span>book<span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>linenumber <span class="o">=</span> row_number<span class="p">(),</span>
+         chapter <span class="o">=</span> <span class="kp">cumsum</span><span class="p">(</span>str_detect<span class="p">(</span>text<span class="p">,</span> regex<span class="p">(</span><span class="s">&quot;^chapter [\\divxlc]&quot;</span><span class="p">,</span>
+                                                 ignore_case <span class="o">=</span> <span class="kc">TRUE</span><span class="p">))))</span> <span class="o">%&gt;%</span>
+  ungroup<span class="p">()</span> <span class="o">%&gt;%</span>
+  unnest_tokens<span class="p">(</span>word<span class="p">,</span> text<span class="p">)</span>
 
 
-<span class="n">tidy_books</span> <span class="o">%&gt;%</span>
-  <span class="nf">anti_join</span><span class="p">(</span><span class="n">stop_words</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">count</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">with</span><span class="p">(</span><span class="nf">wordcloud</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">max.words</span> <span class="o">=</span> <span class="m">100</span><span class="p">),</span>
-       <span class="n">colors</span><span class="o">=</span><span class="nf">brewer.pal</span><span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="s">&quot;Pal2&quot;</span><span class="p">))</span>
+tidy_books <span class="o">%&gt;%</span>
+  anti_join<span class="p">(</span>stop_words<span class="p">)</span> <span class="o">%&gt;%</span>
+  count<span class="p">(</span>word<span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="kp">with</span><span class="p">(</span>wordcloud<span class="p">(</span>word<span class="p">,</span> n<span class="p">,</span> max.words <span class="o">=</span> <span class="m">100</span><span class="p">),</span>
+       colors<span class="o">=</span>brewer.pal<span class="p">(</span><span class="m">2</span><span class="p">,</span> <span class="s">&quot;Pal2&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <p><img alt="image0" src="p06-01-nlp-co-ban_files/figure-html/unnamed-chunk-4-1.png" /></p>

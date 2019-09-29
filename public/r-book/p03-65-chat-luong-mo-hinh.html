@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>12. Chất lượng mô hình &mdash; Tài liệu Phân tích dữ liệu với R 2019</title>
+  <title>13. Chất lượng mô hình &mdash; Tài liệu Phân tích dữ liệu với R 2019</title>
   
 
   
@@ -50,8 +50,8 @@
   <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Tìm Kiếm" href="search.html" />
-    <link rel="next" title="13. Tidymodels" href="p03-70-tidymodels.html" />
-    <link rel="prev" title="11. Xây dựng mô hình dự báo với caret" href="p03-35-caret.html" /> 
+    <link rel="next" title="14. Tidymodels" href="p03-70-tidymodels.html" />
+    <link rel="prev" title="12. Xây dựng mô hình dự báo với caret" href="p03-35-caret.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -234,7 +235,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>12. Chất lượng mô hình</li>
+      <li>13. Chất lượng mô hình</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -278,8 +279,8 @@
 }
 </style>
 <div class="section" id="chat-luong-mo-hinh">
-<h1>12. Chất lượng mô hình<a class="headerlink" href="#chat-luong-mo-hinh" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+<h1>13. Chất lượng mô hình<a class="headerlink" href="#chat-luong-mo-hinh" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Loading tidyverse: ggplot2</span>
@@ -315,7 +316,7 @@
 <span class="c1">## lag():    dplyr, stats</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">tidymodels</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>tidymodels<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## -- Attaching packages --------------------------------------------------------------------------------------------------------- tidymodels 0.0.2 --</span>
@@ -361,11 +362,11 @@
 </div>
 <p><strong>Trường hợp 1</strong>: Xác suất <code class="docutils literal notranslate"><span class="pre">TRUE</span></code> phân phối đều trong khoảng từ 0 đến
 1</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">prob</span> <span class="o">&lt;-</span> <span class="nf">seq</span><span class="p">(</span><span class="m">0.1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">)</span>
-<span class="n">class</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">as.factor</span>
-<span class="n">df1</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">prob</span> <span class="o">=</span> <span class="n">prob</span><span class="p">,</span>
-                 <span class="n">class</span> <span class="o">=</span> <span class="n">class</span> <span class="o">%&gt;%</span> <span class="n">as.factor</span><span class="p">)</span>
-<span class="n">df1</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>prob <span class="o">&lt;-</span> <span class="kp">seq</span><span class="p">(</span><span class="m">0.1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span> by <span class="o">=</span> <span class="m">0.1</span><span class="p">)</span>
+class <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">as.factor</span>
+df1 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>prob <span class="o">=</span> prob<span class="p">,</span>
+                 class <span class="o">=</span> class <span class="o">%&gt;%</span> <span class="kp">as.factor</span><span class="p">)</span>
+df1
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    prob class</span>
@@ -381,7 +382,7 @@
 <span class="c1">## 10  1.0     1</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">roc_auc</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">class</span><span class="p">,</span> <span class="n">prob</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>roc_auc<span class="p">(</span>df1<span class="p">,</span> <span class="kp">class</span><span class="p">,</span> prob<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Warning: The `printer` argument is deprecated as of rlang 0.3.0.</span>
@@ -398,11 +399,11 @@
 </pre></div>
 </div>
 <p><strong>Trường hợp 2</strong>: Xác xuất <code class="docutils literal notranslate"><span class="pre">TRUE</span></code> phân phối trong khoảng từ 0.55 đến 1</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">prob</span> <span class="o">&lt;-</span> <span class="nf">seq</span><span class="p">(</span><span class="m">0.55</span><span class="p">,</span><span class="m">1</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="m">0.05</span><span class="p">)</span>
-<span class="n">class</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">as.factor</span>
-<span class="n">df2</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">prob</span> <span class="o">=</span> <span class="n">prob</span><span class="p">,</span>
-                 <span class="n">class</span> <span class="o">=</span> <span class="n">class</span> <span class="o">%&gt;%</span> <span class="n">as.factor</span><span class="p">)</span>
-<span class="n">df2</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>prob <span class="o">&lt;-</span> <span class="kp">seq</span><span class="p">(</span><span class="m">0.55</span><span class="p">,</span><span class="m">1</span><span class="p">,</span> by <span class="o">=</span> <span class="m">0.05</span><span class="p">)</span>
+class <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">as.factor</span>
+df2 <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>prob <span class="o">=</span> prob<span class="p">,</span>
+                 class <span class="o">=</span> class <span class="o">%&gt;%</span> <span class="kp">as.factor</span><span class="p">)</span>
+df2
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##    prob class</span>
@@ -418,7 +419,7 @@
 <span class="c1">## 10 1.00     1</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">roc_auc</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="n">class</span><span class="p">,</span> <span class="n">prob</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>roc_auc<span class="p">(</span>df2<span class="p">,</span> <span class="kp">class</span><span class="p">,</span> prob<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 1 x 3</span>
@@ -439,10 +440,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="p03-70-tidymodels.html" class="btn btn-neutral float-right" title="13. Tidymodels" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="p03-70-tidymodels.html" class="btn btn-neutral float-right" title="14. Tidymodels" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="p03-35-caret.html" class="btn btn-neutral float-left" title="11. Xây dựng mô hình dự báo với caret" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="p03-35-caret.html" class="btn btn-neutral float-left" title="12. Xây dựng mô hình dự báo với caret" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

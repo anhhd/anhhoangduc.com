@@ -127,14 +127,15 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -314,40 +315,40 @@ lượng</p>
 packge <strong>ISLR</strong> để dự báo thu nhập của cầu thủ bóng chày (<code class="docutils literal notranslate"><span class="pre">salary</span></code>)
 dựa vào số năm chơi bóng tại các giải đấu lớn (<code class="docutils literal notranslate"><span class="pre">years</span></code>) và số điểm ghi
 được trong mùa giải trước (<code class="docutils literal notranslate"><span class="pre">hits</span></code>).</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">ISLR</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>ISLR<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
 
-<span class="nf">data</span><span class="p">(</span><span class="s">&quot;Hitters&quot;</span><span class="p">)</span>
-<span class="nf">names</span><span class="p">(</span><span class="n">Hitters</span><span class="p">)</span> <span class="o">&lt;-</span> <span class="nf">names</span><span class="p">(</span><span class="n">Hitters</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">tolower</span>
+data<span class="p">(</span><span class="s">&quot;Hitters&quot;</span><span class="p">)</span>
+<span class="kp">names</span><span class="p">(</span>Hitters<span class="p">)</span> <span class="o">&lt;-</span> <span class="kp">names</span><span class="p">(</span>Hitters<span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">tolower</span>
 
 <span class="c1"># Lấy 3 biến: `years`, `hits`, `salary`</span>
-<span class="n">data</span> <span class="o">&lt;-</span> <span class="n">Hitters</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="n">years</span><span class="p">,</span><span class="n">hits</span><span class="p">,</span><span class="n">salary</span><span class="p">)</span>
+data <span class="o">&lt;-</span> Hitters <span class="o">%&gt;%</span>
+  select<span class="p">(</span>years<span class="p">,</span>hits<span class="p">,</span>salary<span class="p">)</span>
 </pre></div>
 </div>
 <p>Đầu tiên chúng ta sẽ loại bỏ những quan sát bị missing ở biến
 <code class="docutils literal notranslate"><span class="pre">salary</span></code>, và lấy log của biến <code class="docutils literal notranslate"><span class="pre">salary</span></code> để biến này tiệm cận với phân
 phối chuẩn hơn (phân phối hình chuông). Biến <code class="docutils literal notranslate"><span class="pre">salary</span></code> đơn vị là nghìn
 USD.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data_new</span> <span class="o">&lt;-</span> <span class="n">data</span> <span class="o">%&gt;%</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data_new <span class="o">&lt;-</span> data <span class="o">%&gt;%</span>
   <span class="c1"># Loại bỏ giá trị missing ở biến `salary`</span>
-  <span class="nf">filter</span><span class="p">(</span><span class="o">!</span><span class="nf">is.na</span><span class="p">(</span><span class="n">salary</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  filter<span class="p">(</span><span class="o">!</span><span class="kp">is.na</span><span class="p">(</span>salary<span class="p">))</span> <span class="o">%&gt;%</span>
   <span class="c1"># log-transform</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">salary</span> <span class="o">=</span> <span class="nf">log</span><span class="p">(</span><span class="n">salary</span><span class="p">))</span>
+  mutate<span class="p">(</span>salary <span class="o">=</span> <span class="kp">log</span><span class="p">(</span>salary<span class="p">))</span>
 
 <span class="c1"># Biểu đồ phân phối biến `salary` của `data`</span>
-<span class="n">data</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">salary</span><span class="p">))</span><span class="o">+</span>
-  <span class="nf">geom_density</span><span class="p">()</span><span class="o">+</span>
-  <span class="nf">theme_minimal</span><span class="p">()</span>
+data <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>salary<span class="p">))</span><span class="o">+</span>
+  geom_density<span class="p">()</span><span class="o">+</span>
+  theme_minimal<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image1" src="p03-04-decision-tree_files/figure-html/unnamed-chunk-3-1.png" /></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Biểu đồ phân phối biến `salary` của `data_new`</span>
-<span class="n">data_new</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">salary</span><span class="p">))</span><span class="o">+</span>
-  <span class="nf">geom_density</span><span class="p">()</span><span class="o">+</span>
-  <span class="nf">theme_minimal</span><span class="p">()</span>
+data_new <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>salary<span class="p">))</span><span class="o">+</span>
+  geom_density<span class="p">()</span><span class="o">+</span>
+  theme_minimal<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image2" src="p03-04-decision-tree_files/figure-html/unnamed-chunk-3-2.png" /></p>
@@ -383,25 +384,25 @@ trung bình là exp(6.7) = 812 (nghìn USD).</li>
 <li>R2: years &gt;= 4.5, hits &lt; 118</li>
 <li>R3: years &gt;= 4.5, hits &gt;= 118</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data_new</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">years</span><span class="p">,</span><span class="n">hits</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="n">col</span> <span class="o">=</span> <span class="s">&quot;gold&quot;</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">theme_bw</span><span class="p">()</span><span class="o">+</span>
-  <span class="nf">geom_vline</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">xintercept</span> <span class="o">=</span> <span class="m">4.5</span><span class="p">),</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">geom_segment</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="m">4.5</span><span class="p">,</span>
-                   <span class="n">y</span> <span class="o">=</span> <span class="m">118</span><span class="p">,</span>
-                   <span class="n">xend</span> <span class="o">=</span> <span class="kc">Inf</span><span class="p">,</span>
-                   <span class="n">yend</span> <span class="o">=</span> <span class="m">118</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data_new <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>years<span class="p">,</span>hits<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>col <span class="o">=</span> <span class="s">&quot;gold&quot;</span><span class="p">)</span><span class="o">+</span>
+  theme_bw<span class="p">()</span><span class="o">+</span>
+  geom_vline<span class="p">(</span>aes<span class="p">(</span>xintercept <span class="o">=</span> <span class="m">4.5</span><span class="p">),</span> col <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">1</span><span class="p">)</span><span class="o">+</span>
+  geom_segment<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> <span class="m">4.5</span><span class="p">,</span>
+                   y <span class="o">=</span> <span class="m">118</span><span class="p">,</span>
+                   xend <span class="o">=</span> <span class="kc">Inf</span><span class="p">,</span>
+                   yend <span class="o">=</span> <span class="m">118</span>
                    <span class="p">),</span>
-               <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span>
-               <span class="n">size</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">panel.grid</span> <span class="o">=</span> <span class="nf">element_blank</span><span class="p">())</span><span class="o">+</span>
-  <span class="nf">scale_x_continuous</span><span class="p">(</span><span class="n">breaks</span> <span class="o">=</span> <span class="m">4.5</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">scale_y_continuous</span><span class="p">(</span><span class="n">breaks</span> <span class="o">=</span> <span class="m">118</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">axis.text</span> <span class="o">=</span> <span class="nf">element_text</span><span class="p">(</span><span class="n">face</span> <span class="o">=</span> <span class="s">&quot;bold&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">10</span><span class="p">))</span><span class="o">+</span>
-  <span class="nf">annotate</span><span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="m">4.5</span><span class="o">/</span><span class="m">2</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="m">118</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;R1&quot;</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">6</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">annotate</span><span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="m">32-4.5</span><span class="p">)</span><span class="o">/</span><span class="m">2</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="m">118</span><span class="o">/</span><span class="m">2</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;R2&quot;</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">6</span><span class="p">)</span><span class="o">+</span>
-  <span class="nf">annotate</span><span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="m">32-4.5</span><span class="p">)</span><span class="o">/</span><span class="m">2</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="m">118</span><span class="o">*</span><span class="m">1.5</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;R3&quot;</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">6</span><span class="p">)</span>
+               col <span class="o">=</span> <span class="s">&quot;blue&quot;</span><span class="p">,</span>
+               size <span class="o">=</span> <span class="m">1</span><span class="p">)</span><span class="o">+</span>
+  theme<span class="p">(</span>panel.grid <span class="o">=</span> element_blank<span class="p">())</span><span class="o">+</span>
+  scale_x_continuous<span class="p">(</span>breaks <span class="o">=</span> <span class="m">4.5</span><span class="p">)</span><span class="o">+</span>
+  scale_y_continuous<span class="p">(</span>breaks <span class="o">=</span> <span class="m">118</span><span class="p">)</span><span class="o">+</span>
+  theme<span class="p">(</span>axis.text <span class="o">=</span> element_text<span class="p">(</span>face <span class="o">=</span> <span class="s">&quot;bold&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">10</span><span class="p">))</span><span class="o">+</span>
+  annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> x <span class="o">=</span> <span class="m">4.5</span><span class="o">/</span><span class="m">2</span><span class="p">,</span> y <span class="o">=</span> <span class="m">118</span><span class="p">,</span> label <span class="o">=</span> <span class="s">&quot;R1&quot;</span><span class="p">,</span> col <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">6</span><span class="p">)</span><span class="o">+</span>
+  annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> x <span class="o">=</span> <span class="p">(</span><span class="m">32-4.5</span><span class="p">)</span><span class="o">/</span><span class="m">2</span><span class="p">,</span> y <span class="o">=</span> <span class="m">118</span><span class="o">/</span><span class="m">2</span><span class="p">,</span> label <span class="o">=</span> <span class="s">&quot;R2&quot;</span><span class="p">,</span> col <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">6</span><span class="p">)</span><span class="o">+</span>
+  annotate<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> x <span class="o">=</span> <span class="p">(</span><span class="m">32-4.5</span><span class="p">)</span><span class="o">/</span><span class="m">2</span><span class="p">,</span> y <span class="o">=</span> <span class="m">118</span><span class="o">*</span><span class="m">1.5</span><span class="p">,</span> label <span class="o">=</span> <span class="s">&quot;R3&quot;</span><span class="p">,</span> col <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">6</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image4" src="p03-04-decision-tree_files/figure-html/unnamed-chunk-4-1.png" /></p>
@@ -683,17 +684,17 @@ cành” chúng ta có thể dùng hàm <code class="docutils literal notranslat
 quan sát là khách hàng sử dụng thẻ tín dụng vào 2 nhóm: Trả được nợ hay
 không trả được nợ.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Data</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">ISLR</span><span class="p">)</span>
-<span class="nf">data</span><span class="p">(</span><span class="s">&quot;Default&quot;</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>ISLR<span class="p">)</span>
+data<span class="p">(</span><span class="s">&quot;Default&quot;</span><span class="p">)</span>
 
 <span class="c1"># Chia dữ liệu thành 2 tập: train/test</span>
-<span class="nf">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
-<span class="n">train</span> <span class="o">&lt;-</span> <span class="nf">sample</span><span class="p">(</span><span class="nf">nrow</span><span class="p">(</span><span class="n">Default</span><span class="p">),</span> <span class="m">0.7</span><span class="o">*</span><span class="nf">nrow</span><span class="p">(</span><span class="n">Default</span><span class="p">))</span>
-<span class="n">df.train</span> <span class="o">&lt;-</span> <span class="n">Default[train</span><span class="p">,</span><span class="n">]</span>
-<span class="n">df.validate</span> <span class="o">&lt;-</span> <span class="n">Default[</span><span class="o">-</span><span class="n">train</span><span class="p">,</span><span class="n">]</span>
+<span class="kp">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
+train <span class="o">&lt;-</span> <span class="kp">sample</span><span class="p">(</span><span class="kp">nrow</span><span class="p">(</span>Default<span class="p">),</span> <span class="m">0.7</span><span class="o">*</span><span class="kp">nrow</span><span class="p">(</span>Default<span class="p">))</span>
+df.train <span class="o">&lt;-</span> Default<span class="p">[</span>train<span class="p">,]</span>
+df.validate <span class="o">&lt;-</span> Default<span class="p">[</span><span class="o">-</span>train<span class="p">,]</span>
 
 <span class="c1"># Biến đầu ra của dữ liệu huấn luyện</span>
-<span class="nf">table</span><span class="p">(</span><span class="n">df.train</span><span class="o">$</span><span class="n">default</span><span class="p">)</span>
+<span class="kp">table</span><span class="p">(</span>df.train<span class="o">$</span>default<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -702,7 +703,7 @@ không trả được nợ.</p>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Biến đầu ra của dữ liệu kiểm tra</span>
-<span class="nf">table</span><span class="p">(</span><span class="n">df.validate</span><span class="o">$</span><span class="n">default</span><span class="p">)</span>
+<span class="kp">table</span><span class="p">(</span>df.validate<span class="o">$</span>default<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -713,20 +714,20 @@ không trả được nợ.</p>
 <p>Trước tiên, chúng ta sẽ xây dựng một cây quyết định với tập dữ liệu huấn
 luyện, sử dụng hàm <code class="docutils literal notranslate"><span class="pre">rpart()</span></code>.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Classical decision tree</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">rpart</span><span class="p">)</span>
-<span class="nf">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>rpart<span class="p">)</span>
+<span class="kp">set.seed</span><span class="p">(</span><span class="m">1234</span><span class="p">)</span>
 <span class="c1"># 1. Grows the tree</span>
-<span class="n">dtree</span> <span class="o">&lt;-</span> <span class="nf">rpart</span><span class="p">(</span><span class="n">default</span> <span class="o">~</span> <span class="n">.,</span>
-               <span class="n">data</span> <span class="o">=</span> <span class="n">df.train</span><span class="p">,</span>
-               <span class="n">method</span> <span class="o">=</span> <span class="s">&quot;class&quot;</span><span class="p">,</span>  <span class="c1"># biến đầu ra - rời rạc</span>
-               <span class="n">parms</span><span class="o">=</span><span class="nf">list</span><span class="p">(</span><span class="n">split</span><span class="o">=</span><span class="s">&quot;information&quot;</span><span class="p">)</span>
+dtree <span class="o">&lt;-</span> rpart<span class="p">(</span>default <span class="o">~</span> <span class="m">.</span><span class="p">,</span>
+               data <span class="o">=</span> df.train<span class="p">,</span>
+               method <span class="o">=</span> <span class="s">&quot;class&quot;</span><span class="p">,</span>  <span class="c1"># biến đầu ra - rời rạc</span>
+               parms<span class="o">=</span><span class="kt">list</span><span class="p">(</span>split<span class="o">=</span><span class="s">&quot;information&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>Để xem và thống kê kết quả của mô hình vừa xây dựng, chúng ta có thể sử
 dụng hàm <code class="docutils literal notranslate"><span class="pre">print()</span></code> và <code class="docutils literal notranslate"><span class="pre">summary()</span></code>. Cây quyết định có thể sẽ rất lớn
 và cần phải sử dụng kỹ thuật “tỉa cành”.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">print</span><span class="p">(</span><span class="n">dtree</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kp">print</span><span class="p">(</span>dtree<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## n= 7000</span>
@@ -748,7 +749,7 @@ và cần phải sử dụng kỹ thuật “tỉa cành”.</p>
 <p>Để lựa chọn kích thước của cây, chúng ta có thể kiểm tra phần
 <code class="docutils literal notranslate"><span class="pre">cptable</span></code> trong kết quả model <code class="docutils literal notranslate"><span class="pre">dtree</span></code> như sau:</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Data about the prediction error for various tree sizes</span>
-<span class="n">dtree</span><span class="o">$</span><span class="n">cptable</span>
+dtree<span class="o">$</span>cptable
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##           CP nsplit rel error    xerror       xstd</span>
@@ -776,7 +777,7 @@ sự lựa chọn tốt cho kích thước của cây là cây nhỏ nhất mà
 cross-validated error nằm trong khoảng giá trị 1 standard error của
 cross-validated error nhỏ nhất</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the cross-validated error against the complexity parameter</span>
-<span class="nf">plotcp</span><span class="p">(</span><span class="n">dtree</span><span class="p">)</span>
+plotcp<span class="p">(</span>dtree<span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image5" src="p03-04-decision-tree_files/figure-html/unnamed-chunk-9-1.png" /></p>
@@ -800,9 +801,9 @@ nhất của cây theo giá trị của tham số complexity mà chúng ta mong 
 complexity (CP = ), do đó để lựa chọn cây với kích thước mong muốn,
 chúng ta sử dụng câu lệnh sau:</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># 2. Prunes the tree</span>
-<span class="n">dtree.pruned</span> <span class="o">&lt;-</span> <span class="nf">prune</span><span class="p">(</span><span class="n">dtree</span><span class="p">,</span> <span class="n">cp</span> <span class="o">=</span> <span class="m">0.05106383</span><span class="p">)</span>
+dtree.pruned <span class="o">&lt;-</span> prune<span class="p">(</span>dtree<span class="p">,</span> cp <span class="o">=</span> <span class="m">0.05106383</span><span class="p">)</span>
 
-<span class="nf">print</span><span class="p">(</span><span class="n">dtree.pruned</span><span class="p">)</span>
+<span class="kp">print</span><span class="p">(</span>dtree.pruned<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## n= 7000</span>
@@ -824,12 +825,12 @@ quyết định cuối cùng. Để phân loại một quan sát, bắt đầu t
 của cây, sau đó di chuyển sang nhánh bên trái nếu một điều kiện là đúng
 hoặc sang phải trường hợp ngược lại. Tiếp tục di chuyển xuống phía dưới
 cho đến khi gặp terminal node (lá), tức đã được phân loại.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">rpart.plot</span><span class="p">)</span>
-<span class="nf">prp</span><span class="p">(</span><span class="n">dtree.pruned</span><span class="p">,</span>
-    <span class="n">type</span> <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="c1"># Draws the split labels below each node</span>
-    <span class="n">extra</span> <span class="o">=</span> <span class="m">104</span><span class="p">,</span> <span class="c1"># Includes the probabilities for each class, along with the percentage of observations in each node</span>
-    <span class="n">fallen.leaves</span> <span class="o">=</span> <span class="bp">T</span><span class="p">,</span> <span class="c1"># Displays the terminal nodes at the bottom of the graph</span>
-    <span class="n">main</span> <span class="o">=</span> <span class="s">&quot;Decision Tree&quot;</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>rpart.plot<span class="p">)</span>
+prp<span class="p">(</span>dtree.pruned<span class="p">,</span>
+    type <span class="o">=</span> <span class="m">2</span><span class="p">,</span> <span class="c1"># Draws the split labels below each node</span>
+    extra <span class="o">=</span> <span class="m">104</span><span class="p">,</span> <span class="c1"># Includes the probabilities for each class, along with the percentage of observations in each node</span>
+    fallen.leaves <span class="o">=</span> <span class="bp">T</span><span class="p">,</span> <span class="c1"># Displays the terminal nodes at the bottom of the graph</span>
+    main <span class="o">=</span> <span class="s">&quot;Decision Tree&quot;</span>
     <span class="p">)</span>
 </pre></div>
 </div>
@@ -877,17 +878,17 @@ vùng:<ul>
 phân loại những quan sát mới - tập dữ liệu validation bằng việc sử dụng
 hàm <code class="docutils literal notranslate"><span class="pre">predict()</span></code>, sau đó só sánh kết quả dự báo và thực tế như sau:</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Phân loại những quan sát mới</span>
-<span class="n">dtree.pred</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">dtree.pruned</span><span class="p">,</span>
-                      <span class="n">df.validate</span><span class="p">,</span>
-                      <span class="n">type</span> <span class="o">=</span> <span class="s">&quot;class&quot;</span>
+dtree.pred <span class="o">&lt;-</span> predict<span class="p">(</span>dtree.pruned<span class="p">,</span>
+                      df.validate<span class="p">,</span>
+                      type <span class="o">=</span> <span class="s">&quot;class&quot;</span>
                       <span class="p">)</span>
 
 <span class="c1"># So sánh kết quả dự báo và thực tế</span>
-<span class="n">dtree.perf</span> <span class="o">&lt;-</span> <span class="nf">table</span><span class="p">(</span><span class="n">df.validate</span><span class="o">$</span><span class="n">default</span><span class="p">,</span>
-                    <span class="n">dtree.pred</span><span class="p">,</span>
-                    <span class="n">dnn</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;Actual&quot;</span><span class="p">,</span> <span class="s">&quot;Predicted&quot;</span><span class="p">)</span>
+dtree.perf <span class="o">&lt;-</span> <span class="kp">table</span><span class="p">(</span>df.validate<span class="o">$</span>default<span class="p">,</span>
+                    dtree.pred<span class="p">,</span>
+                    dnn <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;Actual&quot;</span><span class="p">,</span> <span class="s">&quot;Predicted&quot;</span><span class="p">)</span>
                     <span class="p">)</span>
-<span class="n">dtree.perf</span>
+dtree.perf
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##       Predicted</span>

@@ -122,14 +122,15 @@
 <li class="toctree-l1"><a class="reference internal" href="p03-03-logistic-regression.html">3. Mô hình hồi quy logistic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -305,8 +306,8 @@ sử dụng các công cụ <em>Analytics</em></p>
 </li>
 <li>2 file của shiny cần đặt cùng trong 1 thư mục</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">shiny</span><span class="p">)</span>
-<span class="nf">runExample</span><span class="p">(</span><span class="s">&quot;01_hello&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>shiny<span class="p">)</span>
+runExample<span class="p">(</span><span class="s">&quot;01_hello&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -314,57 +315,57 @@ sử dụng các công cụ <em>Analytics</em></p>
 <h2>5.2. Phân tích UI và SERVER<a class="headerlink" href="#phan-tich-ui-va-server" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="ui">
 <h3>5.2.1. UI<a class="headerlink" href="#ui" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">shiny</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>shiny<span class="p">)</span>
 
 <span class="c1"># fluiidPage cho phép tạo UI responsive</span>
-<span class="nf">shinyUI</span><span class="p">(</span><span class="nf">fluidPage</span><span class="p">(</span>
+shinyUI<span class="p">(</span>fluidPage<span class="p">(</span>
 
   <span class="c1"># Tên ứng dụng</span>
-  <span class="nf">titlePanel</span><span class="p">(</span><span class="s">&quot;Ứng dụng đầu tiên của Đức Anh&quot;</span><span class="p">),</span>
+  titlePanel<span class="p">(</span><span class="s">&quot;Ứng dụng đầu tiên của Đức Anh&quot;</span><span class="p">),</span>
 
   <span class="c1"># Sidebar với input dạng slider cho số  bins</span>
-  <span class="nf">sidebarLayout</span><span class="p">(</span>
-    <span class="nf">sidebarPanel</span><span class="p">(</span>
+  sidebarLayout<span class="p">(</span>
+    sidebarPanel<span class="p">(</span>
       <span class="c1">#Input cho bins dạng slider</span>
-       <span class="nf">sliderInput</span><span class="p">(</span><span class="s">&quot;bins&quot;</span><span class="p">,</span>           <span class="c1">#Tên input</span>
+       sliderInput<span class="p">(</span><span class="s">&quot;bins&quot;</span><span class="p">,</span>           <span class="c1">#Tên input</span>
                    <span class="s">&quot;Số lượng bins:&quot;</span><span class="p">,</span> <span class="c1">#Title cho input</span>
-                   <span class="n">min</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
-                   <span class="n">max</span> <span class="o">=</span> <span class="m">50</span><span class="p">,</span>
-                   <span class="n">value</span> <span class="o">=</span> <span class="m">30</span><span class="p">),</span>      <span class="c1">#Giá trị mặc định</span>
+                   min <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
+                   max <span class="o">=</span> <span class="m">50</span><span class="p">,</span>
+                   value <span class="o">=</span> <span class="m">30</span><span class="p">),</span>      <span class="c1">#Giá trị mặc định</span>
        <span class="c1">#Input cho mean dạng nhập số</span>
-       <span class="nf">numericInput</span><span class="p">(</span><span class="s">&quot;mean&quot;</span><span class="p">,</span>
+       numericInput<span class="p">(</span><span class="s">&quot;mean&quot;</span><span class="p">,</span>
                     <span class="s">&quot;Mean value&quot;</span><span class="p">,</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="m">0</span><span class="p">),</span>
+                    value <span class="o">=</span> <span class="m">0</span><span class="p">),</span>
        <span class="c1">#Input cho standard deviation</span>
-       <span class="nf">numericInput</span><span class="p">(</span><span class="s">&quot;sd&quot;</span><span class="p">,</span>
+       numericInput<span class="p">(</span><span class="s">&quot;sd&quot;</span><span class="p">,</span>
                     <span class="s">&quot;Standard deviation&quot;</span><span class="p">,</span>
-                    <span class="n">value</span> <span class="o">=</span> <span class="m">1</span><span class="p">)</span>
+                    value <span class="o">=</span> <span class="m">1</span><span class="p">)</span>
     <span class="p">),</span>
 
     <span class="c1"># main Panel xác định kết quả đầu ra</span>
-    <span class="nf">mainPanel</span><span class="p">(</span>
-       <span class="nf">plotOutput</span><span class="p">(</span><span class="s">&quot;distPlot&quot;</span><span class="p">)</span>       <span class="c1">#Ouput của distPlot</span>
+    mainPanel<span class="p">(</span>
+       plotOutput<span class="p">(</span><span class="s">&quot;distPlot&quot;</span><span class="p">)</span>       <span class="c1">#Ouput của distPlot</span>
     <span class="p">)</span>
   <span class="p">)</span>
 <span class="p">))</span>
 </pre></div>
 </div>
 <p>###SERVER</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">shiny</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>shiny<span class="p">)</span>
 
 <span class="c1"># shiny Server được tính bằng hàm của input và ouput</span>
-<span class="nf">shinyServer</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span> <span class="p">{</span>
+shinyServer<span class="p">(</span><span class="kr">function</span><span class="p">(</span>input<span class="p">,</span> output<span class="p">)</span> <span class="p">{</span>
 <span class="c1">#distPlot tương ứng với trên UI.R</span>
 <span class="c1">#renderPlot trả ra kết quả biểu đồ</span>
-  <span class="n">output</span><span class="o">$</span><span class="n">distPlot</span> <span class="o">&lt;-</span> <span class="nf">renderPlot</span><span class="p">({</span>
+  output<span class="o">$</span>distPlot <span class="o">&lt;-</span> renderPlot<span class="p">({</span>
 
     <span class="c1">#Tạo vector phân phối chuẩn có mean từ mean của input, sd từ sd của input</span>
-    <span class="n">x</span>    <span class="o">&lt;-</span> <span class="nf">rnorm</span><span class="p">(</span><span class="m">1000</span><span class="p">,</span> <span class="n">input</span><span class="o">$</span><span class="n">mean</span><span class="p">,</span> <span class="n">input</span><span class="o">$</span><span class="n">sd</span><span class="p">)</span>
-    <span class="n">bins</span> <span class="o">&lt;-</span> <span class="nf">seq</span><span class="p">(</span><span class="nf">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nf">max</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">length.out</span> <span class="o">=</span> <span class="n">input</span><span class="o">$</span><span class="n">bins</span> <span class="o">+</span> <span class="m">1</span><span class="p">)</span>
+    x    <span class="o">&lt;-</span> rnorm<span class="p">(</span><span class="m">1000</span><span class="p">,</span> input<span class="o">$</span><span class="kp">mean</span><span class="p">,</span> input<span class="o">$</span>sd<span class="p">)</span>
+    bins <span class="o">&lt;-</span> <span class="kp">seq</span><span class="p">(</span><span class="kp">min</span><span class="p">(</span>x<span class="p">),</span> <span class="kp">max</span><span class="p">(</span>x<span class="p">),</span> length.out <span class="o">=</span> input<span class="o">$</span>bins <span class="o">+</span> <span class="m">1</span><span class="p">)</span>
 
     <span class="c1"># Vẽ plot</span>
-    <span class="nf">hist</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">breaks</span> <span class="o">=</span> <span class="n">bins</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&#39;darkgray&#39;</span><span class="p">,</span> <span class="n">border</span> <span class="o">=</span> <span class="s">&#39;white&#39;</span><span class="p">,</span>
-         <span class="n">main</span> <span class="o">=</span> <span class="s">&quot;Biểu đồ phân phối chuẩn&quot;</span><span class="p">)</span>
+    hist<span class="p">(</span>x<span class="p">,</span> breaks <span class="o">=</span> bins<span class="p">,</span> col <span class="o">=</span> <span class="s">&#39;darkgray&#39;</span><span class="p">,</span> border <span class="o">=</span> <span class="s">&#39;white&#39;</span><span class="p">,</span>
+         main <span class="o">=</span> <span class="s">&quot;Biểu đồ phân phối chuẩn&quot;</span><span class="p">)</span>
     <span class="p">})</span>
 
 <span class="p">})</span>
@@ -387,17 +388,17 @@ gallery</a></li>
 </ul>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># ui.R</span>
 
-<span class="nf">library</span><span class="p">(</span><span class="n">shiny</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>shiny<span class="p">)</span>
 
-<span class="nf">shinyUI</span><span class="p">(</span><span class="nf">fluidPage</span><span class="p">(</span>
-  <span class="nf">titlePanel</span><span class="p">(</span><span class="s">&quot;Tên ứng dụng cho Shiny&quot;</span><span class="p">),</span>
+shinyUI<span class="p">(</span>fluidPage<span class="p">(</span>
+  titlePanel<span class="p">(</span><span class="s">&quot;Tên ứng dụng cho Shiny&quot;</span><span class="p">),</span>
 
-  <span class="nf">sidebarLayout</span><span class="p">(</span>
-    <span class="nf">sidebarPanel</span><span class="p">(</span> <span class="nf">h1</span><span class="p">(</span><span class="s">&quot;Các Input đầu vào&quot;</span><span class="p">),</span>
-                  <span class="nf">h5</span><span class="p">(</span><span class="s">&quot;Giá trị của bins, mean&quot;</span><span class="p">),</span>
-                  <span class="nf">numericInput</span><span class="p">(</span><span class="s">&quot;bins&quot;</span><span class="p">,</span> <span class="s">&quot;Bins&quot;</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="m">1</span><span class="p">),</span>
-                  <span class="nf">sliderInput</span><span class="p">(</span><span class="s">&quot;mean&quot;</span><span class="p">,</span><span class="s">&quot;Mean&quot;</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="m">5</span><span class="p">,</span> <span class="n">min</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">max</span> <span class="o">=</span> <span class="m">10</span><span class="p">)),</span>
-    <span class="nf">mainPanel</span><span class="p">(</span><span class="s">&quot;Main Panel trả ra kết quả&quot;</span><span class="p">)</span>
+  sidebarLayout<span class="p">(</span>
+    sidebarPanel<span class="p">(</span> h1<span class="p">(</span><span class="s">&quot;Các Input đầu vào&quot;</span><span class="p">),</span>
+                  h5<span class="p">(</span><span class="s">&quot;Giá trị của bins, mean&quot;</span><span class="p">),</span>
+                  numericInput<span class="p">(</span><span class="s">&quot;bins&quot;</span><span class="p">,</span> <span class="s">&quot;Bins&quot;</span><span class="p">,</span> value <span class="o">=</span> <span class="m">1</span><span class="p">),</span>
+                  sliderInput<span class="p">(</span><span class="s">&quot;mean&quot;</span><span class="p">,</span><span class="s">&quot;Mean&quot;</span><span class="p">,</span> value <span class="o">=</span> <span class="m">5</span><span class="p">,</span> min <span class="o">=</span> <span class="m">1</span><span class="p">,</span> max <span class="o">=</span> <span class="m">10</span><span class="p">)),</span>
+    mainPanel<span class="p">(</span><span class="s">&quot;Main Panel trả ra kết quả&quot;</span><span class="p">)</span>
   <span class="p">)</span>
 <span class="p">))</span>
 </pre></div>
@@ -411,19 +412,19 @@ app</li>
 </li>
 </ul>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># ui.R</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">shiny</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>shiny<span class="p">)</span>
 
-<span class="nf">shinyUI</span><span class="p">(</span><span class="nf">fluidPage</span><span class="p">(</span>
-  <span class="nf">img</span><span class="p">(</span><span class="n">src</span> <span class="o">=</span> <span class="s">&quot;logo.png&quot;</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="m">50</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="m">200</span> <span class="p">),</span>
-  <span class="nf">titlePanel</span><span class="p">(</span><span class="s">&quot;Tên ứng dụng cho Shiny&quot;</span><span class="p">),</span>
+shinyUI<span class="p">(</span>fluidPage<span class="p">(</span>
+  img<span class="p">(</span>src <span class="o">=</span> <span class="s">&quot;logo.png&quot;</span><span class="p">,</span> height <span class="o">=</span> <span class="m">50</span><span class="p">,</span> width <span class="o">=</span> <span class="m">200</span> <span class="p">),</span>
+  titlePanel<span class="p">(</span><span class="s">&quot;Tên ứng dụng cho Shiny&quot;</span><span class="p">),</span>
 
-  <span class="nf">sidebarLayout</span><span class="p">(</span>
-    <span class="nf">sidebarPanel</span><span class="p">(</span>
-                  <span class="nf">h1</span><span class="p">(</span><span class="s">&quot;Các Input đầu vào&quot;</span><span class="p">),</span>
-                  <span class="nf">h5</span><span class="p">(</span><span class="s">&quot;Giá trị của bins, mean&quot;</span><span class="p">),</span>
-                  <span class="nf">numericInput</span><span class="p">(</span><span class="s">&quot;bins&quot;</span><span class="p">,</span> <span class="s">&quot;Bins&quot;</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="m">1</span><span class="p">),</span>
-                  <span class="nf">sliderInput</span><span class="p">(</span><span class="s">&quot;mean&quot;</span><span class="p">,</span><span class="s">&quot;Mean&quot;</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="m">5</span><span class="p">,</span> <span class="n">min</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">max</span> <span class="o">=</span> <span class="m">10</span><span class="p">)),</span>
-    <span class="nf">mainPanel</span><span class="p">(</span><span class="s">&quot;Main Panel trả ra kết quả&quot;</span><span class="p">)</span>
+  sidebarLayout<span class="p">(</span>
+    sidebarPanel<span class="p">(</span>
+                  h1<span class="p">(</span><span class="s">&quot;Các Input đầu vào&quot;</span><span class="p">),</span>
+                  h5<span class="p">(</span><span class="s">&quot;Giá trị của bins, mean&quot;</span><span class="p">),</span>
+                  numericInput<span class="p">(</span><span class="s">&quot;bins&quot;</span><span class="p">,</span> <span class="s">&quot;Bins&quot;</span><span class="p">,</span> value <span class="o">=</span> <span class="m">1</span><span class="p">),</span>
+                  sliderInput<span class="p">(</span><span class="s">&quot;mean&quot;</span><span class="p">,</span><span class="s">&quot;Mean&quot;</span><span class="p">,</span> value <span class="o">=</span> <span class="m">5</span><span class="p">,</span> min <span class="o">=</span> <span class="m">1</span><span class="p">,</span> max <span class="o">=</span> <span class="m">10</span><span class="p">)),</span>
+    mainPanel<span class="p">(</span><span class="s">&quot;Main Panel trả ra kết quả&quot;</span><span class="p">)</span>
   <span class="p">)</span>
 <span class="p">))</span>
 </pre></div>
@@ -438,20 +439,20 @@ cần các thành phần sau:</p>
 dụng thành các biến về sau.</li>
 <li><strong>Label</strong>: Nhãn cho widget, để người dùng dễ theo dõi hơn</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">shiny</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>shiny<span class="p">)</span>
 
-<span class="nf">shinyUI</span><span class="p">(</span><span class="nf">fluidPage</span><span class="p">(</span>
-  <span class="nf">img</span><span class="p">(</span><span class="n">src</span> <span class="o">=</span> <span class="s">&quot;logo.png&quot;</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="m">50</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="m">200</span> <span class="p">),</span>
-  <span class="nf">titlePanel</span><span class="p">(</span><span class="s">&quot;Tên ứng dụng cho Shiny&quot;</span><span class="p">),</span>
+shinyUI<span class="p">(</span>fluidPage<span class="p">(</span>
+  img<span class="p">(</span>src <span class="o">=</span> <span class="s">&quot;logo.png&quot;</span><span class="p">,</span> height <span class="o">=</span> <span class="m">50</span><span class="p">,</span> width <span class="o">=</span> <span class="m">200</span> <span class="p">),</span>
+  titlePanel<span class="p">(</span><span class="s">&quot;Tên ứng dụng cho Shiny&quot;</span><span class="p">),</span>
 
-  <span class="nf">sidebarLayout</span><span class="p">(</span>
-    <span class="nf">sidebarPanel</span><span class="p">(</span>
-                  <span class="nf">h1</span><span class="p">(</span><span class="s">&quot;Các Input đầu vào&quot;</span><span class="p">),</span>
-                  <span class="nf">numericInput</span><span class="p">(</span><span class="s">&quot;bins&quot;</span><span class="p">,</span> <span class="s">&quot;Bins&quot;</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="m">1</span><span class="p">),</span>
-                  <span class="nf">sliderInput</span><span class="p">(</span><span class="s">&quot;mean&quot;</span><span class="p">,</span><span class="s">&quot;Mean&quot;</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="m">5</span><span class="p">,</span> <span class="n">min</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">max</span> <span class="o">=</span> <span class="m">10</span><span class="p">),</span>
-                  <span class="nf">selectInput</span><span class="p">(</span><span class="s">&quot;value&quot;</span><span class="p">,</span><span class="s">&quot;Value&quot;</span><span class="p">,</span><span class="nf">c</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="o">=</span> <span class="s">&quot;a&quot;</span><span class="p">,</span> <span class="s">&quot;b&quot;</span> <span class="o">=</span> <span class="s">&quot;b&quot;</span><span class="p">)),</span>
-                  <span class="nf">fileInput</span><span class="p">(</span><span class="s">&quot;data&quot;</span><span class="p">,</span> <span class="s">&quot;Import dữ liệu&quot;</span><span class="p">)),</span>
-    <span class="nf">mainPanel</span><span class="p">(</span><span class="s">&quot;Main Panel trả ra kết quả&quot;</span><span class="p">)</span>
+  sidebarLayout<span class="p">(</span>
+    sidebarPanel<span class="p">(</span>
+                  h1<span class="p">(</span><span class="s">&quot;Các Input đầu vào&quot;</span><span class="p">),</span>
+                  numericInput<span class="p">(</span><span class="s">&quot;bins&quot;</span><span class="p">,</span> <span class="s">&quot;Bins&quot;</span><span class="p">,</span> value <span class="o">=</span> <span class="m">1</span><span class="p">),</span>
+                  sliderInput<span class="p">(</span><span class="s">&quot;mean&quot;</span><span class="p">,</span><span class="s">&quot;Mean&quot;</span><span class="p">,</span> value <span class="o">=</span> <span class="m">5</span><span class="p">,</span> min <span class="o">=</span> <span class="m">1</span><span class="p">,</span> max <span class="o">=</span> <span class="m">10</span><span class="p">),</span>
+                  selectInput<span class="p">(</span><span class="s">&quot;value&quot;</span><span class="p">,</span><span class="s">&quot;Value&quot;</span><span class="p">,</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="o">=</span> <span class="s">&quot;a&quot;</span><span class="p">,</span> <span class="s">&quot;b&quot;</span> <span class="o">=</span> <span class="s">&quot;b&quot;</span><span class="p">)),</span>
+                  fileInput<span class="p">(</span><span class="s">&quot;data&quot;</span><span class="p">,</span> <span class="s">&quot;Import dữ liệu&quot;</span><span class="p">)),</span>
+    mainPanel<span class="p">(</span><span class="s">&quot;Main Panel trả ra kết quả&quot;</span><span class="p">)</span>
   <span class="p">)</span>
 <span class="p">))</span>
 </pre></div>
@@ -477,32 +478,32 @@ dụng thành các biến về sau.</li>
 <p>Tất cả các giá trị từ widget đều là input và được sử dụng trong phân
 tích</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#ui.r</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">shiny</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>shiny<span class="p">)</span>
 
-<span class="nf">shinyUI</span><span class="p">(</span><span class="nf">fluidPage</span><span class="p">(</span>
-  <span class="nf">img</span><span class="p">(</span><span class="n">src</span> <span class="o">=</span> <span class="s">&quot;logo.png&quot;</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="m">50</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="m">200</span> <span class="p">),</span>
-  <span class="nf">titlePanel</span><span class="p">(</span><span class="s">&quot;Tên ứng dụng cho Shiny&quot;</span><span class="p">),</span>
+shinyUI<span class="p">(</span>fluidPage<span class="p">(</span>
+  img<span class="p">(</span>src <span class="o">=</span> <span class="s">&quot;logo.png&quot;</span><span class="p">,</span> height <span class="o">=</span> <span class="m">50</span><span class="p">,</span> width <span class="o">=</span> <span class="m">200</span> <span class="p">),</span>
+  titlePanel<span class="p">(</span><span class="s">&quot;Tên ứng dụng cho Shiny&quot;</span><span class="p">),</span>
 
-  <span class="nf">sidebarLayout</span><span class="p">(</span>
-    <span class="nf">sidebarPanel</span><span class="p">(</span>
-                  <span class="nf">h1</span><span class="p">(</span><span class="s">&quot;Các Input đầu vào&quot;</span><span class="p">),</span>
-                  <span class="nf">textInput</span><span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="s">&quot;Text&quot;</span><span class="p">)),</span>
-    <span class="nf">mainPanel</span><span class="p">(</span><span class="s">&quot;Kết quả hiển thị với text trong output&quot;</span><span class="p">,</span>
-              <span class="nf">textOutput</span><span class="p">(</span><span class="s">&quot;text1&quot;</span><span class="p">))</span>
+  sidebarLayout<span class="p">(</span>
+    sidebarPanel<span class="p">(</span>
+                  h1<span class="p">(</span><span class="s">&quot;Các Input đầu vào&quot;</span><span class="p">),</span>
+                  textInput<span class="p">(</span><span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="s">&quot;Text&quot;</span><span class="p">)),</span>
+    mainPanel<span class="p">(</span><span class="s">&quot;Kết quả hiển thị với text trong output&quot;</span><span class="p">,</span>
+              textOutput<span class="p">(</span><span class="s">&quot;text1&quot;</span><span class="p">))</span>
   <span class="p">)</span>
 <span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#server.r</span>
 
-<span class="nf">library</span><span class="p">(</span><span class="n">shiny</span><span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>shiny<span class="p">)</span>
 
 <span class="c1"># shiny Server được tính bằng hàm của input và ouput</span>
-<span class="nf">shinyServer</span><span class="p">(</span><span class="nf">function</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span> <span class="p">{</span>
+shinyServer<span class="p">(</span><span class="kr">function</span><span class="p">(</span>input<span class="p">,</span> output<span class="p">)</span> <span class="p">{</span>
   <span class="c1">#distPlot tương ứng với trên UI.R</span>
   <span class="c1">#renderPlot trả ra kết quả biểu đồ</span>
-  <span class="n">output</span><span class="o">$</span><span class="n">text1</span> <span class="o">&lt;-</span> <span class="nf">renderText</span><span class="p">({</span>
-    <span class="n">input</span><span class="o">$</span><span class="n">text</span>
+  output<span class="o">$</span>text1 <span class="o">&lt;-</span> renderText<span class="p">({</span>
+    input<span class="o">$</span>text
   <span class="p">})</span>
 
 <span class="p">})</span>

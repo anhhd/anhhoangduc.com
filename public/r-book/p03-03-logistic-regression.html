@@ -152,14 +152,15 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="p03-04-decision-tree.html">4. Cây quyết định</a></li>
 <li class="toctree-l1"><a class="reference internal" href="p03-05-bagging-boosting.html">5. Bagging, RandomForest và Boosting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">6. Support Vector Machine</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">7. Feature Engineering</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">8. Regularization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">9. Mô hình phi tuyến tính</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">10. Credit Scoring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">11. Xây dựng mô hình dự báo với caret</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">12. Chất lượng mô hình</a></li>
-<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">13. Tidymodels</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-07-xay-dung-mo-hinh-voi-h2o.html">6. Xây dựng mô hình với H2O</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-08-svm.html">7. Support Vector Machine</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-09-feature-engineering.html">8. Feature Engineering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-15-regularization.html">9. Regularization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-17-nonlinear.html">10. Mô hình phi tuyến tính</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-30-credit-scoring.html">11. Credit Scoring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-35-caret.html">12. Xây dựng mô hình dự báo với caret</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-65-chat-luong-mo-hinh.html">13. Chất lượng mô hình</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p03-70-tidymodels.html">14. Tidymodels</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Unsupervised learning</span></p>
 <ul>
@@ -475,20 +476,20 @@ ví dụ trong file excel đính kèm</p>
 </div>
 <div class="section" id="vi-du-xay-dung-mo-hinh-don-gian">
 <h2>3.3. Ví dụ xây dựng mô hình đơn giản<a class="headerlink" href="#vi-du-xay-dung-mo-hinh-don-gian" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">ISLR</span><span class="p">)</span>
-<span class="nf">library</span><span class="p">(</span><span class="n">tidyverse</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">&lt;-</span> <span class="n">Default</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="o">-</span><span class="n">student</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">default</span> <span class="o">=</span> <span class="nf">case_when</span><span class="p">(</span>
-    <span class="n">default</span> <span class="o">==</span> <span class="s">&quot;Yes&quot;</span> <span class="o">~</span> <span class="m">1</span><span class="p">,</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>ISLR<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
+data <span class="o">&lt;-</span> Default <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="o">-</span>student<span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>default <span class="o">=</span> case_when<span class="p">(</span>
+    default <span class="o">==</span> <span class="s">&quot;Yes&quot;</span> <span class="o">~</span> <span class="m">1</span><span class="p">,</span>
     <span class="kc">TRUE</span> <span class="o">~</span> <span class="m">0</span>
   <span class="p">))</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">broom</span><span class="p">)</span>
-<span class="n">model</span> <span class="o">&lt;-</span> <span class="nf">glm</span><span class="p">(</span><span class="n">default</span> <span class="o">~</span> <span class="n">income</span> <span class="o">+</span> <span class="n">balance</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span>
-    <span class="n">family</span> <span class="o">=</span> <span class="s">&quot;binomial&quot;</span><span class="p">)</span>
-<span class="n">model</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>broom<span class="p">)</span>
+model <span class="o">&lt;-</span> glm<span class="p">(</span>default <span class="o">~</span> income <span class="o">+</span> balance<span class="p">,</span> data <span class="o">=</span> data<span class="p">,</span>
+    family <span class="o">=</span> <span class="s">&quot;binomial&quot;</span><span class="p">)</span>
+model <span class="o">%&gt;%</span> <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -517,12 +518,12 @@ ví dụ trong file excel đính kèm</p>
 <span class="c1">## Number of Fisher Scoring iterations: 8</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">broom</span><span class="p">)</span>
-<span class="n">model</span> <span class="o">%&gt;%</span>
-  <span class="n">tidy</span> <span class="o">%&gt;%</span>
-  <span class="nf">filter</span><span class="p">(</span><span class="n">term</span> <span class="o">!=</span> <span class="s">&quot;(Intercept)&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">estimate</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="nf">`odd_increase </span><span class="p">(</span><span class="n">thousands</span> <span class="n">USD</span><span class="p">)</span><span class="n">`</span> <span class="o">=</span> <span class="nf">exp</span><span class="p">(</span><span class="m">1000</span><span class="o">*</span><span class="n">estimate</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>broom<span class="p">)</span>
+model <span class="o">%&gt;%</span>
+  tidy <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>term <span class="o">!=</span> <span class="s">&quot;(Intercept)&quot;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  select<span class="p">(</span>term<span class="p">,</span> estimate<span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span><span class="sb">`odd_increase (thousands USD)`</span> <span class="o">=</span> <span class="kp">exp</span><span class="p">(</span><span class="m">1000</span><span class="o">*</span>estimate<span class="p">))</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## # A tibble: 2 x 3</span>
@@ -550,7 +551,7 @@ loại là 0.5 -&gt; KH A - “Good”.</p>
 <p>Để dự báo trên tập dữ liệu mới, ta có thể dùng hàm <code class="docutils literal notranslate"><span class="pre">predict</span></code> với
 option <code class="docutils literal notranslate"><span class="pre">type</span> <span class="pre">=</span> <span class="pre">&quot;response&quot;</span></code> để trả ra kết quả dưới dạng xác suất xảy ra
 event (trong ví dụ này là xác suất xảy ra nợ xâu)</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data</span> <span class="o">%&gt;%</span> <span class="n">head</span><span class="p">,</span> <span class="n">type</span> <span class="o">=</span> <span class="s">&quot;response&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>predict<span class="p">(</span>model<span class="p">,</span> data <span class="o">%&gt;%</span> <span class="kp">head</span><span class="p">,</span> type <span class="o">=</span> <span class="s">&quot;response&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##            1            2            3            4            5</span>
@@ -847,25 +848,25 @@ này đặc biệt quan trọng khi xây dựng các chiến lược marketing.<
 <p><strong>Đường gain</strong> là tổ hợp giữa TPR (True Positive Rate) và RPP (Rate of
 Positive Prediction). Vị trí các điểm trên đường gain cho ta biết nên
 chọn điểm cut-off như thế nào.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">library</span><span class="p">(</span><span class="n">scales</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">tpr</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">0.4</span><span class="p">,</span> <span class="m">0.7</span><span class="p">,</span> <span class="m">0.8</span><span class="p">,</span> <span class="m">0.85</span><span class="p">,</span> <span class="m">0.88</span><span class="p">,</span> <span class="m">0.93</span><span class="p">,</span> <span class="m">0.94</span><span class="p">,</span> <span class="m">0.97</span><span class="p">,</span> <span class="m">0.99</span><span class="p">,</span> <span class="m">1</span><span class="p">),</span>
-                 <span class="n">rpp</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="nf">seq</span><span class="p">(</span><span class="m">0.1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">)))</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">lift</span> <span class="o">=</span> <span class="n">tpr</span><span class="o">/</span><span class="n">rpp</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">lift</span> <span class="o">=</span> <span class="nf">replace_na</span><span class="p">(</span><span class="n">lift</span><span class="p">,</span> <span class="m">0</span><span class="p">))</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>scales<span class="p">)</span>
+df <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>tpr <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">0.4</span><span class="p">,</span> <span class="m">0.7</span><span class="p">,</span> <span class="m">0.8</span><span class="p">,</span> <span class="m">0.85</span><span class="p">,</span> <span class="m">0.88</span><span class="p">,</span> <span class="m">0.93</span><span class="p">,</span> <span class="m">0.94</span><span class="p">,</span> <span class="m">0.97</span><span class="p">,</span> <span class="m">0.99</span><span class="p">,</span> <span class="m">1</span><span class="p">),</span>
+                 rpp <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="kp">seq</span><span class="p">(</span><span class="m">0.1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span> by <span class="o">=</span> <span class="m">0.1</span><span class="p">)))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>lift <span class="o">=</span> tpr<span class="o">/</span>rpp<span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>lift <span class="o">=</span> replace_na<span class="p">(</span>lift<span class="p">,</span> <span class="m">0</span><span class="p">))</span>
 
-<span class="n">df</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">rpp</span><span class="p">,</span> <span class="n">tpr</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_line</span><span class="p">(</span><span class="n">col</span> <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.7</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="n">col</span> <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_text</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">label</span> <span class="o">=</span> <span class="n">tpr</span><span class="p">),</span> <span class="n">vjust</span> <span class="o">=</span> <span class="m">-0.5</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme_classic</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">scale_x_continuous</span><span class="p">(</span><span class="n">breaks</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">0.1</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_line</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">rpp</span><span class="p">,</span> <span class="n">rpp</span><span class="p">),</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">linetype</span> <span class="o">=</span> <span class="s">&quot;dashed&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">annotate</span><span class="p">(</span><span class="n">geom</span> <span class="o">=</span> <span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="m">0.45</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;Base line (No model)&quot;</span><span class="p">,</span> <span class="n">hjust</span> <span class="o">=</span> <span class="m">0</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_vline</span><span class="p">(</span><span class="n">xintercept</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">0.1</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">),</span> <span class="n">linetype</span> <span class="o">=</span> <span class="s">&quot;dashed&quot;</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;darkgrey&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.3</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">labs</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s">&quot;Rate of Positive Prediction&quot;</span><span class="p">,</span>
-       <span class="n">y</span> <span class="o">=</span> <span class="s">&quot;True Positive Rate&quot;</span><span class="p">,</span>
-       <span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Gain chart&quot;</span><span class="p">)</span>
+df <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>rpp<span class="p">,</span> tpr<span class="p">))</span> <span class="o">+</span>
+  geom_line<span class="p">(</span>col <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">0.7</span><span class="p">)</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>col <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">2</span><span class="p">)</span> <span class="o">+</span>
+  geom_text<span class="p">(</span>aes<span class="p">(</span>label <span class="o">=</span> tpr<span class="p">),</span> vjust <span class="o">=</span> <span class="m">-0.5</span><span class="p">)</span> <span class="o">+</span>
+  theme_classic<span class="p">()</span> <span class="o">+</span>
+  scale_x_continuous<span class="p">(</span>breaks <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">0.1</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> by <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span> <span class="o">+</span>
+  geom_line<span class="p">(</span>aes<span class="p">(</span>rpp<span class="p">,</span> rpp<span class="p">),</span> col <span class="o">=</span> <span class="s">&quot;black&quot;</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">1</span><span class="p">,</span> linetype <span class="o">=</span> <span class="s">&quot;dashed&quot;</span><span class="p">)</span> <span class="o">+</span>
+  annotate<span class="p">(</span>geom <span class="o">=</span> <span class="s">&quot;text&quot;</span><span class="p">,</span> x <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> y <span class="o">=</span> <span class="m">0.45</span><span class="p">,</span> label <span class="o">=</span> <span class="s">&quot;Base line (No model)&quot;</span><span class="p">,</span> hjust <span class="o">=</span> <span class="m">0</span><span class="p">)</span> <span class="o">+</span>
+  geom_vline<span class="p">(</span>xintercept <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">0.1</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> by <span class="o">=</span> <span class="m">0.1</span><span class="p">),</span> linetype <span class="o">=</span> <span class="s">&quot;dashed&quot;</span><span class="p">,</span> col <span class="o">=</span> <span class="s">&quot;darkgrey&quot;</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">0.3</span><span class="p">)</span> <span class="o">+</span>
+  labs<span class="p">(</span>x <span class="o">=</span> <span class="s">&quot;Rate of Positive Prediction&quot;</span><span class="p">,</span>
+       y <span class="o">=</span> <span class="s">&quot;True Positive Rate&quot;</span><span class="p">,</span>
+       title <span class="o">=</span> <span class="s">&quot;Gain chart&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image8" src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-7-1.png" /></p>
@@ -885,23 +886,23 @@ mô hình. Đường lift cho ta biết, ứng với từng decile, chất lư�
 cao hơn bao nhiêu lần so với việc không sử dụng mô hình (ngẫu nhiên).
 Đường lift luôn giảm về 1 khi ta dự báo 100% tất cả quan sát thuộc về
 nhóm <em>positive</em>.</p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">%&gt;%</span>
-  <span class="nf">filter</span><span class="p">(</span><span class="n">lift</span> <span class="o">&gt;</span> <span class="m">0</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">rpp</span><span class="p">,</span> <span class="n">lift</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_line</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">theme_classic</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">geom_line</span><span class="p">(</span><span class="n">col</span> <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.7</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_point</span><span class="p">(</span><span class="n">col</span> <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">2</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_text</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">label</span> <span class="o">=</span> <span class="nf">round</span><span class="p">(</span><span class="n">lift</span><span class="p">,</span> <span class="m">1</span><span class="p">)),</span> <span class="n">vjust</span> <span class="o">=</span> <span class="m">-0.5</span><span class="p">,</span> <span class="n">hjust</span> <span class="o">=</span> <span class="m">0</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme_classic</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">scale_x_continuous</span><span class="p">(</span><span class="n">breaks</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">0.1</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">annotate</span><span class="p">(</span><span class="n">geom</span> <span class="o">=</span> <span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="m">1.1</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;Base line (No model)&quot;</span><span class="p">,</span> <span class="n">hjust</span> <span class="o">=</span> <span class="m">0</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_vline</span><span class="p">(</span><span class="n">xintercept</span> <span class="o">=</span> <span class="nf">seq</span><span class="p">(</span><span class="m">0.1</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="n">by</span> <span class="o">=</span> <span class="m">0.1</span><span class="p">),</span> <span class="n">linetype</span> <span class="o">=</span> <span class="s">&quot;dashed&quot;</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;darkgrey&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">0.3</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">geom_hline</span><span class="p">(</span><span class="n">yintercept</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">linetype</span> <span class="o">=</span> <span class="s">&quot;dashed&quot;</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;darkblue&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="m">0.7</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">labs</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s">&quot;Rate of Positive Prediction&quot;</span><span class="p">,</span>
-       <span class="n">y</span> <span class="o">=</span> <span class="s">&quot;Lift ratio&quot;</span><span class="p">,</span>
-       <span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Lift chart&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>df <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>lift <span class="o">&gt;</span> <span class="m">0</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>rpp<span class="p">,</span> lift<span class="p">))</span> <span class="o">+</span>
+  geom_line<span class="p">()</span> <span class="o">+</span>
+  geom_point<span class="p">()</span> <span class="o">+</span>
+  theme_classic<span class="p">()</span> <span class="o">+</span>
+  geom_line<span class="p">(</span>col <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">0.7</span><span class="p">)</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>col <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> size <span class="o">=</span> <span class="m">2</span><span class="p">)</span> <span class="o">+</span>
+  geom_text<span class="p">(</span>aes<span class="p">(</span>label <span class="o">=</span> <span class="kp">round</span><span class="p">(</span>lift<span class="p">,</span> <span class="m">1</span><span class="p">)),</span> vjust <span class="o">=</span> <span class="m">-0.5</span><span class="p">,</span> hjust <span class="o">=</span> <span class="m">0</span><span class="p">)</span> <span class="o">+</span>
+  theme_classic<span class="p">()</span> <span class="o">+</span>
+  scale_x_continuous<span class="p">(</span>breaks <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">0.1</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> by <span class="o">=</span> <span class="m">0.1</span><span class="p">))</span> <span class="o">+</span>
+  annotate<span class="p">(</span>geom <span class="o">=</span> <span class="s">&quot;text&quot;</span><span class="p">,</span> x <span class="o">=</span> <span class="m">0.1</span><span class="p">,</span> y <span class="o">=</span> <span class="m">1.1</span><span class="p">,</span> label <span class="o">=</span> <span class="s">&quot;Base line (No model)&quot;</span><span class="p">,</span> hjust <span class="o">=</span> <span class="m">0</span><span class="p">)</span> <span class="o">+</span>
+  geom_vline<span class="p">(</span>xintercept <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">0.1</span><span class="p">,</span> <span class="m">1</span><span class="p">,</span> by <span class="o">=</span> <span class="m">0.1</span><span class="p">),</span> linetype <span class="o">=</span> <span class="s">&quot;dashed&quot;</span><span class="p">,</span> col <span class="o">=</span> <span class="s">&quot;darkgrey&quot;</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">0.3</span><span class="p">)</span> <span class="o">+</span>
+  geom_hline<span class="p">(</span>yintercept <span class="o">=</span> <span class="m">1</span><span class="p">,</span> linetype <span class="o">=</span> <span class="s">&quot;dashed&quot;</span><span class="p">,</span> col <span class="o">=</span> <span class="s">&quot;darkblue&quot;</span><span class="p">,</span> alpha <span class="o">=</span> <span class="m">1</span><span class="p">,</span> size <span class="o">=</span> <span class="m">0.7</span><span class="p">)</span> <span class="o">+</span>
+  labs<span class="p">(</span>x <span class="o">=</span> <span class="s">&quot;Rate of Positive Prediction&quot;</span><span class="p">,</span>
+       y <span class="o">=</span> <span class="s">&quot;Lift ratio&quot;</span><span class="p">,</span>
+       title <span class="o">=</span> <span class="s">&quot;Lift chart&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image9" src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-8-1.png" /></p>
@@ -919,21 +920,21 @@ phối lũy kế xác suất trên hai class. Khi xây dựng mô hình, KS có 
 được tính theo công thức sau.</p>
 <div class="math notranslate">
 \[KS = max(abs(tpr - fpr))\]</div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">pos_class</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.8</span><span class="p">,</span> <span class="m">0.75</span><span class="p">,</span> <span class="m">0.7</span><span class="p">,</span> <span class="m">0.55</span><span class="p">,</span> <span class="m">0.4</span><span class="p">)</span>
-<span class="n">pos_class</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>pos_class <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="m">0.8</span><span class="p">,</span> <span class="m">0.75</span><span class="p">,</span> <span class="m">0.7</span><span class="p">,</span> <span class="m">0.55</span><span class="p">,</span> <span class="m">0.4</span><span class="p">)</span>
+pos_class
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 0.80 0.75 0.70 0.55 0.40</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">neg_class</span> <span class="o">&lt;-</span> <span class="nf">c</span><span class="p">(</span><span class="m">0.7</span><span class="p">,</span> <span class="m">0.4</span><span class="p">,</span> <span class="m">0.3</span><span class="p">,</span> <span class="m">0.2</span><span class="p">,</span> <span class="m">0.15</span><span class="p">)</span>
-<span class="n">neg_class</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>neg_class <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="m">0.7</span><span class="p">,</span> <span class="m">0.4</span><span class="p">,</span> <span class="m">0.3</span><span class="p">,</span> <span class="m">0.2</span><span class="p">,</span> <span class="m">0.15</span><span class="p">)</span>
+neg_class
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 0.70 0.40 0.30 0.20 0.15</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">ks.test</span><span class="p">(</span><span class="n">pos_class</span><span class="p">,</span> <span class="n">neg_class</span><span class="p">,</span> <span class="n">alternative</span> <span class="o">=</span> <span class="s">&quot;greater&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>ks.test<span class="p">(</span>pos_class<span class="p">,</span> neg_class<span class="p">,</span> alternative <span class="o">=</span> <span class="s">&quot;greater&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -944,17 +945,17 @@ phối lũy kế xác suất trên hai class. Khi xây dựng mô hình, KS có 
 <span class="c1">## alternative hypothesis: the CDF of x lies above that of y</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">data.frame</span><span class="p">(</span><span class="n">pos_class</span><span class="p">,</span> <span class="n">neg_class</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">stat_ecdf</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">pos_class</span><span class="p">),</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> <span class="n">geom</span> <span class="o">=</span> <span class="s">&quot;line&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">stat_ecdf</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">neg_class</span><span class="p">),</span> <span class="n">col</span> <span class="o">=</span> <span class="s">&quot;darkblue&quot;</span><span class="p">,</span> <span class="n">geom</span> <span class="o">=</span> <span class="s">&quot;line&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">annotate</span><span class="p">(</span><span class="n">geom</span> <span class="o">=</span> <span class="s">&quot;text&quot;</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s">&quot;KS = 0.6&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">theme_minimal</span><span class="p">()</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kt">data.frame</span><span class="p">(</span>pos_class<span class="p">,</span> neg_class<span class="p">)</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">()</span> <span class="o">+</span>
+  stat_ecdf<span class="p">(</span>aes<span class="p">(</span>pos_class<span class="p">),</span> col <span class="o">=</span> <span class="s">&quot;darkred&quot;</span><span class="p">,</span> geom <span class="o">=</span> <span class="s">&quot;line&quot;</span><span class="p">)</span> <span class="o">+</span>
+  stat_ecdf<span class="p">(</span>aes<span class="p">(</span>neg_class<span class="p">),</span> col <span class="o">=</span> <span class="s">&quot;darkblue&quot;</span><span class="p">,</span> geom <span class="o">=</span> <span class="s">&quot;line&quot;</span><span class="p">)</span> <span class="o">+</span>
+  annotate<span class="p">(</span>geom <span class="o">=</span> <span class="s">&quot;text&quot;</span><span class="p">,</span> x <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> y <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> label <span class="o">=</span> <span class="s">&quot;KS = 0.6&quot;</span><span class="p">)</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span>
 </pre></div>
 </div>
 <p><img alt="image10" src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-10-1.png" /></p>
 <p><img alt="image11" src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-12-1.png" /></p>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">$</span><span class="n">ksTable</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>result<span class="o">$</span>ksTable
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   dec total responders nonresponders cumResponders cumNonresponders</span>
@@ -977,7 +978,7 @@ phối lũy kế xác suất trên hai class. Khi xây dựng mô hình, KS có 
 <span class="c1">## 8              100                 100     0</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">$</span><span class="n">ks</span> <span class="o">%&gt;%</span> <span class="n">print</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>result<span class="o">$</span>ks <span class="o">%&gt;%</span> <span class="kp">print</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 60</span>
@@ -1008,8 +1009,8 @@ khách hàng sử dụng thẻ tín dụng.</p>
 <li>Balance: Dư nợ TB còn lại của KH sau khi trả tiền hàng tháng.</li>
 <li>Income: Thu nhập của khách hàng</li>
 </ul>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">&lt;-</span> <span class="n">Default</span>
-<span class="n">data</span> <span class="o">%&gt;%</span> <span class="n">head</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>data <span class="o">&lt;-</span> Default
+data <span class="o">%&gt;%</span> <span class="kp">head</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##   default student   balance    income</span>
@@ -1024,10 +1025,10 @@ khách hàng sử dụng thẻ tín dụng.</p>
 </div>
 <div class="section" id="xay-dung-mo-hinh-tren-tap-du-lieu-goc">
 <h3>3.6.2. Xây dựng mô hình trên tập dữ liệu gốc<a class="headerlink" href="#xay-dung-mo-hinh-tren-tap-du-lieu-goc" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">glm.fit1</span> <span class="o">&lt;-</span> <span class="nf">glm</span><span class="p">(</span><span class="n">default</span> <span class="o">~</span> <span class="n">.,</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span>
-                <span class="n">family</span> <span class="o">=</span> <span class="n">binomial</span><span class="p">)</span>
-<span class="n">glm.fit1</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>glm.fit1 <span class="o">&lt;-</span> glm<span class="p">(</span>default <span class="o">~</span> <span class="m">.</span><span class="p">,</span>
+                data <span class="o">=</span> data<span class="p">,</span>
+                family <span class="o">=</span> binomial<span class="p">)</span>
+glm.fit1 <span class="o">%&gt;%</span> <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -1056,7 +1057,7 @@ khách hàng sử dụng thẻ tín dụng.</p>
 <span class="c1">## Number of Fisher Scoring iterations: 8</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">glm.fit2</span> <span class="o">&lt;-</span> <span class="nf">step</span><span class="p">(</span><span class="n">glm.fit1</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>glm.fit2 <span class="o">&lt;-</span> step<span class="p">(</span>glm.fit1<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Start:  AIC=1579.54</span>
@@ -1077,7 +1078,7 @@ khách hàng sử dụng thẻ tín dụng.</p>
 <span class="c1">## - balance  1   2908.7 2912.7</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">glm.fit2</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>glm.fit2 <span class="o">%&gt;%</span> <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -1128,12 +1129,12 @@ KH ko là sinh viên.</li>
 <div class="section" id="chia-tap-train-test">
 <h4>3.6.3.1. Chia tập train/test<a class="headerlink" href="#chia-tap-train-test" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#chia tập train/test</span>
-<span class="nf">set.seed</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
-<span class="n">train</span> <span class="o">&lt;-</span> <span class="nf">sample</span><span class="p">(</span><span class="nf">nrow</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="m">0.7</span> <span class="o">*</span> <span class="nf">nrow</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
-<span class="n">df.train</span> <span class="o">&lt;-</span> <span class="n">data[train</span><span class="p">,</span><span class="n">]</span>            <span class="c1"># tập train</span>
-<span class="n">df.test</span> <span class="o">&lt;-</span> <span class="n">data[</span><span class="o">-</span><span class="n">train</span><span class="p">,</span><span class="n">]</span>        <span class="c1"># tập test</span>
+<span class="kp">set.seed</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+train <span class="o">&lt;-</span> <span class="kp">sample</span><span class="p">(</span><span class="kp">nrow</span><span class="p">(</span>data<span class="p">),</span> <span class="m">0.7</span> <span class="o">*</span> <span class="kp">nrow</span><span class="p">(</span>data<span class="p">))</span>
+df.train <span class="o">&lt;-</span> data<span class="p">[</span>train<span class="p">,]</span>            <span class="c1"># tập train</span>
+df.test <span class="o">&lt;-</span> data<span class="p">[</span><span class="o">-</span>train<span class="p">,]</span>        <span class="c1"># tập test</span>
 
-<span class="n">df.train</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+df.train <span class="o">%&gt;%</span> <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  default    student       balance           income</span>
@@ -1145,7 +1146,7 @@ KH ko là sinh viên.</li>
 <span class="c1">##                        Max.   :2654.3   Max.   :73554</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">df.test</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>df.test <span class="o">%&gt;%</span> <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##  default    student       balance           income</span>
@@ -1160,10 +1161,10 @@ KH ko là sinh viên.</li>
 </div>
 <div class="section" id="xay-dung-mo-hinh">
 <h4>3.6.3.2. Xây dựng mô hình<a class="headerlink" href="#xay-dung-mo-hinh" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">fit.logit</span> <span class="o">&lt;-</span> <span class="nf">glm</span><span class="p">(</span><span class="n">default</span><span class="o">~</span><span class="n">.,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">df.train</span><span class="p">,</span> <span class="n">family</span> <span class="o">=</span> <span class="n">binomial</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>fit.logit <span class="o">&lt;-</span> glm<span class="p">(</span>default<span class="o">~</span><span class="m">.</span><span class="p">,</span> data <span class="o">=</span> df.train<span class="p">,</span> family <span class="o">=</span> binomial<span class="p">)</span>
 
 <span class="c1">#giảm biến ko có ý nghĩa thống kê</span>
-<span class="n">logit.fit.reduced</span> <span class="o">&lt;-</span> <span class="nf">step</span><span class="p">(</span><span class="n">fit.logit</span><span class="p">)</span>
+logit.fit.reduced <span class="o">&lt;-</span> step<span class="p">(</span>fit.logit<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Start:  AIC=1078.68</span>
@@ -1184,7 +1185,7 @@ KH ko là sinh viên.</li>
 <span class="c1">## - balance  1   2042.7 2046.7</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">logit.fit.reduced</span> <span class="o">%&gt;%</span> <span class="n">summary</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>logit.fit.reduced <span class="o">%&gt;%</span> <span class="kp">summary</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##</span>
@@ -1216,27 +1217,27 @@ KH ko là sinh viên.</li>
 </div>
 <div class="section" id="du-bao-xac-suat-co-no-xau-tren-tap-test">
 <h4>3.6.3.3. Dự báo xác suất có nợ xấu trên tập test<a class="headerlink" href="#du-bao-xac-suat-co-no-xau-tren-tap-test" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">prob.test</span> <span class="o">&lt;-</span> <span class="nf">predict</span><span class="p">(</span><span class="n">logit.fit.reduced</span><span class="p">,</span> <span class="n">df.test</span><span class="p">,</span> <span class="n">type</span> <span class="o">=</span> <span class="s">&quot;response&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>prob.test <span class="o">&lt;-</span> predict<span class="p">(</span>logit.fit.reduced<span class="p">,</span> df.test<span class="p">,</span> type <span class="o">=</span> <span class="s">&quot;response&quot;</span><span class="p">)</span>
 
 <span class="c1">#phân loại (chọn cutoff = 0.5)</span>
-<span class="n">class.pred.test</span> <span class="o">&lt;-</span> <span class="nf">factor</span><span class="p">(</span><span class="n">prob.test</span> <span class="o">&gt;</span> <span class="m">0.5</span><span class="p">,</span>
-                          <span class="n">levels</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="kc">FALSE</span><span class="p">,</span> <span class="kc">TRUE</span><span class="p">),</span>
-                          <span class="n">labels</span> <span class="o">=</span> <span class="nf">c</span><span class="p">(</span><span class="s">&quot;No&quot;</span><span class="p">,</span> <span class="s">&quot;Yes&quot;</span><span class="p">))</span>
+class.pred.test <span class="o">&lt;-</span> <span class="kp">factor</span><span class="p">(</span>prob.test <span class="o">&gt;</span> <span class="m">0.5</span><span class="p">,</span>
+                          levels <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="kc">FALSE</span><span class="p">,</span> <span class="kc">TRUE</span><span class="p">),</span>
+                          labels <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;No&quot;</span><span class="p">,</span> <span class="s">&quot;Yes&quot;</span><span class="p">))</span>
 
 <span class="c1">#kết quả trên tập test</span>
-<span class="n">prob.test.df</span> <span class="o">&lt;-</span> <span class="n">prob.test</span> <span class="o">%&gt;%</span> <span class="nf">as.data.frame</span><span class="p">()</span>
-<span class="nf">names</span><span class="p">(</span><span class="n">prob.test.df</span><span class="p">)</span><span class="n">[1]</span> <span class="o">&lt;-</span> <span class="s">&quot;prob.default&quot;</span>
+prob.test.df <span class="o">&lt;-</span> prob.test <span class="o">%&gt;%</span> <span class="kp">as.data.frame</span><span class="p">()</span>
+<span class="kp">names</span><span class="p">(</span>prob.test.df<span class="p">)[</span><span class="m">1</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="s">&quot;prob.default&quot;</span>
 
 <span class="c1">#Lụa chọn điểm cutoff là 0.5</span>
-<span class="n">prob.test.df</span> <span class="o">&lt;-</span> <span class="n">prob.test.df</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">class</span> <span class="o">=</span> <span class="nf">as.factor</span><span class="p">(</span><span class="nf">ifelse</span><span class="p">(</span><span class="n">prob.default</span> <span class="o">&gt;</span> <span class="m">0.5</span><span class="p">,</span> <span class="s">&quot;Yes&quot;</span><span class="p">,</span> <span class="s">&quot;No&quot;</span><span class="p">)))</span>
-<span class="n">prob.test.df</span><span class="o">$</span><span class="n">student</span> <span class="o">&lt;-</span> <span class="n">df.test</span><span class="o">$</span><span class="n">student</span>
-<span class="n">prob.test.df</span><span class="o">$</span><span class="n">balance</span> <span class="o">&lt;-</span> <span class="n">df.test</span><span class="o">$</span><span class="n">balance</span>
-<span class="n">prob.test.df</span><span class="o">$</span><span class="n">income</span> <span class="o">&lt;-</span> <span class="n">df.test</span><span class="o">$</span><span class="n">income</span>
+prob.test.df <span class="o">&lt;-</span> prob.test.df <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>class <span class="o">=</span> <span class="kp">as.factor</span><span class="p">(</span><span class="kp">ifelse</span><span class="p">(</span>prob.default <span class="o">&gt;</span> <span class="m">0.5</span><span class="p">,</span> <span class="s">&quot;Yes&quot;</span><span class="p">,</span> <span class="s">&quot;No&quot;</span><span class="p">)))</span>
+prob.test.df<span class="o">$</span>student <span class="o">&lt;-</span> df.test<span class="o">$</span>student
+prob.test.df<span class="o">$</span>balance <span class="o">&lt;-</span> df.test<span class="o">$</span>balance
+prob.test.df<span class="o">$</span>income <span class="o">&lt;-</span> df.test<span class="o">$</span>income
 
-<span class="n">prob.test.df</span> <span class="o">%&gt;%</span>
-  <span class="nf">select</span><span class="p">(</span><span class="m">3</span><span class="o">:</span><span class="m">5</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">sample_n</span><span class="p">(</span><span class="m">10</span><span class="p">)</span>
+prob.test.df <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="m">3</span><span class="o">:</span><span class="m">5</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  sample_n<span class="p">(</span><span class="m">10</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##      student    balance   income prob.default class</span>
@@ -1258,8 +1259,8 @@ KH ko là sinh viên.</li>
 <div class="section" id="confusion-matrix-1">
 <span id="id1"></span><h5>3.6.3.4.1. Confusion matrix<a class="headerlink" href="#confusion-matrix-1" title="Permalink to this headline">¶</a></h5>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">#conf.matrix</span>
-<span class="n">logit.perf</span> <span class="o">&lt;-</span> <span class="nf">table</span><span class="p">(</span><span class="n">df.test</span><span class="o">$</span><span class="n">default</span><span class="p">,</span> <span class="n">class.pred.test</span><span class="p">)</span>
-<span class="n">logit.perf</span>
+logit.perf <span class="o">&lt;-</span> <span class="kp">table</span><span class="p">(</span>df.test<span class="o">$</span>default<span class="p">,</span> class.pred.test<span class="p">)</span>
+logit.perf
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##      class.pred.test</span>
@@ -1270,22 +1271,22 @@ KH ko là sinh viên.</li>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1">###performance</span>
 <span class="c1">#function to perform model</span>
-<span class="n">model.performance</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">a</span> <span class="o">&lt;-</span> <span class="n">confusion_matrix[1</span><span class="p">,</span><span class="m">1</span><span class="n">]</span>
-  <span class="n">b</span> <span class="o">&lt;-</span> <span class="n">confusion_matrix[1</span><span class="p">,</span><span class="m">2</span><span class="n">]</span>
-  <span class="n">c</span> <span class="o">&lt;-</span> <span class="n">confusion_matrix[2</span><span class="p">,</span><span class="m">2</span><span class="n">]</span>
-  <span class="n">d</span> <span class="o">&lt;-</span> <span class="n">confusion_matrix[2</span><span class="p">,</span><span class="m">1</span><span class="n">]</span>
+model.performance <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>confusion_matrix<span class="p">)</span> <span class="p">{</span>
+  a <span class="o">&lt;-</span> confusion_matrix<span class="p">[</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">]</span>
+  b <span class="o">&lt;-</span> confusion_matrix<span class="p">[</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">]</span>
+  <span class="kt">c</span> <span class="o">&lt;-</span> confusion_matrix<span class="p">[</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">]</span>
+  d <span class="o">&lt;-</span> confusion_matrix<span class="p">[</span><span class="m">2</span><span class="p">,</span><span class="m">1</span><span class="p">]</span>
 
-  <span class="n">recall</span> <span class="o">&lt;-</span> <span class="n">c</span><span class="o">/</span><span class="p">(</span><span class="n">c</span><span class="o">+</span><span class="n">d</span><span class="p">)</span>
-  <span class="n">precision</span> <span class="o">&lt;-</span> <span class="n">c</span><span class="o">/</span><span class="p">(</span><span class="n">b</span><span class="o">+</span><span class="n">c</span><span class="p">)</span>
-  <span class="n">accuracy</span> <span class="o">&lt;-</span> <span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">c</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">+</span><span class="n">c</span><span class="o">+</span><span class="n">d</span><span class="p">)</span>
+  recall <span class="o">&lt;-</span> <span class="kt">c</span><span class="o">/</span><span class="p">(</span><span class="kt">c</span><span class="o">+</span>d<span class="p">)</span>
+  precision <span class="o">&lt;-</span> <span class="kt">c</span><span class="o">/</span><span class="p">(</span>b<span class="o">+</span><span class="kt">c</span><span class="p">)</span>
+  accuracy <span class="o">&lt;-</span> <span class="p">(</span>a<span class="o">+</span><span class="kt">c</span><span class="p">)</span><span class="o">/</span><span class="p">(</span>a<span class="o">+</span>b<span class="o">+</span><span class="kt">c</span><span class="o">+</span>d<span class="p">)</span>
 
-  <span class="nf">print</span><span class="p">(</span><span class="nf">paste</span><span class="p">(</span><span class="s">&#39;recall :&#39;</span><span class="p">,</span><span class="nf">round</span><span class="p">(</span><span class="n">recall</span><span class="p">,</span><span class="m">2</span><span class="p">)))</span>
-  <span class="nf">print</span><span class="p">(</span><span class="nf">paste</span><span class="p">(</span><span class="s">&#39;precision :&#39;</span><span class="p">,</span><span class="nf">round</span><span class="p">(</span><span class="n">precision</span><span class="p">,</span><span class="m">2</span><span class="p">)))</span>
-  <span class="nf">print</span><span class="p">(</span><span class="nf">paste</span><span class="p">(</span><span class="s">&#39;accuracy :&#39;</span><span class="p">,</span><span class="nf">round</span><span class="p">(</span><span class="n">accuracy</span><span class="p">,</span><span class="m">2</span><span class="p">)))</span>
+  <span class="kp">print</span><span class="p">(</span><span class="kp">paste</span><span class="p">(</span><span class="s">&#39;recall :&#39;</span><span class="p">,</span><span class="kp">round</span><span class="p">(</span>recall<span class="p">,</span><span class="m">2</span><span class="p">)))</span>
+  <span class="kp">print</span><span class="p">(</span><span class="kp">paste</span><span class="p">(</span><span class="s">&#39;precision :&#39;</span><span class="p">,</span><span class="kp">round</span><span class="p">(</span>precision<span class="p">,</span><span class="m">2</span><span class="p">)))</span>
+  <span class="kp">print</span><span class="p">(</span><span class="kp">paste</span><span class="p">(</span><span class="s">&#39;accuracy :&#39;</span><span class="p">,</span><span class="kp">round</span><span class="p">(</span>accuracy<span class="p">,</span><span class="m">2</span><span class="p">)))</span>
 <span class="p">}</span>
 
-<span class="nf">model.performance</span><span class="p">(</span><span class="n">logit.perf</span><span class="p">)</span>
+model.performance<span class="p">(</span>logit.perf<span class="p">)</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] &quot;recall : 0.28&quot;</span>
@@ -1308,8 +1309,8 @@ x và y mong muốn</li>
 <p><strong>Lưu ý</strong>: Object <code class="docutils literal notranslate"><span class="pre">pred</span></code> được lưu dưới dạng S4 class. Để chiết xuất dữ
 liệu cần dùng toán tử <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> thay cho <code class="docutils literal notranslate"><span class="pre">$</span></code> như <code class="docutils literal notranslate"><span class="pre">S3</span></code></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bước 1: Tạo object pred</span>
-<span class="n">pred</span> <span class="o">&lt;-</span> <span class="nf">prediction</span><span class="p">(</span><span class="n">prob.test</span><span class="p">,</span> <span class="n">df.test</span><span class="o">$</span><span class="n">default</span><span class="p">)</span>
-<span class="n">pred</span> <span class="o">%&gt;%</span> <span class="n">str</span>
+pred <span class="o">&lt;-</span> prediction<span class="p">(</span>prob.test<span class="p">,</span> df.test<span class="o">$</span>default<span class="p">)</span>
+pred <span class="o">%&gt;%</span> str
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## Formal class &#39;prediction&#39; [package &quot;ROCR&quot;] with 11 slots</span>
@@ -1340,28 +1341,28 @@ liệu cần dùng toán tử <code class="docutils literal notranslate"><span c
 </pre></div>
 </div>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bước 2: Tạo object tính toán prediction cho AUC</span>
-<span class="n">roc</span> <span class="o">&lt;-</span> <span class="nf">performance</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">x.measure</span> <span class="o">=</span> <span class="s">&quot;fpr&quot;</span><span class="p">,</span> <span class="n">measure</span> <span class="o">=</span> <span class="s">&quot;tpr&quot;</span><span class="p">)</span>
+roc <span class="o">&lt;-</span> performance<span class="p">(</span>pred<span class="p">,</span> x.measure <span class="o">=</span> <span class="s">&quot;fpr&quot;</span><span class="p">,</span> measure <span class="o">=</span> <span class="s">&quot;tpr&quot;</span><span class="p">)</span>
 
 <span class="c1"># Xây dựng hàm để convert giá trị sang data.frame</span>
-<span class="n">get_df</span> <span class="o">&lt;-</span> <span class="nf">function</span><span class="p">(</span><span class="n">pred</span><span class="p">){</span>
-  <span class="n">pred_new</span> <span class="o">&lt;-</span> <span class="nf">data.frame</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">pred</span><span class="o">@</span><span class="n">x.values</span> <span class="o">%&gt;%</span> <span class="n">unlist</span><span class="p">,</span>
-                         <span class="n">y</span> <span class="o">=</span> <span class="n">pred</span><span class="o">@</span><span class="n">y.values</span> <span class="o">%&gt;%</span> <span class="n">unlist</span><span class="p">)</span>
-  <span class="nf">return</span><span class="p">(</span><span class="n">pred_new</span><span class="p">)</span>
+get_df <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>pred<span class="p">){</span>
+  pred_new <span class="o">&lt;-</span> <span class="kt">data.frame</span><span class="p">(</span>x <span class="o">=</span> pred<span class="o">@</span>x.values <span class="o">%&gt;%</span> <span class="kp">unlist</span><span class="p">,</span>
+                         y <span class="o">=</span> pred<span class="o">@</span>y.values <span class="o">%&gt;%</span> <span class="kp">unlist</span><span class="p">)</span>
+  <span class="kr">return</span><span class="p">(</span>pred_new<span class="p">)</span>
 <span class="p">}</span>
 
-<span class="nf">get_df</span><span class="p">(</span><span class="n">roc</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_line</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">labs</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="s">&quot;FPR&quot;</span><span class="p">,</span>
-       <span class="n">y</span> <span class="o">=</span> <span class="s">&quot;TPR&quot;</span><span class="p">,</span>
-       <span class="n">title</span> <span class="o">=</span> <span class="s">&quot;ROC curve&quot;</span><span class="p">)</span>
+get_df<span class="p">(</span>roc<span class="p">)</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x<span class="p">,</span> y<span class="p">))</span> <span class="o">+</span>
+  geom_line<span class="p">()</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span>
+  labs<span class="p">(</span>x <span class="o">=</span> <span class="s">&quot;FPR&quot;</span><span class="p">,</span>
+       y <span class="o">=</span> <span class="s">&quot;TPR&quot;</span><span class="p">,</span>
+       title <span class="o">=</span> <span class="s">&quot;ROC curve&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image12" src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-22-1.png" /></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tính chỉ số AUC</span>
-<span class="n">auc_test</span> <span class="o">&lt;-</span> <span class="nf">performance</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="s">&quot;auc&quot;</span><span class="p">,</span> <span class="s">&quot;cutoff&quot;</span><span class="p">)</span>
-<span class="n">auc_test</span><span class="o">@</span><span class="n">y.values</span> <span class="o">%&gt;%</span> <span class="n">unlist</span>
+auc_test <span class="o">&lt;-</span> performance<span class="p">(</span>pred<span class="p">,</span> <span class="s">&quot;auc&quot;</span><span class="p">,</span> <span class="s">&quot;cutoff&quot;</span><span class="p">)</span>
+auc_test<span class="o">@</span>y.values <span class="o">%&gt;%</span> <span class="kp">unlist</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 0.9402992</span>
@@ -1371,50 +1372,50 @@ liệu cần dùng toán tử <code class="docutils literal notranslate"><span c
 <div class="section" id="gain-va-lift-1">
 <span id="id2"></span><h5>3.6.3.4.3. Gain và Lift<a class="headerlink" href="#gain-va-lift-1" title="Permalink to this headline">¶</a></h5>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># GAIN charts on testing set</span>
-<span class="n">gain_df</span> <span class="o">&lt;-</span> <span class="nf">performance</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="s">&quot;tpr&quot;</span><span class="p">,</span> <span class="s">&quot;rpp&quot;</span><span class="p">)</span>
+gain_df <span class="o">&lt;-</span> performance<span class="p">(</span>pred<span class="p">,</span> <span class="s">&quot;tpr&quot;</span><span class="p">,</span> <span class="s">&quot;rpp&quot;</span><span class="p">)</span>
 
-<span class="nf">get_df</span><span class="p">(</span><span class="n">gain_df</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_line</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">labs</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Gain chart&quot;</span><span class="p">,</span>
-       <span class="n">x</span> <span class="o">=</span> <span class="s">&quot;RPP&quot;</span><span class="p">,</span>
-       <span class="n">y</span> <span class="o">=</span> <span class="s">&quot;TPR&quot;</span><span class="p">)</span>
+get_df<span class="p">(</span>gain_df<span class="p">)</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x<span class="p">,</span> y<span class="p">))</span> <span class="o">+</span>
+  geom_line<span class="p">()</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span>
+  labs<span class="p">(</span>title <span class="o">=</span> <span class="s">&quot;Gain chart&quot;</span><span class="p">,</span>
+       x <span class="o">=</span> <span class="s">&quot;RPP&quot;</span><span class="p">,</span>
+       y <span class="o">=</span> <span class="s">&quot;TPR&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image13" src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-23-1.png" /></p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="c1"># LIFT charts on testing set</span>
-<span class="n">lift_df</span> <span class="o">&lt;-</span> <span class="nf">performance</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="s">&quot;lift&quot;</span><span class="p">,</span> <span class="s">&quot;rpp&quot;</span><span class="p">)</span>
-<span class="nf">get_df</span><span class="p">(</span><span class="n">lift_df</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span> <span class="o">+</span>
-  <span class="nf">geom_line</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">labs</span><span class="p">(</span><span class="n">title</span> <span class="o">=</span> <span class="s">&quot;Lift chart&quot;</span><span class="p">,</span>
-       <span class="n">x</span> <span class="o">=</span> <span class="s">&quot;RPP&quot;</span><span class="p">,</span>
-       <span class="n">y</span> <span class="o">=</span> <span class="s">&quot;Lift&quot;</span><span class="p">)</span>
+lift_df <span class="o">&lt;-</span> performance<span class="p">(</span>pred<span class="p">,</span> <span class="s">&quot;lift&quot;</span><span class="p">,</span> <span class="s">&quot;rpp&quot;</span><span class="p">)</span>
+get_df<span class="p">(</span>lift_df<span class="p">)</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x<span class="p">,</span> y<span class="p">))</span> <span class="o">+</span>
+  geom_line<span class="p">()</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span>
+  labs<span class="p">(</span>title <span class="o">=</span> <span class="s">&quot;Lift chart&quot;</span><span class="p">,</span>
+       x <span class="o">=</span> <span class="s">&quot;RPP&quot;</span><span class="p">,</span>
+       y <span class="o">=</span> <span class="s">&quot;Lift&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image14" src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-24-1.png" /></p>
 </div>
 <div class="section" id="ks-statistics">
 <h5>3.6.3.4.4. KS statistics<a class="headerlink" href="#ks-statistics" title="Permalink to this headline">¶</a></h5>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="n">lift_df</span> <span class="o">&lt;-</span> <span class="nf">performance</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="s">&quot;tpr&quot;</span><span class="p">,</span> <span class="s">&quot;fpr&quot;</span><span class="p">)</span>
-<span class="n">lift_df</span> <span class="o">%&gt;%</span>
-  <span class="n">get_df</span> <span class="o">%&gt;%</span>
-  <span class="nf">mutate</span><span class="p">(</span><span class="n">ks</span> <span class="o">=</span> <span class="nf">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">))</span> <span class="o">%&gt;%</span>
-  <span class="nf">pull</span><span class="p">(</span><span class="n">ks</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">max</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span>lift_df <span class="o">&lt;-</span> performance<span class="p">(</span>pred<span class="p">,</span> <span class="s">&quot;tpr&quot;</span><span class="p">,</span> <span class="s">&quot;fpr&quot;</span><span class="p">)</span>
+lift_df <span class="o">%&gt;%</span>
+  get_df <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>ks <span class="o">=</span> <span class="kp">abs</span><span class="p">(</span>x <span class="o">-</span> y<span class="p">))</span> <span class="o">%&gt;%</span>
+  pull<span class="p">(</span>ks<span class="p">)</span> <span class="o">%&gt;%</span> <span class="kp">max</span>
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## [1] 0.7445917</span>
 </pre></div>
 </div>
-<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">data.frame</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">df.test</span><span class="o">$</span><span class="n">default</span> <span class="o">%&gt;%</span> <span class="n">as.numeric</span><span class="p">)</span> <span class="o">-</span> <span class="m">1</span><span class="p">,</span>
-           <span class="n">prob</span> <span class="o">=</span> <span class="n">prob.test</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="nf">ggplot</span><span class="p">(</span><span class="nf">aes</span><span class="p">(</span><span class="n">prob</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="nf">as.factor</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span> <span class="o">+</span>
-  <span class="nf">stat_ecdf</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">theme_minimal</span><span class="p">()</span> <span class="o">+</span>
-  <span class="nf">theme</span><span class="p">(</span><span class="n">legend.position</span> <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span> <span class="o">+</span>
-  <span class="nf">labs</span><span class="p">(</span><span class="n">tittle</span> <span class="o">=</span> <span class="s">&quot;CDF &amp; KS statistics&quot;</span><span class="p">)</span>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="kt">data.frame</span><span class="p">(</span>y <span class="o">=</span> <span class="p">(</span>df.test<span class="o">$</span>default <span class="o">%&gt;%</span> <span class="kp">as.numeric</span><span class="p">)</span> <span class="o">-</span> <span class="m">1</span><span class="p">,</span>
+           prob <span class="o">=</span> prob.test<span class="p">)</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>prob<span class="p">,</span> col <span class="o">=</span> <span class="kp">as.factor</span><span class="p">(</span>y<span class="p">)))</span> <span class="o">+</span>
+  stat_ecdf<span class="p">()</span> <span class="o">+</span>
+  theme_minimal<span class="p">()</span> <span class="o">+</span>
+  theme<span class="p">(</span>legend.position <span class="o">=</span> <span class="s">&quot;none&quot;</span><span class="p">)</span> <span class="o">+</span>
+  labs<span class="p">(</span>tittle <span class="o">=</span> <span class="s">&quot;CDF &amp; KS statistics&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><img alt="image15" src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-25-1.png" /></p>
