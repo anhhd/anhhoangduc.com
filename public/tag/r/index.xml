@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>R | Anh Hoang Duc</title>
+    <link>http://anhhoangduc.com/tag/r/</link>
+      <atom:link href="http://anhhoangduc.com/tag/r/index.xml" rel="self" type="application/rss+xml" />
+    <description>R</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><copyright>© 2017 Anh Hoang Duc</copyright><lastBuildDate>Thu, 10 Aug 2017 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>http://anhhoangduc.com/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <title>R</title>
+      <link>http://anhhoangduc.com/tag/r/</link>
+    </image>
+    
+    <item>
+      <title>How to manage libraries in R efficiently?</title>
+      <link>http://anhhoangduc.com/post/how-to-manage-libraries-in-r-efficiently/</link>
+      <pubDate>Thu, 10 Aug 2017 00:00:00 +0000</pubDate>
+      <guid>http://anhhoangduc.com/post/how-to-manage-libraries-in-r-efficiently/</guid>
+      <description>
+&lt;script src=&#34;index_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;When starting using with R, installing and managing R libraries seems not to be a difficult task at all. However, when updating R to new version, it will make some problems. For most cases, you have to re-install your library, which takes much time.&lt;/p&gt;
+&lt;p&gt;There is another tricky way to solve that problem, which is to copy all your old libraries to the new library folder. For example, all your libraries in R version 3.3 are in &lt;code&gt;C:/Program Files/R/R-3.3.0/library&lt;/code&gt;. Now that you update your R version to 3.4.0 but don’t want to install all libraries, an easy way (not the easiest) to do it is to copy all folders from &lt;code&gt;D:\My Documents\R\win-library\3.3&lt;/code&gt; to the new one &lt;code&gt;D:\My Documents\R\win-library\3.4&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;However, this approach has some disadvantages. Firstly, it takes time to copy from old library folder to the new one, some time it takes up to 40~50 minutes when you are using many libraries. Secondly, if you have multiple versions of R, the approach might consume unnecessary couple of Gigabytes in your disk (as libraries are duplicated). Finally, you cannot install libraries once and use it multiple times, for each version of R (for me, &lt;code&gt;R&lt;/code&gt; from CRAN and &lt;code&gt;Microsoft R&lt;/code&gt; &amp;amp; &lt;code&gt;R Services&lt;/code&gt;) you have to install (or copy) from each folder to another ones.&lt;/p&gt;
+&lt;p&gt;Therefore, I found a very efficient way that can simplify all theses difficulties above in few easy steps.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Step 1&lt;/strong&gt;: Create a &lt;em&gt;permanent folder&lt;/em&gt; for your R library in your laptop. For me, I created a folder in &lt;code&gt;D:/Rlibrary&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Step 2&lt;/strong&gt;: Copy all folders from your original R library (in my case is &lt;code&gt;D:\My Documents\R\win-library\3.3&lt;/code&gt;) to &lt;code&gt;D:/Rlibrary&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Step 3&lt;/strong&gt;: Now, you have to make R understand &lt;code&gt;D:/Rlibrary&lt;/code&gt; (new folder) is your default libraries, all new libraries will be installed to that folder.
+&lt;ul&gt;
+&lt;li&gt;Open R Studio to find your R library paths&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;.libPaths()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;E:/Rlibrary&amp;quot;                        &amp;quot;C:/Program Files/R/R-3.6.0/library&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You will see that I have 2 paths, one is my &lt;code&gt;D:/Rlibrary&lt;/code&gt; - just ignore it &amp;amp; the second one &lt;code&gt;C:/Program Files/R/R-3.3.0/library&lt;/code&gt;. We will change the default library paths as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Go to &lt;code&gt;C:/Program Files/R/R-3.3.0/library&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Go to folder &lt;code&gt;base\R&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Copy file &lt;code&gt;Rprofile&lt;/code&gt; to desktop&lt;/li&gt;
+&lt;li&gt;Open &lt;code&gt;Rprofile&lt;/code&gt; with text editor&lt;/li&gt;
+&lt;li&gt;Add the following code in the end&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;.libPaths(&amp;quot;D:/Rlibrary&amp;quot;)`&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;Copy &lt;code&gt;Rprofile&lt;/code&gt; back to &lt;code&gt;C:/Program Files/R/R-3.3.0/library/base/R&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Restart R studio and when typing &lt;code&gt;.libPaths()&lt;/code&gt;, you will see your default library changed to &lt;code&gt;D:/Rlibrary&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;This method can be applied to &lt;code&gt;R Server&lt;/code&gt; &amp;amp; &lt;code&gt;R Services&lt;/code&gt; as well for &lt;code&gt;Microsoft R Server&lt;/code&gt;. For my local server, I changes Rprofile files in following folders:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;R Server: &lt;code&gt;C:\Program Files\Microsoft\R Server\R_SERVER\library\base\R&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;R Services: &lt;code&gt;C:\Program Files\Microsoft SQL Server\MSSQL13.ANHHD\R_SERVICES\library\base\R&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;After doing it, you can see all libraries from all R version, &lt;code&gt;R&lt;/code&gt; from CRAN, &lt;code&gt;R Server&lt;/code&gt; &amp;amp; &lt;code&gt;R Service&lt;/code&gt; from Microsoft synchronized! When you install a new library from CRAN, you &lt;code&gt;R Service&lt;/code&gt; from SQLRServer can use it, too! Really fantastic!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../img/sqlrserver.jpg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Isn’t it great! For me, this little trick help me a lot! Hope that you will enjoy it and find it helpful! Let me know if you have any comment!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

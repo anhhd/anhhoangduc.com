@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tips in R | Anh Hoang Duc</title>
+    <link>http://anhhoangduc.com/tag/tips-in-r/</link>
+      <atom:link href="http://anhhoangduc.com/tag/tips-in-r/index.xml" rel="self" type="application/rss+xml" />
+    <description>Tips in R</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><copyright>© 2017 Anh Hoang Duc</copyright><lastBuildDate>Sat, 12 Aug 2017 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>http://anhhoangduc.com/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <title>Tips in R</title>
+      <link>http://anhhoangduc.com/tag/tips-in-r/</link>
+    </image>
+    
+    <item>
+      <title>Install R packages from Github through proxy</title>
+      <link>http://anhhoangduc.com/post/install-r-packages-from-github-through-proxy/</link>
+      <pubDate>Sat, 12 Aug 2017 00:00:00 +0000</pubDate>
+      <guid>http://anhhoangduc.com/post/install-r-packages-from-github-through-proxy/</guid>
+      <description>
+&lt;script src=&#34;index_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;The easiest way to install an R package is from R-Cran. However, as the number of R users is growing up very fast, many developers are contribute to R community through Github. And the standard way to install from Github is to use &lt;code&gt;devtools&lt;/code&gt; package with &lt;code&gt;install_github()&lt;/code&gt; command.&lt;/p&gt;
+&lt;p&gt;In many organization, especially financial organization like banking industry, sometimes it is very hard to install an R package from CRAN or Github due to security process. So, in this post I will share with you 2 ways to install an R package via proxy&lt;/p&gt;
+&lt;p&gt;##Method 1: Using &lt;code&gt;downloader&lt;/code&gt; package&lt;/p&gt;
+&lt;p&gt;In this method, the only thing that you need to change is the Github repository of the R package needed to be installed.&lt;/p&gt;
+&lt;p&gt;For example, if you want to install package &lt;code&gt;easyRFM&lt;/code&gt; from Github with the following link: &lt;code&gt;github.com/hoxo-m/easyRFM&lt;/code&gt;, you can easily install with the following codes:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Step 1: Install downloader from CRAN
+install.packages(&amp;quot;downloader&amp;quot;)
+library(downloader)
+
+#Step 2: Download R package from Github in format .tar.gz
+download(&amp;quot;https://github.com/hoxo-m/easyRFM/archive/master.tar.gz&amp;quot;,
+         &amp;quot;easyRFM.tar.gz&amp;quot;)
+
+#Step 3: Install from source
+install.packages(&amp;quot;easyRFM.tar.gz&amp;quot;, repos = NULL, type = &amp;quot;source&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;##Method 2: Using &lt;code&gt;httr&lt;/code&gt; package to modify your proxy&lt;/p&gt;
+&lt;p&gt;In this method, you can modify your proxy using &lt;code&gt;httr&lt;/code&gt; package. To modify your proxy, the key function is &lt;code&gt;set_config&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;httr::set_config(use_proxy(&amp;quot;your_proxy:your_port&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For instance, if your proxy is &lt;code&gt;11.36.22.12&lt;/code&gt; &amp;amp; your port is &lt;code&gt;8080&lt;/code&gt;, you can modify your proxy as follows:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Step 1: Call httr &amp;amp; devtools
+library(httr)
+library(devtools)
+
+#Step 2: Modify proxy
+set_config(use_proxy(&amp;quot;11.36.22.12:8080&amp;quot;))
+
+#Step 3: Install package directly from Github
+install_github(&amp;quot;rstats-db/odbc&amp;quot;)
+
+#Step 4: Reset your proxy if needed
+reset_config()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Two methods above help me a lot to install R packages, specially from Github. Hope that it will help you also to make your life easier!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

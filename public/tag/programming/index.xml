@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>programming | Anh Hoang Duc</title>
+    <link>http://anhhoangduc.com/tag/programming/</link>
+      <atom:link href="http://anhhoangduc.com/tag/programming/index.xml" rel="self" type="application/rss+xml" />
+    <description>programming</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><copyright>© 2017 Anh Hoang Duc</copyright><lastBuildDate>Sat, 25 Aug 2018 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>http://anhhoangduc.com/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <title>programming</title>
+      <link>http://anhhoangduc.com/tag/programming/</link>
+    </image>
+    
+    <item>
+      <title>Automating Data Exploratory Analysis with purrr and NSE</title>
+      <link>http://anhhoangduc.com/post/automate-dea-with-purrr-and-nse/</link>
+      <pubDate>Sat, 25 Aug 2018 00:00:00 +0000</pubDate>
+      <guid>http://anhhoangduc.com/post/automate-dea-with-purrr-and-nse/</guid>
+      <description>
+&lt;script src=&#34;index_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;In the life of an analyst, one have to spend much time on data exploratory analysis. When you have to repeat the task multiple times, you might need to write a function. For example, I often need to do an analysis between a numeric variable and a factor variable in the following process:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Compare statistics among groups (&lt;code&gt;mean&lt;/code&gt;, &lt;code&gt;median&lt;/code&gt;,…)&lt;/li&gt;
+&lt;li&gt;Make an ANOVA model to compare &lt;code&gt;mean&lt;/code&gt; among groups&lt;/li&gt;
+&lt;li&gt;Draw some chart to vizualize difference among groups&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To solve this problem, I create a function called &lt;code&gt;compare_group&lt;/code&gt; as follows:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+library(patchwork)
+compare_group &amp;lt;- function(data,
+                         value,
+                         group){
+  value &amp;lt;- enquo(value)
+  group &amp;lt;- enquo(group)
+  value_name &amp;lt;- quo_name(value)
+  group_name &amp;lt;- quo_name(group)
+  
+  cat(paste0(&amp;quot;Compare &amp;quot;, value_name, &amp;quot; with &amp;quot;, group_name))
+  cat(&amp;quot;\n----------------------------------------\n&amp;quot;)
+  #Compare two variable
+  df &amp;lt;- data %&amp;gt;% select(!!value, !!group)
+  df %&amp;gt;% 
+    group_by(!!group) %&amp;gt;% 
+    summarise_at(vars(!!value),
+                 funs(n(), mean, median, 
+                      min,
+                      q25 = quantile(., 0.25),
+                      q75 = quantile(.,0.75),
+                      p90 = quantile(., 0.9),
+                      q95 = quantile(., .95),
+                      max)) %&amp;gt;% print
+
+  formula.aov &amp;lt;- paste(value_name, group_name, sep = &amp;quot;~&amp;quot;)
+  
+  cat(&amp;quot;\n----------------------------------------&amp;quot;)
+  cat(paste0(&amp;quot;\n# Anova analysis: &amp;quot;, formula.aov))
+  cat(&amp;quot;\n----------------------------------------\n\n&amp;quot;)
+
+  aov(formula(formula.aov), data = df) %&amp;gt;% TukeyHSD() %&amp;gt;% print;
+  
+  p1 &amp;lt;- ggplot(data, aes(!!group, !!value, fill = !!group)) +
+    geom_boxplot(aes(fill = !!group)) + 
+    scale_y_log10() +
+    labs(title = paste0(value_name, &amp;quot; by &amp;quot;, group_name)) +
+    theme_minimal() +
+    theme(legend.position = &amp;quot;none&amp;quot;);
+#  p1 %&amp;gt;% print();
+  
+  p2 &amp;lt;- ggplot(data, aes(!!value)) +
+    geom_density(aes(fill = !!group), alpha = 0.7) + 
+    labs(title = paste0(&amp;quot;Density of &amp;quot;, value_name)) +
+    theme_minimal() +
+    theme(legend.position = &amp;quot;top&amp;quot;);
+#  p2 %&amp;gt;% print();
+  print(p1+p2)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let’s have a quick test.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;% compare_group(Sepal.Length, Species)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Compare Sepal.Length with Species
+## ----------------------------------------
+## # A tibble: 3 x 10
+##   Species        n  mean median   min   q25   q75   p90   q95   max
+##   &amp;lt;fct&amp;gt;      &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt;  &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
+## 1 setosa        50  5.01    5     4.3  4.8    5.2  5.41  5.61   5.8
+## 2 versicolor    50  5.94    5.9   4.9  5.6    6.3  6.7   6.76   7  
+## 3 virginica     50  6.59    6.5   4.9  6.22   6.9  7.61  7.7    7.9
+## 
+## ----------------------------------------
+## # Anova analysis: Sepal.Length~Species
+## ----------------------------------------
+## 
+##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = formula(formula.aov), data = df)
+## 
+## $Species
+##                       diff       lwr       upr p adj
+## versicolor-setosa    0.930 0.6862273 1.1737727     0
+## virginica-setosa     1.582 1.3382273 1.8257727     0
+## virginica-versicolor 0.652 0.4082273 0.8957727     0&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The above solution has saved me hours and release my time to focus on reading and making sense of result. However, if you want to analyze multiple numeric variables with one category variable, the traditional approches are somewhat cubersome.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Ilustrative example&lt;/strong&gt;: For all numeric variables in dataset iris, make an analysis to analysis this variable with &lt;code&gt;Species&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+iris %&amp;gt;% head&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa
+## 4          4.6         3.1          1.5         0.2  setosa
+## 5          5.0         3.6          1.4         0.2  setosa
+## 6          5.4         3.9          1.7         0.4  setosa&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The traditinal ways to do the task are to follow 2 approaches:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Make analysis for every variables without loop. For example: &lt;code&gt;compare_group(Sepal.Length, Species)&lt;/code&gt; and repeat it for each &amp;amp; every variable.&lt;/li&gt;
+&lt;li&gt;Make a &lt;code&gt;for loop&lt;/code&gt; to run a loop for analysis. However, this approach has some limitation, especially in readability in coding &amp;amp; diffculty in programming.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To overcome this diffculty, you can use &lt;code&gt;map&lt;/code&gt; in &lt;code&gt;purrr&lt;/code&gt; and modify some part of &lt;code&gt;compare_group&lt;/code&gt; function. The strategy is as follows.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Step 1: Modify the &lt;code&gt;compare_group&lt;/code&gt; function to fix data and group variable for analysis&lt;/li&gt;
+&lt;li&gt;Step 2: Map all numeric variables to the new function.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Let see the example below.&lt;/p&gt;
+&lt;div id=&#34;step-1-modify-function&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Step 1: Modify function&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Step 1: Create the function
+
+my_stat &amp;lt;- function(x){
+  x &amp;lt;- enquo(x)
+  iris %&amp;gt;% 
+    compare_group(!!x, Species)
+}
+
+# Test the function
+my_stat(Sepal.Length)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Compare Sepal.Length with Species
+## ----------------------------------------
+## # A tibble: 3 x 10
+##   Species        n  mean median   min   q25   q75   p90   q95   max
+##   &amp;lt;fct&amp;gt;      &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt;  &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
+## 1 setosa        50  5.01    5     4.3  4.8    5.2  5.41  5.61   5.8
+## 2 versicolor    50  5.94    5.9   4.9  5.6    6.3  6.7   6.76   7  
+## 3 virginica     50  6.59    6.5   4.9  6.22   6.9  7.61  7.7    7.9
+## 
+## ----------------------------------------
+## # Anova analysis: Sepal.Length~Species
+## ----------------------------------------
+## 
+##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = formula(formula.aov), data = df)
+## 
+## $Species
+##                       diff       lwr       upr p adj
+## versicolor-setosa    0.930 0.6862273 1.1737727     0
+## virginica-setosa     1.582 1.3382273 1.8257727     0
+## virginica-versicolor 0.652 0.4082273 0.8957727     0&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;step-2-using-map-to-automate-analysis&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Step 2: Using map to automate analysis&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Step 2: Apply map for the new function
+
+library(purrr)
+iris %&amp;gt;% 
+  select_if(is.numeric) %&amp;gt;% 
+  names %&amp;gt;% 
+  syms %&amp;gt;% 
+  map(my_stat)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Compare Sepal.Length with Species
+## ----------------------------------------
+## # A tibble: 3 x 10
+##   Species        n  mean median   min   q25   q75   p90   q95   max
+##   &amp;lt;fct&amp;gt;      &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt;  &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
+## 1 setosa        50  5.01    5     4.3  4.8    5.2  5.41  5.61   5.8
+## 2 versicolor    50  5.94    5.9   4.9  5.6    6.3  6.7   6.76   7  
+## 3 virginica     50  6.59    6.5   4.9  6.22   6.9  7.61  7.7    7.9
+## 
+## ----------------------------------------
+## # Anova analysis: Sepal.Length~Species
+## ----------------------------------------
+## 
+##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = formula(formula.aov), data = df)
+## 
+## $Species
+##                       diff       lwr       upr p adj
+## versicolor-setosa    0.930 0.6862273 1.1737727     0
+## virginica-setosa     1.582 1.3382273 1.8257727     0
+## virginica-versicolor 0.652 0.4082273 0.8957727     0&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;## Compare Sepal.Width with Species
+## ----------------------------------------
+## # A tibble: 3 x 10
+##   Species        n  mean median   min   q25   q75   p90   q95   max
+##   &amp;lt;fct&amp;gt;      &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt;  &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
+## 1 setosa        50  3.43    3.4   2.3  3.2   3.68  3.9   4.06   4.4
+## 2 versicolor    50  2.77    2.8   2    2.52  3     3.11  3.2    3.4
+## 3 virginica     50  2.97    3     2.2  2.8   3.18  3.31  3.51   3.8
+## 
+## ----------------------------------------
+## # Anova analysis: Sepal.Width~Species
+## ----------------------------------------
+## 
+##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = formula(formula.aov), data = df)
+## 
+## $Species
+##                        diff         lwr        upr     p adj
+## versicolor-setosa    -0.658 -0.81885528 -0.4971447 0.0000000
+## virginica-setosa     -0.454 -0.61485528 -0.2931447 0.0000000
+## virginica-versicolor  0.204  0.04314472  0.3648553 0.0087802&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-5-2.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;## Compare Petal.Length with Species
+## ----------------------------------------
+## # A tibble: 3 x 10
+##   Species        n  mean median   min   q25   q75   p90   q95   max
+##   &amp;lt;fct&amp;gt;      &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt;  &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
+## 1 setosa        50  1.46   1.5    1     1.4  1.58  1.7   1.7    1.9
+## 2 versicolor    50  4.26   4.35   3     4    4.6   4.8   4.9    5.1
+## 3 virginica     50  5.55   5.55   4.5   5.1  5.88  6.31  6.65   6.9
+## 
+## ----------------------------------------
+## # Anova analysis: Petal.Length~Species
+## ----------------------------------------
+## 
+##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = formula(formula.aov), data = df)
+## 
+## $Species
+##                       diff     lwr     upr p adj
+## versicolor-setosa    2.798 2.59422 3.00178     0
+## virginica-setosa     4.090 3.88622 4.29378     0
+## virginica-versicolor 1.292 1.08822 1.49578     0&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-5-3.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;## Compare Petal.Width with Species
+## ----------------------------------------
+## # A tibble: 3 x 10
+##   Species        n  mean median   min   q25   q75   p90   q95   max
+##   &amp;lt;fct&amp;gt;      &amp;lt;int&amp;gt; &amp;lt;dbl&amp;gt;  &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
+## 1 setosa        50 0.246    0.2   0.1   0.2   0.3  0.4   0.4    0.6
+## 2 versicolor    50 1.33     1.3   1     1.2   1.5  1.51  1.6    1.8
+## 3 virginica     50 2.03     2     1.4   1.8   2.3  2.4   2.45   2.5
+## 
+## ----------------------------------------
+## # Anova analysis: Petal.Width~Species
+## ----------------------------------------
+## 
+##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = formula(formula.aov), data = df)
+## 
+## $Species
+##                      diff       lwr       upr p adj
+## versicolor-setosa    1.08 0.9830903 1.1769097     0
+## virginica-setosa     1.78 1.6830903 1.8769097     0
+## virginica-versicolor 0.70 0.6030903 0.7969097     0&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-5-4.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;## [[1]]&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-5-5.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;## 
+## [[2]]&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-5-6.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;## 
+## [[3]]&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-5-7.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;## 
+## [[4]]&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-5-8.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The trick here is to use &lt;code&gt;syms&lt;/code&gt; to combine the power of nonstandard evaluation and &lt;code&gt;map&lt;/code&gt; in &lt;code&gt;purrr&lt;/code&gt;. The power of functional programming &amp;amp; non-standard evaluation in &lt;code&gt;tidyverse&lt;/code&gt; is incredible. This approach could help one release much time of programming and focus and results &amp;amp; insights.&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>R | Anh Hoang Duc</title>
+    <link>http://anhhoangduc.com/category/r/</link>
+      <atom:link href="http://anhhoangduc.com/category/r/index.xml" rel="self" type="application/rss+xml" />
+    <description>R</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><copyright>© 2017 Anh Hoang Duc</copyright><lastBuildDate>Fri, 06 Jul 2018 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>http://anhhoangduc.com/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <title>R</title>
+      <link>http://anhhoangduc.com/category/r/</link>
+    </image>
+    
+    <item>
+      <title>Review gghighlight - a great package to highlight ggplot charts</title>
+      <link>http://anhhoangduc.com/post/review-gghighlight/</link>
+      <pubDate>Fri, 06 Jul 2018 00:00:00 +0000</pubDate>
+      <guid>http://anhhoangduc.com/post/review-gghighlight/</guid>
+      <description>
+&lt;script src=&#34;index_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;I have been watching &lt;code&gt;gghighlight&lt;/code&gt; for couple of months as his package addresses one of problems that I very much care about: “Highlighting in ggplot”. Recently, the package has released in CRAN with big improvement since the first version. So, I decided to test this package in some common charts in &lt;code&gt;ggplot2&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;First, let’s set up some theme to use during the experiment.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Set up library &amp;amp; theme
+
+library(dplyr)
+library(ggplot2)
+library(gghighlight)
+
+my_theme &amp;lt;- function(){
+  list(
+      theme_bw(),
+      scale_fill_brewer(palette = &amp;quot;Set1&amp;quot;),
+      scale_color_brewer(palette = &amp;quot;Set1&amp;quot;)
+    )
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;highlight-bar-chart&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Highlight bar chart&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data &amp;lt;- mtcars %&amp;gt;% mutate(cyl = factor(cyl))
+
+data %&amp;gt;% 
+  ggplot(aes(cyl, mpg)) +
+  geom_bar(aes(fill = cyl), stat = &amp;quot;identity&amp;quot;) +
+  my_theme() +
+  gghighlight(cyl == 6) +
+  labs(title = &amp;quot;Example 1 - highlight without text&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Highlight bar chart with text&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data %&amp;gt;% 
+  group_by(cyl) %&amp;gt;% 
+  summarise(mpg = sum(mpg)) %&amp;gt;% 
+  ggplot(aes(cyl, mpg)) +
+  geom_bar(aes(fill = cyl), stat = &amp;quot;identity&amp;quot;) +
+  geom_text(aes(label = mpg),
+                       hjust = -0.3) +
+  my_theme() +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 320)) +
+  gghighlight(cyl == 6) +
+  labs(title = &amp;quot;Example 2 - Hightlight with text (version 1)&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;As you can see, text in columns where cyl equal to 4 &amp;amp; 8 still appears, which is not what I expected. However, by moving &lt;code&gt;geom_text&lt;/code&gt; layer after highlighting layer, I can hide all texts which I don’t want to highlight. Let’s check another example:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data %&amp;gt;% 
+  group_by(cyl) %&amp;gt;% 
+  summarise(mpg = sum(mpg)) %&amp;gt;% 
+  ungroup %&amp;gt;% 
+  ggplot(aes(cyl, mpg)) +
+  geom_bar(aes(fill = cyl), stat = &amp;quot;identity&amp;quot;) +
+  my_theme() +
+  coord_flip() +
+  scale_y_continuous(limits = c(0, 320)) +
+  gghighlight(cyl == 6) +
+  geom_text(aes(label = mpg),
+                       hjust = -0.3) +
+    labs(title = &amp;quot;Example 3 - Hightlight with text (version 2)&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Boom! It created the plot I desired exactly! This functionality is so great that I shared with my coleagues right after realizing how cool it is &amp;amp; all members of my team were very impressed!&lt;/p&gt;
+&lt;p&gt;Let’s check other use cases where &lt;code&gt;gghighlight&lt;/code&gt; could change the way we emphasize readers to get insights from charts.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;boxplot&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Boxplot&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;% 
+  ggplot(aes(Species, Sepal.Length)) +
+  geom_boxplot(aes(fill = Species)) +
+  my_theme() +
+  facet_wrap(~Species) +
+  gghighlight() +
+  theme(legend.position = &amp;quot;top&amp;quot;) +
+  labs(title = &amp;quot;Example 4 - highlight for box plot&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;scatter-plot&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Scatter plot&lt;/h2&gt;
+&lt;p&gt;With &lt;code&gt;gghighlight&lt;/code&gt;, it is very easy to highlight interesting points in a graph. You can add different layers after &lt;code&gt;gghighlight&lt;/code&gt; to emphasize your poitns. For example, I want to create a scatter plot in mtcars with mpg &amp;amp; disp being horizontal &amp;amp; vertical axis respectively and emphasize some points under following conditions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Emphasize points with &lt;code&gt;disp&lt;/code&gt; between 350 &amp;amp; 400&lt;/li&gt;
+&lt;li&gt;Add names of cars for these above points&lt;/li&gt;
+&lt;li&gt;Make emphasized points in different color &amp;amp; bigger&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The solution utilizing &lt;code&gt;gghighlight&lt;/code&gt; is so simple as follows:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;df &amp;lt;- mtcars %&amp;gt;% mutate(name = row.names(.))
+df %&amp;gt;% 
+  ggplot(aes(mpg, disp)) +
+  geom_point(col = &amp;quot;darkred&amp;quot;) +
+  my_theme() +
+  gghighlight(disp &amp;gt; 350 &amp;amp; disp &amp;lt;= 400,
+              unhighlighted_colour = alpha(&amp;quot;darkgreen&amp;quot;, 0.4),
+              use_direct_label = T,
+              label_key = name,
+              label_params = list(size = 5)) +
+  geom_point(col = &amp;quot;darkred&amp;quot;, size = 2.5) +
+  labs(title = &amp;quot;Example 5 - Hightlight points&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;After practicing some examples, I do fall in love with this greate R package! It will add much value to ggplot2 it has been already added in my daily packges to use in R! Highly recommended package for all R users and many thanks &lt;a href=&#34;https://twitter.com/yutannihilat_en&#34;&gt;Hiroaki Yutani&lt;/a&gt; for creating such a great R package!&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Create waterfall chart with GGPLOT2</title>
+      <link>http://anhhoangduc.com/post/create-waterfall-chart-with-ggplot2/</link>
+      <pubDate>Wed, 09 May 2018 00:00:00 +0000</pubDate>
+      <guid>http://anhhoangduc.com/post/create-waterfall-chart-with-ggplot2/</guid>
+      <description>
+&lt;script src=&#34;index_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;In digital world, active users is very important metrics but is quite hard to descrile performance of a website/service overtime. Typically, the formula of active user at given time &lt;em&gt;t&lt;/em&gt; can be describle as follows:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[active_{t} = active_{t-1} + new_{t} - churn_{t}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Naturally, waterfall chart comes to my mind as an candidate to vizualize performance of active users overtime. So, I tried to look for some real case study using waterfall chart for this very problem using R but I was stuck. However, after coules of hours looking through various sources, I found a really impressive use case of using Tableau to vizualize subscribe churn activity as follows.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../img/20180509-subscribe-activity.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The original link to the above chart can be found &lt;a href=&#34;https://public.tableau.com/views/CH24_BBOD_ChurnTurnover/SubscriberChurnAnalysis&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;So, the next task of mine was to make similar chart with GGPLOT2 that I would like to share with R users,&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Load library
+library(tidyverse)
+library(ggplot2)
+library(reshape2)
+library(lubridate)
+library(grid)
+library(gridExtra)
+
+# Create data for simulation
+set.seed(123)
+data &amp;lt;- data.frame(date = seq(1, 372, by = 31) %&amp;gt;% as_date)
+data &amp;lt;- data %&amp;gt;% 
+  mutate(new = abs(rnorm(12, 100, 10)) %&amp;gt;% round(0)) %&amp;gt;% 
+  mutate(churn = abs(rnorm(12, 50, 30)) %&amp;gt;% round(0)) %&amp;gt;% 
+  mutate(net = new - churn)  %&amp;gt;% 
+  mutate(eop = cumsum(net)) %&amp;gt;% 
+  select(-net)
+
+data&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##          date new churn eop
+## 1  1970-01-02  94    62  32
+## 2  1970-02-02  98    53  77
+## 3  1970-03-05 116    33 160
+## 4  1970-04-05 101   104 157
+## 5  1970-05-06 101    65 193
+## 6  1970-06-06 117     9 301
+## 7  1970-07-07 105    71 335
+## 8  1970-08-07  87    36 386
+## 9  1970-09-07  93    18 461
+## 10 1970-10-08  96    43 514
+## 11 1970-11-08 112    19 607
+## 12 1970-12-09 104    28 683&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see, data was generated randomly such that eop (end of period) user equal to end of privious period plus new users in current period minus churn users. It is very typical data for active/churn problems.&lt;/p&gt;
+&lt;p&gt;To create waterfall chart, we could use &lt;code&gt;geom_segment&lt;/code&gt; from ggplot2&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Define the width of segment
+step &amp;lt;- 0.4*(max(data$date) - min(data$date))/(nrow(data) - 1)
+
+# Define ymax of segment
+data &amp;lt;- data %&amp;gt;% 
+  mutate(ymax = eop + churn)
+
+# Define ymin of segment
+df &amp;lt;- data %&amp;gt;% 
+  melt(id.vars = c(&amp;quot;date&amp;quot;, &amp;quot;eop&amp;quot;, &amp;quot;ymax&amp;quot;)) %&amp;gt;% 
+  mutate(ymin = ymax - value) %&amp;gt;% 
+  rename(group = variable)
+
+# Define xmin and xmax of segments
+df &amp;lt;- df %&amp;gt;% 
+  mutate(xmin = case_when(
+    group == &amp;quot;new&amp;quot; ~ date - step,
+    TRUE ~ date 
+  )) %&amp;gt;% 
+  mutate(xmax = case_when(
+    group == &amp;quot;new&amp;quot; ~ date,
+    TRUE ~ date + step
+  ))
+
+
+# Create waterfall chart
+df %&amp;gt;% 
+  arrange(date) %&amp;gt;% 
+  ggplot() +
+  geom_rect(aes(xmin = xmin,
+                xmax = xmax,
+                ymin = ymin,
+                ymax = ymax,
+                fill = group)) -&amp;gt; p1
+p1&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We have successfully created a waterfall chart! So, the next steps are to optimize colors &amp;amp; create the line chart.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Create data for line chart
+df2 &amp;lt;- df %&amp;gt;% select(date, eop) %&amp;gt;% distinct()
+
+# Optimize colors, themes &amp;amp; add lines
+p2 &amp;lt;- p1  + 
+  geom_line(aes(date, eop), col = &amp;quot;dodgerblue4&amp;quot;, size = 1) +
+  geom_point(aes(date, eop), col = &amp;quot;dodgerblue4&amp;quot;, size = 2.5) +
+  geom_text(aes(date, eop, label = eop), vjust = 1.2, 
+            hjust = -0.1) +
+  scale_fill_manual(values = c(&amp;quot;grey60&amp;quot;, &amp;quot;coral2&amp;quot;)) +
+  theme_minimal() +
+  theme(
+    axis.line = element_line(color = &amp;quot;gray40&amp;quot;, size = 0.5),
+    legend.position = &amp;quot;top&amp;quot;) +
+  scale_x_date(breaks = data$date,
+               date_labels = &amp;quot;%b&amp;quot;) +
+  theme(panel.grid.minor.x = element_blank(),
+        legend.title = element_blank()) +
+  ggtitle(&amp;quot;Overview of active users&amp;quot;) +
+  xlab(&amp;quot;Date&amp;quot;) + 
+  ylab(&amp;quot;Number of active users&amp;quot;)
+p2&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Not bad, right! The next chart will be the classic bar chart with &lt;code&gt;geom_bar&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;p3 &amp;lt;- df %&amp;gt;% 
+  mutate(value = case_when(
+    group == &amp;quot;churn&amp;quot; ~ -1 * value,
+    TRUE ~ value
+  )) %&amp;gt;% 
+  ggplot(aes(date, value)) +
+  geom_bar(aes(fill = group), stat = &amp;quot;identity&amp;quot;) +
+  scale_fill_manual(values = c(&amp;quot;grey60&amp;quot;, &amp;quot;coral2&amp;quot;)) +
+  theme_minimal() +
+  theme(
+    legend.position = &amp;quot;none&amp;quot;,
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_blank(),
+    axis.text.x = element_text(angle = 90)
+  ) +
+  scale_x_date(breaks = data$date,
+               date_labels = &amp;quot;%b&amp;quot;) 
+p3&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;And, the final step is to combine the two above charts together using &lt;code&gt;grid&lt;/code&gt; &amp;amp; &lt;code&gt;gridExtra&lt;/code&gt; packages!&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;grid.newpage()
+
+# Define position of the main chart
+position_1 &amp;lt;- viewport(width = 1, height = 1, x = 0.5, y = 0.5)  # the larger map
+
+# Position of the secondary chart
+position_2 &amp;lt;- viewport(width = 0.35, height = 0.25, x = 0.25, y = 0.75)  
+
+print(p2, vp = position_1)
+print(p3, vp = position_2)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Done! We have created a very beautiful waterfall chart using &lt;code&gt;ggplot2&lt;/code&gt;!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Install R packages from Github through proxy</title>
+      <link>http://anhhoangduc.com/post/install-r-packages-from-github-through-proxy/</link>
+      <pubDate>Sat, 12 Aug 2017 00:00:00 +0000</pubDate>
+      <guid>http://anhhoangduc.com/post/install-r-packages-from-github-through-proxy/</guid>
+      <description>
+&lt;script src=&#34;index_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;The easiest way to install an R package is from R-Cran. However, as the number of R users is growing up very fast, many developers are contribute to R community through Github. And the standard way to install from Github is to use &lt;code&gt;devtools&lt;/code&gt; package with &lt;code&gt;install_github()&lt;/code&gt; command.&lt;/p&gt;
+&lt;p&gt;In many organization, especially financial organization like banking industry, sometimes it is very hard to install an R package from CRAN or Github due to security process. So, in this post I will share with you 2 ways to install an R package via proxy&lt;/p&gt;
+&lt;p&gt;##Method 1: Using &lt;code&gt;downloader&lt;/code&gt; package&lt;/p&gt;
+&lt;p&gt;In this method, the only thing that you need to change is the Github repository of the R package needed to be installed.&lt;/p&gt;
+&lt;p&gt;For example, if you want to install package &lt;code&gt;easyRFM&lt;/code&gt; from Github with the following link: &lt;code&gt;github.com/hoxo-m/easyRFM&lt;/code&gt;, you can easily install with the following codes:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Step 1: Install downloader from CRAN
+install.packages(&amp;quot;downloader&amp;quot;)
+library(downloader)
+
+#Step 2: Download R package from Github in format .tar.gz
+download(&amp;quot;https://github.com/hoxo-m/easyRFM/archive/master.tar.gz&amp;quot;,
+         &amp;quot;easyRFM.tar.gz&amp;quot;)
+
+#Step 3: Install from source
+install.packages(&amp;quot;easyRFM.tar.gz&amp;quot;, repos = NULL, type = &amp;quot;source&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;##Method 2: Using &lt;code&gt;httr&lt;/code&gt; package to modify your proxy&lt;/p&gt;
+&lt;p&gt;In this method, you can modify your proxy using &lt;code&gt;httr&lt;/code&gt; package. To modify your proxy, the key function is &lt;code&gt;set_config&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;httr::set_config(use_proxy(&amp;quot;your_proxy:your_port&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For instance, if your proxy is &lt;code&gt;11.36.22.12&lt;/code&gt; &amp;amp; your port is &lt;code&gt;8080&lt;/code&gt;, you can modify your proxy as follows:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Step 1: Call httr &amp;amp; devtools
+library(httr)
+library(devtools)
+
+#Step 2: Modify proxy
+set_config(use_proxy(&amp;quot;11.36.22.12:8080&amp;quot;))
+
+#Step 3: Install package directly from Github
+install_github(&amp;quot;rstats-db/odbc&amp;quot;)
+
+#Step 4: Reset your proxy if needed
+reset_config()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Two methods above help me a lot to install R packages, specially from Github. Hope that it will help you also to make your life easier!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>How to manage libraries in R efficiently?</title>
+      <link>http://anhhoangduc.com/post/how-to-manage-libraries-in-r-efficiently/</link>
+      <pubDate>Thu, 10 Aug 2017 00:00:00 +0000</pubDate>
+      <guid>http://anhhoangduc.com/post/how-to-manage-libraries-in-r-efficiently/</guid>
+      <description>
+&lt;script src=&#34;index_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;When starting using with R, installing and managing R libraries seems not to be a difficult task at all. However, when updating R to new version, it will make some problems. For most cases, you have to re-install your library, which takes much time.&lt;/p&gt;
+&lt;p&gt;There is another tricky way to solve that problem, which is to copy all your old libraries to the new library folder. For example, all your libraries in R version 3.3 are in &lt;code&gt;C:/Program Files/R/R-3.3.0/library&lt;/code&gt;. Now that you update your R version to 3.4.0 but don’t want to install all libraries, an easy way (not the easiest) to do it is to copy all folders from &lt;code&gt;D:\My Documents\R\win-library\3.3&lt;/code&gt; to the new one &lt;code&gt;D:\My Documents\R\win-library\3.4&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;However, this approach has some disadvantages. Firstly, it takes time to copy from old library folder to the new one, some time it takes up to 40~50 minutes when you are using many libraries. Secondly, if you have multiple versions of R, the approach might consume unnecessary couple of Gigabytes in your disk (as libraries are duplicated). Finally, you cannot install libraries once and use it multiple times, for each version of R (for me, &lt;code&gt;R&lt;/code&gt; from CRAN and &lt;code&gt;Microsoft R&lt;/code&gt; &amp;amp; &lt;code&gt;R Services&lt;/code&gt;) you have to install (or copy) from each folder to another ones.&lt;/p&gt;
+&lt;p&gt;Therefore, I found a very efficient way that can simplify all theses difficulties above in few easy steps.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Step 1&lt;/strong&gt;: Create a &lt;em&gt;permanent folder&lt;/em&gt; for your R library in your laptop. For me, I created a folder in &lt;code&gt;D:/Rlibrary&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Step 2&lt;/strong&gt;: Copy all folders from your original R library (in my case is &lt;code&gt;D:\My Documents\R\win-library\3.3&lt;/code&gt;) to &lt;code&gt;D:/Rlibrary&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Step 3&lt;/strong&gt;: Now, you have to make R understand &lt;code&gt;D:/Rlibrary&lt;/code&gt; (new folder) is your default libraries, all new libraries will be installed to that folder.
+&lt;ul&gt;
+&lt;li&gt;Open R Studio to find your R library paths&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;.libPaths()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;E:/Rlibrary&amp;quot;                        &amp;quot;C:/Program Files/R/R-3.6.0/library&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You will see that I have 2 paths, one is my &lt;code&gt;D:/Rlibrary&lt;/code&gt; - just ignore it &amp;amp; the second one &lt;code&gt;C:/Program Files/R/R-3.3.0/library&lt;/code&gt;. We will change the default library paths as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Go to &lt;code&gt;C:/Program Files/R/R-3.3.0/library&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Go to folder &lt;code&gt;base\R&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Copy file &lt;code&gt;Rprofile&lt;/code&gt; to desktop&lt;/li&gt;
+&lt;li&gt;Open &lt;code&gt;Rprofile&lt;/code&gt; with text editor&lt;/li&gt;
+&lt;li&gt;Add the following code in the end&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;.libPaths(&amp;quot;D:/Rlibrary&amp;quot;)`&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;Copy &lt;code&gt;Rprofile&lt;/code&gt; back to &lt;code&gt;C:/Program Files/R/R-3.3.0/library/base/R&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Restart R studio and when typing &lt;code&gt;.libPaths()&lt;/code&gt;, you will see your default library changed to &lt;code&gt;D:/Rlibrary&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;This method can be applied to &lt;code&gt;R Server&lt;/code&gt; &amp;amp; &lt;code&gt;R Services&lt;/code&gt; as well for &lt;code&gt;Microsoft R Server&lt;/code&gt;. For my local server, I changes Rprofile files in following folders:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;R Server: &lt;code&gt;C:\Program Files\Microsoft\R Server\R_SERVER\library\base\R&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;R Services: &lt;code&gt;C:\Program Files\Microsoft SQL Server\MSSQL13.ANHHD\R_SERVICES\library\base\R&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;After doing it, you can see all libraries from all R version, &lt;code&gt;R&lt;/code&gt; from CRAN, &lt;code&gt;R Server&lt;/code&gt; &amp;amp; &lt;code&gt;R Service&lt;/code&gt; from Microsoft synchronized! When you install a new library from CRAN, you &lt;code&gt;R Service&lt;/code&gt; from SQLRServer can use it, too! Really fantastic!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../img/sqlrserver.jpg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Isn’t it great! For me, this little trick help me a lot! Hope that you will enjoy it and find it helpful! Let me know if you have any comment!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

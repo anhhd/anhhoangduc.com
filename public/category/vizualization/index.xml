@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Vizualization | Anh Hoang Duc</title>
+    <link>http://anhhoangduc.com/category/vizualization/</link>
+      <atom:link href="http://anhhoangduc.com/category/vizualization/index.xml" rel="self" type="application/rss+xml" />
+    <description>Vizualization</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><copyright>© 2017 Anh Hoang Duc</copyright><lastBuildDate>Wed, 09 May 2018 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>http://anhhoangduc.com/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <title>Vizualization</title>
+      <link>http://anhhoangduc.com/category/vizualization/</link>
+    </image>
+    
+    <item>
+      <title>Create waterfall chart with GGPLOT2</title>
+      <link>http://anhhoangduc.com/post/create-waterfall-chart-with-ggplot2/</link>
+      <pubDate>Wed, 09 May 2018 00:00:00 +0000</pubDate>
+      <guid>http://anhhoangduc.com/post/create-waterfall-chart-with-ggplot2/</guid>
+      <description>
+&lt;script src=&#34;index_files/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;In digital world, active users is very important metrics but is quite hard to descrile performance of a website/service overtime. Typically, the formula of active user at given time &lt;em&gt;t&lt;/em&gt; can be describle as follows:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[active_{t} = active_{t-1} + new_{t} - churn_{t}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Naturally, waterfall chart comes to my mind as an candidate to vizualize performance of active users overtime. So, I tried to look for some real case study using waterfall chart for this very problem using R but I was stuck. However, after coules of hours looking through various sources, I found a really impressive use case of using Tableau to vizualize subscribe churn activity as follows.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;../../img/20180509-subscribe-activity.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The original link to the above chart can be found &lt;a href=&#34;https://public.tableau.com/views/CH24_BBOD_ChurnTurnover/SubscriberChurnAnalysis&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;So, the next task of mine was to make similar chart with GGPLOT2 that I would like to share with R users,&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Load library
+library(tidyverse)
+library(ggplot2)
+library(reshape2)
+library(lubridate)
+library(grid)
+library(gridExtra)
+
+# Create data for simulation
+set.seed(123)
+data &amp;lt;- data.frame(date = seq(1, 372, by = 31) %&amp;gt;% as_date)
+data &amp;lt;- data %&amp;gt;% 
+  mutate(new = abs(rnorm(12, 100, 10)) %&amp;gt;% round(0)) %&amp;gt;% 
+  mutate(churn = abs(rnorm(12, 50, 30)) %&amp;gt;% round(0)) %&amp;gt;% 
+  mutate(net = new - churn)  %&amp;gt;% 
+  mutate(eop = cumsum(net)) %&amp;gt;% 
+  select(-net)
+
+data&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##          date new churn eop
+## 1  1970-01-02  94    62  32
+## 2  1970-02-02  98    53  77
+## 3  1970-03-05 116    33 160
+## 4  1970-04-05 101   104 157
+## 5  1970-05-06 101    65 193
+## 6  1970-06-06 117     9 301
+## 7  1970-07-07 105    71 335
+## 8  1970-08-07  87    36 386
+## 9  1970-09-07  93    18 461
+## 10 1970-10-08  96    43 514
+## 11 1970-11-08 112    19 607
+## 12 1970-12-09 104    28 683&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see, data was generated randomly such that eop (end of period) user equal to end of privious period plus new users in current period minus churn users. It is very typical data for active/churn problems.&lt;/p&gt;
+&lt;p&gt;To create waterfall chart, we could use &lt;code&gt;geom_segment&lt;/code&gt; from ggplot2&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Define the width of segment
+step &amp;lt;- 0.4*(max(data$date) - min(data$date))/(nrow(data) - 1)
+
+# Define ymax of segment
+data &amp;lt;- data %&amp;gt;% 
+  mutate(ymax = eop + churn)
+
+# Define ymin of segment
+df &amp;lt;- data %&amp;gt;% 
+  melt(id.vars = c(&amp;quot;date&amp;quot;, &amp;quot;eop&amp;quot;, &amp;quot;ymax&amp;quot;)) %&amp;gt;% 
+  mutate(ymin = ymax - value) %&amp;gt;% 
+  rename(group = variable)
+
+# Define xmin and xmax of segments
+df &amp;lt;- df %&amp;gt;% 
+  mutate(xmin = case_when(
+    group == &amp;quot;new&amp;quot; ~ date - step,
+    TRUE ~ date 
+  )) %&amp;gt;% 
+  mutate(xmax = case_when(
+    group == &amp;quot;new&amp;quot; ~ date,
+    TRUE ~ date + step
+  ))
+
+
+# Create waterfall chart
+df %&amp;gt;% 
+  arrange(date) %&amp;gt;% 
+  ggplot() +
+  geom_rect(aes(xmin = xmin,
+                xmax = xmax,
+                ymin = ymin,
+                ymax = ymax,
+                fill = group)) -&amp;gt; p1
+p1&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We have successfully created a waterfall chart! So, the next steps are to optimize colors &amp;amp; create the line chart.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Create data for line chart
+df2 &amp;lt;- df %&amp;gt;% select(date, eop) %&amp;gt;% distinct()
+
+# Optimize colors, themes &amp;amp; add lines
+p2 &amp;lt;- p1  + 
+  geom_line(aes(date, eop), col = &amp;quot;dodgerblue4&amp;quot;, size = 1) +
+  geom_point(aes(date, eop), col = &amp;quot;dodgerblue4&amp;quot;, size = 2.5) +
+  geom_text(aes(date, eop, label = eop), vjust = 1.2, 
+            hjust = -0.1) +
+  scale_fill_manual(values = c(&amp;quot;grey60&amp;quot;, &amp;quot;coral2&amp;quot;)) +
+  theme_minimal() +
+  theme(
+    axis.line = element_line(color = &amp;quot;gray40&amp;quot;, size = 0.5),
+    legend.position = &amp;quot;top&amp;quot;) +
+  scale_x_date(breaks = data$date,
+               date_labels = &amp;quot;%b&amp;quot;) +
+  theme(panel.grid.minor.x = element_blank(),
+        legend.title = element_blank()) +
+  ggtitle(&amp;quot;Overview of active users&amp;quot;) +
+  xlab(&amp;quot;Date&amp;quot;) + 
+  ylab(&amp;quot;Number of active users&amp;quot;)
+p2&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Not bad, right! The next chart will be the classic bar chart with &lt;code&gt;geom_bar&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;p3 &amp;lt;- df %&amp;gt;% 
+  mutate(value = case_when(
+    group == &amp;quot;churn&amp;quot; ~ -1 * value,
+    TRUE ~ value
+  )) %&amp;gt;% 
+  ggplot(aes(date, value)) +
+  geom_bar(aes(fill = group), stat = &amp;quot;identity&amp;quot;) +
+  scale_fill_manual(values = c(&amp;quot;grey60&amp;quot;, &amp;quot;coral2&amp;quot;)) +
+  theme_minimal() +
+  theme(
+    legend.position = &amp;quot;none&amp;quot;,
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_blank(),
+    axis.text.x = element_text(angle = 90)
+  ) +
+  scale_x_date(breaks = data$date,
+               date_labels = &amp;quot;%b&amp;quot;) 
+p3&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;And, the final step is to combine the two above charts together using &lt;code&gt;grid&lt;/code&gt; &amp;amp; &lt;code&gt;gridExtra&lt;/code&gt; packages!&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;grid.newpage()
+
+# Define position of the main chart
+position_1 &amp;lt;- viewport(width = 1, height = 1, x = 0.5, y = 0.5)  # the larger map
+
+# Position of the secondary chart
+position_2 &amp;lt;- viewport(width = 0.35, height = 0.25, x = 0.25, y = 0.75)  
+
+print(p2, vp = position_1)
+print(p3, vp = position_2)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;index_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Done! We have created a very beautiful waterfall chart using &lt;code&gt;ggplot2&lt;/code&gt;!&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
