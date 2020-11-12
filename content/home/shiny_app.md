@@ -10,7 +10,7 @@ subtitle = ""
 widget = "custom"
   
 # Order that this section will appear in.
-weight = 4
+weight = 6
 +++
 
 Apart from my work, I really enjoy my time to create shiny apps to automate some common analysis problems for my team, some of them are as follows:
