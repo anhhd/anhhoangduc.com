@@ -32,7 +32,7 @@ and many other analytics questions.
 
 ## Solution
 
-To solve such problems, an R package named `VPBank` has been created so as to release time for data analytics team. The package has helped Analytics team in many perspectives:
+To solve such problems, we created an R package named `VPBank` with 30+ built-in functions so as to release time for data analytics team. The package has helped Analytics team in many perspectives:
 
 - Reduce time to analyze data
 - Standardize many analytics process
