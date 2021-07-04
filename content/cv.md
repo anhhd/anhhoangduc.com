@@ -13,7 +13,7 @@ widget = "custom"
 weight = 7
 +++
 
-<iframe src="https://docs.google.com/viewer?url=http://anhhoangduc.com/pdf/ducanhcv.pdf&embedded=true" style="width:700px; height:900px;" frameborder="0">
+<iframe src="https://docs.google.com/viewer?url=http://anhhoangduc.com/pdf/anhhd-cv.pdf&embedded=true" style="width:700px; height:900px;" frameborder="0">
 This browser does not support PDFs. Please download the PDF to view it: <a href="/pdf/ducanhcv.pdf">Download PDF</a>
 </iframe>
 
