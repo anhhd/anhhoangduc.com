@@ -19,4 +19,4 @@ This browser does not support PDFs. Please download the PDF to view it: <a href=
 
 ---
 
-You can download my CV by clicking this [link](http://anhhoangduc.com/pdf/ducanhcv.pdf)
+You can download my CV by clicking this [link](http://anhhoangduc.com/pdf/anhhd-cv.pdf)
