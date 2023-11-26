@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Khoa học dữ liệu với R - 52&nbsp; Collaborative Filtering</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./p07-04-survival-analysis.html" rel="next">
+<link href="./p07-02-causal-impact.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/quarto-contrib/bookup_fonts_embed-0.0/fonts-download.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked">
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Collaborative Filtering</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Khoa học dữ liệu với R</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle sidebar-tool" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle sidebar-tool" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Khoa học dữ liệu và nghề phân tích dữ liệu</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Phân tích khám phá dữ liệu</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-01-gioi-thieu-co-ban-ve-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Giới thiệu cơ bản về R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-70-xay-dung-bao-cao-voi-rmarkdown.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Xây dựng báo cáo với Rmarkdown</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-02-bien-doi-du-lieu-dplyr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Ngữ pháp của biến đổi dữ liệu với DPLYR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-03-phan-ra-va-xoay-chieu-du-lieu.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Làm sạch và biến đổi dữ liệu nâng cao</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-04-ngu-phap-bieu-do-ggplot2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ngữ pháp của biểu đồ với GGPLOT2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-05-cac-chi-so-thong-ke.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Các chỉ số thống kê mô tả cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-06-lap-trinh-ham.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Lập trình hàm</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-07-lap-trinh-ham-voi-purrr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Lập trình chức năng hàm với purrr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-08-bien-doi-du-lieu-text.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-11-quan-ly-nhieu-mo-hinh.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quản lý kết quả phân tích từ nhiều mô hình</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-15-thong-ke-co-ban.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Xác suất và phân phối thống kê cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-16-power-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Power analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-20-sampling-methods.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Phương pháp ước lượng tham số thông qua lấy mẫu</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-50-datatable.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu với <code>data.table</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-60-thu-thap-du-lieu-tu-website.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Thu thập dữ liệu từ website</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-99-meo-trong-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Các mẹo trong R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Supervised Learning</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-01-nguyen-ly-du-bao.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Giới thiệu về học máy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-02-mo-hinh-ols.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mô hình hồi quy tuyến tính</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-03-logistic-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Mô hình hồi quy logistic</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-04-decision-tree.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Cây quyết định</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-05-bagging-boosting.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Bagging, RandomForest và Boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-07-xay-dung-mo-hinh-voi-h2o.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Xây dựng mô hình với H2O</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-10-knn.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">K nearest neighbors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-11-svm.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Support Vector Machine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-15-nonlinear.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Mô hình phi tuyến tính</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-17-regularization.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Lựa chọn biến &amp; regularization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-20-feature-engineering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Feature Engineering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-30-credit-scoring.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Credit Scoring</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-40-interpretable-ml.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Giải thích mô hình học máy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-50-chat-luong-mo-hinh.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Chất lượng mô hình</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-69-caret.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Xây dựng mô hình dự báo với caret</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-70-tidymodels.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Tidymodels</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Unsupervised Learning</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-01-unsupervised-learning.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Unsupervised learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-02-hierarchical-clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Hierachical clustering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-03-kmeans.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">k-means</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-04-basket-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Phân tích giỏ hàng</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-05-pca.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Principal component analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-06-factor-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Phân tích nhân tố ẩn (factor analysis)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Chuỗi thời gian</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-01-chuoi-thoi-gian.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Giới thiệu về chuỗi thời gian</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-02-arima.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mô hình ARIMA</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Phân tích chuỗi thời gian với tidyquant và timetk</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-06-du-bao-ts-voi-prophet.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với prophet</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-07-du-bao-ts-voi-timetk.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với timetk</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-08-abnomaly-detection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Abnomaly detection trong times series</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">Natural Language Processing</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-01-nlp-co-ban.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Xử lý ngôn ngữ tự nhiên cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-04-text-classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Phân loại text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-07-nlp-api.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Sử dụng API từ các dịch vụ đám mây</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-10-ocr-tesseract.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">OCR với <code>tesseract</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">Các phương pháp khác</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-02-causal-impact.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Causal Impact</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-03-collaborative-filtering.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Collaborative Filtering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-04-survival-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Survival Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-05-vintage-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vintage analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-07-spatial-data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Spatial data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-08-anomaly-detection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Abnomaly detection</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-10-shiny.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Shiny apps</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-15-quantile-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Hồi quy phân vị</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-16-retention-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Retention analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-20-network-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Network analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-30-python-voi-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Sử dụng Python với R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">Cloud Computing</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-01-cai-dat-rstudio-server-tren-amazon.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Cài đặt server RStudio trên Amazon</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-02-deploy-shiny-app-aws.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Deploy Shiny Apps lên AWS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-03-web-service-azure.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Xây dựng web service với Azure</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-09-apis-voi-plumber.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">API với Plumber</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">Kiến thức bổ trợ</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-01-git.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Sử dụng GIT</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-02-cmd.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">CMD và Bash</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-03-docker.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Sử dụng docker</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-04-apis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">API</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-05-html-css.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Cơ bản về HTML và CSS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-10-nguyen-ly-thi-giac.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Nguyên lý thị giác và Business Dashboard</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-30-tim-hieu-he-thong.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Tìm hiểu hệ thống dữ liệu</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-40-aws-overview.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">AWS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-90-other.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Các tricks khác</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">Case studies</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p13-01-casestudy-truc-quan-hoa.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Trực quan hóa dữ liệu</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#giới-thiệu" id="toc-giới-thiệu" class="nav-link active" data-scroll-target="#giới-thiệu"><span class="toc-section-number">52.1</span>  Giới thiệu</a></li>
+  <li><a href="#phương-pháp" id="toc-phương-pháp" class="nav-link" data-scroll-target="#phương-pháp"><span class="toc-section-number">52.2</span>  Phương pháp</a>
+  <ul class="collapse">
+  <li><a href="#user-user-cf" id="toc-user-user-cf" class="nav-link" data-scroll-target="#user-user-cf"><span class="toc-section-number">52.2.1</span>  User-user CF</a></li>
+  <li><a href="#item-item-cf" id="toc-item-item-cf" class="nav-link" data-scroll-target="#item-item-cf"><span class="toc-section-number">52.2.2</span>  Item-Item CF</a></li>
+  </ul></li>
+  <li><a href="#thực-hành" id="toc-thực-hành" class="nav-link" data-scroll-target="#thực-hành"><span class="toc-section-number">52.3</span>  Thực hành</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Collaborative Filtering</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="giới-thiệu" class="level2" data-number="52.1">
+<h2 data-number="52.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">52.1</span> Giới thiệu</h2>
+<p>Khi sử dụng internet chúng ta có thể gặp rất nhiều hiện tượng như sau:</p>
+<ul>
+<li><p>Khi kết thúc 1 video, Youtube tự động chuyển sang 1 video khác mà khả năng cao người dùng sẽ thích</p></li>
+<li><p>Facebook suggest những quảng cáo dựa trên hành vi của người dùng</p></li>
+<li><p>Facebook gợi ý kết bạn</p></li>
+<li><p>Khi mua hàng trên Amazon hệ thống sẽ gợi ý những món hành có thể mua cùng (Frequently bought together)</p></li>
+<li><p>Facebook gợi ý kết bạn</p></li>
+</ul>
+<p>Bằng cách quảng cáo sản phẩm hướng vào các đối tượng tiềm năng sẽ làm cho hiệu quả của Marketing tăng lên cũng như hiệu quả của kinh doanh. Thuật toán đứng đằng sau những ứng dụng như này có tên gọi chung là Recommendation Systems. Recommendation Systems có tuổi đời khá trẻ so với các thuật toán Machine Learning khác vì nó xuất hiện từ nhu cầu bùng nổ của Internet cách đây 10-15 năm trước.</p>
+<p>Các <code>Recommendation Systems</code> thường được chia thành 2 nhóm lớn:</p>
+<ul>
+<li><p>Content-based systems: hệ thống sẽ recommend dựa trên đặc tính của Item. VD: một User xem rất nhiều video trên Youtube thể loại nhạc trẻ Việt của Sơn Tùng thì hệ thống Recommendation Systems sẽ gợi ý cho Users này một số video cùng thể loại như Chạy ngay đi. Đặc điểm của Content-based Recommendation Systems là việc xây dựng mô hình cho mỗi user không phụ thuộc vào các users khác mà phụ thuộc vào profile của mỗi items. Việc làm này có lợi thế là tiết kiệm bộ nhớ và thời gian tính toán. Cách tiếp cận này yêu cầu việc sắp xếp các Item vào các nhóm rõ ràng, tuy nhiên nếu Item không có nhóm cụ thể hoặc khó xác định nhóm thì việc sử dụng Content-based Systems là không thể</p></li>
+<li><p>Neighborhood-based Collaborative Filtering (Khi nói về Collaborarative Filtering ta có thể ngầm hiểu đây là phương pháp NBCF): Ý tưởng cơ bản của NBCF là xác định mức độ quan tâm của một user tới một item dựa trên các users khác gần giống với user này. Việc gần giống nhau giữa các users có thể được xác định thông qua mức độ quan tâm của các users này tới các items khác mà hệ thống đã biết. VD: A,T,N đều thích xem video về nhạc trẻ, ngoài ra T và A thích xem video của Chim sẻ đi nắng. Dựa trên thông tin của T và A, hệ thống sẽ tính toán sự tương quan giữa 3 users và dự đoán rằng N sẽ thích xem video của Chim Sẻ Đi Nắng và gợi ý cho người dùng này</p></li>
+</ul>
+<p>Trong bài viết này ta sẽ đi vào nghiên cứu Collaborative Filtering do có tính ứng dụng cao hơn trong thực tế</p>
+</section>
+<section id="phương-pháp" class="level2" data-number="52.2">
+<h2 data-number="52.2" class="anchored" data-anchor-id="phương-pháp"><span class="header-section-number">52.2</span> Phương pháp</h2>
+<p>Collaborative Filtering được chia thành 2 nhóm: User-based CF và Item-based CF</p>
+<section id="user-user-cf" class="level3" data-number="52.2.1">
+<h3 data-number="52.2.1" class="anchored" data-anchor-id="user-user-cf"><span class="header-section-number">52.2.1</span> User-user CF</h3>
+<p>Phương pháp này sẽ tính toán sự tương quan giữa các users với nhau (similarity).</p>
+<p>Các bước tính toán:</p>
+<ul>
+<li>Bước 1: Xây dựng ma trận rating matrix dựa trên mức độ đánh giá các bộ phim của các khách hàng này</li>
+</ul>
+<center>
+<img src="Images/p07-03-cf01.png" class="img-fluid">
+</center>
+<ul>
+<li><p>Bước 2: Normalise dữ liệu rating: Việc đầu tiên CF sẽ tính trung bình các rating của từng User, sau đó sẽ tính giá trị giữa các các rating đến các giá trị trung bình này. Bản chất của việc normalise dữ liệu đến từ việc tính cách của khách hàng luôn khác nhau (có những người khi xem bộ phim thấy rất hay sẽ đánh giá 5đ, tuy nhiên có những người khó tính hơn chỉ đánh giá 4). Do vậy, khi tính toán trung bình sẽ mang lại mức đánh giá là tốt nhất khi những giá trị lớn hơn trung bình là bộ phim khách hàng thích còn dưới trung bình là không thích.</p></li>
+<li><p>Bước 3: Tính toán Similarities giữa các Users và Items : Phương pháp thường được sử dụng là Cosine Similarity giữa các Users với nhau. Giá trị của Cosin Similarity giữa các Users sẽ trong khoảng [-1,1]. Giá trị 1 thể hiện 2 vector hoàn toàn tương đồng với nhau, với - 1 sẽ thể hiện ngược lại qua đó sẽ tạo ra ma trận Similarity. Từ ma trận Similarity ta sẽ biết những Users nào có hành vi giống với Users nào.</p></li>
+<li><p>Bước 4: Sử dụng concept của phương pháp K-nearest neighbor để dự báo giá trị rating bị missing. CF sẽ lựa chọn k Users có mức độ similarity cao nhất (tức các khách hàng có hành vi giống nhất)</p></li>
+<li><p>Bước 5: Tính giá trị dự báo rating items dựa trên trung bình điều hòa giá trị similarity và rating của các k users giống nó nhất</p></li>
+</ul>
+</section>
+<section id="item-item-cf" class="level3" data-number="52.2.2">
+<h3 data-number="52.2.2" class="anchored" data-anchor-id="item-item-cf"><span class="header-section-number">52.2.2</span> Item-Item CF</h3>
+<p>Phương pháp này sẽ tính toán sự tương quan giữa các Item với nhau (similarity). Các bước tính toán tương tự tuy nhiên sẽ thực hiện việc tính toán similarity theo các Item với nhau</p>
+</section>
+</section>
+<section id="thực-hành" class="level2" data-number="52.3">
+<h2 data-number="52.3" class="anchored" data-anchor-id="thực-hành"><span class="header-section-number">52.3</span> Thực hành</h2>
+<p>Data được sử dụng là MovieLense ghi nhận lịch sử rating phim của 943 khách hàng với 1664 bộ phim. Các bộ phim được rating sẽ có giá trị từ 1 đến 5. Mục tiêu của bài thực hành là xây dựng và kiểm định recommendation model để suggest cho khách hàng nên xem bộ phim gì tiếp theo.</p>
+<ul>
+<li><strong>Bước 1</strong>: Chia bộ data thành 2 phần: Train (chiếm 90% dữ liệu), Test (10% còn lại). Ở đây ta sẽ chia Test thành 2 data nhỏ là Test_known dùng để predict và Test_unknown dùng để kiểm định sự chính xác của mô hình</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(recommenderlab)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(MovieLense)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>MovieLense</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>943 x 1664 rating matrix of class 'realRatingMatrix' with 99392 ratings.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>MovieLenseMeta[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              title year                                                    url
+1  Toy Story (1995) 1995  http://us.imdb.com/M/title-exact?Toy%20Story%20(1995)
+2  GoldenEye (1995) 1995    http://us.imdb.com/M/title-exact?GoldenEye%20(1995)
+3 Four Rooms (1995) 1995 http://us.imdb.com/M/title-exact?Four%20Rooms%20(1995)
+4 Get Shorty (1995) 1995 http://us.imdb.com/M/title-exact?Get%20Shorty%20(1995)
+5    Copycat (1995) 1995      http://us.imdb.com/M/title-exact?Copycat%20(1995)
+  unknown Action Adventure Animation Children's Comedy Crime
+1       0      0         0         1          1      1     0
+2       0      1         1         0          0      0     0
+3       0      0         0         0          0      0     0
+4       0      1         0         0          0      1     0
+5       0      0         0         0          0      0     1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>evaluation_value <span class="ot">&lt;-</span> <span class="fu">evaluationScheme</span>(MovieLense, </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">method =</span> <span class="st">"split"</span>, </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">train =</span> <span class="fl">0.9</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">given =</span> <span class="dv">12</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">getData</span>(evaluation_value, <span class="st">"train"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>test_known <span class="ot">&lt;-</span> <span class="fu">getData</span>(evaluation_value, <span class="st">"known"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>test_unknown <span class="ot">&lt;-</span> <span class="fu">getData</span>(evaluation_value, <span class="st">"unknown"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><strong>Bước 2</strong>: Xây dựng mô hình CF dựa trên tập Train và Predict trên tập Test_known</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ubcf_model <span class="ot">&lt;-</span> <span class="fu">Recommender</span>(train, </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"UBCF"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">param =</span> <span class="fu">list</span>(<span class="at">method =</span> <span class="st">"Cosine"</span>, <span class="at">nn =</span> <span class="dv">50</span>))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>pred_ubcf <span class="ot">&lt;-</span> <span class="fu">predict</span>(ubcf_model, test_known, <span class="at">type=</span><span class="st">"ratings"</span>) </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">as</span>(pred_ubcf, <span class="st">"matrix"</span>)[,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Toy Story (1995) GoldenEye (1995) Four Rooms (1995) Get Shorty (1995)
+7           4.543528         4.772981          3.353097          4.131824
+19          3.685692               NA                NA                NA
+22          3.167089         2.311927          2.364524          2.823718
+29          3.740471         3.267218          3.038683          3.600142
+30          4.238410               NA                NA                NA
+50          3.412825         4.062730          2.788885          4.499896
+62          3.542684         2.919052          4.604978                NA
+68          3.714204         3.178541                NA          3.940187
+69          3.621213         3.661522                NA          4.445255
+76          3.660263         3.766094          3.014380          3.476181
+85          3.942974         3.658348          2.648327          3.340485
+89          4.130466         4.024194                NA          4.546296
+96                NA         5.338936          4.647617          4.901235
+101               NA         2.484458                NA          2.636576
+109         2.901133         3.213083          2.564042          2.525700
+114         4.078156         3.095387          3.853506          3.478724
+127         4.256744         2.462963          2.428553          3.734947
+132         3.403300         3.413847                NA          3.268841
+205         3.353220         3.487289          2.168619          2.908384
+211         3.589176         3.201258          2.364774          3.482136
+232         4.041246               NA                NA          3.982559
+236         3.835126         3.270642          2.802515          3.270642
+242               NA         3.754213                NA          4.235629
+280               NA               NA          3.669040          3.450591
+287         4.427634         4.212963                NA          4.348765
+299         3.796863         3.286966                NA          3.638302
+311         3.504586         3.107527          2.608515          2.946214
+338         4.047676               NA          3.820217                NA
+344               NA         3.493827          3.627771          2.343759
+349         3.535746         2.941395                NA          2.950841
+363         2.816105               NA                NA          2.932524
+379         4.376821         3.726353          3.769332          3.641275
+389         4.022727         2.891045          2.740000          3.495590
+392         5.050338         4.824731          4.334053          4.627320
+394         4.451410               NA          3.659336          4.104624
+399               NA         2.679437                NA          2.639015
+402         4.470856         4.206140          3.904372          2.785501
+416         3.976141         2.253030          2.500000          2.341104
+422               NA         3.932761                NA          3.675838
+424               NA               NA          1.812189          3.525281
+440         4.148104         3.545006          2.811464          4.278845
+444         4.200120         3.448535          1.903048          3.793380
+445         2.319939         1.715646                NA          1.627242
+467         3.972681         3.417767          3.478065          3.859165
+472         4.236698         4.190860          3.966878          3.891351
+474         4.080915         3.270919          3.531283          3.996482
+488         3.424169         3.353976          2.876612          3.333546
+496         3.343741         2.743133          1.958333          2.775089
+501         3.934577         3.747607          3.807140          3.182489
+503         4.720824               NA          4.175000                NA
+510         3.328534         2.722064          2.293518          3.030214
+511         4.123730         3.522961          3.219811          3.893733
+523         4.694358               NA          3.615010          2.847222
+535         4.169381               NA          3.666450          3.638344
+537         3.156909         3.052164          2.295833          3.176452
+548         3.591550         2.937309                NA          2.699887
+551         3.309823         2.856693          1.919733          3.752890
+553         4.244671               NA          3.760551          3.485748
+556         4.425683         3.340580          3.406667          4.146386
+559         3.800216         4.005602                NA                NA
+560         3.906907         4.166024          1.705128          3.827183
+562         3.761696               NA          2.986800          2.249300
+564         3.634958         3.521222          4.050926          3.411416
+592         3.899320         3.706140          2.331059          3.655390
+597               NA         3.452090          4.049462          4.173419
+604         3.462162         2.979136          1.458952          2.175421
+607         4.057029         3.398252          3.335879          4.052098
+610         3.716197         3.682423          2.848495          3.006559
+626         2.727959         2.289127                NA          1.845611
+627         3.122037         2.959048          2.509042          1.586665
+631         3.209021         3.097027          2.886561          3.843011
+660         2.577523         2.357527          2.382779          2.060272
+682         3.296970         2.446390          1.953333          2.565298
+688         4.876648         4.593558          4.155557          4.784818
+714         3.648914         3.383620                NA          4.458953
+716         3.881929         4.582287          3.647497                NA
+720         4.365464         3.666711          2.800182          4.244592
+747         4.113946         3.805907          4.091304          4.071564
+753         3.992889               NA          3.379167          3.517040
+766         3.433891         2.986252          3.526502          3.145142
+790         3.672034         2.702952          4.688312          3.312156
+803         4.131312         4.160262          4.189972          3.957532
+817         2.709073         2.876344                NA          3.123732
+825         3.785102         3.248892          4.217593          3.552232
+838               NA               NA          3.800267          4.884146
+841         4.042908         3.575553          3.929379          4.060529
+856         3.792176         3.612300          2.734099          3.384836
+867         4.584611               NA          3.987705          4.484568
+874         3.897123         3.321777                NA          3.577232
+885         3.516869         3.166667          3.649282          3.971139
+893         3.573697         4.856557          1.621795          3.590879
+902         3.730849               NA          1.455128          4.252971
+907         4.790137               NA          3.656667          4.065432
+914         3.206660         3.000610          2.535938          3.407978
+924               NA         3.405058          3.237705          3.533469
+    Copycat (1995)
+7         4.632681
+19        3.189655
+22        3.217054
+29        4.119042
+30        2.433300
+50        3.337443
+62        2.827401
+68        4.202631
+69        4.514269
+76        3.558533
+85        3.515593
+89        4.116558
+96              NA
+101       2.905541
+109       2.454545
+114       3.865428
+127       3.592298
+132       3.159868
+205       2.452165
+211       3.179599
+232       3.627543
+236       3.204545
+242       5.060548
+280       4.117191
+287       3.787879
+299       3.136096
+311       2.883257
+338       3.696970
+344       2.004781
+349       3.444795
+363       2.823389
+379       3.940508
+389       2.930151
+392       4.671111
+394             NA
+399       2.016449
+402       3.832646
+416       3.461267
+422       1.004695
+424       2.954545
+440       3.711980
+444       3.737463
+445       2.272019
+467       4.227221
+472       3.773188
+474       3.454545
+488       1.519424
+496       3.565133
+501       3.868294
+503       3.911364
+510       2.398139
+511       3.922957
+523             NA
+535       3.686720
+537       2.905881
+548       2.871212
+551       3.373131
+553       4.009804
+556       2.986985
+559       3.030303
+560       3.844176
+562             NA
+564       3.156960
+592       3.841667
+597       4.012855
+604             NA
+607             NA
+610       3.811387
+626       2.042965
+627       2.676471
+631       3.320012
+660       1.681628
+682       0.906879
+688       4.674694
+714       4.321562
+716       3.759804
+720       3.534661
+747       3.805907
+753       3.770053
+766       1.956460
+790       3.494889
+803       3.730140
+817       2.863636
+825       3.509804
+838       4.266207
+841       3.945761
+856       3.362760
+867       4.278571
+874       3.938062
+885       3.063993
+893             NA
+902             NA
+907             NA
+914       1.890273
+924       3.778709</code></pre>
+</div>
+</div>
+<ul>
+<li><strong>Bước 3</strong>: Kiểm định mô hình trên tập Test_unknown</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>acc_ubcf <span class="ot">&lt;-</span> <span class="fu">calcPredictionAccuracy</span>(pred_ubcf, test_unknown)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">as</span>(acc_ubcf,<span class="st">"matrix"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          [,1]
+RMSE 1.1541052
+MSE  1.3319587
+MAE  0.9121051</code></pre>
+</div>
+</div>
+<ul>
+<li><strong>Bước 4</strong>: Tiếp theo ta sẽ sử dựng mô hình Item based CF để tính toán các chỉ số accuracy</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ibcf_model <span class="ot">&lt;-</span> <span class="fu">Recommender</span>(train, </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"IBCF"</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">param =</span> <span class="fu">list</span>(<span class="at">method =</span> <span class="st">"Cosine"</span>, <span class="at">nn =</span> <span class="dv">50</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Available parameter (with default values):
+k    =  30
+method   =  cosine
+normalize    =  center
+normalize_sim_matrix     =  FALSE
+alpha    =  0.5
+na_as_zero   =  FALSE
+verbose  =  FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>pred_ibcf <span class="ot">&lt;-</span> <span class="fu">predict</span>(ibcf_model, test_known, <span class="at">type=</span><span class="st">"ratings"</span>) </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>acc_ibcf <span class="ot">&lt;-</span> <span class="fu">calcPredictionAccuracy</span>(pred_ibcf, test_unknown)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">as</span>(acc_ibcf,<span class="st">"matrix"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         [,1]
+RMSE 1.676796
+MSE  2.811644
+MAE  1.212329</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>acc <span class="ot">&lt;-</span> <span class="fu">rbind</span>(<span class="at">UBCF =</span> acc_ubcf, <span class="at">IBCF =</span> acc_ibcf)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>acc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         RMSE      MSE       MAE
+UBCF 1.154105 1.331959 0.9121051
+IBCF 1.676796 2.811644 1.2123288</code></pre>
+</div>
+</div>
+<ul>
+<li><strong>Bước 5</strong>: Sau khi thấy được mô hình User basd CF có chất lượng tốt hơn ta sẽ áp dụng mô hình này để đưa gợi ý khách hàng xem 5 bộ phim khác</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>recommended_next_film <span class="ot">&lt;-</span> <span class="fu">predict</span>(ibcf_model, MovieLense[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,], <span class="at">n=</span><span class="dv">5</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">as</span>(recommended_next_film, <span class="st">"list"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`0`
+[1] "Entertaining Angels: The Dorothy Day Story (1996)"
+[2] "Big Bang Theory, The (1994)"                      
+[3] "Visitors, The (Visiteurs, Les) (1993)"            
+[4] "They Made Me a Criminal (1939)"                   
+[5] "New York Cop (1996)"                              
+
+$`1`
+[1] "They Made Me a Criminal (1939)"                   
+[2] "New York Cop (1996)"                              
+[3] "Entertaining Angels: The Dorothy Day Story (1996)"
+[4] "Big Bang Theory, The (1994)"                      
+[5] "Other Voices, Other Rooms (1997)"                 
+
+$`2`
+[1] "Entertaining Angels: The Dorothy Day Story (1996)"
+[2] "New York Cop (1996)"                              
+[3] "Legal Deceit (1997)"                              
+[4] "Other Voices, Other Rooms (1997)"                 
+[5] "Hush (1998)"                                      
+
+$`3`
+[1] "Men of Means (1998)"                              
+[2] "Entertaining Angels: The Dorothy Day Story (1996)"
+[3] "Mirage (1995)"                                    
+[4] "Visitors, The (Visiteurs, Les) (1993)"            
+[5] "Further Gesture, A (1996)"                        
+
+$`4`
+[1] "They Made Me a Criminal (1939)"                   
+[2] "Coldblooded (1995)"                               
+[3] "Visitors, The (Visiteurs, Les) (1993)"            
+[4] "Entertaining Angels: The Dorothy Day Story (1996)"
+[5] "King of New York (1990)"                          
+
+$`5`
+[1] "They Made Me a Criminal (1939)"                           
+[2] "I Don't Want to Talk About It (De eso no se habla) (1993)"
+[3] "Daniel Defoe's Robinson Crusoe (1996)"                    
+[4] "Very Natural Thing, A (1974)"                             
+[5] "Walk in the Sun, A (1945)"                                
+
+$`6`
+[1] "Beans of Egypt, Maine, The (1994)" "Death in Brunswick (1991)"        
+[3] "New York Cop (1996)"               "All Things Fair (1996)"           
+[5] "They Made Me a Criminal (1939)"   
+
+$`7`
+[1] "Marlene Dietrich: Shadow and Light (1996) "       
+[2] "All Things Fair (1996)"                           
+[3] "Entertaining Angels: The Dorothy Day Story (1996)"
+[4] "New York Cop (1996)"                              
+[5] "Visitors, The (Visiteurs, Les) (1993)"            
+
+$`8`
+[1] "Daniel Defoe's Robinson Crusoe (1996)"
+[2] "Mat' i syn (1997)"                    
+[3] "B. Monkey (1998)"                     
+[4] "They Made Me a Criminal (1939)"       
+[5] "Other Voices, Other Rooms (1997)"     
+
+$`9`
+[1] "Legal Deceit (1997)"                       
+[2] "Scarlet Letter, The (1926)"                
+[3] "They Made Me a Criminal (1939)"            
+[4] "Marlene Dietrich: Shadow and Light (1996) "
+[5] "New York Cop (1996)"                       </code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./p07-02-causal-impact.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Causal Impact</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./p07-04-survival-analysis.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Survival Analysis</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Khoa học dữ liệu với R - 24&nbsp; Extreme Gradient Boosting</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./p03-10-knn.html" rel="next">
+<link href="./p03-07-xay-dung-mo-hinh-voi-h2o.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/quarto-contrib/bookup_fonts_embed-0.0/fonts-download.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked">
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Khoa học dữ liệu với R</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle sidebar-tool" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle sidebar-tool" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Khoa học dữ liệu và nghề phân tích dữ liệu</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Phân tích khám phá dữ liệu</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-01-gioi-thieu-co-ban-ve-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Giới thiệu cơ bản về R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-70-xay-dung-bao-cao-voi-rmarkdown.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Xây dựng báo cáo với Rmarkdown</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-02-bien-doi-du-lieu-dplyr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Ngữ pháp của biến đổi dữ liệu với DPLYR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-03-phan-ra-va-xoay-chieu-du-lieu.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Làm sạch và biến đổi dữ liệu nâng cao</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-04-ngu-phap-bieu-do-ggplot2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ngữ pháp của biểu đồ với GGPLOT2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-05-cac-chi-so-thong-ke.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Các chỉ số thống kê mô tả cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-06-lap-trinh-ham.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Lập trình hàm</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-07-lap-trinh-ham-voi-purrr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Lập trình chức năng hàm với purrr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-08-bien-doi-du-lieu-text.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-11-quan-ly-nhieu-mo-hinh.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quản lý kết quả phân tích từ nhiều mô hình</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-15-thong-ke-co-ban.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Xác suất và phân phối thống kê cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-16-power-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Power analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-20-sampling-methods.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Phương pháp ước lượng tham số thông qua lấy mẫu</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-50-datatable.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu với <code>data.table</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-60-thu-thap-du-lieu-tu-website.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Thu thập dữ liệu từ website</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-99-meo-trong-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Các mẹo trong R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Supervised Learning</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-01-nguyen-ly-du-bao.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Giới thiệu về học máy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-02-mo-hinh-ols.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mô hình hồi quy tuyến tính</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-03-logistic-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Mô hình hồi quy logistic</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-04-decision-tree.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Cây quyết định</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-05-bagging-boosting.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Bagging, RandomForest và Boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-07-xay-dung-mo-hinh-voi-h2o.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Xây dựng mô hình với H2O</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-10-knn.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">K nearest neighbors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-11-svm.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Support Vector Machine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-15-nonlinear.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Mô hình phi tuyến tính</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-17-regularization.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Lựa chọn biến &amp; regularization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-20-feature-engineering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Feature Engineering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-30-credit-scoring.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Credit Scoring</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-40-interpretable-ml.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Giải thích mô hình học máy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-50-chat-luong-mo-hinh.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Chất lượng mô hình</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-69-caret.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Xây dựng mô hình dự báo với caret</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-70-tidymodels.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Tidymodels</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Unsupervised Learning</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-01-unsupervised-learning.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Unsupervised learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-02-hierarchical-clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Hierachical clustering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-03-kmeans.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">k-means</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-04-basket-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Phân tích giỏ hàng</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-05-pca.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Principal component analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-06-factor-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Phân tích nhân tố ẩn (factor analysis)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Chuỗi thời gian</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-01-chuoi-thoi-gian.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Giới thiệu về chuỗi thời gian</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-02-arima.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mô hình ARIMA</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Phân tích chuỗi thời gian với tidyquant và timetk</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-06-du-bao-ts-voi-prophet.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với prophet</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-07-du-bao-ts-voi-timetk.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với timetk</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-08-abnomaly-detection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Abnomaly detection trong times series</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">Natural Language Processing</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-01-nlp-co-ban.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Xử lý ngôn ngữ tự nhiên cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-04-text-classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Phân loại text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-07-nlp-api.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Sử dụng API từ các dịch vụ đám mây</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-10-ocr-tesseract.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">OCR với <code>tesseract</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">Các phương pháp khác</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-02-causal-impact.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Causal Impact</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-03-collaborative-filtering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Collaborative Filtering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-04-survival-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Survival Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-05-vintage-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vintage analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-07-spatial-data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Spatial data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-08-anomaly-detection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Abnomaly detection</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-10-shiny.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Shiny apps</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-15-quantile-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Hồi quy phân vị</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-16-retention-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Retention analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-20-network-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Network analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-30-python-voi-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Sử dụng Python với R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">Cloud Computing</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-01-cai-dat-rstudio-server-tren-amazon.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Cài đặt server RStudio trên Amazon</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-02-deploy-shiny-app-aws.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Deploy Shiny Apps lên AWS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-03-web-service-azure.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Xây dựng web service với Azure</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-09-apis-voi-plumber.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">API với Plumber</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">Kiến thức bổ trợ</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-01-git.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Sử dụng GIT</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-02-cmd.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">CMD và Bash</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-03-docker.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Sử dụng docker</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-04-apis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">API</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-05-html-css.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Cơ bản về HTML và CSS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-10-nguyen-ly-thi-giac.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Nguyên lý thị giác và Business Dashboard</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-30-tim-hieu-he-thong.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Tìm hiểu hệ thống dữ liệu</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-40-aws-overview.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">AWS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-90-other.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Các tricks khác</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">Case studies</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p13-01-casestudy-truc-quan-hoa.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Trực quan hóa dữ liệu</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#giới-thiệu" id="toc-giới-thiệu" class="nav-link active" data-scroll-target="#giới-thiệu"><span class="toc-section-number">24.1</span>  Giới thiệu</a></li>
+  <li><a href="#tham-số-trong-mô-hình" id="toc-tham-số-trong-mô-hình" class="nav-link" data-scroll-target="#tham-số-trong-mô-hình"><span class="toc-section-number">24.2</span>  Tham số trong mô hình</a>
+  <ul class="collapse">
+  <li><a href="#các-tham-số-cơ-bản" id="toc-các-tham-số-cơ-bản" class="nav-link" data-scroll-target="#các-tham-số-cơ-bản"><span class="toc-section-number">24.2.1</span>  Các tham số cơ bản</a></li>
+  <li><a href="#tham-số-cho-tree-booster" id="toc-tham-số-cho-tree-booster" class="nav-link" data-scroll-target="#tham-số-cho-tree-booster"><span class="toc-section-number">24.2.2</span>  Tham số cho tree booster</a></li>
+  <li><a href="#tham-số-cho-linear-booster" id="toc-tham-số-cho-linear-booster" class="nav-link" data-scroll-target="#tham-số-cho-linear-booster"><span class="toc-section-number">24.2.3</span>  Tham số cho Linear Booster</a></li>
+  <li><a href="#tham-số-cho-các-bài-toán-khác-nhau" id="toc-tham-số-cho-các-bài-toán-khác-nhau" class="nav-link" data-scroll-target="#tham-số-cho-các-bài-toán-khác-nhau"><span class="toc-section-number">24.2.4</span>  Tham số cho các bài toán khác nhau</a></li>
+  </ul></li>
+  <li><a href="#sử-dụng-xgboost-cơ-bản" id="toc-sử-dụng-xgboost-cơ-bản" class="nav-link" data-scroll-target="#sử-dụng-xgboost-cơ-bản"><span class="toc-section-number">24.3</span>  Sử dụng xgboost cơ bản</a>
+  <ul class="collapse">
+  <li><a href="#phân-loại-2-nhóm" id="toc-phân-loại-2-nhóm" class="nav-link" data-scroll-target="#phân-loại-2-nhóm"><span class="toc-section-number">24.3.1</span>  Phân loại 2 nhóm</a></li>
+  <li><a href="#phân-loại-nhiều-nhóm" id="toc-phân-loại-nhiều-nhóm" class="nav-link" data-scroll-target="#phân-loại-nhiều-nhóm"><span class="toc-section-number">24.3.2</span>  Phân loại nhiều nhóm</a></li>
+  <li><a href="#mô-hình-hồi-quy" id="toc-mô-hình-hồi-quy" class="nav-link" data-scroll-target="#mô-hình-hồi-quy"><span class="toc-section-number">24.3.3</span>  Mô hình hồi quy</a></li>
+  </ul></li>
+  <li><a href="#tuning-xgboost" id="toc-tuning-xgboost" class="nav-link" data-scroll-target="#tuning-xgboost"><span class="toc-section-number">24.4</span>  Tuning xgboost</a></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="toc-section-number">24.5</span>  Tài liệu tham khảo</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="giới-thiệu" class="level2" data-number="24.1">
+<h2 data-number="24.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">24.1</span> Giới thiệu</h2>
+<p><strong>XGBoost</strong>, viết tắt của <strong>Extreme Gradient Boosting</strong>, là thuật toán thuộc nhóm cây quyết định áp dụng <code>gradient boosting</code> để tối ưu hóa mô hình. <code>xgboost</code> có thuật toán gần tương tự với <code>gbm</code> nhuwnng tập trung nhiều hơn vào <code>regularization</code>. Do đó, mô hình <code>xgboost</code> hạn chế được vấn đề <code>overfitting</code> trong xây dựng mô hình.</p>
+<p>Khác với dữ liệu đầu vào thông thường, <code>xgboost</code> yêu cầu dữ liệu đầu vào như sau.</p>
+<ul>
+<li>Chỉ dự báo với biến số - do đó các biến <code>factor</code> phải chuyển sang sang số</li>
+<li>Dữ liệu đầu vào của XGBoost chia làm các dạng:
+<ul>
+<li><code>Dense matrix</code>: Lưu trữ tất cả dữ liệu dưới dạng <code>matrix</code></li>
+<li><code>Sparse matrix</code>: Chỉ lưu dữ liệu khác 0.</li>
+<li><code>xgb.DMatrix</code>: Định dạng dữ liệu riêng của <code>xgboost</code> - được khuyến nghị sử dụng trong xây dựng mô hình.</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rsample)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(xgboost)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">3</span>), <span class="fu">rnorm</span>(<span class="dv">3</span>, <span class="dv">4</span>), <span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">10</span>))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Dense Matrix</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(x, <span class="at">nrow =</span> <span class="dv">4</span>, <span class="at">ncol =</span> <span class="dv">4</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Sparse Matrix</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> m1 <span class="sc">%&gt;%</span> <span class="fu">as</span>(<span class="st">"sparseMatrix"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>m2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>4 x 4 sparse Matrix of class "dgCMatrix"
+                         
+[1,]      NA 2.217692 . .
+[2,]      NA 4.521284 . .
+[3,]      NA .        . .
+[4,] 2.97539 .        . .</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># xgb.DMatrix</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">xgb.DMatrix</span>(<span class="at">data =</span> m1, <span class="at">label =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>m3 <span class="sc">%&gt;%</span> class</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "xgb.DMatrix"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dgCMatrix</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">data =</span> m1 <span class="sc">%&gt;%</span> <span class="fu">as</span>(<span class="st">"dgCMatrix"</span>), <span class="at">label =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>m4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$data
+4 x 4 sparse Matrix of class "dgCMatrix"
+                         
+[1,]      NA 2.217692 . .
+[2,]      NA 4.521284 . .
+[3,]      NA .        . .
+[4,] 2.97539 .        . .
+
+$label
+[1] 1 0 1 0</code></pre>
+</div>
+</div>
+<p>Khi xây dựng mô hình, <code>xgboost</code> có 3 nhóm hàm xây dựng mô hình:</p>
+<ul>
+<li><code>xgboost</code>: Xây dựng mô hình đơn giản</li>
+<li><code>xgb.cv</code>: Xây dựng mô hình với cross-validation, hỗ trợ <code>tuning</code></li>
+<li><code>xgb.train</code>: Xây dựng mô hình với các tính năng nâng cao như đánh giá chất lượng trên tập test,… Hàm này bắt buộc dữ liệu đầu vào ở dạng <code>xgb.Dmatrix</code></li>
+</ul>
+</section>
+<section id="tham-số-trong-mô-hình" class="level2" data-number="24.2">
+<h2 data-number="24.2" class="anchored" data-anchor-id="tham-số-trong-mô-hình"><span class="header-section-number">24.2</span> Tham số trong mô hình</h2>
+<section id="các-tham-số-cơ-bản" class="level3" data-number="24.2.1">
+<h3 data-number="24.2.1" class="anchored" data-anchor-id="các-tham-số-cơ-bản"><span class="header-section-number">24.2.1</span> Các tham số cơ bản</h3>
+<ul>
+<li><code>booster[default = gbtree]</code>: Thuật toán sử dụng trong <code>xgboost</code>.
+<ul>
+<li><code>gbtree</code>: Sử dụng cây quyết định</li>
+<li><code>gblinear</code>: Sử dụng hàm tuyến tính</li>
+</ul></li>
+</ul>
+<p>Với bài toán phân loại, sử dụng <code>gbtree</code>. Với bài toán hồi quy, có thể sử dụng bất kỳ thuật toán nào.</p>
+<ul>
+<li><code>nthread</code>: Số lượng cores được sử dụng khi chạy <code>parallel computing</code>.</li>
+<li><code>silent[default = 1]</code>: Hiển thị kết quả chạy mô hình trên console</li>
+</ul>
+</section>
+<section id="tham-số-cho-tree-booster" class="level3" data-number="24.2.2">
+<h3 data-number="24.2.2" class="anchored" data-anchor-id="tham-số-cho-tree-booster"><span class="header-section-number">24.2.2</span> Tham số cho tree booster</h3>
+<ul>
+<li><code>nrounds[default=100]</code>: Số lượt <code>iteration</code> khi xây boosting, đây chính là số cây quyết định được tạo trong mô hình. Cần tối ưu qua <code>xgb.cv</code></li>
+<li><code>eta[default=0.3][range: (0,1)]</code>: Tốc độ <code>learning rate</code>, giá trị càng nhỏ thì thời gian tính toán càng lâu. Khi giá trị của <code>eta</code> thấp, ta cần tăng số lượng <code>nrounds</code> để đạt giá trị tối ưu. <code>eta</code> thường sử dụng trong khoảng <code>0.01-0.3</code></li>
+<li><code>gamma[default=0][range: (0,Inf)]</code>: Tham số hỗ trợ <code>regularization</code> để giảm thiểu <code>overfitting</code>. Giá trị <code>gamma</code> càng lớn, sai số giữa tập <code>train</code> và <code>test</code> càng thấp. Khi sử dụng <code>xgb.cv</code>, nếu sai số giữa <code>train</code> và <code>test</code> lớn, ta cần đưa tham số <code>gamma</code> vào mô hình. <code>gamma</code> hoạt động tốt với các cây quyết định đơn giản (<code>max_depth</code> có giá trị nhỏ). Một <code>node</code> sẽ chỉ được tách tiếp nếu <code>loss function</code> được giảm một lượng tối thiểu <code>gamma</code></li>
+<li><code>max_depth[default=6][range: (0,Inf)]</code>: Tham số quyết định số tầng của cây. Giá trị càng lớn, khả năng <code>overfitting</code> càng lớn. Tham số cần được tối ưu qua <code>xgb.cv</code></li>
+<li><code>min_child_weight[default=1][range:(0,Inf)]</code>: Số lượng quan sát tối thiểu cho mỗi node</li>
+<li><code>subsample[default=1][range: (0,1)]</code>: Tỷ lệ quan sát có trong mỗi cây quyết định. Thông thường có giá trị trong khoảng (0.5-0.8)</li>
+<li><code>colsample_bytree[default=1][range: (0,1)]</code>: Tỷ lệ số biến được sử dụng trong cây quyết định, thường có giá trị trong khoảng (0.5,0.9)</li>
+<li><code>lambda[default=0]</code>: L2 regularization</li>
+<li><code>alpha[default=1]</code>: L1 regularization</li>
+</ul>
+</section>
+<section id="tham-số-cho-linear-booster" class="level3" data-number="24.2.3">
+<h3 data-number="24.2.3" class="anchored" data-anchor-id="tham-số-cho-linear-booster"><span class="header-section-number">24.2.3</span> Tham số cho Linear Booster</h3>
+<p><code>gblinear</code> có ít tham số <code>tuning</code> hơn <code>gbtree</code> rất nhiều. Do đó, với các bài toán hồi quy, ta nên sử dụng để tăng tốc độ <code>tuning</code></p>
+<ul>
+<li><code>nrounds[default=100]</code></li>
+<li><code>lambda[default=0]</code></li>
+<li><code>alpha[default=1]</code></li>
+</ul>
+</section>
+<section id="tham-số-cho-các-bài-toán-khác-nhau" class="level3" data-number="24.2.4">
+<h3 data-number="24.2.4" class="anchored" data-anchor-id="tham-số-cho-các-bài-toán-khác-nhau"><span class="header-section-number">24.2.4</span> Tham số cho các bài toán khác nhau</h3>
+<p>Với các bài toán khác nhau, tham số mục tiêu trong mô hình cũng sẽ thay đổi theo.</p>
+<ul>
+<li><code>objective = "binary:logistic"</code>: Phân loại 2 nhóm</li>
+<li><code>objective = "multi:softmax"</code>: Phân loại nhiều nhóm, kết quả trả ra nhãn (<code>label</code>) của mỗi class. Yêu cầu có thêm tham số <code>num_class</code></li>
+<li><code>objective = "multi:softprob"</code>: Phân loại nhiều nhóm, trả ra xác suất của mỗi nhóm</li>
+<li><code>objective = "reg:linear</code>: Mô hình dự báo regression</li>
+</ul>
+<p>Các tham số đánh giá chất lượng mô hình khi tuning</p>
+<ul>
+<li><code>mae</code> – Mean Absolute Error (regression)</li>
+<li><code>logloss</code> – Negative loglikelihood (classification)</li>
+<li><code>auc</code> – Area under curve (classification)</li>
+<li><code>rmse</code> – Root mean square error (regression)</li>
+<li><code>error</code> – Binary classification error rate [#wrong cases/#all cases]</li>
+<li><code>mlogloss</code> – multiclass logloss (classification)</li>
+</ul>
+</section>
+</section>
+<section id="sử-dụng-xgboost-cơ-bản" class="level2" data-number="24.3">
+<h2 data-number="24.3" class="anchored" data-anchor-id="sử-dụng-xgboost-cơ-bản"><span class="header-section-number">24.3</span> Sử dụng xgboost cơ bản</h2>
+<section id="phân-loại-2-nhóm" class="level3" data-number="24.3.1">
+<h3 data-number="24.3.1" class="anchored" data-anchor-id="phân-loại-2-nhóm"><span class="header-section-number">24.3.1</span> Phân loại 2 nhóm</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"Default"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>Default <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  default student   balance    income
+1      No      No  729.5265 44361.625
+2      No     Yes  817.1804 12106.135
+3      No      No 1073.5492 31767.139
+4      No      No  529.2506 35704.494
+5      No      No  785.6559 38463.496
+6      No     Yes  919.5885  7491.559</code></pre>
+</div>
+</div>
+<p>Dữ liệu đầu vào của <code>xgboost</code> cần phải đảm bảo hai yếu tố:</p>
+<ul>
+<li>Toàn bộ dữ liệu cần có định dạng số</li>
+<li>Dữ liệu đầu vào dạng <code>matrix</code></li>
+</ul>
+<p>Do đó, toàn bộ dữ liệu <code>factor</code> phải biến đổi thành <code>matrix</code> như sau</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>convert_fct <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> x <span class="sc">%&gt;%</span> as.numeric</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> x <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>Default <span class="ot">&lt;-</span> Default <span class="sc">%&gt;%</span> </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">modify_if</span>(is.factor, convert_fct) </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>Default <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    default          student          balance           income     
+ Min.   :0.0000   Min.   :0.0000   Min.   :   0.0   Min.   :  772  
+ 1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.: 481.7   1st Qu.:21340  
+ Median :0.0000   Median :0.0000   Median : 823.6   Median :34553  
+ Mean   :0.0333   Mean   :0.2944   Mean   : 835.4   Mean   :33517  
+ 3rd Qu.:0.0000   3rd Qu.:1.0000   3rd Qu.:1166.3   3rd Qu.:43808  
+ Max.   :1.0000   Max.   :1.0000   Max.   :2654.3   Max.   :73554  </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>index <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Default), <span class="fl">0.75</span> <span class="sc">*</span> <span class="fu">nrow</span>(Default))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Chia tập train test</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> Default[index, ]</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> Default[<span class="sc">-</span>index, ]</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span> str</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   7500 obs. of  4 variables:
+ $ default: num  0 0 0 0 0 0 0 0 0 0 ...
+ $ student: num  0 0 0 0 0 0 1 0 1 0 ...
+ $ balance: num  1011 1060 153 817 557 ...
+ $ income : num  36299 27870 39503 41995 35067 ...</code></pre>
+</div>
+</div>
+<p><strong>Training model</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cách 1: Biến đổi dữ liệu trực tiếp matrix từ DataFrame</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>xgb_model <span class="ot">&lt;-</span> <span class="fu">xgboost</span>(<span class="at">data =</span> train <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>default) <span class="sc">%&gt;%</span> as.matrix,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">label =</span> train <span class="sc">%&gt;%</span> <span class="fu">pull</span>(default),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">max_depth =</span> <span class="dv">2</span>, </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">eta =</span> <span class="fl">0.1</span>, <span class="co">#step size of each boosting step = control the learning rate</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">nrounds =</span> <span class="dv">5</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">objective =</span> <span class="st">"binary:logistic"</span>) <span class="co">#binary classification model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] train-logloss:0.606049 
+[2] train-logloss:0.534740 
+[3] train-logloss:0.475348 
+[4] train-logloss:0.425241 
+[5] train-logloss:0.382491 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>xgb_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>##### xgb.Booster
+raw: 8.5 Kb 
+call:
+  xgb.train(params = params, data = dtrain, nrounds = nrounds, 
+    watchlist = watchlist, verbose = verbose, print_every_n = print_every_n, 
+    early_stopping_rounds = early_stopping_rounds, maximize = maximize, 
+    save_period = save_period, save_name = save_name, xgb_model = xgb_model, 
+    callbacks = callbacks, max_depth = 2, eta = 0.1, objective = "binary:logistic")
+params (as set within xgb.train):
+  max_depth = "2", eta = "0.1", objective = "binary:logistic", validate_parameters = "TRUE"
+xgb.attributes:
+  niter
+callbacks:
+  cb.print.evaluation(period = print_every_n)
+  cb.evaluation.log()
+# of features: 3 
+niter: 5
+nfeatures : 3 
+evaluation_log:
+ iter train_logloss
+    1     0.6060489
+    2     0.5347401
+    3     0.4753482
+    4     0.4252406
+    5     0.3824908</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cách 2: Biến đổi thành Dmatrix</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>dtrain <span class="ot">&lt;-</span> <span class="fu">xgb.DMatrix</span>(<span class="at">data =</span> train <span class="sc">%&gt;%</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">select</span>(<span class="sc">-</span>default) <span class="sc">%&gt;%</span> as.matrix,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">label =</span> train <span class="sc">%&gt;%</span> <span class="fu">pull</span>(default) <span class="sc">%&gt;%</span> as.matrix)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>dtest <span class="ot">&lt;-</span> <span class="fu">xgb.DMatrix</span>(<span class="at">data =</span> test <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>default) <span class="sc">%&gt;%</span> as.matrix,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">label =</span> test <span class="sc">%&gt;%</span> <span class="fu">pull</span>(default) <span class="sc">%&gt;%</span> as.matrix)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">getinfo</span>(dtrain, <span class="st">"label"</span>) <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0 0 0 0 0 0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>xgb_model2 <span class="ot">&lt;-</span> <span class="fu">xgb.train</span>(<span class="at">data =</span> dtrain,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">nround =</span> <span class="dv">20</span>,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">watchlist =</span> <span class="fu">list</span>(<span class="at">train =</span> dtrain, <span class="at">test =</span> dtest),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">objective =</span> <span class="st">"binary:logistic"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] train-logloss:0.456465  test-logloss:0.461732 
+[2] train-logloss:0.325561  test-logloss:0.335189 
+[3] train-logloss:0.243478  test-logloss:0.257027 
+[4] train-logloss:0.188583  test-logloss:0.206339 
+[5] train-logloss:0.151419  test-logloss:0.171470 
+[6] train-logloss:0.124873  test-logloss:0.148238 
+[7] train-logloss:0.106079  test-logloss:0.131726 
+[8] train-logloss:0.092768  test-logloss:0.119828 
+[9] train-logloss:0.083067  test-logloss:0.112201 
+[10]    train-logloss:0.076175  test-logloss:0.107035 
+[11]    train-logloss:0.071114  test-logloss:0.103486 
+[12]    train-logloss:0.066510  test-logloss:0.101269 
+[13]    train-logloss:0.063671  test-logloss:0.099681 
+[14]    train-logloss:0.061429  test-logloss:0.098411 
+[15]    train-logloss:0.059548  test-logloss:0.097536 
+[16]    train-logloss:0.057891  test-logloss:0.097047 
+[17]    train-logloss:0.056649  test-logloss:0.096697 
+[18]    train-logloss:0.055824  test-logloss:0.096437 
+[19]    train-logloss:0.054968  test-logloss:0.096052 
+[20]    train-logloss:0.054453  test-logloss:0.096174 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Dự báo</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>pred_result <span class="ot">&lt;-</span> <span class="fu">predict</span>(xgb_model2, test <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>default) <span class="sc">%&gt;%</span> as.matrix)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">pred =</span> pred_result, </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">actual =</span> test<span class="sc">$</span>default)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>result <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         pred actual
+1 0.001644940      0
+2 0.010656979      0
+3 0.001531548      0
+4 0.002682617      0
+5 0.072526902      0
+6 0.022804208      0</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Variable importance</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>important_matrix <span class="ot">&lt;-</span> <span class="fu">xgb.importance</span>(<span class="at">model =</span> xgb_model2) </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>important_matrix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Feature        Gain       Cover Frequency
+1: balance 0.842198921 0.830537424 0.5420354
+2:  income 0.150944068 0.164183260 0.4380531
+3: student 0.006857012 0.005279316 0.0199115</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">xgb.plot.importance</span>(important_matrix)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-08-xgboost_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>xgboost croos validation</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>xgb_cv_model <span class="ot">&lt;-</span> <span class="fu">xgb.cv</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>default) <span class="sc">%&gt;%</span> as.matrix,</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> train <span class="sc">%&gt;%</span> <span class="fu">pull</span>(default),</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">nfold =</span> <span class="dv">5</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrounds =</span> <span class="dv">20</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">objective =</span> <span class="st">"binary:logistic"</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] train-logloss:0.456443+0.000674 test-logloss:0.459251+0.001795 
+[2] train-logloss:0.325654+0.001169 test-logloss:0.331319+0.003312 
+[3] train-logloss:0.243380+0.001407 test-logloss:0.251464+0.004232 
+[4] train-logloss:0.188807+0.001659 test-logloss:0.198382+0.005424 
+[5] train-logloss:0.151177+0.001841 test-logloss:0.162590+0.006475 
+[6] train-logloss:0.124632+0.001843 test-logloss:0.138449+0.007058 
+[7] train-logloss:0.105713+0.001924 test-logloss:0.121676+0.007789 
+[8] train-logloss:0.091863+0.002035 test-logloss:0.109712+0.008631 
+[9] train-logloss:0.081819+0.002160 test-logloss:0.101353+0.009198 
+[10]    train-logloss:0.074494+0.002175 test-logloss:0.095321+0.009602 
+[11]    train-logloss:0.068936+0.002422 test-logloss:0.091329+0.010128 
+[12]    train-logloss:0.064834+0.002410 test-logloss:0.088636+0.010678 
+[13]    train-logloss:0.061750+0.002462 test-logloss:0.086801+0.011021 
+[14]    train-logloss:0.059222+0.002469 test-logloss:0.085496+0.011246 
+[15]    train-logloss:0.057350+0.002357 test-logloss:0.084681+0.011565 
+[16]    train-logloss:0.055885+0.002238 test-logloss:0.083926+0.011783 
+[17]    train-logloss:0.054735+0.002181 test-logloss:0.083789+0.011906 
+[18]    train-logloss:0.053752+0.002185 test-logloss:0.083563+0.011913 
+[19]    train-logloss:0.052808+0.002437 test-logloss:0.083544+0.011947 
+[20]    train-logloss:0.052005+0.002477 test-logloss:0.083590+0.012147 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>xgb_cv_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>##### xgb.cv 5-folds
+ iter train_logloss_mean train_logloss_std test_logloss_mean test_logloss_std
+    1         0.45644301      0.0006739002        0.45925147      0.001795369
+    2         0.32565427      0.0011686685        0.33131930      0.003312023
+    3         0.24338015      0.0014065094        0.25146354      0.004231658
+    4         0.18880739      0.0016591077        0.19838212      0.005423796
+    5         0.15117685      0.0018410891        0.16259027      0.006475489
+    6         0.12463196      0.0018429609        0.13844943      0.007058480
+    7         0.10571266      0.0019244415        0.12167644      0.007789193
+    8         0.09186278      0.0020353153        0.10971164      0.008630608
+    9         0.08181907      0.0021598219        0.10135303      0.009197664
+   10         0.07449379      0.0021750061        0.09532147      0.009602407
+   11         0.06893600      0.0024216393        0.09132926      0.010127932
+   12         0.06483435      0.0024103745        0.08863641      0.010677939
+   13         0.06174974      0.0024623895        0.08680146      0.011021055
+   14         0.05922165      0.0024687004        0.08549554      0.011246297
+   15         0.05735000      0.0023574078        0.08468061      0.011564853
+   16         0.05588468      0.0022383212        0.08392588      0.011782927
+   17         0.05473464      0.0021811777        0.08378939      0.011905952
+   18         0.05375206      0.0021849861        0.08356349      0.011913141
+   19         0.05280787      0.0024371889        0.08354444      0.011947281
+   20         0.05200490      0.0024765581        0.08359039      0.012146617</code></pre>
+</div>
+</div>
+</section>
+<section id="phân-loại-nhiều-nhóm" class="level3" data-number="24.3.2">
+<h3 data-number="24.3.2" class="anchored" data-anchor-id="phân-loại-nhiều-nhóm"><span class="header-section-number">24.3.2</span> Phân loại nhiều nhóm</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>iris <span class="ot">&lt;-</span> iris <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">label =</span> <span class="fu">as.numeric</span>(Species) <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Chia tập train/test</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(iris), <span class="fl">0.7</span> <span class="sc">*</span> <span class="fu">nrow</span>(iris))  </span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>iris_train <span class="ot">&lt;-</span> iris[train,]            </span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>iris_test <span class="ot">&lt;-</span> iris[<span class="sc">-</span>train,]      </span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Đổi định dạng sang xgb.DMatrix</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>dtrain <span class="ot">&lt;-</span> <span class="fu">xgb.DMatrix</span>(<span class="at">data =</span> iris_train[,<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>] <span class="sc">%&gt;%</span> as.matrix, </span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>                      <span class="at">label =</span> iris_train[,<span class="dv">6</span>])</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>dtest <span class="ot">&lt;-</span> <span class="fu">xgb.DMatrix</span>(<span class="at">data =</span> iris_test[,<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>] <span class="sc">%&gt;%</span> as.matrix, </span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>                     <span class="at">label =</span> iris_test[,<span class="dv">6</span>])</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a><span class="co">#Build model trên train</span></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>xgb_model <span class="ot">&lt;-</span> <span class="fu">xgb.train</span>(<span class="at">data=</span>dtrain, </span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>                 <span class="at">nround =</span> <span class="dv">20</span>, </span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>                 <span class="at">watchlist =</span> <span class="fu">list</span>(<span class="at">train=</span>dtrain, <span class="at">test=</span>dtest),</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>                 <span class="at">eval.metric =</span> <span class="st">"merror"</span>, </span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>                 <span class="at">objective =</span> <span class="st">"multi:softmax"</span>, <span class="co">#multiclass</span></span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>                 <span class="at">num_class =</span> <span class="dv">3</span>)               <span class="co"># số lượng class</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] train-merror:0.019048   test-merror:0.000000 
+[2] train-merror:0.019048   test-merror:0.000000 
+[3] train-merror:0.019048   test-merror:0.000000 
+[4] train-merror:0.019048   test-merror:0.000000 
+[5] train-merror:0.019048   test-merror:0.000000 
+[6] train-merror:0.009524   test-merror:0.022222 
+[7] train-merror:0.009524   test-merror:0.022222 
+[8] train-merror:0.000000   test-merror:0.044444 
+[9] train-merror:0.000000   test-merror:0.044444 
+[10]    train-merror:0.000000   test-merror:0.044444 
+[11]    train-merror:0.000000   test-merror:0.044444 
+[12]    train-merror:0.000000   test-merror:0.044444 
+[13]    train-merror:0.000000   test-merror:0.044444 
+[14]    train-merror:0.000000   test-merror:0.044444 
+[15]    train-merror:0.000000   test-merror:0.044444 
+[16]    train-merror:0.000000   test-merror:0.044444 
+[17]    train-merror:0.000000   test-merror:0.044444 
+[18]    train-merror:0.000000   test-merror:0.044444 
+[19]    train-merror:0.000000   test-merror:0.044444 
+[20]    train-merror:0.000000   test-merror:0.044444 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(xgb_model, dtest)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Confusion matrix</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(pred, <span class="fu">getinfo</span>(dtest, <span class="st">"label"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    
+pred  0  1  2
+   0 15  0  0
+   1  0 17  2
+   2  0  0 11</code></pre>
+</div>
+</div>
+</section>
+<section id="mô-hình-hồi-quy" class="level3" data-number="24.3.3">
+<h3 data-number="24.3.3" class="anchored" data-anchor-id="mô-hình-hồi-quy"><span class="header-section-number">24.3.3</span> Mô hình hồi quy</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlbench)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"BostonHousing"</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> BostonHousing <span class="sc">%&gt;%</span> </span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">chas =</span> <span class="fu">as.numeric</span>(chas)) <span class="co"># Fixing factor</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>index <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(BostonHousing), <span class="fl">0.75</span><span class="sc">*</span><span class="fu">nrow</span>(BostonHousing))</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> df[index, ]</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> df[<span class="sc">-</span>index, ]</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Tạo hàm convert</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>xgb_matrix_convert <span class="ot">&lt;-</span> <span class="cf">function</span>(df, y){</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">enquo</span>(y)</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>  xgb_matrix <span class="ot">&lt;-</span> <span class="fu">xgb.DMatrix</span>(<span class="at">data =</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">select</span>(<span class="sc">-!!</span>y) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>                        as.matrix <span class="sc">%&gt;%</span> </span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">as</span>(<span class="st">"dgCMatrix"</span>),</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>                      <span class="at">label =</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">pull</span>(<span class="sc">!!</span>y))</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(xgb_matrix)</span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>dtrain <span class="ot">&lt;-</span> <span class="fu">xgb_matrix_convert</span>(train, medv)</span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>dtest <span class="ot">&lt;-</span> test <span class="sc">%&gt;%</span> <span class="fu">xgb_matrix_convert</span>(medv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Xây mô hình</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>xgb_reg <span class="ot">&lt;-</span> xgboost<span class="sc">::</span><span class="fu">xgb.train</span>(</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data=</span>dtrain,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">watchlist =</span> <span class="fu">list</span>(<span class="at">train =</span> dtrain, <span class="at">test =</span> dtest),</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">max_depth=</span><span class="dv">3</span>, </span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">eta =</span> <span class="fl">0.2</span>, </span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">nthread=</span><span class="dv">3</span>, </span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">nrounds=</span><span class="dv">40</span>, </span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">lambda=</span><span class="dv">0</span>,</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>                   <span class="at">objective=</span><span class="st">"reg:linear"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[14:38:20] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[1] train-rmse:19.309819    test-rmse:18.937997 
+[2] train-rmse:15.606620    test-rmse:15.234527 
+[3] train-rmse:12.638811    test-rmse:12.341616 
+[4] train-rmse:10.270188    test-rmse:10.178778 
+[5] train-rmse:8.403936 test-rmse:8.555597 
+[6] train-rmse:6.920763 test-rmse:7.133534 
+[7] train-rmse:5.768784 test-rmse:6.140970 
+[8] train-rmse:4.855680 test-rmse:5.344052 
+[9] train-rmse:4.150053 test-rmse:4.837382 
+[10]    train-rmse:3.609667 test-rmse:4.362998 
+[11]    train-rmse:3.200611 test-rmse:4.098615 
+[12]    train-rmse:2.894428 test-rmse:3.873524 
+[13]    train-rmse:2.671378 test-rmse:3.725358 
+[14]    train-rmse:2.497225 test-rmse:3.605675 
+[15]    train-rmse:2.366818 test-rmse:3.525180 
+[16]    train-rmse:2.237165 test-rmse:3.467244 
+[17]    train-rmse:2.160299 test-rmse:3.405528 
+[18]    train-rmse:2.068731 test-rmse:3.340547 
+[19]    train-rmse:2.009169 test-rmse:3.306505 
+[20]    train-rmse:1.959114 test-rmse:3.269817 
+[21]    train-rmse:1.896273 test-rmse:3.262797 
+[22]    train-rmse:1.859122 test-rmse:3.247868 
+[23]    train-rmse:1.819388 test-rmse:3.225070 
+[24]    train-rmse:1.784970 test-rmse:3.206565 
+[25]    train-rmse:1.750531 test-rmse:3.187188 
+[26]    train-rmse:1.728462 test-rmse:3.183269 
+[27]    train-rmse:1.686153 test-rmse:3.169784 
+[28]    train-rmse:1.676003 test-rmse:3.165701 
+[29]    train-rmse:1.659468 test-rmse:3.157377 
+[30]    train-rmse:1.620732 test-rmse:3.150728 
+[31]    train-rmse:1.588564 test-rmse:3.147539 
+[32]    train-rmse:1.561644 test-rmse:3.136729 
+[33]    train-rmse:1.548848 test-rmse:3.133808 
+[34]    train-rmse:1.533705 test-rmse:3.128936 
+[35]    train-rmse:1.527019 test-rmse:3.127589 
+[36]    train-rmse:1.507101 test-rmse:3.120439 
+[37]    train-rmse:1.475981 test-rmse:3.109688 
+[38]    train-rmse:1.455215 test-rmse:3.104411 
+[39]    train-rmse:1.434109 test-rmse:3.102678 
+[40]    train-rmse:1.411514 test-rmse:3.099896 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>xgb_reg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>##### xgb.Booster
+raw: 48.8 Kb 
+call:
+  xgboost::xgb.train(data = dtrain, nrounds = 40, watchlist = list(train = dtrain, 
+    test = dtest), max_depth = 3, eta = 0.2, nthread = 3, lambda = 0, 
+    objective = "reg:linear")
+params (as set within xgb.train):
+  max_depth = "3", eta = "0.2", nthread = "3", lambda = "0", objective = "reg:linear", validate_parameters = "TRUE"
+xgb.attributes:
+  niter
+callbacks:
+  cb.print.evaluation(period = print_every_n)
+  cb.evaluation.log()
+# of features: 13 
+niter: 40
+nfeatures : 13 
+evaluation_log:
+    iter train_rmse test_rmse
+       1  19.309819 18.937997
+       2  15.606620 15.234527
+---                          
+      39   1.434109  3.102678
+      40   1.411514  3.099896</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(xgb_reg, dtest)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Error RMSE</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((pred <span class="sc">-</span> test<span class="sc">$</span>medv)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">%&gt;%</span> sqrt <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.1</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="tuning-xgboost" class="level2" data-number="24.4">
+<h2 data-number="24.4" class="anchored" data-anchor-id="tuning-xgboost"><span class="header-section-number">24.4</span> Tuning xgboost</h2>
+<p>Khi mới xây dựng mô hình <code>xgboost</code>, ta có thể sử dụng các tham số sau:</p>
+<ul>
+<li><code>eta</code>: Quyết định <code>learning_rate</code>, thử với 0.01</li>
+<li><code>nrounds</code>: 100 nếu dữ liệu lớn, 1000 nếu dữ liệu nhỏ</li>
+<li><code>max_depth</code>: 3</li>
+<li><code>subsample</code>: 0.8</li>
+<li><code>colsample_bytree</code>: 1</li>
+<li><code>gamma</code>: 1</li>
+</ul>
+<p>Các bước tuning như sau:</p>
+<ul>
+<li>Tuning <code>nrounds</code> để xác định số cây quyết định</li>
+<li>Tuning <code>max_depth</code>, bắt đầu với 3 và tăng dần lên, dừng lại nếu mô hình không tốt hơn trên tập test</li>
+<li><code>learning_rate</code>: Thử giá trị trong khoảng 0.01 đến 0.1</li>
+<li><code>subsample</code>: Thử các giá trị trong khoảng [0.8, 1]</li>
+<li><code>colsample_bytree</code>: Thử giá trị trong khoảng [0.3, 0.8] để tránh 1 biến ảnh hưởng quá nhiều đến chất lượng mô hình</li>
+<li><code>gamma</code>: Thử giá trị [0,1,5]</li>
+</ul>
+<p>Ta sẽ tuning với tập dữ liệu <code>BostonHousing</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> BostonHousing <span class="sc">%&gt;%</span> </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">chas =</span> <span class="fu">as.numeric</span>(chas)) <span class="co"># Fixing factor</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>index <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(BostonHousing), <span class="fl">0.75</span><span class="sc">*</span><span class="fu">nrow</span>(BostonHousing))</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> df[index, ]</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> df[<span class="sc">-</span>index, ]</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Tạo hàm convert</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>xgb_matrix_convert <span class="ot">&lt;-</span> <span class="cf">function</span>(df, y){</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">enquo</span>(y)</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>  xgb_matrix <span class="ot">&lt;-</span> <span class="fu">xgb.DMatrix</span>(<span class="at">data =</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">select</span>(<span class="sc">-!!</span>y) <span class="sc">%&gt;%</span> </span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>                        as.matrix <span class="sc">%&gt;%</span> </span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">as</span>(<span class="st">"dgCMatrix"</span>),</span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>                      <span class="at">label =</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">pull</span>(<span class="sc">!!</span>y))</span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(xgb_matrix)</span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>dtrain <span class="ot">&lt;-</span> <span class="fu">xgb_matrix_convert</span>(train, medv)</span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>dtest <span class="ot">&lt;-</span> test <span class="sc">%&gt;%</span> <span class="fu">xgb_matrix_convert</span>(medv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Xây mô hình</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>xgb_reg <span class="ot">&lt;-</span> xgboost<span class="sc">::</span><span class="fu">xgb.train</span>(</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data=</span>dtrain,</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">watchlist =</span> <span class="fu">list</span>(<span class="at">train =</span> dtrain, <span class="at">test =</span> dtest),</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">max_depth=</span><span class="dv">3</span>, </span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">eta =</span> <span class="fl">0.01</span>, </span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">nrounds=</span><span class="dv">1000</span>, </span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">objective=</span><span class="st">"reg:linear"</span>, </span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">verbose =</span> F,</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">eval =</span> <span class="st">"rmse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[14:38:21] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:21] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>xgb_reg<span class="sc">$</span>evaluation_log <span class="sc">%&gt;%</span> </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   iter train_rmse test_rmse
+1:    1   23.75130  23.32698
+2:    2   23.52634  23.10579
+3:    3   23.30340  22.88668
+4:    4   23.08271  22.66982
+5:    5   22.86451  22.45537
+6:    6   22.64825  22.24294</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reshape2)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>xgb_reg<span class="sc">$</span>evaluation_log <span class="sc">%&gt;%</span> </span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">melt</span>(<span class="at">id.vars =</span> <span class="st">"iter"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(iter, value)) <span class="sc">+</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">col =</span> variable)) <span class="sc">+</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-08-xgboost_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Như vậy, số lượng cây (<code>nrounds</code>) sẽ rơi vào khoảng 300</p>
+<p>Bước tiếp theo, ta sẽ tuning với từng tham số.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tune max_depth</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>xgb_eval <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">max_depth =</span> <span class="dv">3</span>,</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">eta =</span> <span class="fl">0.01</span>,</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">nrounds =</span> <span class="dv">300</span>,</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">subsample =</span> <span class="fl">0.8</span>,</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">colsample_bytree =</span> <span class="fl">0.8</span>,</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">gamma =</span> <span class="dv">0</span>) {</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  xgb_model <span class="ot">&lt;-</span> <span class="fu">xgb.train</span>(</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> dtrain,</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">watchlist =</span> <span class="fu">list</span>(<span class="at">train =</span> dtrain, <span class="at">test =</span> dtest),</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_depth =</span> max_depth,</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">eta =</span> eta,</span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">nrounds =</span> nrounds,</span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">subsample =</span> subsample,</span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">colsample_bytree =</span> colsample_bytree,</span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">gamma =</span> gamma,</span>
+<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">objective =</span> <span class="st">"reg:linear"</span>,</span>
+<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">verbose =</span> F,</span>
+<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">eval =</span> <span class="st">"rmse"</span></span>
+<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(xgb_model<span class="sc">$</span>evaluation_log <span class="sc">%&gt;%</span> <span class="fu">tail</span>(<span class="dv">1</span>))</span>
+<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-24"><a href="#cb48-24" aria-hidden="true" tabindex="-1"></a><span class="fu">xgb_eval</span>(<span class="at">nrounds =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[14:38:22] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:22] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   iter train_rmse test_rmse
+1:   10   21.81913  21.45133</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>max_depth <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">10</span>)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">map_df</span>(max_depth, </span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">as_mapper</span>(<span class="sc">~</span><span class="fu">xgb_eval</span>(<span class="at">max_depth =</span> .x))) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">max_depth =</span> max_depth) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[14:38:22] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:22] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:22] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:22] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:22] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:22] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:22] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:22] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:23] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:23] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:23] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:23] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:23] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:23] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:24] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:24] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   train_rmse test_rmse max_depth
+1:   2.802225  4.111569         3
+2:   2.497150  4.000477         4
+3:   2.285728  3.856733         5
+4:   2.145971  3.777291         6
+5:   2.091390  3.825581         7
+6:   2.068180  3.888360         8
+7:   2.004094  3.819973         9
+8:   2.005576  3.857061        10</code></pre>
+</div>
+</div>
+<ul>
+<li>Như vậy, <code>max_depth</code> tối ưu trong trường hợp này là 8</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tune eta</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>eta <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.01</span>, <span class="fl">0.2</span>, <span class="at">by =</span> <span class="fl">0.02</span>)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>eta_tune <span class="ot">&lt;-</span> <span class="fu">map_df</span>(eta, </span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">as_mapper</span>(<span class="sc">~</span><span class="fu">xgb_eval</span>(<span class="at">eta =</span> .x, </span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">max_depth =</span> <span class="dv">8</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">eta =</span> eta) <span class="sc">%&gt;%</span> </span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[14:38:24] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:24] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:24] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:24] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:24] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:24] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:25] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:25] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:25] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:25] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:25] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:25] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:26] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:26] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:26] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:26] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:26] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:26] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:26] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:26] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>eta_tune</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      train_rmse test_rmse  eta
+ 1: 2.0460189144  3.808014 0.01
+ 2: 0.2471150349  3.245818 0.03
+ 3: 0.0554097094  3.540259 0.05
+ 4: 0.0154485226  3.381197 0.07
+ 5: 0.0033025644  3.554486 0.09
+ 6: 0.0008227960  3.404650 0.11
+ 7: 0.0006471857  3.327971 0.13
+ 8: 0.0006024772  3.344477 0.15
+ 9: 0.0006011283  3.488997 0.17
+10: 0.0005846677  3.435446 0.19</code></pre>
+</div>
+</div>
+<ul>
+<li>Như vậy, <code>eta</code> tối ưu trong trường hợp này là 0.05</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tune subsample</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>subsample <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="at">by =</span> <span class="fl">0.05</span>)</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>subsample_tune <span class="ot">&lt;-</span> <span class="fu">map_df</span>(subsample, </span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">as_mapper</span>(<span class="sc">~</span><span class="fu">xgb_eval</span>(<span class="at">eta =</span> <span class="fl">0.05</span>, </span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">max_depth =</span> <span class="dv">8</span>,</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">subsample =</span> .x))) <span class="sc">%&gt;%</span> </span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">subsample =</span> subsample) <span class="sc">%&gt;%</span> </span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[14:38:27] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:27] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:27] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:27] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:27] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:27] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:28] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:28] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:28] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:28] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:28] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:28] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:28] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:28] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>subsample_tune</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   train_rmse test_rmse subsample
+1: 0.26278404  3.588669      0.50
+2: 0.18770359  3.800652      0.55
+3: 0.15636033  3.517310      0.60
+4: 0.11577811  3.456728      0.65
+5: 0.08067518  3.276463      0.70
+6: 0.08803140  3.476305      0.75
+7: 0.05803862  3.545669      0.80</code></pre>
+</div>
+</div>
+<p>Như vậy, <code>subsample</code> tối ưu trong trường hợp này là 0.55</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Tune colsample_bytree</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>colsample_bytree <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.7</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.05</span>)</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>colsample_bytree_tune <span class="ot">&lt;-</span> <span class="fu">map_df</span>(colsample_bytree, </span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>       <span class="fu">as_mapper</span>(<span class="sc">~</span><span class="fu">xgb_eval</span>(<span class="at">eta =</span> <span class="fl">0.05</span>, </span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">max_depth =</span> <span class="dv">8</span>,</span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">subsample =</span> <span class="fl">0.55</span>,</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">colsample_bytree =</span> .x))) <span class="sc">%&gt;%</span> </span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">colsample_bytree =</span> colsample_bytree) <span class="sc">%&gt;%</span> </span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[14:38:29] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:29] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:29] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:29] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:29] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:29] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:30] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:30] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:30] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:30] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:30] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:30] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:30] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:30] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>colsample_bytree_tune</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   train_rmse test_rmse colsample_bytree
+1:  0.1574834  3.507313             0.70
+2:  0.1897105  3.611232             0.75
+3:  0.1825235  3.382111             0.80
+4:  0.1724446  3.432489             0.85
+5:  0.1727087  3.643824             0.90
+6:  0.2043766  3.531467             0.95
+7:  0.1738617  3.383100             1.00</code></pre>
+</div>
+</div>
+<ul>
+<li>Như vậy, <code>colsample_bytree</code> tối ưu là 0.8</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Tune colsample_bytree</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>gamma<span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">by =</span> <span class="dv">1</span>)</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>gamma_tune <span class="ot">&lt;-</span> <span class="fu">map_df</span>(gamma, </span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>       <span class="fu">as_mapper</span>(<span class="sc">~</span><span class="fu">xgb_eval</span>(<span class="at">eta =</span> <span class="fl">0.05</span>, </span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>                           <span class="at">max_depth =</span> <span class="dv">8</span>,</span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">subsample =</span> <span class="fl">0.55</span>,</span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">colsample_bytree =</span> <span class="fl">0.8</span>,</span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a>                           <span class="at">gamma =</span> .x))) <span class="sc">%&gt;%</span> </span>
+<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gamma =</span> gamma) <span class="sc">%&gt;%</span> </span>
+<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[14:38:31] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:31] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:31] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:31] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:31] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:31] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:32] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:32] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:32] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:32] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:32] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:32] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:33] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:33] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:33] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:33] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:33] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:33] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:33] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:33] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.
+
+[14:38:34] WARNING: src/objective/regression_obj.cu:213: reg:linear is now deprecated in favor of reg:squarederror.
+[14:38:34] WARNING: src/learner.cc:767: 
+Parameters: { "eval" } are not used.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>gamma_tune</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    train_rmse test_rmse gamma
+ 1:  0.1859322  3.562346     0
+ 2:  0.4218689  3.669980     1
+ 3:  0.5615026  3.706800     2
+ 4:  0.6593507  3.520479     3
+ 5:  0.7416174  3.356820     4
+ 6:  0.7990263  3.589631     5
+ 7:  0.8801037  3.756084     6
+ 8:  0.9363509  3.595034     7
+ 9:  0.9876672  3.735096     8
+10:  1.0422657  3.572406     9
+11:  1.1036199  3.533579    10</code></pre>
+</div>
+</div>
+<p>Mô hình cuối cùng sẽ như sau.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>xgb_reg <span class="ot">&lt;-</span> <span class="fu">xgb.train</span>(</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dtrain,</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">watchlist =</span> <span class="fu">list</span>(<span class="at">train =</span> dtrain,</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">test =</span> dtest),</span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">eta =</span> <span class="fl">0.05</span>,</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">nrounds =</span> <span class="dv">300</span>,</span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_depth =</span> <span class="dv">8</span>,</span>
+<span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">subsample =</span> <span class="fl">0.55</span>,</span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">colsample_bytree =</span> <span class="fl">0.8</span>,</span>
+<span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">gamma =</span> <span class="dv">5</span>,</span>
+<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> F</span>
+<span id="cb70-12"><a href="#cb70-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb70-13"><a href="#cb70-13" aria-hidden="true" tabindex="-1"></a>xgb_reg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>##### xgb.Booster
+raw: 995.7 Kb 
+call:
+  xgb.train(data = dtrain, nrounds = 300, watchlist = list(train = dtrain, 
+    test = dtest), verbose = F, eta = 0.05, max_depth = 8, subsample = 0.55, 
+    colsample_bytree = 0.8, gamma = 5)
+params (as set within xgb.train):
+  eta = "0.05", max_depth = "8", subsample = "0.55", colsample_bytree = "0.8", gamma = "5", validate_parameters = "1"
+xgb.attributes:
+  niter
+callbacks:
+  cb.evaluation.log()
+# of features: 13 
+niter: 300
+nfeatures : 13 
+evaluation_log:
+    iter train_rmse test_rmse
+       1 22.8594592 22.467018
+       2 21.7925064 21.412278
+---                          
+     299  0.8118169  3.472679
+     300  0.8118075  3.472565</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sai số mô hình</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(xgb_reg, dtest)</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Error RMSE</span></span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>((pred <span class="sc">-</span> test<span class="sc">$</span>medv)<span class="sc">^</span><span class="dv">2</span>) <span class="sc">%&gt;%</span> sqrt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.472565</code></pre>
+</div>
+</div>
+</section>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="24.5">
+<h2 data-number="24.5" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">24.5</span> Tài liệu tham khảo</h2>
+<ul>
+<li><a href="https://xgboost.readthedocs.io/en/latest/R-package/xgboostPresentation.html">Giới thiệu về xgboost</a></li>
+<li><a href="">https://github.com/dmlc/xgboost/tree/master/demo</a></li>
+<li><a href="https://xgboost.readthedocs.io/en/latest/parameter.html">Parameters xgboost</a></li>
+<li><a href="https://www.hackerearth.com/blog/developers/beginners-tutorial-on-xgboost-parameter-tuning-r">Tuning xgboost</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./p03-07-xay-dung-mo-hinh-voi-h2o.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Xây dựng mô hình với H2O</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./p03-10-knn.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">K nearest neighbors</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

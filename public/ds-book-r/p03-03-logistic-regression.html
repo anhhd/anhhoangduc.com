@@ -1,0 +1,1889 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Khoa học dữ liệu với R - 20&nbsp; Mô hình hồi quy logistic</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./p03-04-decision-tree.html" rel="next">
+<link href="./p03-02-mo-hinh-ols.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/quarto-contrib/bookup_fonts_embed-0.0/fonts-download.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar docked">
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Mô hình hồi quy logistic</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Khoa học dữ liệu với R</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle sidebar-tool" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle sidebar-tool" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Khoa học dữ liệu và nghề phân tích dữ liệu</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Phân tích khám phá dữ liệu</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-01-gioi-thieu-co-ban-ve-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Giới thiệu cơ bản về R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-70-xay-dung-bao-cao-voi-rmarkdown.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Xây dựng báo cáo với Rmarkdown</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-02-bien-doi-du-lieu-dplyr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Ngữ pháp của biến đổi dữ liệu với DPLYR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-03-phan-ra-va-xoay-chieu-du-lieu.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Làm sạch và biến đổi dữ liệu nâng cao</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-04-ngu-phap-bieu-do-ggplot2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ngữ pháp của biểu đồ với GGPLOT2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-05-cac-chi-so-thong-ke.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Các chỉ số thống kê mô tả cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-06-lap-trinh-ham.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Lập trình hàm</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-07-lap-trinh-ham-voi-purrr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Lập trình chức năng hàm với purrr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-08-bien-doi-du-lieu-text.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-11-quan-ly-nhieu-mo-hinh.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quản lý kết quả phân tích từ nhiều mô hình</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-15-thong-ke-co-ban.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Xác suất và phân phối thống kê cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-16-power-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Power analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-20-sampling-methods.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Phương pháp ước lượng tham số thông qua lấy mẫu</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-50-datatable.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu với <code>data.table</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-60-thu-thap-du-lieu-tu-website.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Thu thập dữ liệu từ website</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-99-meo-trong-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Các mẹo trong R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Supervised Learning</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-01-nguyen-ly-du-bao.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Giới thiệu về học máy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-02-mo-hinh-ols.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mô hình hồi quy tuyến tính</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-03-logistic-regression.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Mô hình hồi quy logistic</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-04-decision-tree.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Cây quyết định</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-05-bagging-boosting.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Bagging, RandomForest và Boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-07-xay-dung-mo-hinh-voi-h2o.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Xây dựng mô hình với H2O</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-10-knn.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">K nearest neighbors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-11-svm.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Support Vector Machine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-15-nonlinear.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Mô hình phi tuyến tính</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-17-regularization.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Lựa chọn biến &amp; regularization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-20-feature-engineering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Feature Engineering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-30-credit-scoring.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Credit Scoring</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-40-interpretable-ml.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Giải thích mô hình học máy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-50-chat-luong-mo-hinh.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Chất lượng mô hình</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-69-caret.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Xây dựng mô hình dự báo với caret</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-70-tidymodels.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Tidymodels</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Unsupervised Learning</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-01-unsupervised-learning.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Unsupervised learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-02-hierarchical-clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Hierachical clustering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-03-kmeans.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">k-means</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-04-basket-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Phân tích giỏ hàng</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-05-pca.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Principal component analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-06-factor-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Phân tích nhân tố ẩn (factor analysis)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Chuỗi thời gian</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-01-chuoi-thoi-gian.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Giới thiệu về chuỗi thời gian</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-02-arima.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mô hình ARIMA</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Phân tích chuỗi thời gian với tidyquant và timetk</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-06-du-bao-ts-voi-prophet.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với prophet</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-07-du-bao-ts-voi-timetk.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với timetk</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-08-abnomaly-detection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Abnomaly detection trong times series</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">Natural Language Processing</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-01-nlp-co-ban.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Xử lý ngôn ngữ tự nhiên cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-04-text-classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Phân loại text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-07-nlp-api.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Sử dụng API từ các dịch vụ đám mây</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-10-ocr-tesseract.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">OCR với <code>tesseract</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">Các phương pháp khác</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-02-causal-impact.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Causal Impact</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-03-collaborative-filtering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Collaborative Filtering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-04-survival-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Survival Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-05-vintage-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vintage analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-07-spatial-data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Spatial data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-08-anomaly-detection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Abnomaly detection</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-10-shiny.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Shiny apps</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-15-quantile-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Hồi quy phân vị</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-16-retention-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Retention analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-20-network-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Network analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-30-python-voi-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Sử dụng Python với R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">Cloud Computing</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-01-cai-dat-rstudio-server-tren-amazon.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Cài đặt server RStudio trên Amazon</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-02-deploy-shiny-app-aws.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Deploy Shiny Apps lên AWS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-03-web-service-azure.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Xây dựng web service với Azure</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-09-apis-voi-plumber.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">API với Plumber</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">Kiến thức bổ trợ</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-01-git.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Sử dụng GIT</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-02-cmd.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">CMD và Bash</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-03-docker.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Sử dụng docker</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-04-apis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">API</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-05-html-css.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Cơ bản về HTML và CSS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-10-nguyen-ly-thi-giac.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Nguyên lý thị giác và Business Dashboard</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-30-tim-hieu-he-thong.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Tìm hiểu hệ thống dữ liệu</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-40-aws-overview.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">AWS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-90-other.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Các tricks khác</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">Case studies</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p13-01-casestudy-truc-quan-hoa.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Trực quan hóa dữ liệu</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#giới-thiệu" id="toc-giới-thiệu" class="nav-link active" data-scroll-target="#giới-thiệu"><span class="toc-section-number">20.1</span>  Giới thiệu</a></li>
+  <li><a href="#cách-xây-dựng-mô-hình" id="toc-cách-xây-dựng-mô-hình" class="nav-link" data-scroll-target="#cách-xây-dựng-mô-hình"><span class="toc-section-number">20.2</span>  Cách xây dựng mô hình</a></li>
+  <li><a href="#ví-dụ-xây-dựng-mô-hình-đơn-giản" id="toc-ví-dụ-xây-dựng-mô-hình-đơn-giản" class="nav-link" data-scroll-target="#ví-dụ-xây-dựng-mô-hình-đơn-giản"><span class="toc-section-number">20.3</span>  Ví dụ xây dựng mô hình đơn giản</a></li>
+  <li><a href="#các-chỉ-số-cần-quan-tâm-khác" id="toc-các-chỉ-số-cần-quan-tâm-khác" class="nav-link" data-scroll-target="#các-chỉ-số-cần-quan-tâm-khác"><span class="toc-section-number">20.4</span>  Các chỉ số cần quan tâm khác</a></li>
+  <li><a href="#đánh-giá-chất-lượng-mô-hình" id="toc-đánh-giá-chất-lượng-mô-hình" class="nav-link" data-scroll-target="#đánh-giá-chất-lượng-mô-hình"><span class="toc-section-number">20.5</span>  Đánh giá chất lượng mô hình</a>
+  <ul class="collapse">
+  <li><a href="#confusion-matrix" id="toc-confusion-matrix" class="nav-link" data-scroll-target="#confusion-matrix"><span class="toc-section-number">20.5.1</span>  Confusion Matrix</a></li>
+  <li><a href="#roc" id="toc-roc" class="nav-link" data-scroll-target="#roc"><span class="toc-section-number">20.5.2</span>  ROC</a></li>
+  <li><a href="#gain-và-lift" id="toc-gain-và-lift" class="nav-link" data-scroll-target="#gain-và-lift"><span class="toc-section-number">20.5.3</span>  Gain và Lift</a></li>
+  <li><a href="#kolmogorovsmirnov-statistics" id="toc-kolmogorovsmirnov-statistics" class="nav-link" data-scroll-target="#kolmogorovsmirnov-statistics"><span class="toc-section-number">20.5.4</span>  Kolmogorov–Smirnov statistics</a></li>
+  </ul></li>
+  <li><a href="#thực-hành" id="toc-thực-hành" class="nav-link" data-scroll-target="#thực-hành"><span class="toc-section-number">20.6</span>  Thực hành</a>
+  <ul class="collapse">
+  <li><a href="#dữ-liệu" id="toc-dữ-liệu" class="nav-link" data-scroll-target="#dữ-liệu"><span class="toc-section-number">20.6.1</span>  Dữ liệu</a></li>
+  <li><a href="#xây-dựng-mô-hình-trên-tập-dữ-liệu-gốc" id="toc-xây-dựng-mô-hình-trên-tập-dữ-liệu-gốc" class="nav-link" data-scroll-target="#xây-dựng-mô-hình-trên-tập-dữ-liệu-gốc"><span class="toc-section-number">20.6.2</span>  Xây dựng mô hình trên tập dữ liệu gốc</a></li>
+  <li><a href="#xây-dựng-mô-hình-trên-hai-tập-train-và-test" id="toc-xây-dựng-mô-hình-trên-hai-tập-train-và-test" class="nav-link" data-scroll-target="#xây-dựng-mô-hình-trên-hai-tập-train-và-test"><span class="toc-section-number">20.6.3</span>  Xây dựng mô hình trên hai tập train và test</a></li>
+  </ul></li>
+  <li><a href="#xây-dựng-mô-hình-logistics-theo-machine-learning" id="toc-xây-dựng-mô-hình-logistics-theo-machine-learning" class="nav-link" data-scroll-target="#xây-dựng-mô-hình-logistics-theo-machine-learning"><span class="toc-section-number">20.7</span>  Xây dựng mô hình Logistics theo Machine Learning</a></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="toc-section-number">20.8</span>  Tài liệu tham khảo</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Mô hình hồi quy logistic</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="giới-thiệu" class="level2" data-number="20.1">
+<h2 data-number="20.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">20.1</span> Giới thiệu</h2>
+<p>Khi phân tích dữ liệu, bên cạnh biến liên tục, ta thường xuyên phải làm việc với các biến rời rạc, các biến có đặc tinh nhóm (category) như “mua hàng vs.&nbsp;không mua hàng”, “giàu vs.&nbsp;nghèo”, “nợ xấu vs.&nbsp;không nợ xấu”. Quá trình phân tích và dự báo các quan sát thuộc về nhóm nào được gọi là quá trình phân loại (classification).</p>
+<p>Đối với bài toán phân loại, ta có thể chia thành hai nhóm lớn là phân loại hai biến và phân loại nhiều biến. Trong đó, bài toán phân loại hai biến là bài toán phổ biến nhất, được ứng dụng trong nhiều lĩnh vực trong đời sống như đánh giá điểm tín dụng của khách hàng, dự báo khách hàng phản ứng với chiến dịch marketing…</p>
+<p>Trong chương này, chúng ta sẽ làm quen vơi kỹ thuật nổi tiếng và được ứng dụng sớm nhất trong việc phân loại hai biến (<em>binary classification</em>) là <em>logistic regression</em>.</p>
+<p>Nếu như mô hình hồi quy tuyến tính thường (linear regression) cho phép chúng ta tìm được mối quan hệ giữa biến phụ thuộc liên tục (continous dependent variable) và một/nhiều biến độc lập (independent variable) - liên tục hoặc không liên tục thì mô hình hồi quy Logistic tìm mối quan hệ giữa biến phụ thuộc là biến nhị phân - <em>binary variable</em>. Biến cần dự báo dạng này chỉ nhận 2 giá trị: có/không, sống/chết, yêu/không yêu… và các biến độc lập có thể là liên tục hoặc không liên tục.</p>
+<p>Ví dụ, ta tìm hiểu mối quan hệ giữa việc KH có nợ xấu hay không dựa vào dư nợ của KH - thông qua việc tìm hiểu khả năng khách hàng có nợ xấu dựa vào thông tin dư nợ của KH. Trong đó:</p>
+<ul>
+<li>Biến phụ thuộc:</li>
+</ul>
+<p><span class="math display">\[Y = \begin{cases}1, &amp; KH\:có\:nợ\:xấu\\
+  0,  &amp; KH\:không\:có\:nợ\:xấu\end{cases}\]</span></p>
+<ul>
+<li>Biến độc lập: X - dư nợ của KH (hay số tiền khách hàng nợ ngân hàng)</li>
+</ul>
+<p>Trong mô hình này, ta không thể sử dụng mô hình hồi quy thông thường bởi lẽ biến phụ thuộc chỉ có hai giá trị 0 và 1. Hơn nữa, cái ta cần dự báo là “xác suất” xảy ra sự kiện (xác suất vỡ nợ) cho mỗi quan sát. Để giải quyết vấn đề nay, ta có thể sử dụng mô hình logistic có dạng như sau:</p>
+<p><span class="math display">\[p= Pr(Y=1)=\frac{e^{B_{0} + B_{1}X}}{1+e^{B_{0} + B_{1}X}}\]</span> Trong đó, <span class="math inline">\(p\)</span> là xác suất khách hàng có nợ xấu, <span class="math inline">\((1-p)\)</span> là xác suất khách hàng không có nợ xấu.</p>
+<p><span class="math display">\[Pr(Y=0)=1-p=\frac{1}{1+e^{B_{0} + B_{1}X}}\]</span></p>
+<p><strong>Lưu ý</strong>: Trong các bài toán phân loại, nhóm ta cần dự báo còn được gọi là <code>class positive</code> hay <code>event of interest</code>. Khi ứng dụng với các bài toán cụ thể khác nhau, class sẽ được xây dựng khác nhau. Ví dụ: trong dự báo khách hàng phản hồi, thì sự kiện khách hàng phản hồi email là 1, không phản hồi email là 0. Khi dự báo khách hàng có nợ xấu, khách hàng có nợ xấu được đánh dấu là 1, không có nợ xấu được đánh dấu là 0.</p>
+<p>Trong mô hình logistic, ta còn có một chỉ số khác được gọi là <span class="math inline">\(Odds\: ratio\)</span>, tạm dịch là <em>khả năng xảy ra sự kiện so với khả năng không xảy ra sự kiện</em>. Với bài toán dự báo nợ xấu, chỉ số này cho chúng ta biết xác suất khách hàng có nợ xấu cao hơn bao nhiêu lần bao nhiêu lần so với xác suất khách hàng không có nợ xấu.</p>
+<p><span class="math display">\[Odds=\frac{p}{1-p}=e^{B_{0} + B_{1}X}\]</span></p>
+<p><strong>Ví dụ</strong>:</p>
+<ul>
+<li>Xác suất khách hàng có nợ xấu: p = 0.8</li>
+<li>Xác suất khách hàng không có nợ xấu: 1-p = 1-0.8=0.2</li>
+<li>Odd ration: <span class="math inline">\(p/(1-p) = 4\)</span> - khả năng khách hàng có nợ xấu cao gấp 4 lần khả năng khách hàng không có nợ xấu.</li>
+</ul>
+<p><strong>Logit</strong>: Là hàm log của odd ratio, được tính như sau.</p>
+<p><span class="math display">\[logit=ln(Odds)=ln(\frac{p}{1-p}) = B_{0} + B_{1}X\]</span></p>
+<p>Phương trình trên gọi là <strong>phương trình hồi quy Logistic</strong>. Hàm này có thể chứa các giá trị bất kỳ trong khoảng từ <span class="math inline">\((-\infty, +\infty)\)</span>. Lúc này, hàm trên đã trở về hàm hồi quy thông thường. Như vậy, mô hình chúng ta cần xây dựng có dạng:</p>
+<p><span class="math display">\[logit(p) = \alpha + \beta X\]</span></p>
+<p>hay:</p>
+<p><span class="math display">\[odds(p) = \frac{p}{1-p} = e^{\alpha + \beta X}\]</span></p>
+<p><strong>Giải thích ý nghĩa</strong>: Khi x tăng thêm 1 đơn vị, thì <strong>Odds ratio</strong> (tỷ số khả dĩ) sẽ tăng thêm <span class="math inline">\(e^{\beta}\)</span>. Nghĩa là, khi x tăng thêm 1 đơn vị, <em>khả năng</em> (chance) xảy ra biến cố X sẽ tăng lên <span class="math inline">\(e^{\beta}\)</span> lần.</p>
+<ul>
+<li>Khi <span class="math inline">\(x = x_0\)</span>, khả năng xảy ra biến cố là: <span class="math display">\[odds(p|x=x_0) = e^{\alpha + \beta x_0}\]</span></li>
+<li>Khi <span class="math inline">\(x = x_0 + 1\)</span>, khả năng xảy ra biến cố là: <span class="math display">\[odds(p|x=x_0+1) = e^{\alpha + \beta (x_0+1)}\]</span></li>
+<li>Tỷ số giữa 2 khả năng là: <span class="math display">\[\frac{e^{\alpha + \beta (x_0+1)}}{e^{\alpha + \beta (x_0)}} = e^{\beta}\]</span></li>
+</ul>
+<p><strong>Lưu ý</strong>: Cách giải thích ý nghĩa của hệ số <span class="math inline">\(\beta\)</span> trong Logistic rất dễ nhầm lẫn. Cơ bản có 2 cách như sau:</p>
+<ul>
+<li>Cách 1: Giải thích dựa trên “xác suất” xảy ra biến cố A. Cách tính này dựa trên việc đưa ra tính toán xác suất xảy ra A với X cho trước.</li>
+<li>Cách 2: Dựa trên “khả năng” xảy ra biến cố A (Odd ratio)</li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="cách-xây-dựng-mô-hình" class="level2" data-number="20.2">
+<h2 data-number="20.2" class="anchored" data-anchor-id="cách-xây-dựng-mô-hình"><span class="header-section-number">20.2</span> Cách xây dựng mô hình</h2>
+<p>Để ước lượng các tham số <span class="math inline">\(\beta_j\)</span>, ta dùng phương pháp hợp lý tối đa (<strong>maximum likelihood</strong>), nghĩa là tìm <span class="math inline">\(\beta_j\)</span> để tối đa hóa hàm likelihood.</p>
+<p><span class="math display">\[L = p_1*p_2*...*p_n= \prod_{i=1}^np_i\]</span></p>
+<p>Trong đó, <span class="math inline">\(p_i\)</span> là xác suất xảy sự kiện của quan sát thứ <span class="math inline">\(i\)</span>.</p>
+<p>Trong bài toán hồi quy logistic, ta quan tâm đến việc dự báo chính xác sự kiện xảy ra (<span class="math inline">\(P_{y = 1}\)</span>). Do đó, hàm likelihood trong bài toán nhị phân được tính như sau.</p>
+<p><span class="math display">\[L = \prod[-y_i*log(h_\theta(x_i)) - (1-y_i)log(1-h_\theta(x_i))]\]</span> Trong đó:</p>
+<ul>
+<li><span class="math inline">\(y_i\)</span>: Là giá trị thực tế của biến cần dự báo (1 hoặc 0) tại quan sát i</li>
+<li><span class="math inline">\(h_{\theta}(x_i)\)</span>: Giá trị dự báo của quan sát i. Giá trị này nằm trong khoảng [0, 1]</li>
+</ul>
+<p>Xem ví dụ dưới đây:</p>
+<table class="table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 12%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Thực tế</th>
+<th>Dự báo</th>
+<th>L</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>0.7</td>
+<td>0.7</td>
+</tr>
+<tr class="even">
+<td>0</td>
+<td>0.6</td>
+<td>0.4</td>
+</tr>
+<tr class="odd">
+<td>1</td>
+<td>0.8</td>
+<td>0.8</td>
+</tr>
+</tbody>
+</table>
+<p>Với mô hình trên, ta có:</p>
+<p><span class="math display">\[L = 0.7 * 0.4 * 0.8 = 0.224\]</span></p>
+<p><span class="math display">\[log(L) = log(0.224) = -1.496\]</span></p>
+<p>Như vậy, về mặt hình ảnh, hàm Likelihood sẽ tìm cách fit dữ liệu sao cho sát với dữ liệu thực tế nhiều nhất. Hàm này sẽ đạt giá trị tối đa bằng 1 (L = 1), ứng với <span class="math inline">\(log(L_{max}) = 0\)</span></p>
+<p>Để hiểu hơn về cách tối ưu hóa Logistic trong trường hợp đơn giản, xem ví dụ trong file excel đính kèm</p>
+</section>
+<section id="ví-dụ-xây-dựng-mô-hình-đơn-giản" class="level2" data-number="20.3">
+<h2 data-number="20.3" class="anchored" data-anchor-id="ví-dụ-xây-dựng-mô-hình-đơn-giản"><span class="header-section-number">20.3</span> Ví dụ xây dựng mô hình đơn giản</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> Default <span class="sc">%&gt;%</span> </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>student) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">default =</span> <span class="fu">case_when</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    default <span class="sc">==</span> <span class="st">"Yes"</span> <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">glm</span>(default <span class="sc">~</span> income <span class="sc">+</span> balance, <span class="at">data =</span> data, </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="st">"binomial"</span>) </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = default ~ income + balance, family = "binomial", 
+    data = data)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.4725  -0.1444  -0.0574  -0.0211   3.7245  
+
+Coefficients:
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) -1.154e+01  4.348e-01 -26.545  &lt; 2e-16 ***
+income       2.081e-05  4.985e-06   4.174 2.99e-05 ***
+balance      5.647e-03  2.274e-04  24.836  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 2920.6  on 9999  degrees of freedom
+Residual deviance: 1579.0  on 9997  degrees of freedom
+AIC: 1585
+
+Number of Fisher Scoring iterations: 8</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  tidy <span class="sc">%&gt;%</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">!=</span> <span class="st">"(Intercept)"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(term, estimate) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">odd_increase (thousands USD)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">exp</span>(<span class="dv">1000</span><span class="sc">*</span>estimate))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 3
+  term     estimate `odd_increase (thousands USD)`
+  &lt;chr&gt;       &lt;dbl&gt;                          &lt;dbl&gt;
+1 income  0.0000208                           1.02
+2 balance 0.00565                           283.  </code></pre>
+</div>
+</div>
+<p><strong>Ý nghĩa</strong>:</p>
+<ul>
+<li>Nếu <code>balance</code> tăng 1000 USD, khả năng khách hàng có nợ xấu tăng 283 lần</li>
+<li>Nếu <code>income</code> tăng 1000 USD, khả năng khách hàng có nợ xấu tăng 1.02 lần</li>
+</ul>
+<p>Khi ước lượng được các tham số <span class="math inline">\(\beta_j\)</span>, với mỗi KH cụ thể ta có thể ước lượng được XS KH có nợ xấu bằng bao nhiêu dựa vào dư nợ của KH đó. Từ đó, ta có thể phân loại được KH Good/Bad (ko có nợ xấu/có nợ xấu) bằng việc so sánh XS có nợ xấu của KH với giá trị ngưỡng (“cutoff point”).</p>
+<p>Ví dụ, XS có nợ xấu của KH A là 0.2, điểm cutoff ta lựa chọn để phân loại là 0.5 -&gt; KH A - “Good”.</p>
+<p><strong>Dự báo trên tập mới</strong>.</p>
+<p>Để dự báo trên tập dữ liệu mới, ta có thể dùng hàm <code>predict</code> với option <code>type = "response"</code> để trả ra kết quả dưới dạng xác suất xảy ra event (trong ví dụ này là xác suất xảy ra nợ xâu)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(model, data <span class="sc">%&gt;%</span> head, <span class="at">type =</span> <span class="st">"response"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           1            2            3            4            5            6 
+0.0015047280 0.0012619299 0.0080262106 0.0004059957 0.0018267237 0.0020424398 </code></pre>
+</div>
+</div>
+</section>
+<section id="các-chỉ-số-cần-quan-tâm-khác" class="level2" data-number="20.4">
+<h2 data-number="20.4" class="anchored" data-anchor-id="các-chỉ-số-cần-quan-tâm-khác"><span class="header-section-number">20.4</span> Các chỉ số cần quan tâm khác</h2>
+<p><strong>Null deviance vs.&nbsp;Residual Deviance</strong></p>
+<ul>
+<li>LL: Log Likelihood <span class="math display">\[null\;deviance = 2(LL(saturated\;model) - LL(null\;model))\]</span> <span class="math display">\[residual\;deviance = 2(LL(saturated\;model) - LL(proposed\;model))\]</span></li>
+<li>Trong đó:
+<ul>
+<li>Saturated Model: Mỗi quan sát có 1 tham số riêng cần phải ước lượng (n tham số)</li>
+<li>Null Model: Tất cả quan sát chỉ có 1 tham số</li>
+<li>Proposed Model: Mô hình có p tham số ứng với p biến và 1 tham số ứng với intercept (p+1 tham số)</li>
+</ul></li>
+<li>Nếu Null deviance thấp, nghĩa là mô hình có thể giải thích bằng mô hình đơn giản</li>
+</ul>
+</section>
+<section id="đánh-giá-chất-lượng-mô-hình" class="level2" data-number="20.5">
+<h2 data-number="20.5" class="anchored" data-anchor-id="đánh-giá-chất-lượng-mô-hình"><span class="header-section-number">20.5</span> Đánh giá chất lượng mô hình</h2>
+<p>Khi xây dựng mô hình dự báo, kết quả dự báo sẽ được trả ra dưới dạng 1 dãy các điểm xác suất xảy ra sự kiện. Khi đó, ta sẽ phải lựa chọn điểm mà tại đó, nếu xác suất dự báo cao hơn điểm này, các quan sát sẽ được đánh dấu là nợ xấu. Xem ví dụ sau.</p>
+<table class="table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Customer ID</th>
+<th>Xác suất nợ xấu</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>0.7</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>0.5</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>0.4</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>0.3</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Nếu cutoff là 0.6: Khách hàng 1 được dự báo sẽ có nợ xấu</li>
+<li>Nếu cutoff là 0.45: Khách hàng 1, 2 được dự báo sẽ có nợ xấu</li>
+</ul>
+<p>Như vậy, với mỗi điểm cutoff khác nhau, ta sẽ có số lượng khách hàng bị nợ xấu khác nhau</p>
+<p><strong>R bình phương</strong></p>
+<p>Không giống như mô hình OLS, trong mô hình OLS không có <span class="math inline">\(R^2\)</span> để giải thích độ biến động của dữ liệu khi sử dụng mô hình. Tuy nhiên, mô hình logistic có chỉ số pseudo <span class="math inline">\(R^2\)</span> được <a href="http://stats.stackexchange.com/questions/82105/mcfaddens-pseudo-r2-interpretation">McFadden’s</a> đưa ra. Chỉ số này có thể được dùng tương tự như <span class="math inline">\(R^2\)</span> trong OLS.</p>
+<p><span class="math display">\[R^2 = 1−\frac{ln(LM_1)}{ln(LM_0)}\]</span></p>
+<p>Trong đó:</p>
+<ul>
+<li><span class="math inline">\(ln(LM_1)\)</span> là log likelihood của mô hình</li>
+<li><span class="math inline">\(ln(LM_0)\)</span> là log likelihood của mull model, nghĩa là mô hình chỉ có hệ số tự do intercept.</li>
+</ul>
+<p>Trong mô hình logistic, nếu <span class="math inline">\(R^2\)</span> có giá trị trên 0.4 đã được coi là mô hình tương đối tốt.</p>
+<section id="confusion-matrix" class="level3" data-number="20.5.1">
+<h3 data-number="20.5.1" class="anchored" data-anchor-id="confusion-matrix"><span class="header-section-number">20.5.1</span> Confusion Matrix</h3>
+<ul>
+<li><strong>Confusion Matrix</strong>: Bảng mô tả kết quả dự báo vs.&nbsp;thực tế ứng với 1 điểm cut-off xác định trước.</li>
+</ul>
+<p><img src="Images/log6.png" class="img-fluid"></p>
+<ul>
+<li>Tính toán các chỉ số:
+<ul>
+<li><p>Accuracy (acc): Tỷ lệ dự báo chính xác trên cả hai class. Acc <span class="math display">\[Accuracy = \frac{TP+TN}{TP+TN+FN+FP}\]</span>.</p></li>
+<li><p>True Negative Rate (tnr): Tỷ lệ dự đoán Negative chính xác trong toàn bộ quan sát thực tế là <em>Negative</em> <span class="math display">\[tnr = Specificity = \frac{TN}{TN + FP}\]</span></p></li>
+<li><p>False Positive Rate (fpr - fall out): Tỷ lệ dự đoán Positive sai, hay tỷ lệ các quan sát thực tế là Negative nhưng lại được dự báo thành Positive <span class="math display">\[fpr = 1- Specificity = \frac{FP}{TN + FP}\]</span></p></li>
+<li><p>True Positive Rate (tpr - Sensitivity - hay còn gọi là <strong>recall</strong>): Tỷ lệ dự báo Positive chính xác trên toàn bộ số lượng quan sát thực tế là Positive <span class="math display">\[tpr = Sensitivity = \frac{TP}{TP + FN}\]</span></p></li>
+<li><p>False Negative Rate (fnr - Sensitivity): Tỷ lệ dự báo negative sai - tỷ lệ positive nhưng dự báo nhầm thành Negative <span class="math display">\[fnr = 1- Sensitivity = \frac{FN}{FN + TP}\]</span></p></li>
+<li><p>Support: Tỷ lệ dự báo Positive trong toàn mẫu <span class="math display">\[sup = \frac{TP + FP}{N} = \frac{predicted pos}{total}\]</span></p></li>
+<li><p>Precision: Trong tổng số quan sát dự báo là Positive, bao nhiêu quan sát thực sự là Positive <span class="math display">\[Precision = \frac{TP}{TP+FP}\]</span></p></li>
+<li><p>Rate of positive predictions (RPP): tỷ lệ tổng số quan sát được dự báo là Y=1 (có nợ xấu) trên tổng số quan sát.</p></li>
+</ul></li>
+</ul>
+<p>Trong các chỉ số trên, các chỉ số True Positive Rate, Precision và Accuracy là quan trọng nhất. Để hiểu hơn về các chỉ số trên, giả sử ta có bảng <em>confusion matrix</em> như sau:</p>
+<table class="table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 9%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Predicted/Actual</th>
+<th>1</th>
+<th>0</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>0.4</td>
+<td>0.1</td>
+</tr>
+<tr class="even">
+<td>0</td>
+<td>0.2</td>
+<td>0.3</td>
+</tr>
+</tbody>
+</table>
+<p>Các chỉ số trong bảng trên được tính như sau:</p>
+<ul>
+<li><span class="math inline">\(accurracy = 0.4 + 0.3 = 0.7\)</span>: Tỷ lệ dự báo chính xác trên cả hai class là 70%. Nói cách khác, trong 100 quan sát, mô hình dự báo chính xác 70%</li>
+<li><span class="math inline">\(True \; Positive \; Rate = TPR = \frac{0.4}{0.4 + 0.2} = 0.67\)</span> Trong 100 khách hàng thực sự bị nợ xấu, mô hình dự báo chính xác được 67 khách hàng.</li>
+<li><span class="math inline">\(Precision = \frac{0.4}{0.4 + 0.1} = 0.8\)</span> Trong 100 khách hàng được dự báo là nợ xấu, có 80 khách hàng thực sự bị nợ xấu</li>
+<li><span class="math inline">\(True \;Negative \;Rate = Specificity = \frac{0.3}{0.3+0.1}=0.75\)</span> Trong 100 khách hàng tốt, mô hình dự đoán chính xác 75 khách hàng</li>
+</ul>
+<p>Với phương pháp sử dụng <em>Confusion Matrix</em>, kết quả dự báo của mô hình trở nên đơn giản, dễ hiểu, dễ giải thích. Tuy nhiên, để có được confusion matrix, ta phải xác định trước giá trị của điểm cut-off. Điều này không hề dễ dàng bởi lẽ mỗi điểm cut-off sẽ cho ta 1 giá trị của confusion matrix hoàn toàn khác nhau. Để khắc phục điểm yếu này, một chỉ số khác thường được sử dụng là đường ROC với chỉ số AUC.</p>
+</section>
+<section id="roc" class="level3" data-number="20.5.2">
+<h3 data-number="20.5.2" class="anchored" data-anchor-id="roc"><span class="header-section-number">20.5.2</span> ROC</h3>
+<ul>
+<li><p><strong>ROC Curve</strong>: Receiver Operating Characteristic. ROC cho ta đánh giá hiệu quả của mô hình thông qua sự đánh đổi giữa TPR và FPR.</p></li>
+<li><p><strong>Ý nghĩa</strong>: Mô tả tỷ lệ đánh đổi giữa 2 tỷ lệ: i, Tỷ lệ dự báo chính xác sự kiện A và ii, Tỷ lệ dự báo rằng sự kiện đó không diễn ra</p>
+<ul>
+<li>Dự báo mang tính ngẫu nhiên (50 - 50), ROC là đường 45 độ</li>
+<li>Dự báo hoàn toàn chính xác thì ROC là đường có dạng tam giác</li>
+<li>Dự báo kém hơn kỳ vọng thì ROC ở dưới đường 45 độ</li>
+<li>AUC (Area Under Curve): Cho phép so sánh độ chính xác của mô hình. AUC càng cao (ROC ở vị trí càng cao) thì mô hình càng chính xác</li>
+</ul></li>
+</ul>
+<section id="lý-thuyết" class="level4" data-number="20.5.2.1">
+<h4 data-number="20.5.2.1" class="anchored" data-anchor-id="lý-thuyết"><span class="header-section-number">20.5.2.1</span> Lý thuyết</h4>
+<p>Để xây dựng đường ROC trong, ta có các ký hiệu sau.</p>
+<ul>
+<li>N: số lượng quan sát</li>
+<li>NEG: số lượng NEGATIVE, neg: tỷ lệ negative (<span class="math inline">\(neg = \frac{NEG}{N}\)</span>)</li>
+<li>POS: số lượng POSITIVE, pos: tỷ lệ positive (<span class="math inline">\(pos = \frac{POS}{N}\)</span>)</li>
+</ul>
+<p>Quan hệ giữa acc và fpr, tpr:</p>
+<p><span class="math display">\[acc =  \frac{TP}{N} \frac{TN}{N}= \frac{TP}{POS}\frac{POS}{N} + \frac{NEG-FP}{N}
+= \frac{TP}{POS}\frac{POS}{N} + \frac{NEG}{N} - \frac{FP}{NEG}\frac{NEG}{N}\]</span> <span class="math display">\[acc = tpr * pos + neg - neg * fpr\]</span></p>
+<p>hay: <span class="math display">\[tpr = \frac{acc-neg}{pos} + \frac{neg}{pos}fpr\]</span> công thức trên giúp ta vẽ được đồ thị đường acc theo tpr và fpr</p>
+<ul>
+<li><p>Đồ thị acc với 1 số trường hợp:</p>
+<p><img src="Images/log1.png" class="img-fluid"></p>
+<p><img src="Images/log2.png" class="img-fluid"></p></li>
+</ul>
+<p><strong>Lưu ý</strong>:</p>
+<ul>
+<li><p>Mỗi điểm trên ROC thể hiện kết quả của mô hình ứng vơi <strong>MỘT</strong> điểm cut-off. Do đó khi vẽ đường ROC, máy tính sẽ thay đổi các điểm cutoff từ 0-1, sau đó tính tpr &amp; fpr với từng điểm cutoff. Tập hợp tất cả các điểm này tạo thành ROC</p></li>
+<li><p>Để tìm điểm cutoff tốt nhất, nghia là với mô hình đã đưa ra, chọn cutoff <span class="math inline">\(\alpha\)</span> sao cho <span class="math inline">\(acc\)</span> đạt max.</p></li>
+<li><p>Thuật toán:</p>
+<ul>
+<li>Vẽ đường acc theo tpr và fpr</li>
+<li>Tịnh tiến đường acc cho đến khi acc tiếp tuyến với ROC</li>
+<li>Tiếp điểm chính là điểm <span class="math inline">\(\alpha\)</span> cần tìm</li>
+</ul>
+<p><img src="Images/log3.png" class="img-fluid"></p>
+<p><img src="Images/log4.png" class="img-fluid"></p></li>
+</ul>
+</section>
+<section id="cách-vẽ-roc-thực-tế" class="level4" data-number="20.5.2.2">
+<h4 data-number="20.5.2.2" class="anchored" data-anchor-id="cách-vẽ-roc-thực-tế"><span class="header-section-number">20.5.2.2</span> Cách vẽ ROC thực tế</h4>
+<p>Trên thực tế, ROC được vẽ với thuật toán như sau:</p>
+<ul>
+<li>Gọi F là hàm tính xác suất của Y trong GLM</li>
+</ul>
+<p><span class="math display">\[ F(X) ~ \frac{P(X)}{1-P(X)} = e^{\beta X}\]</span></p>
+<ul>
+<li>Tính F(X) với tập dữ liệu phân tích, sắp xếp F(X) theo giá trị từ cao xuống thấp. Tập hợp này tạo thành tập hợp A của biến score = x</li>
+<li>Bắt đầu từ điểm (0,0)</li>
+<li>Với mỗi giá trị của <span class="math inline">\(x \in A\)</span>, thực hiện như sau:
+<ul>
+<li>Nếu x positive, di chuyển lên trên 1/pos</li>
+<li>Nếu x negative, di chuyển sang phải 1/neg</li>
+</ul>
+<img src="Images/log5.gif" class="img-fluid"></li>
+</ul>
+<p>Đường ROC nằm càng hướng về phía đỉnh góc bên trái thì độ chính xác của dự báo càng cao, điều đó thể hiện true positive rate cao và false positive rate thấp; còn nếu càng tiến tới đường chéo 45 độ so với trục hoành thì độ chính xác của dự báo càng kém. Đường chéo 45 độ so với trục hoành thể hiện sự phân loại là không có ý nghĩa.</p>
+<p><strong>AUC</strong> (Area under ROC curve) - diện tích phía dưới đường cong ROC, là thước đo độ chính xác của sự phân loại. AUC càng lớn thì độ chính xác càng cao.</p>
+<ul>
+<li><p>AUC từ 0.5-0.6: Mô hình chỉ tương đương với việc chọn ngẫu nhiên</p></li>
+<li><p>0.6-0.7: Chất lượng mô hình kém</p></li>
+<li><p>0.7-0.8: Tương đối tốt</p></li>
+<li><p>0.8-0.9: Tốt</p></li>
+<li><p>trên 0.9: Rất tốt</p></li>
+</ul>
+<p>Nói cách khác, chỉ số AUC cho phép ta biết được chất lượng phân loại của mô hình. AUC càng cao, cho ta thấy các quan sát xảy ra <em>positive class</em> (nợ xấu), càng có điểm score cao (tương đối) và ngược lại.</p>
+</section>
+</section>
+<section id="gain-và-lift" class="level3" data-number="20.5.3">
+<h3 data-number="20.5.3" class="anchored" data-anchor-id="gain-và-lift"><span class="header-section-number">20.5.3</span> Gain và Lift</h3>
+<p>Gain và Lift là hai biểu đồ vô cùng quan trọng với các nhà phân tích dữ liệu thực tiễn nhưng lại ít được các nhà lý thuyết sử dụng. Hai đường này đặc biệt quan trọng khi xây dựng các chiến lược marketing.</p>
+<p><strong>Đường gain</strong> là tổ hợp giữa TPR (True Positive Rate) và RPP (Rate of Positive Prediction). Vị trí các điểm trên đường gain cho ta biết nên chọn điểm cut-off như thế nào.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">tpr =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.4</span>, <span class="fl">0.7</span>, <span class="fl">0.8</span>, <span class="fl">0.85</span>, <span class="fl">0.88</span>, <span class="fl">0.93</span>, <span class="fl">0.94</span>, <span class="fl">0.97</span>, <span class="fl">0.99</span>, <span class="dv">1</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">rpp =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="fu">seq</span>(<span class="fl">0.1</span>,<span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lift =</span> tpr<span class="sc">/</span>rpp) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lift =</span> <span class="fu">replace_na</span>(lift, <span class="dv">0</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(rpp, tpr)) <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">col =</span> <span class="st">"darkred"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">col =</span> <span class="st">"darkred"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> tpr), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>)) <span class="sc">+</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(rpp, rpp), <span class="at">col =</span> <span class="st">"black"</span>, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="fl">0.45</span>, <span class="at">label =</span> <span class="st">"Base line (No model)"</span>, <span class="at">hjust =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">col =</span> <span class="st">"darkgrey"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Rate of Positive Prediction"</span>,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"True Positive Rate"</span>,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Gain chart"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Giải thích</strong>:</p>
+<ul>
+<li>Với top 20% khách hàng có điểm score cao nhất sẽ phủ được 70% khách hàng có nợ xấu trong thực tế.</li>
+<li>Với top 30% khách hàng có điểm score cao nhất sẽ phủ được 80% khách hàng có nợ xấu trong thực tế.</li>
+</ul>
+<p>Thông thường, đường gain được chia thành các decile (10%) để marketing/risk manager quyết định điểm cut-off trong mô hình. Nếu số lượng khách hàng ít, 1000 khách hàng, đôi khi ta có thể quyết định gửi email marketing cho cả 1000 khách hàng này.</p>
+<p>Trong khi đó, đường <strong>lift</strong> thể hiện khía cạnh khác trong việc xây dựng mô hình. Đường lift cho ta biết, ứng với từng decile, chất lượng mô hình cao hơn bao nhiêu lần so với việc không sử dụng mô hình (ngẫu nhiên). Đường lift luôn giảm về 1 khi ta dự báo 100% tất cả quan sát thuộc về nhóm <em>positive</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(lift <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(rpp, lift)) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">col =</span> <span class="st">"darkred"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">col =</span> <span class="st">"darkred"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(lift, <span class="dv">1</span>)), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>)) <span class="sc">+</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">0.1</span>, <span class="at">y =</span> <span class="fl">1.1</span>, <span class="at">label =</span> <span class="st">"Base line (No model)"</span>, <span class="at">hjust =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">col =</span> <span class="st">"darkgrey"</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">1</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">col =</span> <span class="st">"darkblue"</span>, <span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Rate of Positive Prediction"</span>,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Lift ratio"</span>,</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Lift chart"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Ý nghĩa</strong>: Trong đồ thị trên, với top 10% khách hàng có điểm score mua hàng cao nhất, tỷ lệ khách hàng mua hàng cao hơn 4 lần so với việc không sử dụng mô hình (hay ngẫu nhiên)</p>
+</section>
+<section id="kolmogorovsmirnov-statistics" class="level3" data-number="20.5.4">
+<h3 data-number="20.5.4" class="anchored" data-anchor-id="kolmogorovsmirnov-statistics"><span class="header-section-number">20.5.4</span> Kolmogorov–Smirnov statistics</h3>
+<p>Chỉ số thống kê Kolmogorov-Smirnov là chỉ số khác để đo lường chất lượng mô hình. Chỉ số này cho ta biết được liệu phân phối của của nhóm <em>positive</em> có thực sự khác nhóm <em>negative</em> hay không.</p>
+<p>Chỉ số KS được đo lường bằng khoảng cách lớn nhất giữa hai đường phân phối lũy kế xác suất trên hai class. Khi xây dựng mô hình, KS có thể được tính theo công thức sau.</p>
+<p><span class="math display">\[KS = max(abs(tpr - fpr))\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pos_class <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.8</span>, <span class="fl">0.75</span>, <span class="fl">0.7</span>, <span class="fl">0.55</span>, <span class="fl">0.4</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>pos_class</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.80 0.75 0.70 0.55 0.40</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>neg_class <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.4</span>, <span class="fl">0.3</span>, <span class="fl">0.2</span>, <span class="fl">0.15</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>neg_class</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.70 0.40 0.30 0.20 0.15</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ks.test</span>(pos_class, neg_class, <span class="at">alternative =</span> <span class="st">"greater"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Exact two-sample Kolmogorov-Smirnov test
+
+data:  pos_class and neg_class
+D^+ = 0, p-value = 1
+alternative hypothesis: the CDF of x lies above that of y</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(pos_class, neg_class) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>(<span class="fu">aes</span>(pos_class), <span class="at">col =</span> <span class="st">"darkred"</span>, <span class="at">geom =</span> <span class="st">"line"</span>) <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>(<span class="fu">aes</span>(neg_class), <span class="at">col =</span> <span class="st">"darkblue"</span>, <span class="at">geom =</span> <span class="st">"line"</span>) <span class="sc">+</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom =</span> <span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="fl">0.5</span>, <span class="at">label =</span> <span class="st">"KS = 0.6"</span>) <span class="sc">+</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>result<span class="sc">$</span>ksTable</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  dec total responders nonresponders cumResponders cumNonresponders
+1   1     1          1             0             1                0
+2   2     1          1             0             2                0
+3   4     2          1             1             3                1
+4   5     1          1             0             4                1
+5   7     2          1             1             5                2
+6   8     1          0             1             5                3
+7   9     1          0             1             5                4
+8  10     1          0             1             5                5
+  perCumResponders perCumNonresponders split
+1               20                   0    20
+2               40                   0    40
+3               60                  20    40
+4               80                  20    60
+5              100                  40    60
+6              100                  60    40
+7              100                  80    20
+8              100                 100     0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>result<span class="sc">$</span>ks <span class="sc">%&gt;%</span> print</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 60</code></pre>
+</div>
+</div>
+<hr>
+<p>Trong bốn nhóm chỉ số đánh giá chất lượng mô hình đã trình bày ở trên, nhóm chỉ số AUC, Gain và Lift là quan trọng nhất khi dự báo trong thực tế, đặc biệt là khi score khách hàng trong chiến dịch marketing, bán chéo, giảm thiểu khách hàng churn. Khi xây dựng các mô hình dự báo nợ xấu, phê duyệt tín dụng, ta cần sử dụng cả 4 nhóm chỉ số trên để đánh giá hiệu quả mô hình. Đặc biệt, nếu xây dựng mô hình score-card, ta còn phải sử dụng 1 số kỹ thuật khác để có thể xây dựng hệ thống score-card hiệu quả. Chi tiết phần score card sẽ được trình bày trong chương tiếp theo.</p>
+</section>
+</section>
+<section id="thực-hành" class="level2" data-number="20.6">
+<h2 data-number="20.6" class="anchored" data-anchor-id="thực-hành"><span class="header-section-number">20.6</span> Thực hành</h2>
+<section id="dữ-liệu" class="level3" data-number="20.6.1">
+<h3 data-number="20.6.1" class="anchored" data-anchor-id="dữ-liệu"><span class="header-section-number">20.6.1</span> Dữ liệu</h3>
+<p>Dùng gói dữ liệu Default có sẵn trong R, bao gồm thông tin của 10,000 khách hàng sử dụng thẻ tín dụng.</p>
+<p>Giải thích các biến:</p>
+<ul>
+<li>Default: Yes/No (khách hàng có nợ xấu/không có nợ xấu)</li>
+<li>Student: Yes/No (khách hàng là sinh viên/không phải là sinh viên)</li>
+<li>Balance: Dư nợ TB còn lại của KH sau khi trả tiền hàng tháng.</li>
+<li>Income: Thu nhập của khách hàng</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> Default</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  default student   balance    income
+1      No      No  729.5265 44361.625
+2      No     Yes  817.1804 12106.135
+3      No      No 1073.5492 31767.139
+4      No      No  529.2506 35704.494
+5      No      No  785.6559 38463.496
+6      No     Yes  919.5885  7491.559</code></pre>
+</div>
+</div>
+</section>
+<section id="xây-dựng-mô-hình-trên-tập-dữ-liệu-gốc" class="level3" data-number="20.6.2">
+<h3 data-number="20.6.2" class="anchored" data-anchor-id="xây-dựng-mô-hình-trên-tập-dữ-liệu-gốc"><span class="header-section-number">20.6.2</span> Xây dựng mô hình trên tập dữ liệu gốc</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>glm.fit1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(default <span class="sc">~</span> ., </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> data, </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">family =</span> binomial)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>glm.fit1 <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = default ~ ., family = binomial, data = data)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.4691  -0.1418  -0.0557  -0.0203   3.7383  
+
+Coefficients:
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) -1.087e+01  4.923e-01 -22.080  &lt; 2e-16 ***
+studentYes  -6.468e-01  2.363e-01  -2.738  0.00619 ** 
+balance      5.737e-03  2.319e-04  24.738  &lt; 2e-16 ***
+income       3.033e-06  8.203e-06   0.370  0.71152    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 2920.6  on 9999  degrees of freedom
+Residual deviance: 1571.5  on 9996  degrees of freedom
+AIC: 1579.5
+
+Number of Fisher Scoring iterations: 8</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>glm.fit2 <span class="ot">&lt;-</span> <span class="fu">step</span>(glm.fit1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Start:  AIC=1579.54
+default ~ student + balance + income
+
+          Df Deviance    AIC
+- income   1   1571.7 1577.7
+&lt;none&gt;         1571.5 1579.5
+- student  1   1579.0 1585.0
+- balance  1   2907.5 2913.5
+
+Step:  AIC=1577.68
+default ~ student + balance
+
+          Df Deviance    AIC
+&lt;none&gt;         1571.7 1577.7
+- student  1   1596.5 1600.5
+- balance  1   2908.7 2912.7</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>glm.fit2 <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = default ~ student + balance, family = binomial, 
+    data = data)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.4578  -0.1422  -0.0559  -0.0203   3.7435  
+
+Coefficients:
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) -1.075e+01  3.692e-01 -29.116  &lt; 2e-16 ***
+studentYes  -7.149e-01  1.475e-01  -4.846 1.26e-06 ***
+balance      5.738e-03  2.318e-04  24.750  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 2920.6  on 9999  degrees of freedom
+Residual deviance: 1571.7  on 9997  degrees of freedom
+AIC: 1577.7
+
+Number of Fisher Scoring iterations: 8</code></pre>
+</div>
+</div>
+<p>Giải thích:</p>
+<ul>
+<li>Beta(balance) &gt; 0: Balance và XS có nợ xấu của KH có quan hệ cùng chiều (cái này tăng thì cái kia tăng).</li>
+</ul>
+<p>Beta(balance) = 0.0057: Balance tăng 1 đơn vị -&gt; Ln(Odds) tăng 0.0057 đơn vị.</p>
+<ul>
+<li>Beta(studentYes) &lt; 0: KH là sinh viên có XS có nợ xấu thấp hơn so với KH ko là sinh viên.</li>
+</ul>
+<p>Giả sử KH B có balance = 1000$:</p>
+<p><span class="math display">\[Pr(default=Yes|student=Yes)=\frac{e^{-10.75-0.7149*1+0.0057*1000}}{1+e^{-10.75-0.7149*1+0.0057*1000}}= 0.003\]</span> <span class="math display">\[Pr(default=Yes|student=No)=\frac{e^{-10.75-0.7149*0+0.0057*1000}}{1+e^{-10.75-0.7149*0+0.0057*1000}}= 0.006\]</span></p>
+</section>
+<section id="xây-dựng-mô-hình-trên-hai-tập-train-và-test" class="level3" data-number="20.6.3">
+<h3 data-number="20.6.3" class="anchored" data-anchor-id="xây-dựng-mô-hình-trên-hai-tập-train-và-test"><span class="header-section-number">20.6.3</span> Xây dựng mô hình trên hai tập train và test</h3>
+<section id="chia-tập-traintest" class="level4" data-number="20.6.3.1">
+<h4 data-number="20.6.3.1" class="anchored" data-anchor-id="chia-tập-traintest"><span class="header-section-number">20.6.3.1</span> Chia tập train/test</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">#chia tập train/test</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">nrow</span>(data), <span class="fl">0.7</span> <span class="sc">*</span> <span class="fu">nrow</span>(data))  </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>df.train <span class="ot">&lt;-</span> data[train,]            <span class="co"># tập train</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>df.test <span class="ot">&lt;-</span> data[<span class="sc">-</span>train,]        <span class="co"># tập test</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>df.train <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> default    student       balance           income     
+ No :6769   No :4925   Min.   :   0.0   Min.   : 1498  
+ Yes: 231   Yes:2075   1st Qu.: 477.9   1st Qu.:21151  
+                       Median : 819.4   Median :34428  
+                       Mean   : 836.6   Mean   :33387  
+                       3rd Qu.:1167.9   3rd Qu.:43780  
+                       Max.   :2654.3   Max.   :71239  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>df.test <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> default    student       balance           income     
+ No :2898   No :2131   Min.   :   0.0   Min.   :  772  
+ Yes: 102   Yes: 869   1st Qu.: 487.0   1st Qu.:21743  
+                       Median : 826.3   Median :34849  
+                       Mean   : 832.5   Mean   :33820  
+                       3rd Qu.:1161.5   3rd Qu.:43878  
+                       Max.   :2321.9   Max.   :73554  </code></pre>
+</div>
+</div>
+</section>
+<section id="xây-dựng-mô-hình" class="level4" data-number="20.6.3.2">
+<h4 data-number="20.6.3.2" class="anchored" data-anchor-id="xây-dựng-mô-hình"><span class="header-section-number">20.6.3.2</span> Xây dựng mô hình</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>fit.logit <span class="ot">&lt;-</span> <span class="fu">glm</span>(default<span class="sc">~</span>., <span class="at">data =</span> df.train, <span class="at">family =</span> binomial)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co">#giảm biến ko có ý nghĩa thống kê</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>logit.fit.reduced <span class="ot">&lt;-</span> <span class="fu">step</span>(fit.logit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Start:  AIC=1081.54
+default ~ student + balance + income
+
+          Df Deviance    AIC
+- income   1   1073.9 1079.9
+&lt;none&gt;         1073.5 1081.5
+- student  1   1079.7 1085.7
+- balance  1   2022.6 2028.6
+
+Step:  AIC=1079.94
+default ~ student + balance
+
+          Df Deviance    AIC
+&lt;none&gt;         1073.9 1079.9
+- student  1   1098.0 1102.0
+- balance  1   2025.9 2029.9</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>logit.fit.reduced <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = default ~ student + balance, family = binomial, 
+    data = df.train)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.4261  -0.1377  -0.0542  -0.0203   3.4070  
+
+Coefficients:
+              Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) -1.070e+01  4.395e-01 -24.349  &lt; 2e-16 ***
+studentYes  -8.591e-01  1.815e-01  -4.733 2.21e-06 ***
+balance      5.684e-03  2.739e-04  20.748  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 2030.3  on 6999  degrees of freedom
+Residual deviance: 1073.9  on 6997  degrees of freedom
+AIC: 1079.9
+
+Number of Fisher Scoring iterations: 8</code></pre>
+</div>
+</div>
+</section>
+<section id="dự-báo-xác-suất-có-nợ-xấu-trên-tập-test" class="level4" data-number="20.6.3.3">
+<h4 data-number="20.6.3.3" class="anchored" data-anchor-id="dự-báo-xác-suất-có-nợ-xấu-trên-tập-test"><span class="header-section-number">20.6.3.3</span> Dự báo xác suất có nợ xấu trên tập test</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>prob.test <span class="ot">&lt;-</span> <span class="fu">predict</span>(logit.fit.reduced, df.test, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co">#phân loại (chọn cutoff = 0.5)</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>class.pred.test <span class="ot">&lt;-</span> <span class="fu">factor</span>(prob.test <span class="sc">&gt;</span> <span class="fl">0.5</span>, </span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">levels =</span> <span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">TRUE</span>), </span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No"</span>, <span class="st">"Yes"</span>))</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="co">#kết quả trên tập test</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>prob.test.df <span class="ot">&lt;-</span> prob.test <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>()</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(prob.test.df)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"prob.default"</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="co">#Lụa chọn điểm cutoff là 0.5</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>prob.test.df <span class="ot">&lt;-</span> prob.test.df <span class="sc">%&gt;%</span> </span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">class =</span> <span class="fu">as.factor</span>(<span class="fu">ifelse</span>(prob.default <span class="sc">&gt;</span> <span class="fl">0.5</span>, <span class="st">"Yes"</span>, <span class="st">"No"</span>)))</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>prob.test.df<span class="sc">$</span>student <span class="ot">&lt;-</span> df.test<span class="sc">$</span>student</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>prob.test.df<span class="sc">$</span>balance <span class="ot">&lt;-</span> df.test<span class="sc">$</span>balance</span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>prob.test.df<span class="sc">$</span>income <span class="ot">&lt;-</span> df.test<span class="sc">$</span>income</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>prob.test.df <span class="sc">%&gt;%</span> </span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>,<span class="dv">1</span>,<span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample_n</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     student  balance   income prob.default class
+6476     Yes 528.5857 19621.63 1.925160e-04    No
+971       No   0.0000 43346.62 2.253954e-05    No
+6027     Yes 969.3972 17686.56 2.352766e-03    No
+1615      No 196.3740 57397.28 6.880709e-05    No
+651       No 133.7433 30457.02 4.820048e-05    No
+8235      No 657.0888 31724.63 9.428268e-04    No
+3265     Yes 687.0644 14059.46 4.737141e-04    No
+2720      No 339.5293 58747.39 1.552189e-04    No
+5721     Yes 645.3388 20122.20 3.737394e-04    No
+3063     Yes 969.1435 22425.41 2.349384e-03    No</code></pre>
+</div>
+</div>
+</section>
+<section id="đánh-giá-chất-lượng-dự-báo-trên-tập-test" class="level4" data-number="20.6.3.4">
+<h4 data-number="20.6.3.4" class="anchored" data-anchor-id="đánh-giá-chất-lượng-dự-báo-trên-tập-test"><span class="header-section-number">20.6.3.4</span> Đánh giá chất lượng dự báo trên tập test</h4>
+<section id="confusion-matrix-1" class="level5" data-number="20.6.3.4.1">
+<h5 data-number="20.6.3.4.1" class="anchored" data-anchor-id="confusion-matrix-1"><span class="header-section-number">20.6.3.4.1</span> Confusion matrix</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#conf.matrix</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>logit.perf <span class="ot">&lt;-</span> <span class="fu">table</span>(df.test<span class="sc">$</span>default, class.pred.test)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>logit.perf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     class.pred.test
+        No  Yes
+  No  2896    2
+  Yes   80   22</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="do">###performance</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="co">#function to perform model</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>model.performance <span class="ot">&lt;-</span> <span class="cf">function</span>(confusion_matrix) {</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  a <span class="ot">&lt;-</span> confusion_matrix[<span class="dv">1</span>,<span class="dv">1</span>]</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  b <span class="ot">&lt;-</span> confusion_matrix[<span class="dv">1</span>,<span class="dv">2</span>]</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  c <span class="ot">&lt;-</span> confusion_matrix[<span class="dv">2</span>,<span class="dv">2</span>]</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> confusion_matrix[<span class="dv">2</span>,<span class="dv">1</span>]</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  recall <span class="ot">&lt;-</span> c<span class="sc">/</span>(c<span class="sc">+</span>d)</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  precision <span class="ot">&lt;-</span> c<span class="sc">/</span>(b<span class="sc">+</span>c)</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  accuracy <span class="ot">&lt;-</span> (a<span class="sc">+</span>c)<span class="sc">/</span>(a<span class="sc">+</span>b<span class="sc">+</span>c<span class="sc">+</span>d)</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">'recall :'</span>,<span class="fu">round</span>(recall,<span class="dv">2</span>)))</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">'precision :'</span>,<span class="fu">round</span>(precision,<span class="dv">2</span>)))</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">'accuracy :'</span>,<span class="fu">round</span>(accuracy,<span class="dv">2</span>)))</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a><span class="fu">model.performance</span>(logit.perf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "recall : 0.22"
+[1] "precision : 0.92"
+[1] "accuracy : 0.97"</code></pre>
+</div>
+</div>
+</section>
+<section id="roc-auc" class="level5" data-number="20.6.3.4.2">
+<h5 data-number="20.6.3.4.2" class="anchored" data-anchor-id="roc-auc"><span class="header-section-number">20.6.3.4.2</span> ROC &amp; AUC</h5>
+<p>Tất cả các chỉ số về chất lượng mô hình đều có thể sử dụng với package <code>ROCR</code> thông qua hai bước</p>
+<ul>
+<li>Bước 1: Tạo object dự báo <code>pred &lt;- prediction(prob_value, actual_value)</code>. Object này sẽ chứa 1 loạt các chỉ số của confusion matrix với từng điểm cut-off</li>
+<li>Bước 2: Tính toán các chỉ số với hàm <code>performance</code> với giá trị trục x và y mong muốn</li>
+</ul>
+<p><strong>Lưu ý</strong>: Object <code>pred</code> được lưu dưới dạng S4 class. Để chiết xuất dữ liệu cần dùng toán tử <code>@</code> thay cho <code>$</code> như <code>S3</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 1: Tạo object pred</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">prediction</span>(prob.test, df.test<span class="sc">$</span>default)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>pred <span class="sc">%&gt;%</span> str</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Formal class 'prediction' [package "ROCR"] with 11 slots
+  ..@ predictions:List of 1
+  .. ..$ : Named num [1:3000] 1.42e-03 2.25e-05 9.55e-06 9.74e-03 8.67e-05 ...
+  .. .. ..- attr(*, "names")= chr [1:3000] "1" "10" "11" "12" ...
+  ..@ labels     :List of 1
+  .. ..$ : Ord.factor w/ 2 levels "No"&lt;"Yes": 1 1 1 1 1 1 1 1 1 1 ...
+  ..@ cutoffs    :List of 1
+  .. ..$ : Named num [1:2851] Inf 0.837 0.76 0.755 0.749 ...
+  .. .. ..- attr(*, "names")= chr [1:2851] "" "3856" "2890" "3377" ...
+  ..@ fp         :List of 1
+  .. ..$ : num [1:2851] 0 0 0 0 0 0 0 0 0 0 ...
+  ..@ tp         :List of 1
+  .. ..$ : num [1:2851] 0 1 2 3 4 5 6 7 8 9 ...
+  ..@ tn         :List of 1
+  .. ..$ : num [1:2851] 2898 2898 2898 2898 2898 ...
+  ..@ fn         :List of 1
+  .. ..$ : num [1:2851] 102 101 100 99 98 97 96 95 94 93 ...
+  ..@ n.pos      :List of 1
+  .. ..$ : int 102
+  ..@ n.neg      :List of 1
+  .. ..$ : int 2898
+  ..@ n.pos.pred :List of 1
+  .. ..$ : num [1:2851] 0 1 2 3 4 5 6 7 8 9 ...
+  ..@ n.neg.pred :List of 1
+  .. ..$ : num [1:2851] 3000 2999 2998 2997 2996 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 2: Tạo object tính toán prediction cho AUC</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>roc <span class="ot">&lt;-</span> <span class="fu">performance</span>(pred, <span class="at">x.measure =</span> <span class="st">"fpr"</span>, <span class="at">measure =</span> <span class="st">"tpr"</span>)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Xây dựng hàm để convert giá trị sang data.frame</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>get_df <span class="ot">&lt;-</span> <span class="cf">function</span>(pred){</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  pred_new <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> pred<span class="sc">@</span>x.values <span class="sc">%&gt;%</span> unlist,</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>                         <span class="at">y =</span> pred<span class="sc">@</span>y.values <span class="sc">%&gt;%</span> unlist)</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(pred_new)</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a><span class="fu">get_df</span>(roc) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"FPR"</span>,</span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"TPR"</span>,</span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"ROC curve"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tính chỉ số AUC</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>auc_test <span class="ot">&lt;-</span> <span class="fu">performance</span>(pred, <span class="st">"auc"</span>, <span class="st">"cutoff"</span>)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>auc_test<span class="sc">@</span>y.values <span class="sc">%&gt;%</span> unlist</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9379389</code></pre>
+</div>
+</div>
+</section>
+<section id="gain-và-lift-1" class="level5" data-number="20.6.3.4.3">
+<h5 data-number="20.6.3.4.3" class="anchored" data-anchor-id="gain-và-lift-1"><span class="header-section-number">20.6.3.4.3</span> Gain và Lift</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GAIN charts on testing set</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>gain_df <span class="ot">&lt;-</span> <span class="fu">performance</span>(pred, <span class="st">"tpr"</span>, <span class="st">"rpp"</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="fu">get_df</span>(gain_df) <span class="sc">%&gt;%</span> </span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Gain chart"</span>,</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"RPP"</span>,</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"TPR"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># LIFT charts on testing set</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>lift_df <span class="ot">&lt;-</span> <span class="fu">performance</span>(pred, <span class="st">"lift"</span>, <span class="st">"rpp"</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">get_df</span>(lift_df) <span class="sc">%&gt;%</span> </span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Lift chart"</span>,</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"RPP"</span>,</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Lift"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="ks-statistics" class="level5" data-number="20.6.3.4.4">
+<h5 data-number="20.6.3.4.4" class="anchored" data-anchor-id="ks-statistics"><span class="header-section-number">20.6.3.4.4</span> KS statistics</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>lift_df <span class="ot">&lt;-</span> <span class="fu">performance</span>(pred, <span class="st">"tpr"</span>, <span class="st">"fpr"</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>lift_df <span class="sc">%&gt;%</span> </span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  get_df <span class="sc">%&gt;%</span> </span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ks =</span> <span class="fu">abs</span>(x <span class="sc">-</span> y)) <span class="sc">%&gt;%</span> </span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(ks) <span class="sc">%&gt;%</span> max</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7432915</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">y =</span> (df.test<span class="sc">$</span>default <span class="sc">%&gt;%</span> as.numeric) <span class="sc">-</span> <span class="dv">1</span>, </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">prob =</span> prob.test) <span class="sc">%&gt;%</span> </span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(prob, <span class="at">col =</span> <span class="fu">as.factor</span>(y))) <span class="sc">+</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>() <span class="sc">+</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">tittle =</span> <span class="st">"CDF &amp; KS statistics"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-03-logistic-regression_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+</section>
+</section>
+<section id="xây-dựng-mô-hình-logistics-theo-machine-learning" class="level2" data-number="20.7">
+<h2 data-number="20.7" class="anchored" data-anchor-id="xây-dựng-mô-hình-logistics-theo-machine-learning"><span class="header-section-number">20.7</span> Xây dựng mô hình Logistics theo Machine Learning</h2>
+<p><strong>Cost function</strong>: Đối với mô hình logistic, nếu sử dụng cost function tương tự như như hồi quy tuyến tính, chúng ta sẽ gặp vấn đề về bài toán tối ưu. Hàm tối ưu sẽ không thể tìm được điểm nhỏ nhất do tồn tại vô số các điểm “local optimization”. Do đó, ta phải xây dựng một hàm tối ưu mới cho bài toán phân loại của logistic như sau.</p>
+<p><span class="math display">\[Cost(h_\theta(x), y)\cases{
+-log(h_\theta(x) \text{ với } y = 1 \\
+-log(1-h_\theta(x)) \text{ với } y = 0)
+}\]</span></p>
+<p>Với hàm tối ưu trên, có 1 số điểm lưu ý như sau.</p>
+<ul>
+<li>Nếu y = 1 và <span class="math inline">\(h_\theta = 1\)</span> nghĩa là mô hình dự báo chính xác với trường hợp xảy ra sự kiện, cost = 0</li>
+<li>Tuy nhiên, nếu y = 1 và <span class="math inline">\(h_\theta \rightarrow 0\)</span>, nghĩa là mô hình dự báo không xảy ra sự kiện (y = 0) trong khi thực tế xảy ra, <span class="math inline">\(cost \rightarrow \infty\)</span>.</li>
+</ul>
+<p>Trong thực tế, hàm tối ưu được đơn giản hóa như sau.</p>
+<p><span class="math display">\[Cost(h_\theta, y) = -y log(h_\theta(x)) - (1-y)log(1-h_\theta(y))\]</span></p>
+<p>Với từng giá trị y = 0 hoặc y = 1, hàm tối ưu quay trở lại như bình thường.</p>
+<p>Đối với hàm tối ưu như trên, thuật toán <em>gradient descent</em> quay trở lại tương tự như hàm hồi quy tuyến tính.</p>
+</section>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="20.8">
+<h2 data-number="20.8" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">20.8</span> Tài liệu tham khảo</h2>
+<ul>
+<li>Chapter 4 - Classification - Introduction to Statistical Learning with R</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./p03-02-mo-hinh-ols.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mô hình hồi quy tuyến tính</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./p03-04-decision-tree.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Cây quyết định</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

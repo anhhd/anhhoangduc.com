@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Khoa học dữ liệu với R - 40&nbsp; Phân tích nhân tố ẩn (factor analysis)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./p05-01-chuoi-thoi-gian.html" rel="next">
+<link href="./p04-05-pca.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/quarto-contrib/bookup_fonts_embed-0.0/fonts-download.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar docked">
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Phân tích nhân tố ẩn (factor analysis)</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Khoa học dữ liệu với R</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle sidebar-tool" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle sidebar-tool" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Khoa học dữ liệu và nghề phân tích dữ liệu</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Phân tích khám phá dữ liệu</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-01-gioi-thieu-co-ban-ve-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Giới thiệu cơ bản về R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-70-xay-dung-bao-cao-voi-rmarkdown.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Xây dựng báo cáo với Rmarkdown</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-02-bien-doi-du-lieu-dplyr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Ngữ pháp của biến đổi dữ liệu với DPLYR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-03-phan-ra-va-xoay-chieu-du-lieu.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Làm sạch và biến đổi dữ liệu nâng cao</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-04-ngu-phap-bieu-do-ggplot2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ngữ pháp của biểu đồ với GGPLOT2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-05-cac-chi-so-thong-ke.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Các chỉ số thống kê mô tả cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-06-lap-trinh-ham.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Lập trình hàm</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-07-lap-trinh-ham-voi-purrr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Lập trình chức năng hàm với purrr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-08-bien-doi-du-lieu-text.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-11-quan-ly-nhieu-mo-hinh.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quản lý kết quả phân tích từ nhiều mô hình</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-15-thong-ke-co-ban.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Xác suất và phân phối thống kê cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-16-power-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Power analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-20-sampling-methods.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Phương pháp ước lượng tham số thông qua lấy mẫu</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-50-datatable.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu với <code>data.table</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-60-thu-thap-du-lieu-tu-website.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Thu thập dữ liệu từ website</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-99-meo-trong-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Các mẹo trong R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Supervised Learning</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-01-nguyen-ly-du-bao.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Giới thiệu về học máy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-02-mo-hinh-ols.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mô hình hồi quy tuyến tính</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-03-logistic-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Mô hình hồi quy logistic</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-04-decision-tree.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Cây quyết định</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-05-bagging-boosting.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Bagging, RandomForest và Boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-07-xay-dung-mo-hinh-voi-h2o.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Xây dựng mô hình với H2O</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-10-knn.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">K nearest neighbors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-11-svm.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Support Vector Machine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-15-nonlinear.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Mô hình phi tuyến tính</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-17-regularization.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Lựa chọn biến &amp; regularization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-20-feature-engineering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Feature Engineering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-30-credit-scoring.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Credit Scoring</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-40-interpretable-ml.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Giải thích mô hình học máy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-50-chat-luong-mo-hinh.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Chất lượng mô hình</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-69-caret.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Xây dựng mô hình dự báo với caret</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-70-tidymodels.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Tidymodels</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Unsupervised Learning</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-01-unsupervised-learning.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Unsupervised learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-02-hierarchical-clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Hierachical clustering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-03-kmeans.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">k-means</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-04-basket-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Phân tích giỏ hàng</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-05-pca.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Principal component analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-06-factor-analysis.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Phân tích nhân tố ẩn (factor analysis)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Chuỗi thời gian</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-01-chuoi-thoi-gian.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Giới thiệu về chuỗi thời gian</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-02-arima.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mô hình ARIMA</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Phân tích chuỗi thời gian với tidyquant và timetk</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-06-du-bao-ts-voi-prophet.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với prophet</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-07-du-bao-ts-voi-timetk.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với timetk</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-08-abnomaly-detection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Abnomaly detection trong times series</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">Natural Language Processing</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-01-nlp-co-ban.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Xử lý ngôn ngữ tự nhiên cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-04-text-classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Phân loại text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-07-nlp-api.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Sử dụng API từ các dịch vụ đám mây</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-10-ocr-tesseract.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">OCR với <code>tesseract</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">Các phương pháp khác</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-02-causal-impact.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Causal Impact</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-03-collaborative-filtering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Collaborative Filtering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-04-survival-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Survival Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-05-vintage-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vintage analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-07-spatial-data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Spatial data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-08-anomaly-detection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Abnomaly detection</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-10-shiny.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Shiny apps</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-15-quantile-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Hồi quy phân vị</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-16-retention-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Retention analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-20-network-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Network analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-30-python-voi-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Sử dụng Python với R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">Cloud Computing</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-01-cai-dat-rstudio-server-tren-amazon.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Cài đặt server RStudio trên Amazon</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-02-deploy-shiny-app-aws.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Deploy Shiny Apps lên AWS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-03-web-service-azure.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Xây dựng web service với Azure</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-09-apis-voi-plumber.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">API với Plumber</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">Kiến thức bổ trợ</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-01-git.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Sử dụng GIT</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-02-cmd.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">CMD và Bash</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-03-docker.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Sử dụng docker</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-04-apis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">API</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-05-html-css.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Cơ bản về HTML và CSS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-10-nguyen-ly-thi-giac.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Nguyên lý thị giác và Business Dashboard</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-30-tim-hieu-he-thong.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Tìm hiểu hệ thống dữ liệu</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-40-aws-overview.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">AWS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-90-other.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Các tricks khác</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">Case studies</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p13-01-casestudy-truc-quan-hoa.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Trực quan hóa dữ liệu</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#so-sánh-giữa-efa-và-pca" id="toc-so-sánh-giữa-efa-và-pca" class="nav-link active" data-scroll-target="#so-sánh-giữa-efa-và-pca"><span class="toc-section-number">40.1</span>  So sánh giữa EFA và PCA</a>
+  <ul class="collapse">
+  <li><a href="#các-điểm-giống-nhau" id="toc-các-điểm-giống-nhau" class="nav-link" data-scroll-target="#các-điểm-giống-nhau"><span class="toc-section-number">40.1.1</span>  Các điểm giống nhau</a></li>
+  <li><a href="#các-điểm-khác-nhau" id="toc-các-điểm-khác-nhau" class="nav-link" data-scroll-target="#các-điểm-khác-nhau"><span class="toc-section-number">40.1.2</span>  Các điểm khác nhau</a></li>
+  </ul></li>
+  <li><a href="#các-bước-thực-hiện" id="toc-các-bước-thực-hiện" class="nav-link" data-scroll-target="#các-bước-thực-hiện"><span class="toc-section-number">40.2</span>  Các bước thực hiện</a>
+  <ul class="collapse">
+  <li><a href="#kiểm-định-xem-tập-dữ-liệu-có-đủ-điều-kiện-cho-factor-analysis-không" id="toc-kiểm-định-xem-tập-dữ-liệu-có-đủ-điều-kiện-cho-factor-analysis-không" class="nav-link" data-scroll-target="#kiểm-định-xem-tập-dữ-liệu-có-đủ-điều-kiện-cho-factor-analysis-không"><span class="toc-section-number">40.2.1</span>  Kiểm định xem tập dữ liệu có đủ điều kiện cho factor analysis không</a></li>
+  <li><a href="#chọn-số-factor" id="toc-chọn-số-factor" class="nav-link" data-scroll-target="#chọn-số-factor"><span class="toc-section-number">40.2.2</span>  Chọn số factor</a></li>
+  <li><a href="#thực-hiện-factor-analysis" id="toc-thực-hiện-factor-analysis" class="nav-link" data-scroll-target="#thực-hiện-factor-analysis"><span class="toc-section-number">40.2.3</span>  Thực hiện factor analysis</a></li>
+  <li><a href="#đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình" id="toc-đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình" class="nav-link" data-scroll-target="#đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình"><span class="toc-section-number">40.2.4</span>  Đánh giá độ tin cậy và độ chính xác của mô hình</a></li>
+  <li><a href="#đặt-tên-cho-các-factor" id="toc-đặt-tên-cho-các-factor" class="nav-link" data-scroll-target="#đặt-tên-cho-các-factor"><span class="toc-section-number">40.2.5</span>  Đặt tên cho các factor</a></li>
+  </ul></li>
+  <li><a href="#thực-hành-trong-r" id="toc-thực-hành-trong-r" class="nav-link" data-scroll-target="#thực-hành-trong-r"><span class="toc-section-number">40.3</span>  Thực hành trong R</a></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="toc-section-number">40.4</span>  Tài liệu tham khảo</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Phân tích nhân tố ẩn (factor analysis)</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Phân tích nhân tố khám phá (exploratory factor analysis) là kỹ thuật giúp làm giảm số chiều dữ liệu (giảm số biến) nhằm tìm ra các biến ẩn (factor) đằng sau các nhóm biến ban đầu. Thực chất, phương pháp này được sử dụng để đo các khái niệm (concept) phức tạp và đa chiều mà ta không thể đo trực tiếp bằng 1 biến duy nhất, mà phải đo từ nhiều khía cạnh hay các hành vi là kết quả cụ thể của khái niệm đó (quan hệ nhân-quả)</p>
+<section id="so-sánh-giữa-efa-và-pca" class="level2" data-number="40.1">
+<h2 data-number="40.1" class="anchored" data-anchor-id="so-sánh-giữa-efa-và-pca"><span class="header-section-number">40.1</span> So sánh giữa EFA và PCA</h2>
+<section id="các-điểm-giống-nhau" class="level3" data-number="40.1.1">
+<h3 data-number="40.1.1" class="anchored" data-anchor-id="các-điểm-giống-nhau"><span class="header-section-number">40.1.1</span> Các điểm giống nhau</h3>
+<ul>
+<li>Đều là các kỹ thuật làm giảm dữ liệu, bằng cách sử dụng sự tương quan giữa các biến ban đầu để gộp thành các biến mới. Với k biến ban đầu, k biến mới sẽ được tạo ra. Tuy nhiên, ta sẽ chỉ giữ lại n biến mới với n &lt; k sao cho lượng thông tin vẫn được bảo toàn nhất có thể (Eigen Value &gt; 1 hoặc Cumulative Variance Percentage &gt; 80 % như trong <code>PCA</code>)</li>
+</ul>
+</section>
+<section id="các-điểm-khác-nhau" class="level3" data-number="40.1.2">
+<h3 data-number="40.1.2" class="anchored" data-anchor-id="các-điểm-khác-nhau"><span class="header-section-number">40.1.2</span> Các điểm khác nhau</h3>
+<section id="thuật-toán" class="level4" data-number="40.1.2.1">
+<h4 data-number="40.1.2.1" class="anchored" data-anchor-id="thuật-toán"><span class="header-section-number">40.1.2.1</span> Thuật toán</h4>
+<ul>
+<li><p>Trong PCA, các thành phần chính (<code>principal components</code>) là các tổ hợp tuyến tính của tất cả các biến ban đầu, sao cho PC1 là tổ hợp giữ được lượng thông tin nhiều nhất, PC2 được bổ sung vuông góc với PC1 nhằm thêm các thông tin còn thiếu trong PC1 và chứa lượng thông tin ít hơn PC1,…cứ như vậy, các PC được bổ sung sau sẽ vuông góc với các PC trước đó và chứa lượng thông tin giảm dần. Như vây các PC <strong>phải vuông góc</strong> với nhau, đồng nghĩa với việc các <strong>PC không được tương quan với nhau</strong>.</p></li>
+<li><p>Trong EFA, các nhân tố (factor) là tổ hợp tuyến tính của các biến ban đầu có tương quan với nhau, sao cho mỗi nhân tố giữ lại được lượng thông tin nhiều nhất của 1 nhóm các biến ban đầu. Khác với PCA, các factor <strong>có thể không vuông góc</strong> với nhau, đồng nghĩa với việc các <strong>factor có thể tương quan với nhau</strong></p></li>
+</ul>
+</section>
+<section id="mục-đích-sử-dụng" class="level4" data-number="40.1.2.2">
+<h4 data-number="40.1.2.2" class="anchored" data-anchor-id="mục-đích-sử-dụng"><span class="header-section-number">40.1.2.2</span> Mục đích sử dụng</h4>
+<ul>
+<li>PCA được sử dụng để đơn giản hoá tập dữ liệu, sao cho với số biến mới tối thiểu vẫn giữ lại được tối đa lượng thông tin của tập dữ liệu ban đầu. Do đó, các biến mới (<code>principal components</code>) không cần được đặt tên</li>
+</ul>
+<center>
+<img src="Images/57-fa-pcamodel.png" class="img-fluid">
+</center>
+<ul>
+<li>EFA được sử dụng để tìm ra biến ẩn (latent variable, factor, concept) đằng sau các biến đo được có tương quan với nhau (correlated observed variables, group of items). Nói cách khác, nhóm biến ban đầu phản ánh các khía cạnh của 1 khái niệm chung. Do đó các biến ẩn/ khái niệm chung này phải có ý nghĩa và gọi tên được</li>
+</ul>
+<center>
+<img src="Images/57-fa-efa-model.png" class="img-fluid">
+</center>
+</section>
+<section id="ứng-dụng-trong-kinh-doanh" class="level4" data-number="40.1.2.3">
+<h4 data-number="40.1.2.3" class="anchored" data-anchor-id="ứng-dụng-trong-kinh-doanh"><span class="header-section-number">40.1.2.3</span> Ứng dụng trong kinh doanh</h4>
+<ul>
+<li><p>PCA được ứng dụng để tìm ra số nhóm tối ưu cho các bài toán phân lớp khách hàng (K-means clustering), hoặc làm giảm số biến đầu vào cho các mô hình dự báo</p></li>
+<li><p>EFA thường được sử dụng trong trong lĩnh vực marketing và nghiên cứu thị trường, xây dựng các bộ câu hỏi cho survey để đánh giá nhận thức/ hành vi của khách hàng về sản phẩm/ dịch vụ như: mức độ hài lòng với sản phẩm, sự trung thành với nhãn hiệu, lý do khách hàng mua sản phẩm…Sau đó các biến mới cũng có thể được sử dụng làm biến đầu vào cho các mô hình</p></li>
+</ul>
+<center>
+<img src="Images/57-fa-survey.jpg" class="img-fluid">
+</center>
+</section>
+</section>
+</section>
+<section id="các-bước-thực-hiện" class="level2" data-number="40.2">
+<h2 data-number="40.2" class="anchored" data-anchor-id="các-bước-thực-hiện"><span class="header-section-number">40.2</span> Các bước thực hiện</h2>
+<section id="kiểm-định-xem-tập-dữ-liệu-có-đủ-điều-kiện-cho-factor-analysis-không" class="level3" data-number="40.2.1">
+<h3 data-number="40.2.1" class="anchored" data-anchor-id="kiểm-định-xem-tập-dữ-liệu-có-đủ-điều-kiện-cho-factor-analysis-không"><span class="header-section-number">40.2.1</span> Kiểm định xem tập dữ liệu có đủ điều kiện cho factor analysis không</h3>
+<ul>
+<li><p>Số quan sát <strong>tối thiểu là 50</strong></p></li>
+<li><p>KMO test (0-&gt;1) kiểm tra mức độ tương quan của các biến ban đầu. <strong>KMO result &gt; 0.5</strong> là chấp nhận được</p></li>
+</ul>
+<center>
+<img src="Images/57-fa-kmo.jpg" class="img-fluid">
+</center>
+</section>
+<section id="chọn-số-factor" class="level3" data-number="40.2.2">
+<h3 data-number="40.2.2" class="anchored" data-anchor-id="chọn-số-factor"><span class="header-section-number">40.2.2</span> Chọn số factor</h3>
+<p>Cân nhắc các điểm sau:</p>
+<ul>
+<li><p>Ý nghĩa kinh doanh</p></li>
+<li><p>Eigen value &gt; 1</p></li>
+<li><p>Scree plot tại điểm thay đổi độ dốc</p></li>
+</ul>
+</section>
+<section id="thực-hiện-factor-analysis" class="level3" data-number="40.2.3">
+<h3 data-number="40.2.3" class="anchored" data-anchor-id="thực-hiện-factor-analysis"><span class="header-section-number">40.2.3</span> Thực hiện factor analysis</h3>
+<p>Trong đó chọn 1 trong 2 phương pháp xoay vector sau:</p>
+<ul>
+<li><p>Chọn Orthogonal (rotate = “varimax”) khi ta cho rằng các factors không có tương quan với nhau</p></li>
+<li><p>Chọn Oblique (rotate = “oblimin”) khi ta cho rằng các factors có tương quan với nhau (chủ yếu chọn phương pháp này)</p></li>
+</ul>
+<center>
+<img src="Images/57-fa-rotation.jpg" class="img-fluid">
+</center>
+<p>=&gt; Xem loadings (correlation value) xem có hiện tượng 1 biến ban đầu tương quan mạnh với nhiều hơn 1 factor không (high multi-loadings)</p>
+</section>
+<section id="đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình" class="level3" data-number="40.2.4">
+<h3 data-number="40.2.4" class="anchored" data-anchor-id="đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình"><span class="header-section-number">40.2.4</span> Đánh giá độ tin cậy và độ chính xác của mô hình</h3>
+<p>Ta mong đợi các biến đo được phải tương quan với nhau theo từng nhóm, đồng nghĩa chúng đo cùng 1 khái niệm (độ tin cậy, reliability) và phải đo đúng khái niệm ta cần (độ chính xác, validity)</p>
+<p>Độ tin cậy được đo bằng chỉ số Cronbach’s alpha. <strong>() &gt;= 0.3</strong> là pass. Ta có thể cân nhắc loại bỏ 1 vài biến ban đầu không có tương quan với các biến khác, tuy nhiên phải đánh đổi bằng thông tin bị mất đi</p>
+<p>Độ chính xác được đo theo 2 tiêu chí:</p>
+<ul>
+<li>Convergent validity: Chỉ số AVE (Average Variance Extracted) của các factor phải &gt; 0.5 đồng nghĩa với việc các items giải thích được ít nhất 50% độ biến thiên của factor đó</li>
+</ul>
+<p><span class="math display">\[AVE=\frac{\sum Factor.loadings^2}{No.of.items}\]</span></p>
+<ul>
+<li>Discriminant validity: Chỉ số AVE của từng factor phải &gt; Shared variance giữa các factor, đồng nghĩa với việc các factor phải tương quan mạnh hơn với các items đo chính factor đó chứ không tương quan nhiều với các items đo các factor khác</li>
+</ul>
+<p><span class="math display">\[Shared.variance=Correlation.between.factors^2\]</span></p>
+<p><strong>Ví dụ</strong>:</p>
+<center>
+<img src="Images/57-fa-validity.jpg" class="img-fluid">
+</center>
+<ul>
+<li><p>Reliability test: Với cả 2 factor, AVE đều &gt; 0.5 =&gt; nhóm các item (x1,x2,x3) và (x4,x5,x6) đều giải thích được trên 50% độ biến thiên của 2 factor tương ứng =&gt; good</p></li>
+<li><p>Validity test: Xét 3 trường hợp của Shared Variance</p>
+<ul>
+<li><p>Shared Variance = 0.49 (&lt; 0.72 và &lt; 0.66) =&gt; good</p></li>
+<li><p>Shared Variance = 0.64 (&lt; 0.72 và &lt; 0.66) =&gt; pass</p></li>
+<li><p>Shared Variance = 0.90 (&gt; 0.72 và &gt; 0.66) =&gt; fail</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="đặt-tên-cho-các-factor" class="level3" data-number="40.2.5">
+<h3 data-number="40.2.5" class="anchored" data-anchor-id="đặt-tên-cho-các-factor"><span class="header-section-number">40.2.5</span> Đặt tên cho các factor</h3>
+<p>Tùy theo kết quả loadings các nhóm biến để đặt tên cho biến ẩn (khái niệm) sao cho biến ẩn có ý nghĩa tổng hợp nhất</p>
+<p><strong>Lưu ý</strong>: Các bước 2 -&gt; 4 có thể phải thực hiện nhiều lần để có kết quả ưng ý</p>
+</section>
+</section>
+<section id="thực-hành-trong-r" class="level2" data-number="40.3">
+<h2 data-number="40.3" class="anchored" data-anchor-id="thực-hành-trong-r"><span class="header-section-number">40.3</span> Thực hành trong R</h2>
+<p>Sử dụng tập dữ liệu là kết quả phản hồi survey của 90 KH cho 14 tiêu chí họ ưu tiên khi chọn mua ô tô (bao gồm giá, tính an toàn, tiết kiệm nhiên liệu, dịch vụ hậu mãi…). Survey được thiết kế dưới dạng thang đo Likert với 5 lựa chọn (5-point Likert scale) từ “Very low” (tương ứng với 1) đến “Very high” (tương ứng với 5)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GPArotation)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/efa-df.Rda"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> efa.df</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(efa.df)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Price Safety Exterior_Looks Space_comfort Technology After_Sales_Service
+1     4      4              5             4          3                   4
+2     3      5              3             3          4                   4
+3     4      4              3             4          5                   5
+4     4      4              4             3          3                   4
+5     5      5              4             4          5                   4
+6     4      4              5             3          4                   5
+  Resale_Value Fuel_Type Fuel_Efficiency Color Maintenance Test_drive
+1            5         4               4     2           4          2
+2            3         4               3     4           3          2
+3            5         4               5     4           5          4
+4            5         5               4     4           4          2
+5            5         3               4     5           5          5
+6            3         4               3     2           3          2
+  Product_reviews Testimonials
+1               4            3
+2               2            2
+3               4            3
+4               5            3
+5               5            2
+6               2            3</code></pre>
+</div>
+</div>
+<ul>
+<li>Bước 1: Tập dữ liệu có 90 quan sát, đủ lớn cho phân tích. Kiểm tra KMO test = 0.61 chỉ ở mức dưới trung bình nhưng đủ cho phân tích</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">KMO</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Kaiser-Meyer-Olkin factor adequacy
+Call: KMO(r = df)
+Overall MSA =  0.61
+MSA for each item = 
+              Price              Safety      Exterior_Looks       Space_comfort 
+               0.72                0.47                0.55                0.61 
+         Technology After_Sales_Service        Resale_Value           Fuel_Type 
+               0.65                0.62                0.63                0.68 
+    Fuel_Efficiency               Color         Maintenance          Test_drive 
+               0.62                0.56                0.61                0.64 
+    Product_reviews        Testimonials 
+               0.69                0.50 </code></pre>
+</div>
+</div>
+<ul>
+<li>Bước 2: Lựa chọn số factor bằng cách visualise <strong>eigen value</strong> trong <strong>scree plot</strong></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>parallel <span class="ot">&lt;-</span> <span class="fu">fa.parallel</span>(df, <span class="at">fm =</span> <span class="st">'minres'</span>, <span class="at">fa =</span> <span class="st">'fa'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p04-06-factor-analysis_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Parallel analysis suggests that the number of factors =  4  and the number of components =  NA </code></pre>
+</div>
+</div>
+<p>=&gt; Như vậy ta có thể chọn từ 2 hoặc 3 factor được giữ lại</p>
+<ul>
+<li>Bước 3: Thực hiện factor analysis với 3 factors</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>three.fa <span class="ot">&lt;-</span> <span class="fu">fa</span>(df,<span class="at">nfactors =</span> <span class="dv">3</span>, <span class="at">rotate =</span> <span class="st">"oblimin"</span>, <span class="at">fm=</span><span class="st">"minres"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(three.fa<span class="sc">$</span>loadings, <span class="at">cutoff =</span> <span class="fl">0.3</span>) <span class="co"># chỉ hiển thị các giá trị loading &gt; 0.3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Loadings:
+                    MR1    MR2    MR3   
+Price                0.444              
+Safety                      0.311       
+Exterior_Looks                          
+Space_comfort               0.832       
+Technology                  0.342       
+After_Sales_Service         0.460       
+Resale_Value         0.599              
+Fuel_Type                   0.573       
+Fuel_Efficiency      0.655              
+Color                0.464              
+Maintenance          0.668              
+Test_drive                         0.328
+Product_reviews      0.424              
+Testimonials                       0.742
+
+                 MR1   MR2   MR3
+SS loadings    2.015 1.605 0.972
+Proportion Var 0.144 0.115 0.069
+Cumulative Var 0.144 0.259 0.328</code></pre>
+</div>
+</div>
+<p>Từ kết quả loadings của 3 factors mới, ta có thể thấy 1 số biến có tương quan cùng lúc với cả 2 factor mới (double loading)</p>
+<p>Thực hiện lại factor analysis với 4 factors =&gt; Ta thấy không còn hiện tượng double loading nữa. Như vậy ta sử dụng model với 4 factor</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>four.fa <span class="ot">&lt;-</span> <span class="fu">fa</span>(df,<span class="at">nfactors =</span> <span class="dv">4</span>, <span class="at">rotate =</span> <span class="st">"oblimin"</span>, <span class="at">fm=</span><span class="st">"minres"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(four.fa<span class="sc">$</span>loadings, <span class="at">cutoff =</span> <span class="fl">0.3</span>) <span class="co"># chỉ hiện thị các giá trị loading &gt; 0.3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Loadings:
+                    MR1    MR2    MR4    MR3   
+Price                0.544                     
+Safety              -0.331  0.358              
+Exterior_Looks                    -0.548       
+Space_comfort               0.782              
+Technology                  0.358              
+After_Sales_Service         0.537              
+Resale_Value         0.729                     
+Fuel_Type                   0.575              
+Fuel_Efficiency      0.434         0.308       
+Color                              0.731       
+Maintenance          0.562                     
+Test_drive                                0.365
+Product_reviews      0.345                0.364
+Testimonials                              0.685
+
+                 MR1   MR2   MR4   MR3
+SS loadings    1.639 1.637 1.053 0.968
+Proportion Var 0.117 0.117 0.075 0.069
+Cumulative Var 0.117 0.234 0.309 0.378</code></pre>
+</div>
+</div>
+<ul>
+<li>Bước 4: Đánh giá độ tin cậy và chính xác của mô hình</li>
+</ul>
+<p>() = 0.61 cho thấy mô hình đáng tin cậy. Xem thêm bảng Reliability if an item is dropped ta thấy nếu loại bỏ các biến Safety, Exterior_Looks, Testimonials có thể cải thiện () tuy nhiên rất ít =&gt; Ta chọn giữ lại tất cả các biến này để không bị mất thông tin</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">alpha</span>(df,<span class="at">check.keys=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Reliability analysis   
+Call: alpha(x = df, check.keys = TRUE)
+
+  raw_alpha std.alpha G6(smc) average_r S/N   ase mean   sd median_r
+      0.61      0.62    0.71       0.1 1.6 0.059  3.7 0.34    0.091
+
+    95% confidence boundaries 
+         lower alpha upper
+Feldt     0.48  0.61  0.72
+Duhachek  0.49  0.61  0.73
+
+ Reliability if an item is dropped:
+                    raw_alpha std.alpha G6(smc) average_r S/N alpha se var.r
+Price                    0.59      0.59    0.69     0.101 1.5    0.063 0.027
+Safety-                  0.62      0.64    0.72     0.120 1.8    0.059 0.026
+Exterior_Looks-          0.63      0.65    0.72     0.123 1.8    0.056 0.025
+Space_comfort            0.60      0.61    0.68     0.106 1.5    0.061 0.023
+Technology               0.60      0.61    0.70     0.107 1.6    0.060 0.028
+After_Sales_Service      0.58      0.59    0.68     0.099 1.4    0.064 0.026
+Resale_Value             0.61      0.61    0.69     0.107 1.6    0.059 0.024
+Fuel_Type                0.60      0.61    0.70     0.108 1.6    0.060 0.026
+Fuel_Efficiency          0.53      0.54    0.64     0.084 1.2    0.072 0.025
+Color                    0.57      0.59    0.68     0.099 1.4    0.065 0.027
+Maintenance              0.55      0.56    0.65     0.090 1.3    0.069 0.026
+Test_drive               0.60      0.61    0.70     0.106 1.5    0.061 0.028
+Product_reviews          0.56      0.57    0.67     0.094 1.3    0.067 0.028
+Testimonials             0.62      0.63    0.71     0.116 1.7    0.058 0.026
+                    med.r
+Price               0.095
+Safety-             0.112
+Exterior_Looks-     0.115
+Space_comfort       0.087
+Technology          0.104
+After_Sales_Service 0.087
+Resale_Value        0.095
+Fuel_Type           0.101
+Fuel_Efficiency     0.079
+Color               0.094
+Maintenance         0.082
+Test_drive          0.095
+Product_reviews     0.082
+Testimonials        0.107
+
+ Item statistics 
+                     n raw.r std.r r.cor  r.drop mean   sd
+Price               90  0.41  0.45 0.382  0.3032  4.2 0.59
+Safety-             90  0.19  0.20 0.073  0.0556  1.8 0.64
+Exterior_Looks-     90  0.16  0.16 0.022 -0.0069  2.2 0.82
+Space_comfort       90  0.32  0.38 0.342  0.1872  4.0 0.65
+Technology          90  0.35  0.37 0.269  0.1735  4.2 0.87
+After_Sales_Service 90  0.45  0.48 0.433  0.3265  4.4 0.65
+Resale_Value        90  0.44  0.38 0.326  0.1971  3.7 1.22
+Fuel_Type           90  0.30  0.36 0.280  0.1643  4.1 0.65
+Fuel_Efficiency     90  0.69  0.69 0.710  0.5863  3.9 0.82
+Color               90  0.51  0.48 0.437  0.3428  3.7 0.92
+Maintenance         90  0.62  0.61 0.603  0.5001  4.0 0.77
+Test_drive          90  0.44  0.39 0.302  0.2283  3.4 1.11
+Product_reviews     90  0.56  0.55 0.511  0.4073  4.1 0.89
+Testimonials        90  0.26  0.25 0.149  0.0839  3.9 0.87
+
+Non missing response frequency for each item
+                       1    2    3    4    5 miss
+Price               0.00 0.00 0.10 0.63 0.27    0
+Safety              0.00 0.00 0.12 0.56 0.32    0
+Exterior_Looks      0.01 0.02 0.30 0.47 0.20    0
+Space_comfort       0.00 0.01 0.18 0.61 0.20    0
+Technology          0.01 0.03 0.14 0.41 0.40    0
+After_Sales_Service 0.00 0.01 0.06 0.44 0.49    0
+Resale_Value        0.06 0.11 0.28 0.21 0.34    0
+Fuel_Type           0.00 0.00 0.17 0.58 0.26    0
+Fuel_Efficiency     0.01 0.03 0.24 0.50 0.21    0
+Color               0.02 0.08 0.22 0.50 0.18    0
+Maintenance         0.00 0.01 0.27 0.44 0.28    0
+Test_drive          0.02 0.23 0.22 0.33 0.19    0
+Product_reviews     0.00 0.08 0.10 0.43 0.39    0
+Testimonials        0.01 0.04 0.24 0.46 0.24    0</code></pre>
+</div>
+</div>
+<p>Có thể tính toán thêm AVE và Shared Variance cho validity test</p>
+<ul>
+<li>Bước 5: Đặt tên cho các biến ẩn</li>
+</ul>
+<center>
+<img src="Images/57-fa-naming.jpg" class="img-fluid">
+</center>
+</section>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="40.4">
+<h2 data-number="40.4" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">40.4</span> Tài liệu tham khảo</h2>
+<ol type="1">
+<li><p><a href="http://www.theanalysisfactor.com/the-fundamental-difference-between-principal-component-analysis-and-factor-analysis/" class="uri">http://www.theanalysisfactor.com/the-fundamental-difference-between-principal-component-analysis-and-factor-analysis/</a></p></li>
+<li><p><a href="https://www.promptcloud.com/blog/exploratory-factor-analysis-in-r/" class="uri">https://www.promptcloud.com/blog/exploratory-factor-analysis-in-r/</a></p></li>
+<li><p><a href="http://minato.sip21c.org/swtips/factor-in-R.pdf" class="uri">http://minato.sip21c.org/swtips/factor-in-R.pdf</a></p></li>
+</ol>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./p04-05-pca.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Principal component analysis</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./p05-01-chuoi-thoi-gian.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Giới thiệu về chuỗi thời gian</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

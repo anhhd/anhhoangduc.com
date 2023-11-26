@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Khoa học dữ liệu với R - 30&nbsp; Credit Scoring</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./p03-40-interpretable-ml.html" rel="next">
+<link href="./p03-20-feature-engineering.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/quarto-contrib/bookup_fonts_embed-0.0/fonts-download.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar docked">
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Credit Scoring</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Khoa học dữ liệu với R</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle sidebar-tool" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle sidebar-tool" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Khoa học dữ liệu và nghề phân tích dữ liệu</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Phân tích khám phá dữ liệu</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-01-gioi-thieu-co-ban-ve-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Giới thiệu cơ bản về R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-70-xay-dung-bao-cao-voi-rmarkdown.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Xây dựng báo cáo với Rmarkdown</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-02-bien-doi-du-lieu-dplyr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Ngữ pháp của biến đổi dữ liệu với DPLYR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-03-phan-ra-va-xoay-chieu-du-lieu.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Làm sạch và biến đổi dữ liệu nâng cao</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-04-ngu-phap-bieu-do-ggplot2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ngữ pháp của biểu đồ với GGPLOT2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-05-cac-chi-so-thong-ke.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Các chỉ số thống kê mô tả cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-06-lap-trinh-ham.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Lập trình hàm</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-07-lap-trinh-ham-voi-purrr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Lập trình chức năng hàm với purrr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-08-bien-doi-du-lieu-text.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-11-quan-ly-nhieu-mo-hinh.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quản lý kết quả phân tích từ nhiều mô hình</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-15-thong-ke-co-ban.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Xác suất và phân phối thống kê cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-16-power-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Power analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-20-sampling-methods.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Phương pháp ước lượng tham số thông qua lấy mẫu</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-50-datatable.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu với <code>data.table</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-60-thu-thap-du-lieu-tu-website.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Thu thập dữ liệu từ website</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-99-meo-trong-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Các mẹo trong R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Supervised Learning</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-01-nguyen-ly-du-bao.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Giới thiệu về học máy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-02-mo-hinh-ols.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mô hình hồi quy tuyến tính</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-03-logistic-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Mô hình hồi quy logistic</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-04-decision-tree.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Cây quyết định</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-05-bagging-boosting.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Bagging, RandomForest và Boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-07-xay-dung-mo-hinh-voi-h2o.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Xây dựng mô hình với H2O</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-10-knn.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">K nearest neighbors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-11-svm.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Support Vector Machine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-15-nonlinear.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Mô hình phi tuyến tính</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-17-regularization.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Lựa chọn biến &amp; regularization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-20-feature-engineering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Feature Engineering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-30-credit-scoring.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Credit Scoring</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-40-interpretable-ml.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Giải thích mô hình học máy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-50-chat-luong-mo-hinh.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Chất lượng mô hình</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-69-caret.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Xây dựng mô hình dự báo với caret</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-70-tidymodels.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Tidymodels</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Unsupervised Learning</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-01-unsupervised-learning.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Unsupervised learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-02-hierarchical-clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Hierachical clustering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-03-kmeans.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">k-means</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-04-basket-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Phân tích giỏ hàng</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-05-pca.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Principal component analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-06-factor-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Phân tích nhân tố ẩn (factor analysis)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Chuỗi thời gian</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-01-chuoi-thoi-gian.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Giới thiệu về chuỗi thời gian</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-02-arima.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mô hình ARIMA</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Phân tích chuỗi thời gian với tidyquant và timetk</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-06-du-bao-ts-voi-prophet.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với prophet</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-07-du-bao-ts-voi-timetk.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với timetk</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-08-abnomaly-detection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Abnomaly detection trong times series</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">Natural Language Processing</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-01-nlp-co-ban.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Xử lý ngôn ngữ tự nhiên cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-04-text-classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Phân loại text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-07-nlp-api.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Sử dụng API từ các dịch vụ đám mây</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-10-ocr-tesseract.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">OCR với <code>tesseract</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">Các phương pháp khác</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-02-causal-impact.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Causal Impact</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-03-collaborative-filtering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Collaborative Filtering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-04-survival-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Survival Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-05-vintage-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vintage analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-07-spatial-data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Spatial data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-08-anomaly-detection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Abnomaly detection</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-10-shiny.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Shiny apps</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-15-quantile-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Hồi quy phân vị</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-16-retention-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Retention analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-20-network-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Network analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-30-python-voi-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Sử dụng Python với R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">Cloud Computing</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-01-cai-dat-rstudio-server-tren-amazon.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Cài đặt server RStudio trên Amazon</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-02-deploy-shiny-app-aws.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Deploy Shiny Apps lên AWS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-03-web-service-azure.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Xây dựng web service với Azure</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-09-apis-voi-plumber.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">API với Plumber</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">Kiến thức bổ trợ</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-01-git.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Sử dụng GIT</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-02-cmd.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">CMD và Bash</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-03-docker.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Sử dụng docker</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-04-apis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">API</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-05-html-css.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Cơ bản về HTML và CSS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-10-nguyen-ly-thi-giac.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Nguyên lý thị giác và Business Dashboard</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-30-tim-hieu-he-thong.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Tìm hiểu hệ thống dữ liệu</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-40-aws-overview.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">AWS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-90-other.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Các tricks khác</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">Case studies</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p13-01-casestudy-truc-quan-hoa.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Trực quan hóa dữ liệu</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#score-card" id="toc-score-card" class="nav-link active" data-scroll-target="#score-card"><span class="toc-section-number">30.1</span>  Score card</a></li>
+  <li><a href="#các-bước-xây-dựng-score-card" id="toc-các-bước-xây-dựng-score-card" class="nav-link" data-scroll-target="#các-bước-xây-dựng-score-card"><span class="toc-section-number">30.2</span>  Các bước xây dựng score card</a></li>
+  <li><a href="#các-tính-score" id="toc-các-tính-score" class="nav-link" data-scroll-target="#các-tính-score"><span class="toc-section-number">30.3</span>  Các tính score</a></li>
+  <li><a href="#xây-dựng-score-card" id="toc-xây-dựng-score-card" class="nav-link" data-scroll-target="#xây-dựng-score-card"><span class="toc-section-number">30.4</span>  Xây dựng score card</a>
+  <ul class="collapse">
+  <li><a href="#điền-thêm-missing-value" id="toc-điền-thêm-missing-value" class="nav-link" data-scroll-target="#điền-thêm-missing-value"><span class="toc-section-number">30.4.1</span>  Điền thêm missing value</a></li>
+  <li><a href="#đo-lường-độ-ổn-định-mô-hình" id="toc-đo-lường-độ-ổn-định-mô-hình" class="nav-link" data-scroll-target="#đo-lường-độ-ổn-định-mô-hình"><span class="toc-section-number">30.4.2</span>  Đo lường độ ổn định mô hình</a></li>
+  </ul></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="toc-section-number">30.5</span>  Tài liệu tham khảo</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Credit Scoring</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="score-card" class="level2" data-number="30.1">
+<h2 data-number="30.1" class="anchored" data-anchor-id="score-card"><span class="header-section-number">30.1</span> Score card</h2>
+<p>Khi xây dựng scorecard, cần chia bucket để dễ dàng hơn trong việc tính điểm</p>
+<p><strong>Các định nghĩa quan trọng</strong>:</p>
+<ul>
+<li>WOE (Weight of Evidence): Đo lường độ mạnh của việc phân loại good vs.&nbsp;bad giữa một nhóm (VD: age 27-29). Nếu WOE có giá trị âm càng lớn, càng thể hiện khả năng phân nhóm khoản vay xấu.</li>
+</ul>
+<p><span class="math display">\[WOE = ln(\frac{Distr\:Good}{Distr\: Bad})\]</span></p>
+<ul>
+<li>IV (Informatio Value): Đo lường độ mạnh dự báo của biến dự báo với biến cần được dự báo (response). Các đặc tính như sau:
+<ul>
+<li>IV &lt; 0.02: Không có giá trị dự báo</li>
+<li>0.02 - 0.1: thấp</li>
+<li>0.1 - 0.3: trung bình</li>
+<li>0.3 - 0.5: cao</li>
+<li>Trên 0.5: Cần kiểm tra lại</li>
+</ul></li>
+</ul>
+<p><span class="math display">\[IV = \sum_{i = 1}^{n}(Distr\:Good - Distr\:Bad)*ln(\frac{Distr\:Good}{Distr\:Bad})\]</span></p>
+<center>
+<img src="Images/credit-scoring-01.png" class="img-fluid" style="width:100.0%">
+</center>
+<center>
+<img src="Images/credit-scoring-02.png" class="img-fluid" style="width:60.0%">
+</center>
+<p><strong>Các quy tắc khi xây dựng</strong>:</p>
+<ul>
+<li>Mỗi bucket có tối thiểu 5%</li>
+<li>Khi nhóm các biến, cần đảm báo quy tắc WOE sau khi nhóm là tuyến tính (đồng biến hoặc nghịch biến)</li>
+</ul>
+<p><strong>Lưu ý</strong>: Xem thêm file excel (<code>data/woe-example.xlsx</code>)để hiểu rõ hơn cách tính WOE và IV</p>
+</section>
+<section id="các-bước-xây-dựng-score-card" class="level2" data-number="30.2">
+<h2 data-number="30.2" class="anchored" data-anchor-id="các-bước-xây-dựng-score-card"><span class="header-section-number">30.2</span> Các bước xây dựng score card</h2>
+<ul>
+<li>Bổ sung các thông tin dữ liệu bị thiếu</li>
+<li>Tính toán WOE và IV, loại các biến có IV quá thấp, kiểm tra lại các biến có IV quá cao</li>
+<li>Tạo tập mới là tập <code>df_woe</code>, các biến đã được nhóm lại để tối ưu hóa WOE</li>
+<li>Xây dựng mô hình <code>logistic</code> đơn giản trên tập <code>df_woe</code></li>
+<li>Score dữ liệu mới, việc xây dựng score card cần thực hiện hai việc:
+<ul>
+<li>Xác định odds tại mốc điểm scorecard nhất định</li>
+<li>Xác định điểm score card giúp tăng gấp đôi odds</li>
+</ul></li>
+</ul>
+</section>
+<section id="các-tính-score" class="level2" data-number="30.3">
+<h2 data-number="30.3" class="anchored" data-anchor-id="các-tính-score"><span class="header-section-number">30.3</span> Các tính score</h2>
+<ul>
+<li>Điểm mặc định (<code>point 0</code>) thường được dùng là 600. Mốc điểm này phản ánh một tỷ lệ odd cho trước (ví dụ: 30)</li>
+<li>Điểm tăng gấp đôi odd (<code>point double ood - pdo</code>): Là số điểm mà cứ tăng thêm pdo, odd sẽ tăng gấp đôi - thường là 20. Xem minh họa dưới đây</li>
+</ul>
+<center>
+<table class="table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 9%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Score</th>
+<th>Odd</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>600</td>
+<td>30</td>
+</tr>
+<tr class="even">
+<td>601</td>
+<td>31</td>
+</tr>
+<tr class="odd">
+<td>…</td>
+<td>….</td>
+</tr>
+<tr class="even">
+<td>620</td>
+<td>60</td>
+</tr>
+</tbody>
+</table>
+</center>
+</section>
+<section id="xây-dựng-score-card" class="level2" data-number="30.4">
+<h2 data-number="30.4" class="anchored" data-anchor-id="xây-dựng-score-card"><span class="header-section-number">30.4</span> Xây dựng score card</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"http://www.creditriskanalytics.net/uploads/1/9/5/1/19511601/hmeq.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(data, <span class="at">file =</span> <span class="st">"data/hmeq.rda"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scorecard)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/hmeq.rda"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data) <span class="ot">&lt;-</span> <span class="fu">names</span>(data) <span class="sc">%&gt;%</span> tolower</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  bad loan mortdue  value  reason    job  yoj derog delinq     clage ninq clno
+1   1 1100   25860  39025 HomeImp  Other 10.5     0      0  94.36667    1    9
+2   1 1300   70053  68400 HomeImp  Other  7.0     0      2 121.83333    0   14
+3   1 1500   13500  16700 HomeImp  Other  4.0     0      0 149.46667    1   10
+4   1 1500      NA     NA                  NA    NA     NA        NA   NA   NA
+5   0 1700   97800 112000 HomeImp Office  3.0     0      0  93.33333    0   14
+6   1 1700   30548  40320 HomeImp  Other  9.0     0      0 101.46600    1    8
+   debtinc
+1       NA
+2       NA
+3       NA
+4       NA
+5       NA
+6 37.11361</code></pre>
+</div>
+</div>
+<ul>
+<li>Kiểm tra dữ liệu missing</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>check_na <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (x <span class="sc">%&gt;%</span> is.na <span class="sc">%&gt;%</span> sum)<span class="sc">/</span><span class="fu">length</span>(x)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> <span class="fu">map_df</span>(check_na)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 13
+    bad  loan mortdue  value reason   job    yoj derog delinq  clage   ninq
+  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+1     0     0  0.0869 0.0188      0     0 0.0864 0.119 0.0973 0.0517 0.0856
+# ℹ 2 more variables: clno &lt;dbl&gt;, debtinc &lt;dbl&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      bad              loan          mortdue           value       
+ Min.   :0.0000   Min.   : 1100   Min.   :  2063   Min.   :  8000  
+ 1st Qu.:0.0000   1st Qu.:11100   1st Qu.: 46276   1st Qu.: 66076  
+ Median :0.0000   Median :16300   Median : 65019   Median : 89236  
+ Mean   :0.1995   Mean   :18608   Mean   : 73761   Mean   :101776  
+ 3rd Qu.:0.0000   3rd Qu.:23300   3rd Qu.: 91488   3rd Qu.:119824  
+ Max.   :1.0000   Max.   :89900   Max.   :399550   Max.   :855909  
+                                  NA's   :518      NA's   :112     
+     reason          job            yoj             derog        
+        : 252          : 279   Min.   : 0.000   Min.   : 0.0000  
+ DebtCon:3928   Mgr    : 767   1st Qu.: 3.000   1st Qu.: 0.0000  
+ HomeImp:1780   Office : 948   Median : 7.000   Median : 0.0000  
+                Other  :2388   Mean   : 8.922   Mean   : 0.2546  
+                ProfExe:1276   3rd Qu.:13.000   3rd Qu.: 0.0000  
+                Sales  : 109   Max.   :41.000   Max.   :10.0000  
+                Self   : 193   NA's   :515      NA's   :708      
+     delinq            clage             ninq             clno     
+ Min.   : 0.0000   Min.   :   0.0   Min.   : 0.000   Min.   : 0.0  
+ 1st Qu.: 0.0000   1st Qu.: 115.1   1st Qu.: 0.000   1st Qu.:15.0  
+ Median : 0.0000   Median : 173.5   Median : 1.000   Median :20.0  
+ Mean   : 0.4494   Mean   : 179.8   Mean   : 1.186   Mean   :21.3  
+ 3rd Qu.: 0.0000   3rd Qu.: 231.6   3rd Qu.: 2.000   3rd Qu.:26.0  
+ Max.   :15.0000   Max.   :1168.2   Max.   :17.000   Max.   :71.0  
+ NA's   :580       NA's   :308      NA's   :510      NA's   :222   
+    debtinc        
+ Min.   :  0.5245  
+ 1st Qu.: 29.1400  
+ Median : 34.8183  
+ Mean   : 33.7799  
+ 3rd Qu.: 39.0031  
+ Max.   :203.3121  
+ NA's   :1267      </code></pre>
+</div>
+</div>
+<section id="điền-thêm-missing-value" class="level3" data-number="30.4.1">
+<h3 data-number="30.4.1" class="anchored" data-anchor-id="điền-thêm-missing-value"><span class="header-section-number">30.4.1</span> Điền thêm missing value</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Thay NA bằng mean</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>replace_by_mean <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  x[<span class="fu">is.na</span>(x)] <span class="ot">&lt;-</span> <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Thay NA bằng category</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>replace_na_categorical <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">%&gt;%</span> </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">table</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="sc">-</span>Freq) <span class="ot">-&gt;&gt;</span> my_df</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  n_obs <span class="ot">&lt;-</span> <span class="fu">sum</span>(my_df<span class="sc">$</span>Freq)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  pop <span class="ot">&lt;-</span> my_df<span class="sc">$</span>. <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">129</span>)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  x[<span class="fu">is.na</span>(x)] <span class="ot">&lt;-</span> <span class="fu">sample</span>(pop, <span class="fu">sum</span>(<span class="fu">is.na</span>(x)), </span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>                        <span class="at">replace =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>                        <span class="at">prob =</span> my_df<span class="sc">$</span>Freq)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is.factor, as.character) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">reason =</span> <span class="fu">case_when</span>(reason <span class="sc">==</span> <span class="st">""</span> <span class="sc">~</span> <span class="cn">NA_character_</span>, </span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>                            <span class="cn">TRUE</span> <span class="sc">~</span> reason), </span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>         <span class="at">job =</span> <span class="fu">case_when</span>(job <span class="sc">==</span> <span class="st">""</span> <span class="sc">~</span> <span class="cn">NA_character_</span>, </span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>                         <span class="cn">TRUE</span> <span class="sc">~</span> job)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is_character, as.factor) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is.numeric, replace_by_mean) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is.factor, replace_na_categorical)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Phân chia train/test</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(bad) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample_frac</span>(<span class="fl">0.5</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(df, train)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Xây dựng WOE</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scorecard)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>bins_var <span class="ot">&lt;-</span> <span class="fu">woebin</span>(train, <span class="at">y =</span> <span class="st">"bad"</span>, <span class="at">no_cores =</span> <span class="dv">1</span>, <span class="at">positive =</span> <span class="st">"bad|1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>✔ Binning on 2980 rows and 13 columns in 00:00:04</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>bins_var<span class="sc">$</span>derog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   variable                 bin count count_distr  neg pos   posprob        woe
+1:    derog [-Inf,0.2545696877)  2262   0.7590604 1882 380 0.1679929 -0.2094248
+2:    derog    [0.2545696877,1)   341   0.1144295  303  38 0.1114370 -0.6856524
+3:    derog            [1, Inf)   377   0.1265101  201 176 0.4668435  1.2576734
+       bin_iv  total_iv       breaks is_special_values
+1: 0.03121208 0.3411161 0.2545696877             FALSE
+2: 0.04320825 0.3411161            1             FALSE
+3: 0.26669579 0.3411161          Inf             FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lọc các biến có woe cao</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>bins_var<span class="sc">$</span>loan <span class="sc">%&gt;%</span> <span class="fu">select</span>(total_iv) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    total_iv
+1: 0.1586945</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra IV cho tất cả các biến</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>bins_var <span class="sc">%&gt;%</span> <span class="fu">map_df</span>(<span class="cf">function</span>(df){df <span class="sc">%&gt;%</span> <span class="fu">select</span>(total_iv) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span> pull})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 12
+   loan mortdue value  reason    job    yoj derog delinq clage  ninq   clno
+  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+1 0.159  0.0555 0.174 0.00604 0.0833 0.0895 0.341  0.575 0.207 0.107 0.0665
+# ℹ 1 more variable: debtinc &lt;dbl&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Biểu đồ WOE cho biến</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>bins_var<span class="sc">$</span>loan </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   variable           bin count count_distr  neg pos   posprob         woe
+1:     loan   [-Inf,6000)   152  0.05100671   87  65 0.4276316  1.09897343
+2:     loan  [6000,13000)   868  0.29127517  683 185 0.2131336  0.08435525
+3:     loan [13000,15000)   249  0.08355705  212  37 0.1485944 -0.35517408
+4:     loan [15000,16000)   190  0.06375839  135  55 0.2894737  0.49255269
+5:     loan [16000,38000)  1339  0.44932886 1134 205 0.1530993 -0.32000222
+6:     loan  [38000, Inf)   182  0.06107383  135  47 0.2582418  0.33536711
+        bin_iv  total_iv breaks is_special_values
+1: 0.080186498 0.1586945   6000             FALSE
+2: 0.002125302 0.1586945  13000             FALSE
+3: 0.009434160 0.1586945  15000             FALSE
+4: 0.017738075 0.1586945  16000             FALSE
+5: 0.041649754 0.1586945  38000             FALSE
+6: 0.007560693 0.1586945    Inf             FALSE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">woebin_plot</span>(bins_var<span class="sc">$</span>derog)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>p<span class="sc">$</span>derog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><strong>Lưu ý</strong>: Trong package <code>scorecard</code>, WOE được tính đảo ngược lại, nghĩa là <span class="math inline">\(WOE = ln(\frac{Distr\:Bad}{Distr\:Good})\)</span>. Do đó, với bucket nào có hệ số dương, nhóm đó có xu hướng laf</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tạo dataframe woe</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>train_woe <span class="ot">&lt;-</span> <span class="fu">woebin_ply</span>(train, bins_var)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>✔ Woe transformating on 2980 rows and 12 columns in 00:00:02</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Logistic Regression:</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>my_logistic <span class="ot">&lt;-</span> <span class="fu">glm</span>(bad <span class="sc">~</span> ., <span class="at">family =</span> binomial, <span class="at">data =</span> train_woe)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Kết quả</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>my_logistic <span class="sc">%&gt;%</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = bad ~ ., family = binomial, data = train_woe)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.3874  -0.4542  -0.2655  -0.1434   2.9964  
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) -1.39388    0.06267 -22.241  &lt; 2e-16 ***
+loan_woe     0.55661    0.15662   3.554 0.000379 ***
+mortdue_woe  0.45576    0.26473   1.722 0.085139 .  
+value_woe    0.72577    0.14587   4.975 6.51e-07 ***
+reason_woe   1.06208    0.81259   1.307 0.191202    
+job_woe      0.93845    0.21525   4.360 1.30e-05 ***
+yoj_woe      1.05720    0.21329   4.957 7.17e-07 ***
+derog_woe    0.67661    0.09936   6.810 9.77e-12 ***
+delinq_woe   0.95015    0.07827  12.140  &lt; 2e-16 ***
+clage_woe    0.83732    0.13584   6.164 7.10e-10 ***
+ninq_woe     0.36784    0.18398   1.999 0.045569 *  
+clno_woe     0.92563    0.22804   4.059 4.93e-05 ***
+debtinc_woe  0.91605    0.04644  19.727  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 2976.8  on 2979  degrees of freedom
+Residual deviance: 1831.7  on 2967  degrees of freedom
+AIC: 1857.7
+
+Number of Fisher Scoring iterations: 6</code></pre>
+</div>
+</div>
+<ul>
+<li>Xây dựng scorecard</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate scorecard scores for variables based on the results from woebin and glm: </span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>my_card <span class="ot">&lt;-</span> <span class="fu">scorecard</span>(bins_var, my_logistic, <span class="at">points0 =</span> <span class="dv">600</span>, <span class="at">odds0 =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">19</span>, <span class="at">pdo =</span> <span class="dv">50</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>my_card</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$basepoints
+     variable bin woe points
+1: basepoints  NA  NA    488
+
+$loan
+   variable           bin count count_distr  neg pos   posprob         woe
+1:     loan   [-Inf,6000)   152  0.05100671   87  65 0.4276316  1.09897343
+2:     loan  [6000,13000)   868  0.29127517  683 185 0.2131336  0.08435525
+3:     loan [13000,15000)   249  0.08355705  212  37 0.1485944 -0.35517408
+4:     loan [15000,16000)   190  0.06375839  135  55 0.2894737  0.49255269
+5:     loan [16000,38000)  1339  0.44932886 1134 205 0.1530993 -0.32000222
+6:     loan  [38000, Inf)   182  0.06107383  135  47 0.2582418  0.33536711
+        bin_iv  total_iv breaks is_special_values points
+1: 0.080186498 0.1586945   6000             FALSE    -44
+2: 0.002125302 0.1586945  13000             FALSE     -3
+3: 0.009434160 0.1586945  15000             FALSE     14
+4: 0.017738075 0.1586945  16000             FALSE    -20
+5: 0.041649754 0.1586945  38000             FALSE     13
+6: 0.007560693 0.1586945    Inf             FALSE    -13
+
+$mortdue
+   variable            bin count count_distr neg pos   posprob         woe
+1:  mortdue   [-Inf,30000)   323  0.10838926 233  90 0.2786378  0.43926550
+2:  mortdue  [30000,55000)   659  0.22114094 513 146 0.2215478  0.13382506
+3:  mortdue  [55000,75000)   950  0.31879195 765 185 0.1947368 -0.02902573
+4:  mortdue  [75000,85000)   260  0.08724832 224  36 0.1384615 -0.43763283
+5:  mortdue [85000,145000)   612  0.20536913 513  99 0.1617647 -0.25466171
+6:  mortdue  [145000, Inf)   176  0.05906040 138  38 0.2159091  0.10082676
+         bin_iv   total_iv breaks is_special_values points
+1: 0.0236597956 0.05553666  30000             FALSE    -14
+2: 0.0041200794 0.05553666  55000             FALSE     -4
+3: 0.0002662377 0.05553666  75000             FALSE      1
+4: 0.0145621938 0.05553666  85000             FALSE     14
+5: 0.0123097167 0.05553666 145000             FALSE      8
+6: 0.0006186406 0.05553666    Inf             FALSE     -3
+
+$value
+   variable             bin count count_distr  neg pos   posprob        woe
+1:    value    [-Inf,45000)   220  0.07382550  142  78 0.3545455  0.7913761
+2:    value   [45000,90000)  1269  0.42583893 1039 230 0.1812451 -0.1174404
+3:    value  [90000,100000)   285  0.09563758  247  38 0.1333333 -0.4813079
+4:    value [100000,105000)   204  0.06845638  124  80 0.3921569  0.9522394
+5:    value   [105000, Inf)  1002  0.33624161  834 168 0.1676647 -0.2117751
+        bin_iv  total_iv breaks is_special_values points
+1: 0.056820247 0.1744091  45000             FALSE    -41
+2: 0.005666669 0.1744091  90000             FALSE      6
+3: 0.019034511 0.1744091 100000             FALSE     25
+4: 0.078760013 0.1744091 105000             FALSE    -50
+5: 0.014127667 0.1744091    Inf             FALSE     11
+
+$reason
+   variable     bin count count_distr  neg pos   posprob         woe
+1:   reason DebtCon  2063   0.6922819 1669 394 0.1909840 -0.05313473
+2:   reason HomeImp   917   0.3077181  717 200 0.2181025  0.11373581
+        bin_iv   total_iv  breaks is_special_values points
+1: 0.001923339 0.00604028 DebtCon             FALSE      4
+2: 0.004116941 0.00604028 HomeImp             FALSE     -9
+
+$job
+   variable                    bin count count_distr neg pos   posprob
+1:      job                    Mgr   409   0.1372483 312  97 0.2371638
+2:      job                 Office   494   0.1657718 434  60 0.1214575
+3:      job                  Other  1278   0.4288591 978 300 0.2347418
+4:      job ProfExe%,%Sales%,%Self   799   0.2681208 662 137 0.1714643
+          woe      bin_iv   total_iv                 breaks is_special_values
+1:  0.2222021 0.007229762 0.08332294                    Mgr             FALSE
+2: -0.5882057 0.047576595 0.08332294                 Office             FALSE
+3:  0.2087671 0.019866166 0.08332294                  Other             FALSE
+4: -0.1847903 0.008650419 0.08332294 ProfExe%,%Sales%,%Self             FALSE
+   points
+1:    -15
+2:     40
+3:    -14
+4:     13
+
+$yoj
+   variable       bin count count_distr neg pos   posprob         woe
+1:      yoj  [-Inf,5)   975  0.32718121 748 227 0.2328205  0.19804132
+2:      yoj     [5,6)   173  0.05805369 122  51 0.2947977  0.51829887
+3:      yoj     [6,9)   693  0.23255034 591 102 0.1471861 -0.36634892
+4:      yoj    [9,21)   874  0.29328859 691 183 0.2093822  0.06184061
+5:      yoj [21, Inf)   265  0.08892617 234  31 0.1169811 -0.63083963
+        bin_iv   total_iv breaks is_special_values points
+1: 0.013597417 0.08951837      5             FALSE    -15
+2: 0.017998957 0.08951837      6             FALSE    -40
+3: 0.027834354 0.08951837      9             FALSE     28
+4: 0.001142491 0.08951837     21             FALSE     -5
+5: 0.028945152 0.08951837    Inf             FALSE     48
+
+$derog
+   variable                 bin count count_distr  neg pos   posprob        woe
+1:    derog [-Inf,0.2545696877)  2262   0.7590604 1882 380 0.1679929 -0.2094248
+2:    derog    [0.2545696877,1)   341   0.1144295  303  38 0.1114370 -0.6856524
+3:    derog            [1, Inf)   377   0.1265101  201 176 0.4668435  1.2576734
+       bin_iv  total_iv       breaks is_special_values points
+1: 0.03121208 0.3411161 0.2545696877             FALSE     10
+2: 0.04320825 0.3411161            1             FALSE     33
+3: 0.26669579 0.3411161          Inf             FALSE    -61
+
+$delinq
+   variable                 bin count count_distr  neg pos   posprob        woe
+1:   delinq [-Inf,0.4494423792)  2084  0.69932886 1800 284 0.1362764 -0.4560734
+2:   delinq    [0.4494423792,1)   289  0.09697987  258  31 0.1072664 -0.7284781
+3:   delinq            [1, Inf)   607  0.20369128  328 279 0.4596376  1.2286925
+       bin_iv total_iv       breaks is_special_values points
+1: 0.12600679 0.574966 0.4494423792             FALSE     31
+2: 0.04075268 0.574966            1             FALSE     50
+3: 0.40820653 0.574966          Inf             FALSE    -84
+
+$clage
+   variable        bin count count_distr neg pos   posprob         woe
+1:    clage  [-Inf,70)   158  0.05302013 101  57 0.3607595  0.81842503
+2:    clage   [70,150)  1037  0.34798658 770 267 0.2574735  0.33135243
+3:    clage  [150,230)  1048  0.35167785 853 195 0.1860687 -0.08526571
+4:    clage [230, Inf)   737  0.24731544 662  75 0.1017639 -0.78728316
+        bin_iv  total_iv breaks is_special_values points
+1: 0.043891591 0.2074202     70             FALSE    -49
+2: 0.042008565 0.2074202    150             FALSE    -20
+3: 0.002491401 0.2074202    230             FALSE      5
+4: 0.119028692 0.2074202    Inf             FALSE     48
+
+$ninq
+   variable      bin count count_distr  neg pos   posprob        woe
+1:     ninq [-Inf,2)  2229  0.74798658 1843 386 0.1731718 -0.1728183
+2:     ninq    [2,3)   378  0.12684564  295  83 0.2195767  0.1223595
+3:     ninq    [3,4)   182  0.06107383  131  51 0.2802198  0.4471226
+4:     ninq [4, Inf)   191  0.06409396  117  74 0.3874346  0.9323854
+        bin_iv total_iv breaks is_special_values points
+1: 0.021185937 0.107431      2             FALSE      5
+2: 0.001969102 0.107431      3             FALSE     -3
+3: 0.013840672 0.107431      4             FALSE    -12
+4: 0.070435269 0.107431    Inf             FALSE    -25
+
+$clno
+   variable       bin count count_distr  neg pos   posprob         woe
+1:     clno  [-Inf,9)   232  0.07785235  159  73 0.3146552  0.61204952
+2:     clno    [9,27)  2038  0.68389262 1679 359 0.1761531 -0.15213699
+3:     clno   [27,36)   455  0.15268456  363  92 0.2021978  0.01788003
+4:     clno [36, Inf)   255  0.08557047  185  70 0.2745098  0.41863370
+         bin_iv   total_iv breaks is_special_values points
+1: 3.443201e-02 0.06646488      9             FALSE    -41
+2: 1.510889e-02 0.06646488     27             FALSE     10
+3: 4.907506e-05 0.06646488     36             FALSE     -1
+4: 1.687491e-02 0.06646488    Inf             FALSE    -28
+
+$debtinc
+   variable       bin count count_distr  neg pos    posprob        woe
+1:  debtinc [-Inf,31)   803  0.26946309  756  47 0.05853051 -1.3873995
+2:  debtinc   [31,33)   175  0.05872483  156  19 0.10857143 -0.7149227
+3:  debtinc   [33,34)   703  0.23590604  316 387 0.55049787  1.5931768
+4:  debtinc   [34,42)  1128  0.37852349 1043  85 0.07535461 -1.1167109
+5:  debtinc [42, Inf)   171  0.05738255  115  56 0.32748538  0.6709138
+       bin_iv total_iv breaks is_special_values points
+1: 0.32981774  1.53994     31             FALSE     92
+2: 0.02387474  1.53994     33             FALSE     47
+3: 0.82697970  1.53994     34             FALSE   -105
+4: 0.32835280  1.53994     42             FALSE     74
+5: 0.03091455  1.53994    Inf             FALSE    -44</code></pre>
+</div>
+</div>
+<p><strong>Lưu ý</strong>:</p>
+<ul>
+<li>Default là 600 điểm tương ứng với odd là 19</li>
+<li>pdo là 50</li>
+<li>Basepoint là điểm offset 485 điểm</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># So sánh điểm score tương ứng với prob trên train</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span>  <span class="fu">scorecard_ply</span>(train, my_card)<span class="sc">$</span>score</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(my_logistic, train_woe, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">score =</span> score,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">pred =</span> pred) <span class="sc">%&gt;%</span> </span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">odds =</span> (<span class="dv">1</span><span class="sc">-</span>pred)<span class="sc">/</span>pred <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(score <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">600</span>, <span class="dv">650</span>, <span class="dv">700</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(score)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     score       pred     odds
+220    600 0.04893927 19.02121
+1153   600 0.05024819 18.99504
+1916   600 0.04984767 19.00305
+1989   600 0.04970749 19.00585
+2068   600 0.05033726 18.99325
+2807   600 0.05024819 18.99504
+2961   600 0.05024819 18.99504
+79     650 0.02543880 32.48537
+638    650 0.02555429 32.48152
+955    650 0.02555429 32.48152
+971    650 0.02534197 32.48860
+1398   650 0.02571808 32.47606
+1762   650 0.02571808 32.47606
+2078   650 0.02571808 32.47606
+2141   650 0.02568026 32.47732
+2263   650 0.02555429 32.48152
+540    700 0.01300547 98.69945
+636    700 0.01305757 98.69424
+802    700 0.01313392 98.68661
+810    700 0.01294695 98.70531
+1402   700 0.01294695 98.70531
+1435   700 0.01294459 98.70554
+1793   700 0.01294695 98.70531
+1854   700 0.01294695 98.70531
+1855   700 0.01305757 98.69424</code></pre>
+</div>
+</div>
+<p><strong>Dự báo với tập mới</strong>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>test_woe <span class="ot">&lt;-</span> <span class="fu">woebin_ply</span>(test, bins_var)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>✔ Woe transformating on 2980 rows and 12 columns in 00:00:02</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>test_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(my_logistic, test_woe, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">perf_eva</span>(test_pred, test<span class="sc">$</span>bad,  </span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">c</span>(<span class="st">"ks"</span>, <span class="st">"lift"</span>, <span class="st">"roc"</span>, <span class="st">"pr"</span>), </span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">"Test Data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$binomial_metric
+$binomial_metric$`Test Data`
+          MSE      RMSE   LogLoss        R2        KS       AUC      Gini
+1: 0.09501332 0.3082423 0.3125839 0.4054181 0.6188503 0.8871089 0.7742177
+
+
+$pic
+TableGrob (1 x 2) "arrange": 2 grobs
+  z     cells    name           grob
+1 1 (1-1,1-1) arrange gtable[layout]
+2 2 (1-1,2-2) arrange gtable[layout]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>test_woe <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   bad loan_woe mortdue_woe  value_woe  reason_woe    job_woe     yoj_woe
+1:   1 1.098973  0.43926550  0.7913761  0.11373581  0.2087671  0.06184061
+2:   1 1.098973 -0.02902573 -0.1174404  0.11373581  0.2087671 -0.36634892
+3:   1 1.098973  0.43926550  0.7913761  0.11373581  0.2087671  0.19804132
+4:   1 1.098973 -0.02902573  0.9522394 -0.05313473  0.2087671 -0.36634892
+5:   0 1.098973 -0.25466171 -0.2117751  0.11373581 -0.5882057  0.19804132
+6:   1 1.098973  0.43926550  0.7913761  0.11373581  0.2087671  0.06184061
+    derog_woe delinq_woe   clage_woe   ninq_woe   clno_woe debtinc_woe
+1: -0.2094248 -0.4560734  0.33135243 -0.1728183 -0.1521370    1.593177
+2: -0.2094248  1.2286925  0.33135243 -0.1728183 -0.1521370    1.593177
+3: -0.2094248 -0.4560734  0.33135243 -0.1728183 -0.1521370    1.593177
+4: -0.6856524 -0.4560734 -0.08526571 -0.1728183 -0.1521370    1.593177
+5: -0.2094248 -0.4560734  0.33135243 -0.1728183 -0.1521370    1.593177
+6: -0.2094248 -0.4560734  0.33135243 -0.1728183  0.6120495   -1.116711</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>score_result <span class="ot">&lt;-</span> <span class="fu">scorecard_ply</span>(test, my_card, <span class="at">only_total_score =</span> F)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>score_result <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   loan_points mortdue_points value_points reason_points job_points yoj_points
+1:         -44            -14          -41            -9        -14         -5
+2:         -44              1            6            -9        -14         28
+3:         -44            -14          -41            -9        -14        -15
+4:         -44              1          -50             4        -14         28
+5:         -44              8           11            -9         40        -15
+6:         -44            -14          -41            -9        -14         -5
+   derog_points delinq_points clage_points ninq_points clno_points
+1:           10            31          -20           5          10
+2:           10           -84          -20           5          10
+3:           10            31          -20           5          10
+4:           33            31            5           5          10
+5:           10            31          -20           5          10
+6:           10            31          -20           5         -41
+   debtinc_points score
+1:           -105   292
+2:           -105   272
+3:           -105   282
+4:           -105   392
+5:           -105   410
+6:             74   420</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">predict =</span> test_pred, <span class="at">actual =</span> test<span class="sc">$</span>bad)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>result <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    predict actual
+1 0.7911585      1
+2 0.8329938      1
+3 0.8139546      1
+4 0.4835735      1
+5 0.4215718      0
+6 0.3909958      1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># result %&gt;% VPBank::model_performance(predict, actual)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="đo-lường-độ-ổn-định-mô-hình" class="level3" data-number="30.4.2">
+<h3 data-number="30.4.2" class="anchored" data-anchor-id="đo-lường-độ-ổn-định-mô-hình"><span class="header-section-number">30.4.2</span> Đo lường độ ổn định mô hình</h3>
+<p>Độ ổn định</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>index <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="fu">textConnection</span>(</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"Score_bands    Actual  Expected    Diff    log_Ac_Ex   Index</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="st">&lt; 251   5%  8%  -3% -0.47   0.014</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="st">251–290 6%  9%  -3% -0.41   0.012</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="st">291–320 6%  10% -4% -0.51   0.020</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="st">321–350 8%  13% -5% -0.49   0.024</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="st">351–380 10% 12% -2% -0.18   0.004</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="st">381–410 12% 11% 1%  0.09    0.001</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="st">411–440 14% 10% 4%  0.34    0.013</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="st">441–470 14% 9%  5%  0.44    0.022</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a><span class="st">471–520 13% 9%  4%  0.37    0.015</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a><span class="st">520 &lt;   9%  8%  1%  0.12    0.001"</span>)</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>), <span class="at">header =</span> T, <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>)</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>index</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Score_bands Actual Expected Diff log_Ac_Ex Index
+1        &lt; 251     5%       8%  -3%     -0.47 0.014
+2      251–290     6%       9%  -3%     -0.41 0.012
+3      291–320     6%      10%  -4%     -0.51 0.020
+4      321–350     8%      13%  -5%     -0.49 0.024
+5      351–380    10%      12%  -2%     -0.18 0.004
+6      381–410    12%      11%   1%      0.09 0.001
+7      411–440    14%      10%   4%      0.34 0.013
+8      441–470    14%       9%   5%      0.44 0.022
+9      471–520    13%       9%   4%      0.37 0.015
+10       520 &lt;     9%       8%   1%      0.12 0.001</code></pre>
+</div>
+</div>
+<p><span class="math display">\[log_Ac_Ex = log(\frac{AC}{Ec})\]</span> <span class="math display">\[Diff = AC - EC\]</span> <span class="math display">\[Index = (AC - EC)*log(\frac{AC}{EC})\]</span></p>
+<p><span class="math display">\[Population\:Stability\:Index\:(PSI) ==  \sum(Index) = 0.1269\]</span></p>
+<p><strong>Quy tắc</strong>:</p>
+<ul>
+<li>PSI &lt; 0.1: Mô hình ổn định</li>
+<li>0.1 &lt;= PSI &lt;= 0.25: Kiểm tra lại mô hình</li>
+<li>PSI &gt;= 0.25: Mô hình cần phải xây lại</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>train_score <span class="ot">&lt;-</span> <span class="fu">scorecard_ply</span>(train, my_card)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>test_score <span class="ot">&lt;-</span> <span class="fu">scorecard_ply</span>(test, my_card)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="fu">perf_psi</span>(</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">score =</span> <span class="fu">list</span>(<span class="at">train =</span> train_score, <span class="at">test =</span> test_score),</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> <span class="fu">list</span>(<span class="at">train =</span> train<span class="sc">$</span>bad, <span class="at">test =</span> test<span class="sc">$</span>bad)</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>psi<span class="sc">$</span>psi  <span class="co"># psi dataframe</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   variable    dataset        psi
+1:    score train_test 0.01135422</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> psi<span class="sc">$</span>pic</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>p<span class="sc">$</span>score</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> train_score <span class="sc">%&gt;%</span> </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">class =</span> <span class="st">"train"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">actual =</span> train<span class="sc">$</span>bad) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(test_score <span class="sc">%&gt;%</span> </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">mutate</span>(<span class="at">class =</span> <span class="st">"test"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>              <span class="fu">mutate</span>(<span class="at">actual =</span> test<span class="sc">$</span>bad))</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     score          class               actual      
+ Min.   : 40.0   Length:5960        Min.   :0.0000  
+ 1st Qu.:457.0   Class :character   1st Qu.:0.0000  
+ Median :570.0   Mode  :character   Median :0.0000  
+ Mean   :540.8                      Mean   :0.1995  
+ 3rd Qu.:642.0                      3rd Qu.:0.0000  
+ Max.   :815.0                      Max.   :1.0000  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bucket =</span> <span class="fu">cut</span>(score, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">150</span>, <span class="dv">850</span>, <span class="at">by =</span> <span class="dv">50</span>)))  <span class="sc">%&gt;%</span> </span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bucket =</span> <span class="fu">as.character</span>(bucket)) <span class="sc">%&gt;%</span> </span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bucket =</span> <span class="fu">case_when</span>(</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    score <span class="sc">&lt;</span> <span class="dv">200</span> <span class="sc">~</span> <span class="st">"(-50,200]"</span>,</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>    score <span class="sc">&gt;</span> <span class="dv">750</span> <span class="sc">~</span> <span class="st">"[750, 850)"</span>,</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> bucket</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span> </span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">class =</span> <span class="fu">as.factor</span>(class),</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">actual =</span> <span class="fu">as.factor</span>(actual),</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">bucket =</span> <span class="fu">as.factor</span>(bucket)</span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(bucket)) <span class="sc">+</span></span>
+<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> class),</span>
+<span id="cb47-18"><a href="#cb47-18" aria-hidden="true" tabindex="-1"></a>           <span class="at">stat =</span> <span class="st">"count"</span>,</span>
+<span id="cb47-19"><a href="#cb47-19" aria-hidden="true" tabindex="-1"></a>           <span class="at">position =</span> <span class="st">"dodge"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>p<span class="sc">$</span>score</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-13-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>bucket <span class="sc">%&gt;%</span> levels</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "(-50,200]"  "(150,200]"  "(200,250]"  "(250,300]"  "(300,350]" 
+ [6] "(350,400]"  "(400,450]"  "(450,500]"  "(500,550]"  "(550,600]" 
+[11] "(600,650]"  "(650,700]"  "(700,750]"  "[750, 850)"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(bucket <span class="sc">==</span> <span class="st">"(300,350]"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class, actual) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">no =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  ungroup <span class="sc">%&gt;%</span> </span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class) <span class="sc">%&gt;%</span> </span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> no<span class="sc">/</span><span class="fu">sum</span>(no))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+# Groups:   class [2]
+  class actual    no  perc
+  &lt;fct&gt; &lt;fct&gt;  &lt;int&gt; &lt;dbl&gt;
+1 test  0         34 0.298
+2 test  1         80 0.702
+3 train 0         50 0.391
+4 train 1         78 0.609</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="30.5">
+<h2 data-number="30.5" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">30.5</span> Tài liệu tham khảo</h2>
+<ul>
+<li>http://ucanalytics.com/blogs/information-value-and-weight-of-evidencebanking-case/</li>
+<li>IFRS 9 and CECL Credit Risk Modelling and ValidationA Practical Guide with Examples Worked in R and SAS</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./p03-20-feature-engineering.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Feature Engineering</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./p03-40-interpretable-ml.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Giải thích mô hình học máy</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

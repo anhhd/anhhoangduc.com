@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Hoàng Đức Anh">
+<meta name="dcterms.date" content="2023-11-26">
+
+<title>Khoa học dữ liệu với R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./p02-01-gioi-thieu-co-ban-ve-r.html" rel="next">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/quarto-contrib/bookup_fonts_embed-0.0/fonts-download.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar docked">
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Khoa học dữ liệu và nghề phân tích dữ liệu</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Khoa học dữ liệu với R</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Khoa học dữ liệu và nghề phân tích dữ liệu</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Phân tích khám phá dữ liệu</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-01-gioi-thieu-co-ban-ve-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Giới thiệu cơ bản về R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-70-xay-dung-bao-cao-voi-rmarkdown.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Xây dựng báo cáo với Rmarkdown</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-02-bien-doi-du-lieu-dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Ngữ pháp của biến đổi dữ liệu với DPLYR</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-03-phan-ra-va-xoay-chieu-du-lieu.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Làm sạch và biến đổi dữ liệu nâng cao</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-04-ngu-phap-bieu-do-ggplot2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ngữ pháp của biểu đồ với GGPLOT2</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-05-cac-chi-so-thong-ke.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Các chỉ số thống kê mô tả cơ bản</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-06-lap-trinh-ham.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Lập trình hàm</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-07-lap-trinh-ham-voi-purrr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Lập trình chức năng hàm với purrr</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-08-bien-doi-du-lieu-text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu text</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-11-quan-ly-nhieu-mo-hinh.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quản lý kết quả phân tích từ nhiều mô hình</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-15-thong-ke-co-ban.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Xác suất và phân phối thống kê cơ bản</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-16-power-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Power analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-20-sampling-methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Phương pháp ước lượng tham số thông qua lấy mẫu</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-50-datatable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu với <code>data.table</code></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-60-thu-thap-du-lieu-tu-website.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Thu thập dữ liệu từ website</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-99-meo-trong-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Các mẹo trong R</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Supervised Learning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-01-nguyen-ly-du-bao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Giới thiệu về học máy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-02-mo-hinh-ols.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mô hình hồi quy tuyến tính</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-03-logistic-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Mô hình hồi quy logistic</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-04-decision-tree.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Cây quyết định</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-05-bagging-boosting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Bagging, RandomForest và Boosting</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-07-xay-dung-mo-hinh-voi-h2o.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Xây dựng mô hình với H2O</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-10-knn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">K nearest neighbors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-11-svm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Support Vector Machine</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-15-nonlinear.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Mô hình phi tuyến tính</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-17-regularization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Lựa chọn biến &amp; regularization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-20-feature-engineering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Feature Engineering</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-30-credit-scoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Credit Scoring</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-40-interpretable-ml.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Giải thích mô hình học máy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-50-chat-luong-mo-hinh.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Chất lượng mô hình</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-69-caret.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Xây dựng mô hình dự báo với caret</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-70-tidymodels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Tidymodels</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-75-mlops-vetiver.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">MLOPs với <code>vetiver</code></span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Unsupervised Learning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-01-unsupervised-learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Unsupervised learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-02-hierarchical-clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Hierachical clustering</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-03-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">k-means</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-04-basket-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Phân tích giỏ hàng</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-05-pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Principal component analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-06-factor-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Phân tích nhân tố ẩn (factor analysis)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Chuỗi thời gian</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-01-chuoi-thoi-gian.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Giới thiệu về chuỗi thời gian</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-02-arima.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Mô hình ARIMA</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Phân tích chuỗi thời gian với tidyquant và timetk</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-06-du-bao-ts-voi-prophet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với prophet</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-07-du-bao-ts-voi-timetk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với timetk</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-08-abnomaly-detection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Abnomaly detection trong times series</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Natural Language Processing</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-01-nlp-co-ban.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Xử lý ngôn ngữ tự nhiên cơ bản</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-04-text-classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Phân loại text</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-07-nlp-api.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Sử dụng API từ các dịch vụ đám mây</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-10-ocr-tesseract.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">OCR với <code>tesseract</code></span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Các phương pháp khác</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-02-causal-impact.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Causal Impact</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-03-collaborative-filtering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Collaborative Filtering</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-04-survival-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Survival Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-05-vintage-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Vintage analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-07-spatial-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Spatial data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-08-anomaly-detection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Abnomaly detection</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-10-shiny.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Shiny apps</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-15-quantile-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Hồi quy phân vị</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-16-retention-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Retention analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-20-network-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Network analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-30-python-voi-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Sử dụng Python với R</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Cloud Computing</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-01-cai-dat-rstudio-server-tren-amazon.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Cài đặt server RStudio trên Amazon</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-02-deploy-shiny-app-aws.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Deploy Shiny Apps lên AWS</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-03-web-service-azure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Xây dựng web service với Azure</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-09-apis-voi-plumber.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">API với Plumber</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text">Kiến thức bổ trợ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-01-git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">Sử dụng GIT</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-02-cmd.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">CMD và Bash</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-03-docker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">Sử dụng docker</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-04-apis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">API</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-05-html-css.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Cơ bản về HTML và CSS</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-10-nguyen-ly-thi-giac.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Nguyên lý thị giác và Business Dashboard</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-30-tim-hieu-he-thong.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">Tìm hiểu hệ thống dữ liệu</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-40-aws-overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">AWS</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-90-other.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Các tricks khác</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">
+ <span class="menu-text">Case studies</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p13-01-casestudy-truc-quan-hoa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">76</span>&nbsp; <span class="chapter-title">Trực quan hóa dữ liệu</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#intro" id="toc-intro" class="nav-link active" data-scroll-target="#intro"><span class="header-section-number">1</span> Khoa học dữ liệu và nghề phân tích dữ liệu</a>
+  <ul class="collapse">
+  <li><a href="#khoa-học-dữ-liệu" id="toc-khoa-học-dữ-liệu" class="nav-link" data-scroll-target="#khoa-học-dữ-liệu"><span class="header-section-number">1.1</span> Khoa học dữ liệu</a></li>
+  <li><a href="#tại-sao-phân-tích-dữ-liệu-là-nghề-khó" id="toc-tại-sao-phân-tích-dữ-liệu-là-nghề-khó" class="nav-link" data-scroll-target="#tại-sao-phân-tích-dữ-liệu-là-nghề-khó"><span class="header-section-number">1.2</span> Tại sao phân tích dữ liệu là nghề khó?</a></li>
+  <li><a href="#phân-loại-hoạt-động-phân-tích-dữ-liệu" id="toc-phân-loại-hoạt-động-phân-tích-dữ-liệu" class="nav-link" data-scroll-target="#phân-loại-hoạt-động-phân-tích-dữ-liệu"><span class="header-section-number">1.3</span> Phân loại hoạt động phân tích dữ liệu</a>
+  <ul class="collapse">
+  <li><a href="#dựa-theo-cách-thức-tác-động-đến-khách-hàng" id="toc-dựa-theo-cách-thức-tác-động-đến-khách-hàng" class="nav-link" data-scroll-target="#dựa-theo-cách-thức-tác-động-đến-khách-hàng"><span class="header-section-number">1.3.1</span> Dựa theo cách thức tác động đến khách hàng</a></li>
+  <li><a href="#dựa-theo-đặc-tính-của-nghề-phân-tích-dữ-liệu" id="toc-dựa-theo-đặc-tính-của-nghề-phân-tích-dữ-liệu" class="nav-link" data-scroll-target="#dựa-theo-đặc-tính-của-nghề-phân-tích-dữ-liệu"><span class="header-section-number">1.3.2</span> Dựa theo đặc tính của nghề phân tích dữ liệu</a></li>
+  <li><a href="#dựa-theo-chu-kỳ-của-khách-hàng-đối-với-sản-phẩm" id="toc-dựa-theo-chu-kỳ-của-khách-hàng-đối-với-sản-phẩm" class="nav-link" data-scroll-target="#dựa-theo-chu-kỳ-của-khách-hàng-đối-với-sản-phẩm"><span class="header-section-number">1.3.3</span> Dựa theo chu kỳ của khách hàng đối với sản phẩm</a></li>
+  <li><a href="#dựa-theo-nhu-cầu-về-hoạt-động-trong-doanh-nghiệp" id="toc-dựa-theo-nhu-cầu-về-hoạt-động-trong-doanh-nghiệp" class="nav-link" data-scroll-target="#dựa-theo-nhu-cầu-về-hoạt-động-trong-doanh-nghiệp"><span class="header-section-number">1.3.4</span> Dựa theo nhu cầu về hoạt động trong doanh nghiệp</a></li>
+  </ul></li>
+  <li><a href="#cách-xây-dựng-nhóm-phân-tích-dữ-liệu" id="toc-cách-xây-dựng-nhóm-phân-tích-dữ-liệu" class="nav-link" data-scroll-target="#cách-xây-dựng-nhóm-phân-tích-dữ-liệu"><span class="header-section-number">1.4</span> Cách xây dựng nhóm phân tích dữ liệu</a></li>
+  <li><a href="#lưu-ý-khi-đọc-tài-liệu" id="toc-lưu-ý-khi-đọc-tài-liệu" class="nav-link" data-scroll-target="#lưu-ý-khi-đọc-tài-liệu"><span class="header-section-number">1.5</span> Lưu ý khi đọc tài liệu</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Khoa học dữ liệu với R</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Hoàng Đức Anh </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 26, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="intro" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Khoa học dữ liệu và nghề phân tích dữ liệu</h1>
+<p>Phần lớn, các bạn làm trong ngành phân tích dữ liệu rơi vào một trong hai nhóm sau:</p>
+<ul>
+<li><p>Nhóm một, <strong>chưa có nền tảng về phân tích thống kê</strong>. Ở nhóm này, các bạn thường không được đào tạo bài bản hoặc không có đủ điều kiện (phần lớn là về thời gian) để học các kiến thức về phân tích thống kê. Do nhu cầu của công việc, các bạn có thành thạo các kỹ năng về xây dựng báo cáo và phân tích khám phá dữ liệu đơn giản với SQL và Excel. Các bạn này thường thuộc các nhóm phân tích báo cáo (Business Intelligence) tại các tổ chức lớn hoặc làm trong startup. Điểm mạnh của nhóm này là làm việc sát với các bộ phận kinh doanh, hiểu rõ nghiệp vụ và nhu cầu nghiệp vụ. Tuy nhiên, điểm yếu của các bạn lại là không thể ứng dụng hoặc tự học và không biết cách triển khai các ứng dụng của khoa học dữ liệu ở mức độ cao vào công việc thực tế.</p></li>
+<li><p>Nhóm hai, <strong>có nền tảng vững vàng về kiến thức thống kê, dự báo nhưng lại quá chú trọng vào các yếu tố kỹ thuật</strong>. Ở nhóm này, các bạn đều có nền tảng kiến thức về toán, thống kê rất tốt. Một số bạn được học và đào tạo cơ bản về khoa học dữ liệu, học máy và các ứng dụng của khoa học dữ liệu. Các bạn này có thiên hướng thích xây dựng mô hình dự báo, thích làm các bài toán lớn trong kinh doanh. Điểm mạnh của nhóm này là rất thông minh, chịu khó học hỏi và có thể áp dụng những kỹ thuật phân tích mới vào thực tế một cách nhanh chóng. Nhưng ngược lại, nhóm này lại có nhược điểm chết người là có thói quen chỉ tập trung vào việc phân tích dữ liệu mà thiếu đi cái nhìn tổng quát trong việc giải quyết bài toán thực tế. Không chỉ thế, nhóm này không có thế mạnh trong việc trình bày và giao tiếp, dẫn đến các kết quả thực tế không được các đơn vị kinh doanh nghiệp vụ đón nhận và sử dụng.</p></li>
+</ul>
+<p>Đối với một tổ chức muốn phát triển dựa vào dữ liệu và muốn biến các quyết định của tổ chức dựa vào phân tích dữ liệu, cả hai nhóm trên đều là các trạng thái nên tránh và phải cân bằng được cả hai. Cuốn sách này sẽ phân tích và giúp các bạn làm trong lĩnh vực phân tích dữ liệu hiểu rõ hơn các ưu nhược điểm của chính mình.</p>
+<section id="khoa-học-dữ-liệu" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="khoa-học-dữ-liệu"><span class="header-section-number">1.1</span> Khoa học dữ liệu</h2>
+<p>Khoa học dữ liệu là nhóm ngành ứng dụng việc tổ chức và khai thác dữ liệu để hỗ trợ hoạt động ra quyết định. Phạm vi của khoa học dữ liệu rất rộng, từ việc tổ chức, quản lý, quản trị dữ liệu cho đến khai thác dữ liệu dưới dạng các báo cáo đơn giản cho đến các ứng dụng của Machine Learning, AI.</p>
+<center>
+<font size="4">§</font>
+</center>
+<p>Trong quá trình sử dụng, dữ liệu được đi qua nhiều bước trong vòng đời dữ liệu, bao gồm:</p>
+<ul>
+<li>Thu thập (Capture): Thu thập dữ liệu từ các hệ thống nguồn</li>
+<li>Lưu trữ (Store): Lưu trữ dữ liệu được thu thập</li>
+<li>Xử lý (Process): Xử lý, làm sạch dữ liệu</li>
+<li>Chia sẻ (Share): Tích hợp dữ liệu từ các nguồn, chia sẻ dưới dạng API, etc.</li>
+<li>Sử dụng (Use): Báo cáo, phân tích</li>
+<li>Ngừng sử dụng (End of life): Đưa vào vùng đóng băng, hạn chế sử dụng</li>
+</ul>
+<p>Trong các bước trên, việc sử dụng dữ liệu (hay còn gọi là phân tích dữ liệu) được nhấn mạnh và chú trọng nhiều nhất trong vòng đời của dữ liệu.</p>
+<blockquote class="blockquote">
+<p>Phân tích dữ liệu là việc chứng minh các giả thuyết (hypothesis) là đúng hoặc sai dựa trên cở sở sử dụng dữ liệu.</p>
+</blockquote>
+</section>
+<section id="tại-sao-phân-tích-dữ-liệu-là-nghề-khó" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="tại-sao-phân-tích-dữ-liệu-là-nghề-khó"><span class="header-section-number">1.2</span> Tại sao phân tích dữ liệu là nghề khó?</h2>
+<p>Phân tích dữ liệu đòi hỏi cùng lúc thực hiện ba nhóm công việc sau:</p>
+<ul>
+<li><strong>Hiểu biết về vấn đề kinh doanh</strong>. Nghe có vẻ đơn giản nhưng qua quá trình làm việc thực tế, đây có lẽ là phần dễ bị bỏ qua nhất bỏi lẽ mấy nguyên nhân sau.
+<ul>
+<li>Sự khác biệt của vận hành kinh doanh so với hoạt động phân tích dữ liệu.</li>
+<li>Tư duy và thái độ của nhóm phân tích dữ liệu. Các bạn phân tích kinh doanh (hoặc đôi khi được gọi là phân tích kinh doanh) thường tự coi mình là đơn vị hỗ trợ và <em>cung cấp</em> dữ liệu theo yêu cầu. Với lối tư duy thụ động này, các bạn sẽ không có nhu cầu tìm hiểu cặn kẽ các hoạt động kinh doanh, dẫn đến không hiểu hoạt động kinh doanh đủ sâu để có thể tư vấn và thuyết phục các bên kinh doanh trong việc triển khai các dự án phân tích dữ liệu mới.</li>
+<li>Nghiệp vụ kinh doanh rất phức tạp và thiếu hệ thống tài liệu ghi chép dưới góc độ khái quát cho hoạt động phân tích dữ liệu. Đây là vấn đề phần lớn các nhóm phân tích dữ liệu gặp phải. Để giải quyết vấn đề này, trong phần sau tác giả sẽ đưa ra phương pháp tìm hiểu hoạt động kinh doanh theo 6 nhóm vấn đề.</li>
+</ul></li>
+<li><strong>Khai thác và phân tích dữ liệu</strong></li>
+<li><strong>Trình bày, thuyết phục và tư vấn</strong> cho các bên kinh doanh về kết quả phân tích dữ liệu.</li>
+</ul>
+<center>
+<font size="4">§</font>
+</center>
+<p>Khi ứng dụng phân tích dữ liệu trong hoạt động kinh doanh, <em>giá trị của phân tích chỉ là số 0</em> - sự phối hợp giữa kinh doanh và phân tích dữ liệu có thể so sánh tương ứng như số 1 và số 0 như sau:</p>
+<ul>
+<li><code>0-1</code> - Số không đứng trước, số 1 đứng sau. Trong trường hợp này, đội phân tích dữ liệu thường dễ bị tự mãn, cho rằng các phân tích mình đưa ra phải được đơn vị kinh doanh triển khai và sử dụng. Do đó, kết quả phân tích thường không được sử dụng do sự thiếu hiểu biết về hoạt động kinh doanh, thiếu thuyết phục trong quá trình triển khai. Trong trường hợp này, giá trị của phân tích dữ liệu hoàn toàn chỉ là số 0.</li>
+<li><code>$1^0$</code> - Số 1 đứng dưới, số 0 đứng trên. Trong trường hợp này, đơn vị kinh doanh quá đề cao giá trị và quá dựa vào hoạt động phân tích số liệu. Điều này sẽ dẫn đến sự thất vọng nếu các dự án phân tích số liệu triển khai chậm, không đưa ra được kết quả như kỳ vọng (dù có rất nhiều điều phân tích số liệu không thể làm được). Trong trường hợp này, giá trị của phân tích cũng chỉ là số 0.</li>
+<li><code>1-0</code> - Số 1 đứng trước, số 0 đứng sau. Trong trường hợp này, phân tích dữ liệu đứng ngang hàng và đi sau hoạt động kinh doanh. Trong trường hợp này, sự phối hợp giữa kinh doanh và phân tích rất nhuần nhuyễn và khéo léo - tư duy của phân tích số liệu được triển khai đơn giản nhưng mạch lạc, sắc sảo và <em>khiêm tốn</em> trong quá trình thúc đẩy kinh doanh. Trong trường hợp này, giá trị của phân tích dữ liệu có thể giúp giá trị của kinh doanh tăng lên 10 lần.</li>
+</ul>
+<p>Như vậy, trong 3 trường hợp trên, chỉ có 1 trường hợp duy nhất phân tích dữ liệu có thể đem lại giá trị cho kinh doanh thực tiễn. Các tổ chức lớn gặp khó khăn trong việc biến ứng dụng phân tích số liệu vào thực tiễn do đặt sai vị trí của số 0 (phân tích số liệu) trong cả tổ chức.</p>
+<center>
+<font size="4">§</font>
+</center>
+<p><strong>Ba cấp độ của viết code</strong>: Trong quá trình làm việc trong lĩnh vực phân tích dữ liệu, chắc chắn chúng ta sẽ phải học và sử dụng các ngôn ngữ truy vấn/phân tích dữ liệu và sẽ trải qua 3 cấp độ như sau:</p>
+<ol type="1">
+<li><p>Viết thứ đơn giản. Ở cấp độ này, các bạn thường mới nhập môn phân tích dữ liệu, đầy lo lắng và thiếu tự tin ở bản thân và bắt đầu với những bài phân tích đơn giản để áp dụng các kiến thức mới học.</p></li>
+<li><p>Viết càng nguy hiểm càng tốt. Ở giai đoạn này, các bạn đã có một lượng kiến thức nền tương đối vững và bắt đầu đi vào các phương pháp nâng cao. Do đó, các bạn thường có xu hướng khiến mọi thứ trở nên <em>nguy hiểm</em>, tô vẽ và đưa ra nhiều yếu tố không thực sự cần thiết. Với các bạn có xu hướng trực quan hóa, sẽ là đưa ra các biểu đồ đầy màu sắc và cực kỳ nguy hiểm. Với các bạn có xu hướng xây dựng mô hình dự báo, sẽ là dùng mô hình dự báo, học máy hoặc deep-learning mọi lúc, mọi nơi. Kết quả sẽ khiến người đọc ấn tượng nhưng có thể chưa thực sự có tính ứng dụng cao.</p></li>
+<li><p>Chỉ viết những thứ có khả năng tái sử dụng, giải quyết vấn đề bằng phương pháp đơn giản nhất có thể có. Ở giai đoạn này, các bạn đã dung hòa được rất nhiều kiến thức của nghành phân tích dữ liệu với nhau và tiếp cận các vấn đề một cách mạch lạc, logic và rất chặt chẽ. Các bạn nắm rất vững khi nào nên dùng các phương pháp phân tích khám phá dữ liệu đơn giản thay cho các thuật toán phức tạp trong việc giải quyết các vấn đề kinh doanh.</p></li>
+</ol>
+<p><strong>Công thức tổng quát khi viết code</strong>:</p>
+<p>Khi phân tích dữ liệu (hay bất cứ hoạt động nào cần phải viết code), công thức tổng quát cần phải ghi nhớ là:</p>
+<blockquote class="blockquote">
+<p><span class="math display">\[e = mc^2 \Leftrightarrow error = ({more\;code})^2\]</span></p>
+</blockquote>
+<p>Do đó, càng viết đơn giản, khả năng chúng ta giảm thiểu được các sai sót trong quá trình phân tích dữ liệu càng nhiều.</p>
+</section>
+<section id="phân-loại-hoạt-động-phân-tích-dữ-liệu" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="phân-loại-hoạt-động-phân-tích-dữ-liệu"><span class="header-section-number">1.3</span> Phân loại hoạt động phân tích dữ liệu</h2>
+<section id="dựa-theo-cách-thức-tác-động-đến-khách-hàng" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="dựa-theo-cách-thức-tác-động-đến-khách-hàng"><span class="header-section-number">1.3.1</span> Dựa theo cách thức tác động đến khách hàng</h3>
+<p>Khi làm việc thực tế, có nhiều nhánh trong hoạt động phân tích dữ liệu dẫn tới việc gây hiểu nhầm giữa các khía cạnh khác nhau. Khái quát hóa có thể chia làm hai nhánh lớn sau.</p>
+<ul>
+<li><p>Phân tích dữ liệu để tác động lên khách hàng một cách trực tiếp. Với cách tiếp cận này, để có thể tác động trực tiếp lên khách hàng, kết quả của hoạt động phân tích dữ liệu phải được đưa vào thực tế dưới dạng API và tác động trực tiếp lên UI mà người dùng sử dụng. Các hệ thống <code>recommendation engine</code> trên các trang thương mại điện tử thuộc loại này</p></li>
+<li><p>Phân tích dữ liệu để tác động lên khách hàng thông qua những người ra quyết định. Đây là nhóm được sử dụng đặc biệt nhiều trong thực tế nhưng lại bị đánh giá thấp hơn so với nhóm đầu tiên. Nhánh ứng dụng phân tích dữ liệu này được dùng đặc biệt nhiều trong các tổ chức lớn như ngân hàng, bảo hiểm… Trong nhóm này lại tách thành hai nhóm nhỏ:</p>
+<ul>
+<li>Kết quả phân tích được thể hiện dưới dạng trình chiếu - công cụ thường hay được sử dụng nhất là powerpoint</li>
+<li>Kết quả được sử dụng dưới dạng phần mềm (data tools). Với dạng này, người ra quyết định sẽ sử dụng các kết quả từ các công cụ này để đánh giá và ra quyết định thay đổi chính sách, sản phẩm cho phù hợp với khách hàng. Các công cụ như Google Analytics, Tableau… thuộc dạng này.</li>
+</ul></li>
+</ul>
+<hr>
+<p><strong>Lưu ý</strong>:</p>
+<ul>
+<li>Đối với mô hình nâng cao hơn, kết quả phân loại, dự báo có thể được hiển thị trên các công cụ này và khiến người sử dụng dễ dàng hơn trong việc ra quyết định.</li>
+<li>Nguồn dữ liệu sử dụng để phân tích có thể tách ra thành hai nhóm lớn:
+<ul>
+<li>Dữ liệu trong nội bộ doanh nghiệp. Nguồn dữ liệu này thể hiện phần lớn hành vi, thói quen của khách hàng đối với sản phẩm, dịch vụ do doanh nghiệp nắm giữ. Tổ chức càng lớn, nguồn dữ liệu này càng khó được khai thác hết nếu không có hệ thống Data Warehouse tốt do gặp phải vấn đề phân tán và chất lượng dữ liệu. Các hệ thống như T24, W4, EBank, LOS của ngân hàng, Google Analytics trên website/apps… thuộc vào nhóm này</li>
+<li>Dữ liệu bên ngoài doanh nghiệp. Nguồn dữ liệu không do doanh nghiệp quản lý, phản ánh hành vi của khách hàng nói chung. Ví dụ - social network, blog, giao dịch trên các trang thương mại điện tử, etc.</li>
+</ul></li>
+</ul>
+<center>
+<font size="4">§</font>
+</center>
+<p>Mục tiêu toàn bộ của hoạt động phân tích dữ liệu là sử dụng dữ liệu, thông qua phân tích, dự báo để tác động lên hành vi khách hàng nhằm gia tăng giá trị của sản phẩm, dịch vụ của doanh nghiệp đối với khách hàng.</p>
+<p>Khái quát hóa hoạt động phân tích dữ liệu có thể thể hiện qua sơ đồ sau.</p>
+<center>
+<img src="Images/01-analysis-overview.png" class="img-fluid">
+</center>
+</section>
+<section id="dựa-theo-đặc-tính-của-nghề-phân-tích-dữ-liệu" class="level3" data-number="1.3.2">
+<h3 data-number="1.3.2" class="anchored" data-anchor-id="dựa-theo-đặc-tính-của-nghề-phân-tích-dữ-liệu"><span class="header-section-number">1.3.2</span> Dựa theo đặc tính của nghề phân tích dữ liệu</h3>
+<center>
+<img src="Images/01-data-science-job.png" class="img-fluid">
+</center>
+<p>Nếu bám sát vào hoạt động của sơ đồ phía trên, ta có thể chia các hoạt động có liên quan đến khoa học dữ liệu thành 4 nhóm lớn.</p>
+<ul>
+<li><strong>Data Governance</strong> - Quản trị dữ liệu: Quản trị các hoạt động ghi nhận dữ liệu vào hệ thống của tổ chức, đưa ra các quy định, quy trình để đảm bảo dữ liệu được đưa vào hệ thống một cách chính xác và đảm bảo yêu cầu của hoạt động kinh doanh. Ví dụ, dữ liệu địa chỉ của khách hàng phải để dạng dropdown theo các đơn vị hành chính để tránh sai sót (quận/huyện, phường/xã, tỉnh, thành phố)</li>
+<li><strong>Data Management</strong> - Quản lý dữ liệu: Quản lý dữ liệu sau khi dữ liệu được đưa vào hệ thống của tổ chức, bao gổm làm sạch, tái cấu trúc, sắp xếp dữ liệu theo hệ thống để đảm bảo sẵn sàng sử dụng dữ liệu</li>
+<li><strong>Business Intelligence</strong>: Khai thác dữ liệu để hỗ trợ hoạt động kinh doanh và quá trình ra quyết định. Đối với hoạt động BI, có thể chia thành ba cấp độ.
+<ul>
+<li><strong>Data provider</strong> - cung cấp dữ liệu: Đơn vị kinh doanh/ nghiệp vụ yêu cầu như thế nào, cung cấp chính xác như vậy</li>
+<li><strong>Information &amp; basic insight provider</strong> - cung cấp thông tin &amp; các hiểu biết đơn giản về khách hàng và hoạt động kinh doanh: Đưa ra các nhận định, thông tin ở mức độ đơn giản nhưng rất hữu dụng cho hoạt động kinh doanh. Công cụ sử dụng cho cấp độ này phần lớn là Excel với pivot table đi kèm với các chỉ số thống kê cơ bản. <em>Ví dụ, top 10% khách hàng chiếm đến 90% doanh thu của cả công ty.</em></li>
+<li><strong>Advanced insights provider</strong> - cung cấp các hiểu biết sâu sắc về khách hàng và hoạt động kinh doanh. Để đưa ra các hiểu biết này, phải sử dụng nhiều đến các công cụ và mô hình thuộc nhóm <code>inference</code> nhằm tác động đến hoạt động kinh doanh. <em>Ví dụ, khách hàng nếu có ít nhất 3 loại giao dịch trong 2 tháng đầu tiên có khả năng ở lại với ngân hàng cao hơn 20% so với các khách hàng khác.</em></li>
+</ul></li>
+<li><strong>Predictive Modelling/ Optimization</strong> - Phân tích dự báo, tối ưu hóa. Ở mức độ này, công việc phân tích dữ liệu sẽ tập trung nhiều vào việc dự báo và tối ưu hóa. <em>Ví dụ: Khách hàng nào là khách hàng có nhiều khả năng bán chéo được sản phẩm thấu chi?</em> Các công cụ sử dụng trong cấp độ này là các phần mềm chuyên biệt về phân tích thống kê, dự báo như R/Python/SAS.</li>
+</ul>
+</section>
+<section id="dựa-theo-chu-kỳ-của-khách-hàng-đối-với-sản-phẩm" class="level3" data-number="1.3.3">
+<h3 data-number="1.3.3" class="anchored" data-anchor-id="dựa-theo-chu-kỳ-của-khách-hàng-đối-với-sản-phẩm"><span class="header-section-number">1.3.3</span> Dựa theo chu kỳ của khách hàng đối với sản phẩm</h3>
+<center>
+<img src="Images/1_customer_lifecycle.png" class="img-fluid" style="width:70.0%">
+</center>
+<p>Xét về khía cạnh vòng đời sản phẩm, chu kỳ khách hàng, bất cứ hoạt động kinh doanh nào cũng có thể chia thành chu kỳ như sau.</p>
+<ul>
+<li><strong>Tim kiếm khách hàng</strong> - acquisition: Giai đoạn thu hút khách hàng mới, mục tiêu của giai đoạn này là đưa khách hàng mới về doanh nghiệp. Giai đoạn này, khách hàng chưa đem lại doanh số mà phần lớn chỉ là ở mức đăng ký dịch vụ, sản phẩm và trải nghiệm.</li>
+<li><strong>Kích hoạt khách hàng</strong> - activation: Sau khi một người đã trở thành khách hàng của doanh nghiệp, không có nghĩa người đó sẽ sử dụng sản phẩm dịch vụ mà thường phải có quá trình <code>on-boarding</code>. Mục tiêu của giai đoạn này không chỉ là để khách hàng có những trải nghiệm đầu tiên với sản phẩm dịch vụ mà còn khiến các sản phẩm đó trở nên quen thuộc và khách hàng bắt đầu <em>thực sự</em> sử dụng sản phẩm dịch vụ. Đây là giai đoạn rất nhiều doanh nghiệp lớn <em>quên</em> không sử dụng và đưa vào vận hành, khiến khách hàng vừa ở giai đoạn acquisition đã chuyển sang giai đoạn <code>churn</code></li>
+<li><strong>Khai thác khách hàng</strong> - deep farming: Chỉ sau khi khách hàng thực sự sử dụng sản phẩm, dịch vụ, lúc này doanh nghiệp mới có thể tiếp tục khai thác khách hàng. Thông thường có hai nhóm là bán chéo (cross-selling) và bán thêm (up-selling).</li>
+<li><strong>Giữ chân khách hàng</strong> - retaining customers: Sau một thời gian sử dụng sản phẩm, dịch vụ, khách hàng lúc này sẽ có xu hướng rời bỏ doanh nghiệp để sử dụng các sản phẩm khác cạnh tranh hơn. Do đó, mục tiêu phân tích trong giai đoạn này là dự báo, tìm kiếm và hỗ trợ các hoạt động kinh doanh giúp giảm <code>churn</code></li>
+<li><strong>Thu hồi nợ</strong> - collection/bad bank: Giai đoạn này thường chỉ sử dụng đối với các doanh nghiệp có hoạt động cho vay như ngân hàng. Mục tiêu phân tích là giảm tỷ lệ nợ, tỷ lệ nợ xấu</li>
+</ul>
+<p>Ngoài các giai đoạn lớn trên, hoạt động phân tích dữ liệu còn tập trung vào 2 mảng lớn:</p>
+<ul>
+<li><strong>Giữ chân khách hàng chủ động</strong> - proactively retaining customers: Phân tích để giữ chân khách hàng chủ động, ngay từ khi khách hàng chuyển qua giai đoạn có thể khai thác được. Nhiều doanh nghiệp lớn chưa chú trọng đến vấn đề này mà thường để đến khi khách hàng sắp rời bỏ doanh nghiệp mới tìm cách giữ chân. Khi đó, phần lớn mọi việc đã trở nên quá muộn.</li>
+<li><strong>Phân nhóm khách hàng</strong> - customers segmentation: Phân nhóm khách hàng theo các đặc trưng về hành vi, tính chất để có thể đưa ra các sản phẩm phù hợp</li>
+</ul>
+</section>
+<section id="dựa-theo-nhu-cầu-về-hoạt-động-trong-doanh-nghiệp" class="level3" data-number="1.3.4">
+<h3 data-number="1.3.4" class="anchored" data-anchor-id="dựa-theo-nhu-cầu-về-hoạt-động-trong-doanh-nghiệp"><span class="header-section-number">1.3.4</span> Dựa theo nhu cầu về hoạt động trong doanh nghiệp</h3>
+<p>Nếu chia theo ứng dụng trong hoạt động doanh nghiệp, ta có thể chia ứng dụng của hoạt động phân tích dữ liệu như sau</p>
+<p><img src="Images/01-ds-business-map.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="cách-xây-dựng-nhóm-phân-tích-dữ-liệu" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="cách-xây-dựng-nhóm-phân-tích-dữ-liệu"><span class="header-section-number">1.4</span> Cách xây dựng nhóm phân tích dữ liệu</h2>
+<p>Để xây dựng nhóm phân tích dữ liệu, cần đảm bảo 3 nguyên tắc lớn sau:</p>
+<ul>
+<li>Nắm vững kỹ năng phân tích khám phá dữ liệu</li>
+<li>Bám sát hoạt động kinh doanh</li>
+<li>Đẩy mạnh tương tác nhóm &amp; phân nhóm kỹ năng dựa trên sở thích và tính cách cá nhân.</li>
+</ul>
+<p><strong>Thứ nhất</strong>, nền tảng của toàn bộ hoạt động phân tích dữ liệu (Analytics) phải giải quyết được bài toán kinh doanh dưới góc độ phân tích dữ liệu. Do đó, không nhất thiết phải xây dựng các mô hình phức tạp để giải quyết bài toán. Ngược lại, trong nhiều tình huống, ta nên sử dụng các phương pháp đơn giản bởi hai lý do: thứ nhất - có thể giải thích cho kinh doanh và thứ hai - rất nhiều vấn đề không cần xây mô hình cũng có thể giải quyết ngay được bởi các nguyên nhân từ vận hành, con người và sản phẩm. Chỉ khi nắm vững được kỹ năng phân tích khám phá dữ liệu ta mới có thể đưa ra các nhận định và kết quả một cách nhanh chóng và chính xác hỗ trợ hoạt động kinh doanh.</p>
+<p><strong>Thứ hai</strong>, hoạt động phân tích được sinh ra nhằm phục vụ kinh doanh. Do đó, nếu không nắm vững đến một mức độ nhất định hoạt động kinh doanh, ta không thể đưa ra các kết luận thực tế và có thể triển khai được. Rất nhiều trường hợp, nhóm phân tích dữ liệu quá chú trọng đến mặt kỹ thuật và thuật toán, đưa ra những kết luận phi thực tế. Điều này cần tránh dối với các tổ chức hướng đến việc ứng dụng phân tích dữ liệu thưc tiễn hỗ trợ kinh doanh.</p>
+<p><strong>Thứ ba</strong>, các bạn làm việc trong lĩnh vực phân tích dữ liệu thường khá thông minh và thích làm việc tương đối độc lập. Tuy nhiên, bên cạnh đó còn có rất nhiều các khía cạnh khác nhau trong hoạt động phân tích dữ liệu. Có người ưa thích thuật toán và kiên trì và có thể tự học tốt nhưng lại yếu trong khâu giao tiếp và tương tác. Nhóm này nên khuyến khích phát triển các bài toán và vấn đề dự báo. Ngược lại, có nhóm rất thông minh, nhanh nhạy, thích thể hiện trước đông người nhưng lại thường xuyên cả thèm chóng chán. Nhóm này nên phát triển các kỹ năng khám phá dữ liệu, tìm kiếm insights và nên giao cho nhiệm vụ tương tác chính với kinh doanh. Ngoài ra, còn có nhóm trunh bình, việc gì cũng có thể làm ở mức độ khá nhưng không có việc gì thực sự nổi trội. Với nhóm này nên cố gắng bồi dưỡng để họ phát huy kiến thức tổng thể và hướng họ có thể back-up hai nhóm trên.</p>
+<p>Thêm vào đó, việc phân rã kỹ năng còn giúp cho kiến thức không bị quá tập trung vào 1-2 thành viên, điều này có thể khiến cho hoạt động phân tích dữ liệu bị chậm lại do bị phụ thuộc vào những thành viên đó.</p>
+</section>
+<section id="lưu-ý-khi-đọc-tài-liệu" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="lưu-ý-khi-đọc-tài-liệu"><span class="header-section-number">1.5</span> Lưu ý khi đọc tài liệu</h2>
+<p>Các chương tiếp theo được trình bày với những kiến thức lõi về phân tích số liệu với R. Các chương này sẽ được viết theo hướng <em>ứng dụng</em> của khoa học dữ liệu trong hoạt động kinh doanh. Do đó, ngôn ngữ cũng như cách tiếp cận trong cuốn sách này được cố gắng viết một cách đơn giản, dễ hiểu để trình bày các kiến thức, thuật ngữ khó hiểu của khoa học dữ liệu thành các ngôn ngữ bình dân phù hợp với nhiều đối tượng.</p>
+<p>Cuốn sách này sẽ không đi sâu vào lý thuyết của các thuật toán, mô hình thống kê mà sẽ cố gắng trả lời các khía cạnh sau.</p>
+<ul>
+<li>Thuật toán, mô hình đó là gì?</li>
+<li>Mô hình đó được sử dụng như thế nào?</li>
+<li>Khi giải thích cho các đơn vị kinh doanh, ta cần phải giải thích điều gì?</li>
+<li>Ứng dụng của mô hình trong thực tế như thế nào?</li>
+</ul>
+<p>Bên cạnh đó, có nhiều phần còn tổng hợp thêm các kỹ thuật bổ trợ cần thiết cho hoạt động phân tích số liệu như <code>git</code>, <code>cmd</code></p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./p02-01-gioi-thieu-co-ban-ve-r.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Giới thiệu cơ bản về R</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>

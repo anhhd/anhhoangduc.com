@@ -1,0 +1,2529 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Khoa học dữ liệu với R - 23&nbsp; Xây dựng mô hình với H2O</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./p03-08-xgboost.html" rel="next">
+<link href="./p03-05-bagging-boosting.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/quarto-contrib/bookup_fonts_embed-0.0/fonts-download.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar docked">
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Xây dựng mô hình với H2O</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Khoa học dữ liệu với R</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle sidebar-tool" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle sidebar-tool" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Khoa học dữ liệu và nghề phân tích dữ liệu</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Phân tích khám phá dữ liệu</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-01-gioi-thieu-co-ban-ve-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Giới thiệu cơ bản về R</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-70-xay-dung-bao-cao-voi-rmarkdown.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Xây dựng báo cáo với Rmarkdown</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-02-bien-doi-du-lieu-dplyr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Ngữ pháp của biến đổi dữ liệu với DPLYR</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-03-phan-ra-va-xoay-chieu-du-lieu.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Làm sạch và biến đổi dữ liệu nâng cao</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-04-ngu-phap-bieu-do-ggplot2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ngữ pháp của biểu đồ với GGPLOT2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-05-cac-chi-so-thong-ke.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Các chỉ số thống kê mô tả cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-06-lap-trinh-ham.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Lập trình hàm</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-07-lap-trinh-ham-voi-purrr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Lập trình chức năng hàm với purrr</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-08-bien-doi-du-lieu-text.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-11-quan-ly-nhieu-mo-hinh.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quản lý kết quả phân tích từ nhiều mô hình</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-15-thong-ke-co-ban.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Xác suất và phân phối thống kê cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-16-power-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Power analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-20-sampling-methods.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Phương pháp ước lượng tham số thông qua lấy mẫu</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-50-datatable.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu với <code>data.table</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-60-thu-thap-du-lieu-tu-website.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Thu thập dữ liệu từ website</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-99-meo-trong-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Các mẹo trong R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Supervised Learning</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-01-nguyen-ly-du-bao.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Giới thiệu về học máy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-02-mo-hinh-ols.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mô hình hồi quy tuyến tính</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-03-logistic-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Mô hình hồi quy logistic</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-04-decision-tree.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Cây quyết định</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-05-bagging-boosting.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Bagging, RandomForest và Boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-07-xay-dung-mo-hinh-voi-h2o.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Xây dựng mô hình với H2O</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-10-knn.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">K nearest neighbors</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-11-svm.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Support Vector Machine</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-15-nonlinear.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Mô hình phi tuyến tính</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-17-regularization.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Lựa chọn biến &amp; regularization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-20-feature-engineering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Feature Engineering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-30-credit-scoring.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Credit Scoring</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-40-interpretable-ml.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Giải thích mô hình học máy</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-50-chat-luong-mo-hinh.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Chất lượng mô hình</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-69-caret.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Xây dựng mô hình dự báo với caret</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-70-tidymodels.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Tidymodels</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Unsupervised Learning</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-01-unsupervised-learning.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Unsupervised learning</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-02-hierarchical-clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Hierachical clustering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-03-kmeans.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">k-means</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-04-basket-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Phân tích giỏ hàng</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-05-pca.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Principal component analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-06-factor-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Phân tích nhân tố ẩn (factor analysis)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Chuỗi thời gian</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-01-chuoi-thoi-gian.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Giới thiệu về chuỗi thời gian</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-02-arima.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mô hình ARIMA</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Phân tích chuỗi thời gian với tidyquant và timetk</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-06-du-bao-ts-voi-prophet.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với prophet</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-07-du-bao-ts-voi-timetk.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với timetk</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-08-abnomaly-detection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Abnomaly detection trong times series</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">Natural Language Processing</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-01-nlp-co-ban.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Xử lý ngôn ngữ tự nhiên cơ bản</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-04-text-classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Phân loại text</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-07-nlp-api.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Sử dụng API từ các dịch vụ đám mây</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-10-ocr-tesseract.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">OCR với <code>tesseract</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">Các phương pháp khác</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-02-causal-impact.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Causal Impact</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-03-collaborative-filtering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Collaborative Filtering</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-04-survival-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Survival Analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-05-vintage-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vintage analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-07-spatial-data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Spatial data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-08-anomaly-detection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Abnomaly detection</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-10-shiny.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Shiny apps</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-15-quantile-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Hồi quy phân vị</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-16-retention-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Retention analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-20-network-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Network analysis</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-30-python-voi-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Sử dụng Python với R</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">Cloud Computing</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-01-cai-dat-rstudio-server-tren-amazon.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Cài đặt server RStudio trên Amazon</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-02-deploy-shiny-app-aws.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Deploy Shiny Apps lên AWS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-03-web-service-azure.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Xây dựng web service với Azure</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-09-apis-voi-plumber.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">API với Plumber</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">Kiến thức bổ trợ</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-01-git.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Sử dụng GIT</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-02-cmd.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">CMD và Bash</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-03-docker.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Sử dụng docker</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-04-apis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">API</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-05-html-css.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Cơ bản về HTML và CSS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-10-nguyen-ly-thi-giac.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Nguyên lý thị giác và Business Dashboard</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-30-tim-hieu-he-thong.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Tìm hiểu hệ thống dữ liệu</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-40-aws-overview.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">AWS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-90-other.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Các tricks khác</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">Case studies</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p13-01-casestudy-truc-quan-hoa.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Trực quan hóa dữ liệu</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#giới-thiệu" id="toc-giới-thiệu" class="nav-link active" data-scroll-target="#giới-thiệu"><span class="toc-section-number">23.1</span>  Giới thiệu</a></li>
+  <li><a href="#cài-đặt-và-khởi-động" id="toc-cài-đặt-và-khởi-động" class="nav-link" data-scroll-target="#cài-đặt-và-khởi-động"><span class="toc-section-number">23.2</span>  Cài đặt và khởi động</a></li>
+  <li><a href="#thực-hành-với-r" id="toc-thực-hành-với-r" class="nav-link" data-scroll-target="#thực-hành-với-r"><span class="toc-section-number">23.3</span>  Thực hành với R</a>
+  <ul class="collapse">
+  <li><a href="#lấy-dữ-liệu" id="toc-lấy-dữ-liệu" class="nav-link" data-scroll-target="#lấy-dữ-liệu"><span class="toc-section-number">23.3.1</span>  Lấy dữ liệu</a></li>
+  <li><a href="#kiểm-tra-dữ-liệu" id="toc-kiểm-tra-dữ-liệu" class="nav-link" data-scroll-target="#kiểm-tra-dữ-liệu"><span class="toc-section-number">23.3.2</span>  Kiểm tra dữ liệu</a></li>
+  <li><a href="#khởi-động-h2o" id="toc-khởi-động-h2o" class="nav-link" data-scroll-target="#khởi-động-h2o"><span class="toc-section-number">23.3.3</span>  Khởi động H2O</a></li>
+  <li><a href="#đưa-dữ-liệu-vào-h2o" id="toc-đưa-dữ-liệu-vào-h2o" class="nav-link" data-scroll-target="#đưa-dữ-liệu-vào-h2o"><span class="toc-section-number">23.3.4</span>  Đưa dữ liệu vào H2O</a></li>
+  <li><a href="#chia-dữ-liệu-traintest" id="toc-chia-dữ-liệu-traintest" class="nav-link" data-scroll-target="#chia-dữ-liệu-traintest"><span class="toc-section-number">23.3.5</span>  Chia dữ liệu train/test</a></li>
+  <li><a href="#xây-dựng-mô-hình-trên-tập-train" id="toc-xây-dựng-mô-hình-trên-tập-train" class="nav-link" data-scroll-target="#xây-dựng-mô-hình-trên-tập-train"><span class="toc-section-number">23.3.6</span>  Xây dựng mô hình trên tập train</a></li>
+  <li><a href="#dự-báo-trên-tập-test" id="toc-dự-báo-trên-tập-test" class="nav-link" data-scroll-target="#dự-báo-trên-tập-test"><span class="toc-section-number">23.3.7</span>  Dự báo trên tập test</a></li>
+  <li><a href="#đánh-giá-chất-lượng-dự-báo-trên-test" id="toc-đánh-giá-chất-lượng-dự-báo-trên-test" class="nav-link" data-scroll-target="#đánh-giá-chất-lượng-dự-báo-trên-test"><span class="toc-section-number">23.3.8</span>  Đánh giá chất lượng dự báo trên test</a></li>
+  <li><a href="#tuning" id="toc-tuning" class="nav-link" data-scroll-target="#tuning"><span class="toc-section-number">23.3.9</span>  Tuning</a></li>
+  <li><a href="#lưu-và-load-mô-hình" id="toc-lưu-và-load-mô-hình" class="nav-link" data-scroll-target="#lưu-và-load-mô-hình"><span class="toc-section-number">23.3.10</span>  Lưu và load mô hình</a></li>
+  </ul></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="toc-section-number">23.4</span>  Tài liệu tham khảo</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Xây dựng mô hình với H2O</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="giới-thiệu" class="level2" data-number="23.1">
+<h2 data-number="23.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">23.1</span> Giới thiệu</h2>
+<ul>
+<li><p>H2O là một phần mềm dựa trên nền tảng của Java dùng để mô hình hóa dữ liệu (data modeling) và tính toán nói chung (general computing).</p></li>
+<li><p>H2O là một platform mã nguồn mở hàng đầu thế giới hiện nay về Machine Learning và AI.</p></li>
+<li><p>Hỗ trợ nhiều phần mềm khác nhau như: R, Python, Azure, Spark…</p></li>
+</ul>
+</section>
+<section id="cài-đặt-và-khởi-động" class="level2" data-number="23.2">
+<h2 data-number="23.2" class="anchored" data-anchor-id="cài-đặt-và-khởi-động"><span class="header-section-number">23.2</span> Cài đặt và khởi động</h2>
+<p>Để cài đặt và khởi động H2O, chúng ta cần thực hiện các bước sau:</p>
+<ul>
+<li><p>Bước 1: Cài đặt Java</p></li>
+<li><p>Bước 2: Cài đặt R package <code>h2o</code></p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"h2o"</span>, <span class="at">method =</span> <span class="st">"wininet"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Bước 3: Khởi động H2O từ R - sử dụng câu lệnh <code>h2o.init()</code></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(h2o)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.init</span>(<span class="at">ip =</span> <span class="st">"localhost"</span>, </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">port =</span> <span class="dv">54321</span>, </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">nthreads=</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">max_mem_size =</span> <span class="st">"4g"</span>) <span class="co"># Đặt mức RAM tối đa</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Lưu ý</strong>: Trong trường hợp chúng ta muốn tắt H2O trên R, chúng ta có thể sử dụng câu lệnh sau:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.shutdown</span>(<span class="at">prompt =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="thực-hành-với-r" class="level2" data-number="23.3">
+<h2 data-number="23.3" class="anchored" data-anchor-id="thực-hành-với-r"><span class="header-section-number">23.3</span> Thực hành với R</h2>
+<p>Để thực hành xây dựng mô hình dự báo với H2O, chúng ta sẽ sử dụng dữ liệu có sẵn trong <code>R</code> - <code>GermanCredit</code> trong package <strong>caret</strong>.</p>
+<p>Đây là dữ liệu ghi nhận về lịch sử vay của khách hàng, với các 61 biến đầu vào cùng với biến đầu ra <code>Class</code> ghi nhận thực tế là các khoản vay đó có phải là khoản nợ xấu hay không. Chúng ta sẽ dự báo khoản vay nào không có nợ xấu.</p>
+<section id="lấy-dữ-liệu" class="level3" data-number="23.3.1">
+<h3 data-number="23.3.1" class="anchored" data-anchor-id="lấy-dữ-liệu"><span class="header-section-number">23.3.1</span> Lấy dữ liệu</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 1: Lấy dữ liệu</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"GermanCredit"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="kiểm-tra-dữ-liệu" class="level3" data-number="23.3.2">
+<h3 data-number="23.3.2" class="anchored" data-anchor-id="kiểm-tra-dữ-liệu"><span class="header-section-number">23.3.2</span> Kiểm tra dữ liệu</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 2: Kiểm tra dữ liệu</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra định dạng các biến trong tập dữ liệu</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>GermanCredit <span class="sc">%&gt;%</span> str</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   1000 obs. of  62 variables:
+ $ Duration                              : int  6 48 12 42 24 36 24 36 12 30 ...
+ $ Amount                                : int  1169 5951 2096 7882 4870 9055 2835 6948 3059 5234 ...
+ $ InstallmentRatePercentage             : int  4 2 2 2 3 2 3 2 2 4 ...
+ $ ResidenceDuration                     : int  4 2 3 4 4 4 4 2 4 2 ...
+ $ Age                                   : int  67 22 49 45 53 35 53 35 61 28 ...
+ $ NumberExistingCredits                 : int  2 1 1 1 2 1 1 1 1 2 ...
+ $ NumberPeopleMaintenance               : int  1 1 2 2 2 2 1 1 1 1 ...
+ $ Telephone                             : num  0 1 1 1 1 0 1 0 1 1 ...
+ $ ForeignWorker                         : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ Class                                 : Factor w/ 2 levels "Bad","Good": 2 1 2 2 1 2 2 2 2 1 ...
+ $ CheckingAccountStatus.lt.0            : num  1 0 0 1 1 0 0 0 0 0 ...
+ $ CheckingAccountStatus.0.to.200        : num  0 1 0 0 0 0 0 1 0 1 ...
+ $ CheckingAccountStatus.gt.200          : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ CheckingAccountStatus.none            : num  0 0 1 0 0 1 1 0 1 0 ...
+ $ CreditHistory.NoCredit.AllPaid        : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ CreditHistory.ThisBank.AllPaid        : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ CreditHistory.PaidDuly                : num  0 1 0 1 0 1 1 1 1 0 ...
+ $ CreditHistory.Delay                   : num  0 0 0 0 1 0 0 0 0 0 ...
+ $ CreditHistory.Critical                : num  1 0 1 0 0 0 0 0 0 1 ...
+ $ Purpose.NewCar                        : num  0 0 0 0 1 0 0 0 0 1 ...
+ $ Purpose.UsedCar                       : num  0 0 0 0 0 0 0 1 0 0 ...
+ $ Purpose.Furniture.Equipment           : num  0 0 0 1 0 0 1 0 0 0 ...
+ $ Purpose.Radio.Television              : num  1 1 0 0 0 0 0 0 1 0 ...
+ $ Purpose.DomesticAppliance             : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ Purpose.Repairs                       : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ Purpose.Education                     : num  0 0 1 0 0 1 0 0 0 0 ...
+ $ Purpose.Vacation                      : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ Purpose.Retraining                    : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ Purpose.Business                      : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ Purpose.Other                         : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ SavingsAccountBonds.lt.100            : num  0 1 1 1 1 0 0 1 0 1 ...
+ $ SavingsAccountBonds.100.to.500        : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ SavingsAccountBonds.500.to.1000       : num  0 0 0 0 0 0 1 0 0 0 ...
+ $ SavingsAccountBonds.gt.1000           : num  0 0 0 0 0 0 0 0 1 0 ...
+ $ SavingsAccountBonds.Unknown           : num  1 0 0 0 0 1 0 0 0 0 ...
+ $ EmploymentDuration.lt.1               : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ EmploymentDuration.1.to.4             : num  0 1 0 0 1 1 0 1 0 0 ...
+ $ EmploymentDuration.4.to.7             : num  0 0 1 1 0 0 0 0 1 0 ...
+ $ EmploymentDuration.gt.7               : num  1 0 0 0 0 0 1 0 0 0 ...
+ $ EmploymentDuration.Unemployed         : num  0 0 0 0 0 0 0 0 0 1 ...
+ $ Personal.Male.Divorced.Seperated      : num  0 0 0 0 0 0 0 0 1 0 ...
+ $ Personal.Female.NotSingle             : num  0 1 0 0 0 0 0 0 0 0 ...
+ $ Personal.Male.Single                  : num  1 0 1 1 1 1 1 1 0 0 ...
+ $ Personal.Male.Married.Widowed         : num  0 0 0 0 0 0 0 0 0 1 ...
+ $ Personal.Female.Single                : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ OtherDebtorsGuarantors.None           : num  1 1 1 0 1 1 1 1 1 1 ...
+ $ OtherDebtorsGuarantors.CoApplicant    : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ OtherDebtorsGuarantors.Guarantor      : num  0 0 0 1 0 0 0 0 0 0 ...
+ $ Property.RealEstate                   : num  1 1 1 0 0 0 0 0 1 0 ...
+ $ Property.Insurance                    : num  0 0 0 1 0 0 1 0 0 0 ...
+ $ Property.CarOther                     : num  0 0 0 0 0 0 0 1 0 1 ...
+ $ Property.Unknown                      : num  0 0 0 0 1 1 0 0 0 0 ...
+ $ OtherInstallmentPlans.Bank            : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ OtherInstallmentPlans.Stores          : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ OtherInstallmentPlans.None            : num  1 1 1 1 1 1 1 1 1 1 ...
+ $ Housing.Rent                          : num  0 0 0 0 0 0 0 1 0 0 ...
+ $ Housing.Own                           : num  1 1 1 0 0 0 1 0 1 1 ...
+ $ Housing.ForFree                       : num  0 0 0 1 1 1 0 0 0 0 ...
+ $ Job.UnemployedUnskilled               : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ Job.UnskilledResident                 : num  0 0 1 0 0 1 0 0 1 0 ...
+ $ Job.SkilledEmployee                   : num  1 1 0 1 1 0 1 0 0 0 ...
+ $ Job.Management.SelfEmp.HighlyQualified: num  0 0 0 0 0 0 0 1 0 1 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra biến đầu ra (biến muốn dự báo)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>GermanCredit<span class="sc">$</span>Class <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  table <span class="sc">%&gt;%</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  prop.table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>.
+ Bad Good 
+ 0.3  0.7 </code></pre>
+</div>
+</div>
+<p>Như vậy, chúng ta thấy trong tập dữ liệu này:</p>
+<ul>
+<li><p>70% là các khoản vay không có nợ xấu</p></li>
+<li><p>30% là các khoản vay có nợ xấu</p></li>
+</ul>
+</section>
+<section id="khởi-động-h2o" class="level3" data-number="23.3.3">
+<h3 data-number="23.3.3" class="anchored" data-anchor-id="khởi-động-h2o"><span class="header-section-number">23.3.3</span> Khởi động H2O</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 3: Khởi động H2O</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(h2o)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.init</span>(<span class="at">ip =</span> <span class="st">"localhost"</span>, </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">port =</span> <span class="dv">54321</span>, </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">nthreads=</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">max_mem_size =</span> <span class="st">"4g"</span>) <span class="co"># Đặt mức RAM tối đa</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Connection successful!
+
+R is connected to the H2O cluster: 
+    H2O cluster uptime:         3 minutes 28 seconds 
+    H2O cluster timezone:       UTC 
+    H2O data parsing timezone:  UTC 
+    H2O cluster version:        3.40.0.1 
+    H2O cluster version age:    2 months and 9 days 
+    H2O cluster name:           H2O_started_from_R_r110786_ocv184 
+    H2O cluster total nodes:    1 
+    H2O cluster total memory:   3.80 GB 
+    H2O cluster total cores:    1 
+    H2O cluster allowed cores:  1 
+    H2O cluster healthy:        TRUE 
+    H2O Connection ip:          localhost 
+    H2O Connection port:        54321 
+    H2O Connection proxy:       NA 
+    H2O Internal Security:      FALSE 
+    R Version:                  R version 4.2.3 (2023-03-15) </code></pre>
+</div>
+</div>
+</section>
+<section id="đưa-dữ-liệu-vào-h2o" class="level3" data-number="23.3.4">
+<h3 data-number="23.3.4" class="anchored" data-anchor-id="đưa-dữ-liệu-vào-h2o"><span class="header-section-number">23.3.4</span> Đưa dữ liệu vào H2O</h3>
+<p>Để đưa dữ liệu vào H2O, chúng ta sử dụng câu lệnh: <code>as.h2o()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 4: Đưa dữ liệu vào h2o</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>data_h2o <span class="ot">&lt;-</span> <span class="fu">as.h2o</span>(GermanCredit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+</div>
+</div>
+</section>
+<section id="chia-dữ-liệu-traintest" class="level3" data-number="23.3.5">
+<h3 data-number="23.3.5" class="anchored" data-anchor-id="chia-dữ-liệu-traintest"><span class="header-section-number">23.3.5</span> Chia dữ liệu train/test</h3>
+<p>Chia tập dữ liệu thành 2 tập dữ liệu train và test (tỷ lệ 80-20)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 5: Chia tập dữ liệu thành: train/test (tỷ lệ 80/20) </span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>data_split <span class="ot">=</span> <span class="fu">h2o.splitFrame</span>(<span class="at">data =</span> data_h2o, </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">ratios =</span> <span class="fl">0.8</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>train <span class="ot">=</span> data_split[[<span class="dv">1</span>]]</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>test <span class="ot">=</span> data_split[[<span class="dv">2</span>]]</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Tập dữ liệu train (data frame)</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>train_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(train)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>train_df<span class="sc">$</span>Class <span class="sc">%&gt;%</span> table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>.
+ Bad Good 
+ 235  551 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tập dữ liệu test (data frame)</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>test_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(test)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>test_df<span class="sc">$</span>Class <span class="sc">%&gt;%</span> table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>.
+ Bad Good 
+  65  149 </code></pre>
+</div>
+</div>
+</section>
+<section id="xây-dựng-mô-hình-trên-tập-train" class="level3" data-number="23.3.6">
+<h3 data-number="23.3.6" class="anchored" data-anchor-id="xây-dựng-mô-hình-trên-tập-train"><span class="header-section-number">23.3.6</span> Xây dựng mô hình trên tập train</h3>
+<p>Để xây dựng mô hình dự báo với H2O, chúng ta có thể sử dụng những câu lệnh khác nhau tương ứng với từng phương pháp/thuật toán như: Logistic regression, Random Forests, Boosting…</p>
+<ul>
+<li><p><code>h2o.glm()</code> - Logistic regression</p></li>
+<li><p><code>h2o.randomForest()</code> - Random Forests</p></li>
+<li><p><code>h2o.gbm()</code> - Boosting</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 6: Xây dựng mô hình trên train</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>start_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>gbm_model1 <span class="ot">&lt;-</span> <span class="fu">h2o.gbm</span>(<span class="at">training_frame =</span> train, <span class="co"># Tập dữ liệu train</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(GermanCredit), <span class="st">"Class"</span>),  <span class="co"># Các biến đầu vào</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="st">"Class"</span> <span class="co"># Biến đầu ra (biến muốn dự báo)</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |===================================================================   |  96%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>end_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>time <span class="ot">&lt;-</span> end_time <span class="sc">-</span> start_time</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>time</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Time difference of 2.223689 secs</code></pre>
+</div>
+</div>
+<p>Chúng ta thấy việc xây dựng mô hình với H2O có tốc độ rất nhanh, xây dựng mô hình với các tham số cơ bản với dữ liệu này chỉ mất khoảng 2.22 giây. Đương nhiên trong trường hợp này dữ liệu nhỏ nên chúng ta chưa nhìn thấy rõ ưu điểm vượt trội của H2O về tốc độ, nhưng trong trường hơp dữ liệu lớn, việc sử dụng H2O sẽ rút ngắn thời gian xây dựng mô hình dự báo của chúng ta đi rất nhiều.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary model</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>gbm_model1 <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Model Details:
+==============
+
+H2OBinomialModel: gbm
+Model Key:  GBM_model_R_1681781433609_248 
+Model Summary: 
+  number_of_trees number_of_internal_trees model_size_in_bytes min_depth
+1              50                       50               13981         5
+  max_depth mean_depth min_leaves max_leaves mean_leaves
+1         5    5.00000          9         26    17.58000
+
+H2OBinomialMetrics: gbm
+** Reported on training data. **
+
+MSE:  0.07258735
+RMSE:  0.2694204
+LogLoss:  0.2676266
+Mean Per-Class Error:  0.07134031
+AUC:  0.9794455
+AUCPR:  0.990769
+Gini:  0.958891
+R^2:  0.6536728
+
+Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:
+       Bad Good    Error     Rate
+Bad    210   25 0.106383  =25/235
+Good    20  531 0.036298  =20/551
+Totals 230  556 0.057252  =45/786
+
+Maximum Metrics: Maximum metrics at their respective thresholds
+                        metric threshold      value idx
+1                       max f1  0.585928   0.959350 231
+2                       max f2  0.528659   0.973467 251
+3                 max f0point5  0.641146   0.964326 215
+4                 max accuracy  0.585928   0.942748 231
+5                max precision  0.985738   1.000000   0
+6                   max recall  0.301839   1.000000 324
+7              max specificity  0.985738   1.000000   0
+8             max absolute_mcc  0.585928   0.862683 231
+9   max min_per_class_accuracy  0.650274   0.932849 211
+10 max mean_per_class_accuracy  0.641146   0.936919 215
+11                     max tns  0.985738 235.000000   0
+12                     max fns  0.985738 550.000000   0
+13                     max fps  0.050169 235.000000 399
+14                     max tps  0.301839 551.000000 324
+15                     max tnr  0.985738   1.000000   0
+16                     max fnr  0.985738   0.998185   0
+17                     max fpr  0.050169   1.000000 399
+18                     max tpr  0.301839   1.000000 324
+
+Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`
+
+
+
+Scoring History: 
+            timestamp   duration number_of_trees training_rmse training_logloss
+1 2023-04-18 01:34:07  0.002 sec               0       0.45781          0.61000
+2 2023-04-18 01:34:07  0.069 sec               1       0.44489          0.58254
+3 2023-04-18 01:34:07  0.078 sec               2       0.43324          0.55877
+4 2023-04-18 01:34:07  0.085 sec               3       0.42313          0.53861
+5 2023-04-18 01:34:07  0.093 sec               4       0.41501          0.52240
+  training_auc training_pr_auc training_lift training_classification_error
+1      0.50000         0.70102       1.00000                       0.29898
+2      0.82314         0.91958       1.42650                       0.22774
+3      0.83729         0.92585       1.42650                       0.21374
+4      0.85373         0.93406       1.42650                       0.20738
+5      0.86354         0.93792       1.42650                       0.19338
+
+---
+             timestamp   duration number_of_trees training_rmse
+46 2023-04-18 01:34:08  0.990 sec              45       0.27706
+47 2023-04-18 01:34:08  0.997 sec              46       0.27555
+48 2023-04-18 01:34:08  1.006 sec              47       0.27383
+49 2023-04-18 01:34:08  1.073 sec              48       0.27225
+50 2023-04-18 01:34:08  1.081 sec              49       0.27105
+51 2023-04-18 01:34:08  1.089 sec              50       0.26942
+   training_logloss training_auc training_pr_auc training_lift
+46          0.27988      0.97668         0.98933       1.42650
+47          0.27727      0.97715         0.98965       1.42650
+48          0.27464      0.97787         0.99002       1.42650
+49          0.27199      0.97879         0.99049       1.42650
+50          0.27012      0.97924         0.99069       1.42650
+51          0.26763      0.97945         0.99077       1.42650
+   training_classification_error
+46                       0.06234
+47                       0.06107
+48                       0.05980
+49                       0.05980
+50                       0.05852
+51                       0.05725
+
+Variable Importances: (Extract with `h2o.varimp`) 
+=================================================
+
+Variable Importances: 
+                    variable relative_importance scaled_importance percentage
+1 CheckingAccountStatus.none           84.350624          1.000000   0.156410
+2                     Amount           82.419136          0.977102   0.152829
+3                   Duration           68.733696          0.814857   0.127452
+4                        Age           31.725632          0.376116   0.058828
+5             Purpose.NewCar           19.282278          0.228597   0.035755
+
+---
+                           variable relative_importance scaled_importance
+54                  Housing.ForFree            0.132180          0.001567
+55        Purpose.DomesticAppliance            0.000000          0.000000
+56               Purpose.Retraining            0.000000          0.000000
+57                    Purpose.Other            0.000000          0.000000
+58 Personal.Male.Divorced.Seperated            0.000000          0.000000
+59          Job.UnemployedUnskilled            0.000000          0.000000
+   percentage
+54   0.000245
+55   0.000000
+56   0.000000
+57   0.000000
+58   0.000000
+59   0.000000</code></pre>
+</div>
+</div>
+<p>Nhìn vào kết quả mô hình vừa được xây dựng trên tập train, chúng ta có thể thấy một số thông tin quan trọng sau:</p>
+<ul>
+<li><p>Các tham số (<code>parameters</code>) cơ bản của mô hình:</p>
+<ul>
+<li>number_of_trees = 50: Số lượng cây là 50</li>
+<li>max_depth = 5: Mỗi cây có 5 tầng (mức độ phức tạp của mô hình)</li>
+</ul></li>
+<li><p>AUC trên tập train: 0.9794455</p></li>
+<li><p>Dựa vào mục <code>Confusion Matrix</code> (tối ưu hóa F1-score) có thể tính toán được:</p>
+<ul>
+<li>error rate (tỷ lệ quan sát dự báo sai): 45/786 = 0.057 (5.7%)</li>
+<li>accuracy (tỷ lệ quan sát dự báo đúng): 1 - 0.057 = 0.943 (94.3%)</li>
+<li>precision: 531/551 = 0.96 (96%)</li>
+<li>recall: 531/556 = 0.96 (96%)</li>
+</ul></li>
+<li><p>Dựa vào mục <code>Maximum Metrics</code>, chúng ta có thể biết được các ngưỡng cutoff xác suất để tối ưu hóa các chỉ số như accuracy, precision, recall, f1-score…</p>
+<ul>
+<li>max f1: Điểm cutoff xác suất là 0.585928</li>
+<li>max accuracy: 0.585928</li>
+<li>max recall: 0.301839</li>
+<li>max precision: 0.985738</li>
+</ul></li>
+<li><p>Dựa vào mục <code>Variable Importances</code>, chúng ta có thể biết được những biến nào có ảnh hưởng nhiều nhất đến biến đầu ra mà chúng ta muốn dự báo (có thể sử dụng câu lệnh <code>h2o.varimp()</code> để xem chi tiết). Trong trường hợp này, các biến có ảnh hưởng nhiều nhất tới biến <code>Class</code> theo thứ tự là:</p>
+<ul>
+<li>CheckingAccountStatus.none</li>
+<li>Amount</li>
+<li>Duration</li>
+<li>Age</li>
+<li>Purpose.NewCar</li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra chi tiết các biến có ảnh hướng nhiều tới biến dự báo trong mô hình</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>gbm_model1 <span class="sc">%&gt;%</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">h2o.varimp</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  as.data.frame <span class="sc">%&gt;%</span> </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 44%">
+<col style="width: 22%">
+<col style="width: 20%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">variable</th>
+<th style="text-align: right;">relative_importance</th>
+<th style="text-align: right;">scaled_importance</th>
+<th style="text-align: right;">percentage</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">CheckingAccountStatus.none</td>
+<td style="text-align: right;">84.3506241</td>
+<td style="text-align: right;">1.0000000</td>
+<td style="text-align: right;">0.1564102</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Amount</td>
+<td style="text-align: right;">82.4191360</td>
+<td style="text-align: right;">0.9771017</td>
+<td style="text-align: right;">0.1528287</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Duration</td>
+<td style="text-align: right;">68.7336960</td>
+<td style="text-align: right;">0.8148570</td>
+<td style="text-align: right;">0.1274520</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Age</td>
+<td style="text-align: right;">31.7256317</td>
+<td style="text-align: right;">0.3761161</td>
+<td style="text-align: right;">0.0588284</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Purpose.NewCar</td>
+<td style="text-align: right;">19.2822781</td>
+<td style="text-align: right;">0.2285967</td>
+<td style="text-align: right;">0.0357549</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">InstallmentRatePercentage</td>
+<td style="text-align: right;">15.5161829</td>
+<td style="text-align: right;">0.1839486</td>
+<td style="text-align: right;">0.0287714</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OtherInstallmentPlans.None</td>
+<td style="text-align: right;">15.2438316</td>
+<td style="text-align: right;">0.1807198</td>
+<td style="text-align: right;">0.0282664</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CreditHistory.Critical</td>
+<td style="text-align: right;">14.5524130</td>
+<td style="text-align: right;">0.1725229</td>
+<td style="text-align: right;">0.0269843</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CheckingAccountStatus.lt.0</td>
+<td style="text-align: right;">12.5769672</td>
+<td style="text-align: right;">0.1491034</td>
+<td style="text-align: right;">0.0233213</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Property.RealEstate</td>
+<td style="text-align: right;">12.3567972</td>
+<td style="text-align: right;">0.1464933</td>
+<td style="text-align: right;">0.0229130</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SavingsAccountBonds.lt.100</td>
+<td style="text-align: right;">10.7499561</td>
+<td style="text-align: right;">0.1274437</td>
+<td style="text-align: right;">0.0199335</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OtherDebtorsGuarantors.Guarantor</td>
+<td style="text-align: right;">9.6545200</td>
+<td style="text-align: right;">0.1144570</td>
+<td style="text-align: right;">0.0179022</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Property.Insurance</td>
+<td style="text-align: right;">9.3979931</td>
+<td style="text-align: right;">0.1114158</td>
+<td style="text-align: right;">0.0174266</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Job.SkilledEmployee</td>
+<td style="text-align: right;">8.7692375</td>
+<td style="text-align: right;">0.1039617</td>
+<td style="text-align: right;">0.0162607</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CheckingAccountStatus.gt.200</td>
+<td style="text-align: right;">8.7212677</td>
+<td style="text-align: right;">0.1033930</td>
+<td style="text-align: right;">0.0161717</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ResidenceDuration</td>
+<td style="text-align: right;">8.4237700</td>
+<td style="text-align: right;">0.0998661</td>
+<td style="text-align: right;">0.0156201</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OtherDebtorsGuarantors.None</td>
+<td style="text-align: right;">7.9725552</td>
+<td style="text-align: right;">0.0945168</td>
+<td style="text-align: right;">0.0147834</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">OtherInstallmentPlans.Bank</td>
+<td style="text-align: right;">7.7707009</td>
+<td style="text-align: right;">0.0921238</td>
+<td style="text-align: right;">0.0144091</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CreditHistory.NoCredit.AllPaid</td>
+<td style="text-align: right;">7.2156229</td>
+<td style="text-align: right;">0.0855432</td>
+<td style="text-align: right;">0.0133798</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Personal.Male.Single</td>
+<td style="text-align: right;">7.0852146</td>
+<td style="text-align: right;">0.0839972</td>
+<td style="text-align: right;">0.0131380</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NumberExistingCredits</td>
+<td style="text-align: right;">6.5925212</td>
+<td style="text-align: right;">0.0781562</td>
+<td style="text-align: right;">0.0122244</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Purpose.UsedCar</td>
+<td style="text-align: right;">6.2361321</td>
+<td style="text-align: right;">0.0739311</td>
+<td style="text-align: right;">0.0115636</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Personal.Female.NotSingle</td>
+<td style="text-align: right;">5.6832266</td>
+<td style="text-align: right;">0.0673762</td>
+<td style="text-align: right;">0.0105383</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">EmploymentDuration.lt.1</td>
+<td style="text-align: right;">5.2887440</td>
+<td style="text-align: right;">0.0626995</td>
+<td style="text-align: right;">0.0098068</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EmploymentDuration.4.to.7</td>
+<td style="text-align: right;">5.2262311</td>
+<td style="text-align: right;">0.0619584</td>
+<td style="text-align: right;">0.0096909</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Telephone</td>
+<td style="text-align: right;">5.1227264</td>
+<td style="text-align: right;">0.0607313</td>
+<td style="text-align: right;">0.0094990</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Property.Unknown</td>
+<td style="text-align: right;">4.8568892</td>
+<td style="text-align: right;">0.0575798</td>
+<td style="text-align: right;">0.0090061</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Housing.Rent</td>
+<td style="text-align: right;">4.7812662</td>
+<td style="text-align: right;">0.0566832</td>
+<td style="text-align: right;">0.0088658</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CreditHistory.Delay</td>
+<td style="text-align: right;">4.5384483</td>
+<td style="text-align: right;">0.0538046</td>
+<td style="text-align: right;">0.0084156</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SavingsAccountBonds.Unknown</td>
+<td style="text-align: right;">3.7545331</td>
+<td style="text-align: right;">0.0445110</td>
+<td style="text-align: right;">0.0069620</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">EmploymentDuration.1.to.4</td>
+<td style="text-align: right;">3.6860566</td>
+<td style="text-align: right;">0.0436992</td>
+<td style="text-align: right;">0.0068350</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Job.Management.SelfEmp.HighlyQualified</td>
+<td style="text-align: right;">3.5472615</td>
+<td style="text-align: right;">0.0420538</td>
+<td style="text-align: right;">0.0065776</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Purpose.Education</td>
+<td style="text-align: right;">3.3089063</td>
+<td style="text-align: right;">0.0392280</td>
+<td style="text-align: right;">0.0061357</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">EmploymentDuration.gt.7</td>
+<td style="text-align: right;">3.2702508</td>
+<td style="text-align: right;">0.0387697</td>
+<td style="text-align: right;">0.0060640</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Housing.Own</td>
+<td style="text-align: right;">3.0387659</td>
+<td style="text-align: right;">0.0360254</td>
+<td style="text-align: right;">0.0056347</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CreditHistory.PaidDuly</td>
+<td style="text-align: right;">2.8158870</td>
+<td style="text-align: right;">0.0333831</td>
+<td style="text-align: right;">0.0052215</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OtherDebtorsGuarantors.CoApplicant</td>
+<td style="text-align: right;">2.5130854</td>
+<td style="text-align: right;">0.0297933</td>
+<td style="text-align: right;">0.0046600</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NumberPeopleMaintenance</td>
+<td style="text-align: right;">2.4034374</td>
+<td style="text-align: right;">0.0284934</td>
+<td style="text-align: right;">0.0044567</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CreditHistory.ThisBank.AllPaid</td>
+<td style="text-align: right;">2.3900807</td>
+<td style="text-align: right;">0.0283351</td>
+<td style="text-align: right;">0.0044319</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CheckingAccountStatus.0.to.200</td>
+<td style="text-align: right;">2.0607431</td>
+<td style="text-align: right;">0.0244307</td>
+<td style="text-align: right;">0.0038212</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Purpose.Radio.Television</td>
+<td style="text-align: right;">2.0184691</td>
+<td style="text-align: right;">0.0239295</td>
+<td style="text-align: right;">0.0037428</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Property.CarOther</td>
+<td style="text-align: right;">1.9168139</td>
+<td style="text-align: right;">0.0227244</td>
+<td style="text-align: right;">0.0035543</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Purpose.Furniture.Equipment</td>
+<td style="text-align: right;">1.8031244</td>
+<td style="text-align: right;">0.0213765</td>
+<td style="text-align: right;">0.0033435</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Purpose.Business</td>
+<td style="text-align: right;">1.5692081</td>
+<td style="text-align: right;">0.0186034</td>
+<td style="text-align: right;">0.0029098</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SavingsAccountBonds.gt.1000</td>
+<td style="text-align: right;">1.4338670</td>
+<td style="text-align: right;">0.0169989</td>
+<td style="text-align: right;">0.0026588</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">EmploymentDuration.Unemployed</td>
+<td style="text-align: right;">1.3670616</td>
+<td style="text-align: right;">0.0162069</td>
+<td style="text-align: right;">0.0025349</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Purpose.Repairs</td>
+<td style="text-align: right;">1.2434046</td>
+<td style="text-align: right;">0.0147409</td>
+<td style="text-align: right;">0.0023056</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SavingsAccountBonds.100.to.500</td>
+<td style="text-align: right;">1.1172017</td>
+<td style="text-align: right;">0.0132447</td>
+<td style="text-align: right;">0.0020716</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OtherInstallmentPlans.Stores</td>
+<td style="text-align: right;">1.0155718</td>
+<td style="text-align: right;">0.0120399</td>
+<td style="text-align: right;">0.0018832</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SavingsAccountBonds.500.to.1000</td>
+<td style="text-align: right;">0.7910167</td>
+<td style="text-align: right;">0.0093777</td>
+<td style="text-align: right;">0.0014668</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ForeignWorker</td>
+<td style="text-align: right;">0.5909842</td>
+<td style="text-align: right;">0.0070063</td>
+<td style="text-align: right;">0.0010959</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Job.UnskilledResident</td>
+<td style="text-align: right;">0.3838074</td>
+<td style="text-align: right;">0.0045501</td>
+<td style="text-align: right;">0.0007117</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Personal.Male.Married.Widowed</td>
+<td style="text-align: right;">0.2746936</td>
+<td style="text-align: right;">0.0032566</td>
+<td style="text-align: right;">0.0005094</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Housing.ForFree</td>
+<td style="text-align: right;">0.1321795</td>
+<td style="text-align: right;">0.0015670</td>
+<td style="text-align: right;">0.0002451</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Purpose.DomesticAppliance</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Purpose.Retraining</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Purpose.Other</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Personal.Male.Divorced.Seperated</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Job.UnemployedUnskilled</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="dự-báo-trên-tập-test" class="level3" data-number="23.3.7">
+<h3 data-number="23.3.7" class="anchored" data-anchor-id="dự-báo-trên-tập-test"><span class="header-section-number">23.3.7</span> Dự báo trên tập test</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 7: Dự báo trên tập test</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>pred_test1 <span class="ot">&lt;-</span> <span class="fu">h2o.predict</span>(gbm_model1, <span class="at">newdata =</span> test) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>pred_test1 <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  predict        Bad      Good
+1     Bad 0.71166405 0.2883359
+2     Bad 0.82454629 0.1754537
+3     Bad 0.49154935 0.5084507
+4     Bad 0.79388195 0.2061180
+5    Good 0.03446872 0.9655313
+6     Bad 0.76942563 0.2305744</code></pre>
+</div>
+</div>
+<p>Nhìn vào kết quả trên, ta có thể biết được những thông tin sau:</p>
+<ul>
+<li><p>Cột <code>predict</code>: Là <code>Class</code> của khoản vay được dự báo</p>
+<ul>
+<li>Good: Khoản vay không phải là khoản nợ xấu</li>
+<li>Bad: Khoản vay là khoản nợ xấu</li>
+</ul></li>
+<li><p><code>Bad</code>: Xác suất khoản vay là khoản nợ xấu</p></li>
+<li><p><code>Good</code>: Xác suất khoản vay là khoản không có nợ xấu</p></li>
+</ul>
+</section>
+<section id="đánh-giá-chất-lượng-dự-báo-trên-test" class="level3" data-number="23.3.8">
+<h3 data-number="23.3.8" class="anchored" data-anchor-id="đánh-giá-chất-lượng-dự-báo-trên-test"><span class="header-section-number">23.3.8</span> Đánh giá chất lượng dự báo trên test</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 8: Đánh giá chất lượng dự báo trên test</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Confusion matrix</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">as.vector</span>(pred_test1<span class="sc">$</span>predict), </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>      test_df<span class="sc">$</span>Class,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">dnn =</span> <span class="fu">c</span>(<span class="st">"Predicted"</span>, <span class="st">"Actual"</span>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Actual
+Predicted Bad Good
+     Bad   40   30
+     Good  25  119</code></pre>
+</div>
+</div>
+<p>Dựa vào confusion matrix trên tập test, chúng ta có thể tính toán được:</p>
+<ul>
+<li><p>Accuracy: (40+119)/214 = 0.74 (74%)</p></li>
+<li><p>Error rate: (25+30)/186 = 1 - 0.74 = 0.26 (26%)</p></li>
+<li><p>Precision: 119/(119+25) = 0.83 (83%)</p></li>
+<li><p>Recall: 119/(119+30) = 0.80 (80%)</p></li>
+</ul>
+<hr>
+<p><strong>Note</strong>: Với H2O, chúng ta hoàn toàn có thể xây dựng mô hình trên tập train, rồi sau đó đánh giá chất lượng trên tập train và test đồng thời bằng một câu lệnh sau:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>gbm_model2 <span class="ot">&lt;-</span> <span class="fu">h2o.gbm</span>(<span class="at">training_frame =</span> train, <span class="co"># Xây dựng trên train</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(GermanCredit), <span class="st">"Class"</span>),  <span class="co"># Các biến đầu vào</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="st">"Class"</span>, <span class="co"># Biến đầu ra (biến muốn dự báo)</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">validation_frame =</span> test <span class="co"># Đánh giá trên test</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>                      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |=====================================================                 |  76%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>gbm_model2 <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Model Details:
+==============
+
+H2OBinomialModel: gbm
+Model Key:  GBM_model_R_1681781433609_300 
+Model Summary: 
+  number_of_trees number_of_internal_trees model_size_in_bytes min_depth
+1              50                       50               13979         5
+  max_depth mean_depth min_leaves max_leaves mean_leaves
+1         5    5.00000          9         26    17.58000
+
+H2OBinomialMetrics: gbm
+** Reported on training data. **
+
+MSE:  0.07258735
+RMSE:  0.2694204
+LogLoss:  0.2676266
+Mean Per-Class Error:  0.07134031
+AUC:  0.9794455
+AUCPR:  0.990769
+Gini:  0.958891
+R^2:  0.6536728
+
+Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:
+       Bad Good    Error     Rate
+Bad    210   25 0.106383  =25/235
+Good    20  531 0.036298  =20/551
+Totals 230  556 0.057252  =45/786
+
+Maximum Metrics: Maximum metrics at their respective thresholds
+                        metric threshold      value idx
+1                       max f1  0.585928   0.959350 231
+2                       max f2  0.528659   0.973467 251
+3                 max f0point5  0.641146   0.964326 215
+4                 max accuracy  0.585928   0.942748 231
+5                max precision  0.985738   1.000000   0
+6                   max recall  0.301839   1.000000 324
+7              max specificity  0.985738   1.000000   0
+8             max absolute_mcc  0.585928   0.862683 231
+9   max min_per_class_accuracy  0.650274   0.932849 211
+10 max mean_per_class_accuracy  0.641146   0.936919 215
+11                     max tns  0.985738 235.000000   0
+12                     max fns  0.985738 550.000000   0
+13                     max fps  0.050169 235.000000 399
+14                     max tps  0.301839 551.000000 324
+15                     max tnr  0.985738   1.000000   0
+16                     max fnr  0.985738   0.998185   0
+17                     max fpr  0.050169   1.000000 399
+18                     max tpr  0.301839   1.000000 324
+
+Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`
+H2OBinomialMetrics: gbm
+** Reported on validation data. **
+
+MSE:  0.1745567
+RMSE:  0.4177998
+LogLoss:  0.5180404
+Mean Per-Class Error:  0.4451729
+AUC:  0.7696438
+AUCPR:  0.8859651
+Gini:  0.5392876
+R^2:  0.1746002
+
+Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:
+       Bad Good    Error     Rate
+Bad      8   57 0.876923   =57/65
+Good     2  147 0.013423   =2/149
+Totals  10  204 0.275701  =59/214
+
+Maximum Metrics: Maximum metrics at their respective thresholds
+                        metric threshold      value idx
+1                       max f1  0.230574   0.832861 203
+2                       max f2  0.175454   0.924318 209
+3                 max f0point5  0.643835   0.829662 132
+4                 max accuracy  0.579584   0.757009 148
+5                max precision  0.983556   1.000000   0
+6                   max recall  0.175454   1.000000 209
+7              max specificity  0.983556   1.000000   0
+8             max absolute_mcc  0.643835   0.427333 132
+9   max min_per_class_accuracy  0.705292   0.707692 124
+10 max mean_per_class_accuracy  0.643835   0.725348 132
+11                     max tns  0.983556  65.000000   0
+12                     max fns  0.983556 148.000000   0
+13                     max fps  0.082487  65.000000 213
+14                     max tps  0.175454 149.000000 209
+15                     max tnr  0.983556   1.000000   0
+16                     max fnr  0.983556   0.993289   0
+17                     max fpr  0.082487   1.000000 213
+18                     max tpr  0.175454   1.000000 209
+
+Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`
+
+
+Scoring History: 
+            timestamp   duration number_of_trees training_rmse training_logloss
+1 2023-04-18 01:34:09  0.001 sec               0       0.45781          0.61000
+2 2023-04-18 01:34:09  0.069 sec               1       0.44489          0.58254
+3 2023-04-18 01:34:09  0.077 sec               2       0.43324          0.55877
+4 2023-04-18 01:34:09  0.086 sec               3       0.42313          0.53861
+5 2023-04-18 01:34:09  0.168 sec               4       0.41501          0.52240
+  training_auc training_pr_auc training_lift training_classification_error
+1      0.50000         0.70102       1.00000                       0.29898
+2      0.82314         0.91958       1.42650                       0.22774
+3      0.83729         0.92585       1.42650                       0.21374
+4      0.85373         0.93406       1.42650                       0.20738
+5      0.86354         0.93792       1.42650                       0.19338
+  validation_rmse validation_logloss validation_auc validation_pr_auc
+1         0.45990            0.61405        0.50000           0.69626
+2         0.45392            0.60102        0.66598           0.80764
+3         0.45093            0.59421        0.66004           0.80140
+4         0.44796            0.58744        0.66324           0.80763
+5         0.44516            0.58122        0.67491           0.81993
+  validation_lift validation_classification_error
+1         1.00000                         0.30374
+2         1.10480                         0.30374
+3         1.07718                         0.29907
+4         1.07718                         0.28037
+5         0.95749                         0.26636
+
+---
+             timestamp   duration number_of_trees training_rmse
+46 2023-04-18 01:34:11  1.280 sec              45       0.27706
+47 2023-04-18 01:34:11  1.293 sec              46       0.27555
+48 2023-04-18 01:34:11  1.365 sec              47       0.27383
+49 2023-04-18 01:34:11  1.375 sec              48       0.27225
+50 2023-04-18 01:34:11  1.386 sec              49       0.27105
+51 2023-04-18 01:34:11  1.396 sec              50       0.26942
+   training_logloss training_auc training_pr_auc training_lift
+46          0.27988      0.97668         0.98933       1.42650
+47          0.27727      0.97715         0.98965       1.42650
+48          0.27464      0.97787         0.99002       1.42650
+49          0.27199      0.97879         0.99049       1.42650
+50          0.27012      0.97924         0.99069       1.42650
+51          0.26763      0.97945         0.99077       1.42650
+   training_classification_error validation_rmse validation_logloss
+46                       0.06234         0.41681            0.51647
+47                       0.06107         0.41697            0.51699
+48                       0.05980         0.41727            0.51749
+49                       0.05980         0.41718            0.51717
+50                       0.05852         0.41795            0.51830
+51                       0.05725         0.41780            0.51804
+   validation_auc validation_pr_auc validation_lift
+46        0.76964           0.88500         1.43624
+47        0.76944           0.88436         1.43624
+48        0.76820           0.88405         1.43624
+49        0.76923           0.88526         1.43624
+50        0.76758           0.88486         1.43624
+51        0.76964           0.88597         1.43624
+   validation_classification_error
+46                         0.28037
+47                         0.28037
+48                         0.28037
+49                         0.27570
+50                         0.27570
+51                         0.27570
+
+Variable Importances: (Extract with `h2o.varimp`) 
+=================================================
+
+Variable Importances: 
+                    variable relative_importance scaled_importance percentage
+1 CheckingAccountStatus.none           84.350624          1.000000   0.156410
+2                     Amount           82.419136          0.977102   0.152829
+3                   Duration           68.733696          0.814857   0.127452
+4                        Age           31.725632          0.376116   0.058828
+5             Purpose.NewCar           19.282278          0.228597   0.035755
+
+---
+                           variable relative_importance scaled_importance
+54                  Housing.ForFree            0.132180          0.001567
+55        Purpose.DomesticAppliance            0.000000          0.000000
+56               Purpose.Retraining            0.000000          0.000000
+57                    Purpose.Other            0.000000          0.000000
+58 Personal.Male.Divorced.Seperated            0.000000          0.000000
+59          Job.UnemployedUnskilled            0.000000          0.000000
+   percentage
+54   0.000245
+55   0.000000
+56   0.000000
+57   0.000000
+58   0.000000
+59   0.000000</code></pre>
+</div>
+</div>
+</section>
+<section id="tuning" class="level3" data-number="23.3.9">
+<h3 data-number="23.3.9" class="anchored" data-anchor-id="tuning"><span class="header-section-number">23.3.9</span> Tuning</h3>
+<p><strong>Tuning</strong> là quá trình tìm kiếm tổ hợp các tham số để tối ưu hóa mô hình (chất lượng dự báo tốt nhất có thể).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 9: Tuning</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.1. Set hyper parameters</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>hyper_params <span class="ot">=</span> <span class="fu">list</span>( </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="do">## restrict the search to the range of max_depth established above</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_depth =</span> <span class="fu">c</span>(<span class="dv">5</span><span class="sc">:</span><span class="dv">9</span>),                                      </span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of row sampling rates per tree</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_rate =</span> <span class="fu">seq</span>(<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="fl">0.05</span>),                                             </span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of column sampling rates per split</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_sample_rate =</span> <span class="fu">seq</span>(<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="fl">0.05</span>),                                  </span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of the number of min rows in a terminal node</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_rows =</span> <span class="dv">2</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="fu">log2</span>(<span class="fu">nrow</span>(train))<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>),                                 </span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of the number of bins for split-finding for continuous and integer columns</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">nbins =</span> <span class="dv">2</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">4</span>,<span class="dv">10</span>,<span class="dv">1</span>),                                                     </span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of the number of bins for split-finding for categorical columns</span></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">nbins_cats =</span> <span class="dv">2</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">4</span>,<span class="dv">12</span>,<span class="dv">1</span>),                                                </span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a few minimum required relative error improvement thresholds for a split to happen</span></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_split_improvement =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">1e-8</span>,<span class="fl">1e-6</span>,<span class="fl">1e-4</span>),                               </span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>  <span class="do">## try all histogram types (QuantilesGlobal and RoundRobin are good for numeric columns with outliers)</span></span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">histogram_type =</span> <span class="fu">c</span>(<span class="st">"UniformAdaptive"</span>,<span class="st">"QuantilesGlobal"</span>,<span class="st">"RoundRobin"</span>)      </span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.2. Set search criteria</span></span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>search_criteria <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Random grid search</span></span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">strategy =</span> <span class="st">"RandomDiscrete"</span>,      </span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>  <span class="do">## limit the runtime to xx minutes</span></span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_runtime_secs =</span> <span class="dv">10</span>,         </span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>  <span class="do">## build no more than xx models</span></span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_models =</span> <span class="dv">5</span>,                  </span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>  <span class="do">## random number generator seed to make sampling of parameter combinations reproducible</span></span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">1234</span>,                        </span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a>  <span class="do">## early stopping once the leaderboard of the top 5 models is converged to 0.1% relative difference</span></span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_rounds =</span> <span class="dv">5</span>,                </span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_metric =</span> <span class="st">"AUC"</span>,</span>
+<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_tolerance =</span> <span class="fl">1e-3</span></span>
+<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.3. Grid search</span></span>
+<span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">h2o.grid</span>(</span>
+<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a>  <span class="do">## hyper parameters</span></span>
+<span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">hyper_params =</span> hyper_params,</span>
+<span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a>  <span class="do">## hyper-parameter search configuration (see above)</span></span>
+<span id="cb34-55"><a href="#cb34-55" aria-hidden="true" tabindex="-1"></a>  <span class="at">search_criteria =</span> search_criteria,</span>
+<span id="cb34-56"><a href="#cb34-56" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-57"><a href="#cb34-57" aria-hidden="true" tabindex="-1"></a>  <span class="do">## which algorithm to run</span></span>
+<span id="cb34-58"><a href="#cb34-58" aria-hidden="true" tabindex="-1"></a>  <span class="at">algorithm =</span> <span class="st">"gbm"</span>,</span>
+<span id="cb34-59"><a href="#cb34-59" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-60"><a href="#cb34-60" aria-hidden="true" tabindex="-1"></a>  <span class="do">## identifier for the grid, to later retrieve it</span></span>
+<span id="cb34-61"><a href="#cb34-61" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid_id =</span> <span class="st">"model_id"</span>, </span>
+<span id="cb34-62"><a href="#cb34-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-63"><a href="#cb34-63" aria-hidden="true" tabindex="-1"></a>  <span class="do">## standard model parameters</span></span>
+<span id="cb34-64"><a href="#cb34-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(GermanCredit), <span class="st">"Class"</span>), </span>
+<span id="cb34-65"><a href="#cb34-65" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="st">"Class"</span>, </span>
+<span id="cb34-66"><a href="#cb34-66" aria-hidden="true" tabindex="-1"></a>  <span class="at">training_frame =</span> train, </span>
+<span id="cb34-67"><a href="#cb34-67" aria-hidden="true" tabindex="-1"></a>  <span class="at">validation_frame =</span> test,</span>
+<span id="cb34-68"><a href="#cb34-68" aria-hidden="true" tabindex="-1"></a>  <span class="co">#balance_classes = T, #Option to solve imbalanced classification</span></span>
+<span id="cb34-69"><a href="#cb34-69" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-70"><a href="#cb34-70" aria-hidden="true" tabindex="-1"></a>  <span class="do">## more trees is better if the learning rate is small enough</span></span>
+<span id="cb34-71"><a href="#cb34-71" aria-hidden="true" tabindex="-1"></a>  <span class="do">## use "more than enough" trees - we have early stopping</span></span>
+<span id="cb34-72"><a href="#cb34-72" aria-hidden="true" tabindex="-1"></a>  <span class="at">ntrees =</span> <span class="dv">200</span>,                                                            </span>
+<span id="cb34-73"><a href="#cb34-73" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-74"><a href="#cb34-74" aria-hidden="true" tabindex="-1"></a>  <span class="do">## smaller learning rate is better</span></span>
+<span id="cb34-75"><a href="#cb34-75" aria-hidden="true" tabindex="-1"></a>  <span class="do">## since we have learning_rate_annealing, we can afford to start with a bigger learning rate</span></span>
+<span id="cb34-76"><a href="#cb34-76" aria-hidden="true" tabindex="-1"></a>  <span class="at">learn_rate =</span> <span class="fl">0.05</span>,                                                         </span>
+<span id="cb34-77"><a href="#cb34-77" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-78"><a href="#cb34-78" aria-hidden="true" tabindex="-1"></a>  <span class="do">## learning rate annealing: learning_rate shrinks by 1% after every tree </span></span>
+<span id="cb34-79"><a href="#cb34-79" aria-hidden="true" tabindex="-1"></a>  <span class="do">## (use 1.00 to disable, but then lower the learning_rate)</span></span>
+<span id="cb34-80"><a href="#cb34-80" aria-hidden="true" tabindex="-1"></a>  <span class="at">learn_rate_annealing =</span> <span class="fl">0.99</span>,                                               </span>
+<span id="cb34-81"><a href="#cb34-81" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-82"><a href="#cb34-82" aria-hidden="true" tabindex="-1"></a>  <span class="do">## early stopping based on timeout (no model should take more than 1 hour - modify as needed)</span></span>
+<span id="cb34-83"><a href="#cb34-83" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_runtime_secs =</span> <span class="dv">30</span>,                                                 </span>
+<span id="cb34-84"><a href="#cb34-84" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-85"><a href="#cb34-85" aria-hidden="true" tabindex="-1"></a>  <span class="do">## early stopping once the validation AUC doesn't improve by at least 0.01% for 5 consecutive scoring events</span></span>
+<span id="cb34-86"><a href="#cb34-86" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_rounds =</span> <span class="dv">5</span>, <span class="at">stopping_tolerance =</span> <span class="fl">1e-3</span>, <span class="at">stopping_metric =</span> <span class="st">"AUC"</span>, </span>
+<span id="cb34-87"><a href="#cb34-87" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-88"><a href="#cb34-88" aria-hidden="true" tabindex="-1"></a>  <span class="do">## score every 10 trees to make early stopping reproducible (it depends on the scoring interval)</span></span>
+<span id="cb34-89"><a href="#cb34-89" aria-hidden="true" tabindex="-1"></a>  <span class="at">score_tree_interval =</span> <span class="dv">10</span>,                                                </span>
+<span id="cb34-90"><a href="#cb34-90" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb34-91"><a href="#cb34-91" aria-hidden="true" tabindex="-1"></a>  <span class="do">## base random number generator seed for each model (automatically gets incremented internally for each model)</span></span>
+<span id="cb34-92"><a href="#cb34-92" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">1234</span>                                                             </span>
+<span id="cb34-93"><a href="#cb34-93" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |=======                                                               |  10%
+  |                                                                            
+  |=====================                                                 |  30%
+  |                                                                            
+  |===================================                                   |  50%
+  |                                                                            
+  |=================================================                     |  70%
+  |                                                                            
+  |===============================================================       |  90%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.4. Get models</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>sortedGrid <span class="ot">&lt;-</span> <span class="fu">h2o.getGrid</span>(<span class="st">"model_id"</span>, <span class="at">sort_by =</span> <span class="st">"auc"</span>, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)    </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>sortedGrid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>H2O Grid Details
+================
+
+Grid ID: model_id 
+Used hyper parameters: 
+  -  col_sample_rate 
+  -  histogram_type 
+  -  max_depth 
+  -  min_rows 
+  -  min_split_improvement 
+  -  nbins 
+  -  nbins_cats 
+  -  sample_rate 
+Number of models: 7 
+Number of failed models: 0 
+
+Hyper-Parameter Search Summary: ordered by decreasing auc
+  col_sample_rate  histogram_type max_depth min_rows min_split_improvement
+1         0.80000 UniformAdaptive   7.00000  1.00000               0.00000
+2         0.80000 UniformAdaptive   7.00000  8.00000               0.00010
+3         0.80000 UniformAdaptive   7.00000  1.00000               0.00000
+4         0.75000 QuantilesGlobal   5.00000 32.00000               0.00000
+5         0.75000 QuantilesGlobal   5.00000 32.00000               0.00000
+6         0.85000      RoundRobin   8.00000  1.00000               0.00010
+7         0.85000      RoundRobin   8.00000  1.00000               0.00010
+      nbins nbins_cats sample_rate        model_ids     auc
+1 512.00000 2048.00000     0.55000 model_id_model_6 0.77656
+2  16.00000   16.00000     1.00000 model_id_model_7 0.77408
+3 512.00000 2048.00000     0.55000 model_id_model_3 0.77315
+4  64.00000  512.00000     0.50000 model_id_model_2 0.77233
+5  64.00000  512.00000     0.50000 model_id_model_5 0.77233
+6  16.00000  256.00000     0.55000 model_id_model_1 0.76386
+7  16.00000  256.00000     0.55000 model_id_model_4 0.76386</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.5. Get best model</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>gbm <span class="ot">&lt;-</span> <span class="fu">h2o.getModel</span>(sortedGrid<span class="sc">@</span>model_ids[[<span class="dv">1</span>]])</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters of the best model</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>gbm<span class="sc">@</span>parameters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$model_id
+[1] "model_id_model_6"
+
+$training_frame
+[1] "RTMP_sid_9333_3"
+
+$validation_frame
+[1] "RTMP_sid_9333_5"
+
+$score_tree_interval
+[1] 10
+
+$ntrees
+[1] 190
+
+$max_depth
+[1] 7
+
+$min_rows
+[1] 1
+
+$nbins
+[1] 512
+
+$nbins_cats
+[1] 2048
+
+$stopping_rounds
+[1] 5
+
+$stopping_metric
+[1] "AUC"
+
+$max_runtime_secs
+[1] 3.775
+
+$seed
+[1] 1234
+
+$learn_rate
+[1] 0.05
+
+$learn_rate_annealing
+[1] 0.99
+
+$distribution
+[1] "bernoulli"
+
+$sample_rate
+[1] 0.55
+
+$col_sample_rate
+[1] 0.8
+
+$min_split_improvement
+[1] 1e-08
+
+$histogram_type
+[1] "UniformAdaptive"
+
+$categorical_encoding
+[1] "Enum"
+
+$calibration_method
+[1] "PlattScaling"
+
+$x
+ [1] "Duration"                              
+ [2] "Amount"                                
+ [3] "InstallmentRatePercentage"             
+ [4] "ResidenceDuration"                     
+ [5] "Age"                                   
+ [6] "NumberExistingCredits"                 
+ [7] "NumberPeopleMaintenance"               
+ [8] "Telephone"                             
+ [9] "ForeignWorker"                         
+[10] "CheckingAccountStatus.lt.0"            
+[11] "CheckingAccountStatus.0.to.200"        
+[12] "CheckingAccountStatus.gt.200"          
+[13] "CheckingAccountStatus.none"            
+[14] "CreditHistory.NoCredit.AllPaid"        
+[15] "CreditHistory.ThisBank.AllPaid"        
+[16] "CreditHistory.PaidDuly"                
+[17] "CreditHistory.Delay"                   
+[18] "CreditHistory.Critical"                
+[19] "Purpose.NewCar"                        
+[20] "Purpose.UsedCar"                       
+[21] "Purpose.Furniture.Equipment"           
+[22] "Purpose.Radio.Television"              
+[23] "Purpose.DomesticAppliance"             
+[24] "Purpose.Repairs"                       
+[25] "Purpose.Education"                     
+[26] "Purpose.Retraining"                    
+[27] "Purpose.Business"                      
+[28] "Purpose.Other"                         
+[29] "SavingsAccountBonds.lt.100"            
+[30] "SavingsAccountBonds.100.to.500"        
+[31] "SavingsAccountBonds.500.to.1000"       
+[32] "SavingsAccountBonds.gt.1000"           
+[33] "SavingsAccountBonds.Unknown"           
+[34] "EmploymentDuration.lt.1"               
+[35] "EmploymentDuration.1.to.4"             
+[36] "EmploymentDuration.4.to.7"             
+[37] "EmploymentDuration.gt.7"               
+[38] "EmploymentDuration.Unemployed"         
+[39] "Personal.Male.Divorced.Seperated"      
+[40] "Personal.Female.NotSingle"             
+[41] "Personal.Male.Single"                  
+[42] "Personal.Male.Married.Widowed"         
+[43] "OtherDebtorsGuarantors.None"           
+[44] "OtherDebtorsGuarantors.CoApplicant"    
+[45] "OtherDebtorsGuarantors.Guarantor"      
+[46] "Property.RealEstate"                   
+[47] "Property.Insurance"                    
+[48] "Property.CarOther"                     
+[49] "Property.Unknown"                      
+[50] "OtherInstallmentPlans.Bank"            
+[51] "OtherInstallmentPlans.Stores"          
+[52] "OtherInstallmentPlans.None"            
+[53] "Housing.Rent"                          
+[54] "Housing.Own"                           
+[55] "Housing.ForFree"                       
+[56] "Job.UnemployedUnskilled"               
+[57] "Job.UnskilledResident"                 
+[58] "Job.SkilledEmployee"                   
+[59] "Job.Management.SelfEmp.HighlyQualified"
+
+$y
+[1] "Class"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary best model</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>gbm <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Model Details:
+==============
+
+H2OBinomialModel: gbm
+Model Key:  model_id_model_6 
+Model Summary: 
+  number_of_trees number_of_internal_trees model_size_in_bytes min_depth
+1             190                      190              154044         7
+  max_depth mean_depth min_leaves max_leaves mean_leaves
+1         7    7.00000         37         90    59.70526
+
+H2OBinomialMetrics: gbm
+** Reported on training data. **
+
+MSE:  0.02755389
+RMSE:  0.1659936
+LogLoss:  0.1418825
+Mean Per-Class Error:  0.003035101
+AUC:  0.9998533
+AUCPR:  0.9999372
+Gini:  0.9997065
+R^2:  0.8685355
+
+Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:
+       Bad Good    Error    Rate
+Bad    234    1 0.004255  =1/235
+Good     1  550 0.001815  =1/551
+Totals 235  551 0.002545  =2/786
+
+Maximum Metrics: Maximum metrics at their respective thresholds
+                        metric threshold      value idx
+1                       max f1  0.562943   0.998185 224
+2                       max f2  0.562943   0.998185 224
+3                 max f0point5  0.562943   0.998185 224
+4                 max accuracy  0.562943   0.997455 224
+5                max precision  0.989264   1.000000   0
+6                   max recall  0.519195   1.000000 231
+7              max specificity  0.989264   1.000000   0
+8             max absolute_mcc  0.562943   0.993930 224
+9   max min_per_class_accuracy  0.600199   0.995745 223
+10 max mean_per_class_accuracy  0.562943   0.996965 224
+11                     max tns  0.989264 235.000000   0
+12                     max fns  0.989264 550.000000   0
+13                     max fps  0.044299 235.000000 399
+14                     max tps  0.519195 551.000000 231
+15                     max tnr  0.989264   1.000000   0
+16                     max fnr  0.989264   0.998185   0
+17                     max fpr  0.044299   1.000000 399
+18                     max tpr  0.519195   1.000000 231
+
+Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`
+H2OBinomialMetrics: gbm
+** Reported on validation data. **
+
+MSE:  0.1704193
+RMSE:  0.4128187
+LogLoss:  0.5140953
+Mean Per-Class Error:  0.3946825
+AUC:  0.7765617
+AUCPR:  0.8842813
+Gini:  0.5531234
+R^2:  0.1941639
+
+Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:
+       Bad Good    Error     Rate
+Bad     15   50 0.769231   =50/65
+Good     3  146 0.020134   =3/149
+Totals  18  196 0.247664  =53/214
+
+Maximum Metrics: Maximum metrics at their respective thresholds
+                        metric threshold      value idx
+1                       max f1  0.294319   0.846377 195
+2                       max f2  0.265576   0.928482 200
+3                 max f0point5  0.629027   0.820896 146
+4                 max accuracy  0.572423   0.757009 158
+5                max precision  0.986755   1.000000   0
+6                   max recall  0.132550   1.000000 210
+7              max specificity  0.986755   1.000000   0
+8             max absolute_mcc  0.629027   0.408635 146
+9   max min_per_class_accuracy  0.742643   0.692308 123
+10 max mean_per_class_accuracy  0.731343   0.708570 127
+11                     max tns  0.986755  65.000000   0
+12                     max fns  0.986755 148.000000   0
+13                     max fps  0.091295  65.000000 213
+14                     max tps  0.132550 149.000000 210
+15                     max tnr  0.986755   1.000000   0
+16                     max fnr  0.986755   0.993289   0
+17                     max fpr  0.091295   1.000000 213
+18                     max tpr  0.132550   1.000000 210
+
+Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`
+
+
+Scoring History: 
+             timestamp   duration number_of_trees training_rmse
+1  2023-04-18 01:34:18  6.228 sec               0       0.45781
+2  2023-04-18 01:34:18  6.423 sec              10       0.38021
+3  2023-04-18 01:34:18  6.542 sec              20       0.33012
+4  2023-04-18 01:34:18  6.641 sec              30       0.29559
+5  2023-04-18 01:34:18  6.735 sec              40       0.27103
+6  2023-04-18 01:34:19  6.832 sec              50       0.25164
+7  2023-04-18 01:34:19  6.933 sec              60       0.23528
+8  2023-04-18 01:34:19  7.036 sec              70       0.22403
+9  2023-04-18 01:34:19  7.145 sec              80       0.21344
+10 2023-04-18 01:34:19  7.235 sec              90       0.20578
+11 2023-04-18 01:34:19  7.325 sec             100       0.19796
+12 2023-04-18 01:34:19  7.418 sec             110       0.19256
+13 2023-04-18 01:34:19  7.542 sec             120       0.18836
+14 2023-04-18 01:34:19  7.638 sec             130       0.18327
+15 2023-04-18 01:34:19  7.737 sec             140       0.17954
+16 2023-04-18 01:34:20  7.832 sec             150       0.17647
+17 2023-04-18 01:34:20  7.923 sec             160       0.17356
+18 2023-04-18 01:34:20  8.022 sec             170       0.17036
+19 2023-04-18 01:34:20  8.121 sec             180       0.16797
+20 2023-04-18 01:34:20  8.214 sec             190       0.16599
+   training_logloss training_auc training_pr_auc training_lift
+1           0.61000      0.50000         0.70102       1.00000
+2           0.45947      0.96683         0.98507       1.42650
+3           0.37361      0.98343         0.99259       1.42650
+4           0.31846      0.99070         0.99579       1.42650
+5           0.28075      0.99421         0.99734       1.42650
+6           0.25232      0.99597         0.99820       1.42650
+7           0.22911      0.99682         0.99859       1.42650
+8           0.21353      0.99772         0.99901       1.42650
+9           0.19968      0.99841         0.99931       1.42650
+10          0.18953      0.99878         0.99947       1.42650
+11          0.17986      0.99908         0.99961       1.42650
+12          0.17317      0.99919         0.99965       1.42650
+13          0.16761      0.99928         0.99969       1.42650
+14          0.16165      0.99944         0.99976       1.42650
+15          0.15721      0.99957         0.99981       1.42650
+16          0.15372      0.99963         0.99984       1.42650
+17          0.15041      0.99970         0.99987       1.42650
+18          0.14672      0.99975         0.99989       1.42650
+19          0.14401      0.99980         0.99992       1.42650
+20          0.14188      0.99985         0.99994       1.42650
+   training_classification_error validation_rmse validation_logloss
+1                        0.29898         0.45990            0.61405
+2                        0.08524         0.43380            0.55706
+3                        0.06107         0.42038            0.52747
+4                        0.04453         0.41787            0.52099
+5                        0.03181         0.41491            0.51435
+6                        0.02417         0.41453            0.51243
+7                        0.02163         0.41477            0.51231
+8                        0.01908         0.41367            0.51055
+9                        0.01527         0.41347            0.51122
+10                       0.01527         0.41203            0.50889
+11                       0.01145         0.41213            0.50923
+12                       0.01018         0.41182            0.50903
+13                       0.00891         0.41179            0.50945
+14                       0.00763         0.41150            0.50925
+15                       0.00763         0.41181            0.51021
+16                       0.00636         0.41169            0.51012
+17                       0.00382         0.41213            0.51182
+18                       0.00382         0.41218            0.51246
+19                       0.00382         0.41278            0.51395
+20                       0.00254         0.41282            0.51410
+   validation_auc validation_pr_auc validation_lift
+1         0.50000           0.69626         1.00000
+2         0.74734           0.88451         1.43624
+3         0.76851           0.88894         1.43624
+4         0.76489           0.88515         1.43624
+5         0.77078           0.88528         1.43624
+6         0.77202           0.88675         1.43624
+7         0.77481           0.88866         1.43624
+8         0.77584           0.88846         1.43624
+9         0.77739           0.88715         1.43624
+10        0.77904           0.88849         1.43624
+11        0.77801           0.88722         1.43624
+12        0.78007           0.88798         1.43624
+13        0.78152           0.88848         1.43624
+14        0.78286           0.88893         1.43624
+15        0.78080           0.88712         1.43624
+16        0.78090           0.88723         1.43624
+17        0.77873           0.88623         1.43624
+18        0.77894           0.88555         1.43624
+19        0.77728           0.88529         1.43624
+20        0.77656           0.88428         1.43624
+   validation_classification_error
+1                          0.30374
+2                          0.28972
+3                          0.27103
+4                          0.26636
+5                          0.25234
+6                          0.25234
+7                          0.25701
+8                          0.27570
+9                          0.26636
+10                         0.26168
+11                         0.25701
+12                         0.25701
+13                         0.26168
+14                         0.25701
+15                         0.25701
+16                         0.25234
+17                         0.25234
+18                         0.24766
+19                         0.24766
+20                         0.24766
+
+Variable Importances: (Extract with `h2o.varimp`) 
+=================================================
+
+Variable Importances: 
+                    variable relative_importance scaled_importance percentage
+1                     Amount          332.317505          1.000000   0.157845
+2                        Age          204.717499          0.616030   0.097237
+3                   Duration          190.941040          0.574574   0.090694
+4 CheckingAccountStatus.none          184.693298          0.555774   0.087726
+5          ResidenceDuration           78.698425          0.236817   0.037380
+
+---
+                    variable relative_importance scaled_importance percentage
+54           Purpose.Repairs            8.946022          0.026920   0.004249
+55 Purpose.DomesticAppliance            6.825329          0.020539   0.003242
+56   Job.UnemployedUnskilled            6.578030          0.019794   0.003124
+57             ForeignWorker            6.199419          0.018655   0.002945
+58        Purpose.Retraining            3.083785          0.009280   0.001465
+59             Purpose.Other            1.568497          0.004720   0.000745</code></pre>
+</div>
+</div>
+</section>
+<section id="lưu-và-load-mô-hình" class="level3" data-number="23.3.10">
+<h3 data-number="23.3.10" class="anchored" data-anchor-id="lưu-và-load-mô-hình"><span class="header-section-number">23.3.10</span> Lưu và load mô hình</h3>
+<p>Để lưu lại mô hình trên H2O, chúng ta sử dụng câu lệnh <code>h2o.saveModel()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lưu model</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.saveModel</span>(gbm, <span class="co"># Tên mô hình</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">path =</span> <span class="fu">getwd</span>(), <span class="co"># Đường dẫn muốn lưu</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">force =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Để load mô hình trên H2O, chúng ta sử dụng câu lệnh <code>h2o.loadModel()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.shutdown</span>(<span class="at">prompt =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+<p>Như vậy, trong chương này, chúng ta được học cách xây dựng mô hình dự báo với H2O. Đây là một platform rất mạnh giúp cải thiện chất lượng dự báo, tốc độ xử lý, tối ưu hóa mô hình, cũng như hiển thị kết quả mô hình một cách rất hiệu quả.</p>
+</section>
+</section>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="23.4">
+<h2 data-number="23.4" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">23.4</span> Tài liệu tham khảo</h2>
+<ul>
+<li><a href="https://github.com/h2oai/h2o-tutorials">https://github.com/h2oai/h2o-tutorials</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./p03-05-bagging-boosting.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Bagging, RandomForest và Boosting</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./p03-08-xgboost.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
