@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.475">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Khoa học dữ liệu với R - 19&nbsp; Mô hình hồi quy tuyến tính</title>
+<title>Khoa học dữ liệu với R - 18&nbsp; Mô hình hồi quy tuyến tính</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -17,9 +17,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -46,43 +47,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -127,6 +98,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
@@ -136,11 +108,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mô hình hồi quy tuyến tính</span></h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./p03-01-nguyen-ly-du-bao.html">Supervised Learning</a></li><li class="breadcrumb-item"><a href="./p03-02-mo-hinh-ols.html"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Mô hình hồi quy tuyến tính</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -148,13 +125,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Khoa học dữ liệu với R</a> 
         <div class="sidebar-tools-main">
-  <a href="" class="quarto-color-scheme-toggle sidebar-tool" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
-  <a href="" class="quarto-reader-toggle sidebar-tool" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
   <i class="bi"></i>
   </div>
@@ -162,474 +139,534 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Khoa học dữ liệu và nghề phân tích dữ liệu</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Khoa học dữ liệu và nghề phân tích dữ liệu</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Phân tích khám phá dữ liệu</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Phân tích khám phá dữ liệu</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p02-01-gioi-thieu-co-ban-ve-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Giới thiệu cơ bản về R</span></a>
+  <a href="./p02-01-gioi-thieu-co-ban-ve-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Giới thiệu cơ bản về R</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p02-70-xay-dung-bao-cao-voi-rmarkdown.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Xây dựng báo cáo với Rmarkdown</span></a>
+  <a href="./p02-70-xay-dung-bao-cao-voi-rmarkdown.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Xây dựng báo cáo với Rmarkdown</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p02-02-bien-doi-du-lieu-dplyr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Ngữ pháp của biến đổi dữ liệu với DPLYR</span></a>
+  <a href="./p02-02-bien-doi-du-lieu-dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Ngữ pháp của biến đổi dữ liệu với DPLYR</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p02-03-phan-ra-va-xoay-chieu-du-lieu.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Làm sạch và biến đổi dữ liệu nâng cao</span></a>
+  <a href="./p02-03-phan-ra-va-xoay-chieu-du-lieu.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Làm sạch và biến đổi dữ liệu nâng cao</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p02-04-ngu-phap-bieu-do-ggplot2.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ngữ pháp của biểu đồ với GGPLOT2</span></a>
+  <a href="./p02-04-ngu-phap-bieu-do-ggplot2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Ngữ pháp của biểu đồ với GGPLOT2</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p02-05-cac-chi-so-thong-ke.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Các chỉ số thống kê mô tả cơ bản</span></a>
+  <a href="./p02-05-cac-chi-so-thong-ke.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Các chỉ số thống kê mô tả cơ bản</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p02-06-lap-trinh-ham.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Lập trình hàm</span></a>
+  <a href="./p02-06-lap-trinh-ham.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Lập trình hàm</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p02-07-lap-trinh-ham-voi-purrr.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Lập trình chức năng hàm với purrr</span></a>
+  <a href="./p02-07-lap-trinh-ham-voi-purrr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Lập trình chức năng hàm với purrr</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p02-08-bien-doi-du-lieu-text.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu text</span></a>
+  <a href="./p02-08-bien-doi-du-lieu-text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu text</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p02-11-quan-ly-nhieu-mo-hinh.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quản lý kết quả phân tích từ nhiều mô hình</span></a>
+  <a href="./p02-11-quan-ly-nhieu-mo-hinh.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Quản lý kết quả phân tích từ nhiều mô hình</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p02-15-thong-ke-co-ban.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Xác suất và phân phối thống kê cơ bản</span></a>
+  <a href="./p02-16-power-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Power analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p02-16-power-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Power analysis</span></a>
+  <a href="./p02-20-sampling-methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Phương pháp ước lượng tham số thông qua lấy mẫu</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p02-20-sampling-methods.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Phương pháp ước lượng tham số thông qua lấy mẫu</span></a>
+  <a href="./p02-50-datatable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu với <code>data.table</code></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p02-50-datatable.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu với <code>data.table</code></span></a>
+  <a href="./p02-60-thu-thap-du-lieu-tu-website.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Thu thập dữ liệu từ website</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p02-60-thu-thap-du-lieu-tu-website.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Thu thập dữ liệu từ website</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./p02-99-meo-trong-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Các mẹo trong R</span></a>
+  <a href="./p02-99-meo-trong-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Các mẹo trong R</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Supervised Learning</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Supervised Learning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p03-01-nguyen-ly-du-bao.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Giới thiệu về học máy</span></a>
+  <a href="./p03-01-nguyen-ly-du-bao.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Giới thiệu về học máy</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p03-02-mo-hinh-ols.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mô hình hồi quy tuyến tính</span></a>
+  <a href="./p03-02-mo-hinh-ols.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Mô hình hồi quy tuyến tính</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p03-03-logistic-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Mô hình hồi quy logistic</span></a>
+  <a href="./p03-03-logistic-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mô hình hồi quy logistic</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p03-04-decision-tree.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Cây quyết định</span></a>
+  <a href="./p03-04-decision-tree.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Cây quyết định</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p03-05-bagging-boosting.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Bagging, RandomForest và Boosting</span></a>
+  <a href="./p03-05-bagging-boosting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Bagging, RandomForest và Boosting</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p03-07-xay-dung-mo-hinh-voi-h2o.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Xây dựng mô hình với H2O</span></a>
+  <a href="./p03-07-xay-dung-mo-hinh-voi-h2o.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Xây dựng mô hình với H2O</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></a>
+  <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p03-10-knn.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">K nearest neighbors</span></a>
+  <a href="./p03-10-knn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">K nearest neighbors</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p03-11-svm.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Support Vector Machine</span></a>
+  <a href="./p03-11-svm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Support Vector Machine</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p03-15-nonlinear.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Mô hình phi tuyến tính</span></a>
+  <a href="./p03-15-nonlinear.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Mô hình phi tuyến tính</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p03-17-regularization.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Lựa chọn biến &amp; regularization</span></a>
+  <a href="./p03-17-regularization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Lựa chọn biến &amp; regularization</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p03-20-feature-engineering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Feature Engineering</span></a>
+  <a href="./p03-20-feature-engineering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Feature Engineering</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p03-30-credit-scoring.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Credit Scoring</span></a>
+  <a href="./p03-30-credit-scoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Credit Scoring</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p03-40-interpretable-ml.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Giải thích mô hình học máy</span></a>
+  <a href="./p03-40-interpretable-ml.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Giải thích mô hình học máy</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p03-50-chat-luong-mo-hinh.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Chất lượng mô hình</span></a>
+  <a href="./p03-50-chat-luong-mo-hinh.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Chất lượng mô hình</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p03-69-caret.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Xây dựng mô hình dự báo với caret</span></a>
+  <a href="./p03-69-caret.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Xây dựng mô hình dự báo với caret</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p03-70-tidymodels.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Tidymodels</span></a>
+  <a href="./p03-70-tidymodels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Tidymodels</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-75-mlops-vetiver.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">MLOPs với <code>vetiver</code></span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Unsupervised Learning</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Unsupervised Learning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p04-01-unsupervised-learning.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Unsupervised learning</span></a>
+  <a href="./p04-01-unsupervised-learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Unsupervised learning</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p04-02-hierarchical-clustering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Hierachical clustering</span></a>
+  <a href="./p04-02-hierarchical-clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Hierachical clustering</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p04-03-kmeans.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">k-means</span></a>
+  <a href="./p04-03-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">k-means</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p04-04-basket-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Phân tích giỏ hàng</span></a>
+  <a href="./p04-04-basket-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Phân tích giỏ hàng</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p04-05-pca.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Principal component analysis</span></a>
+  <a href="./p04-05-pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Principal component analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p04-06-factor-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Phân tích nhân tố ẩn (factor analysis)</span></a>
+  <a href="./p04-06-factor-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Phân tích nhân tố ẩn (factor analysis)</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Chuỗi thời gian</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Chuỗi thời gian</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p05-01-chuoi-thoi-gian.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Giới thiệu về chuỗi thời gian</span></a>
+  <a href="./p05-01-chuoi-thoi-gian.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Giới thiệu về chuỗi thời gian</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p05-02-arima.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mô hình ARIMA</span></a>
+  <a href="./p05-02-arima.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Mô hình ARIMA</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Phân tích chuỗi thời gian với tidyquant và timetk</span></a>
+  <a href="./p05-03-phan-tich-chuoi-thoi-gian-voi-tidyquant.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Phân tích chuỗi thời gian với tidyquant và timetk</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p05-06-du-bao-ts-voi-prophet.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với prophet</span></a>
+  <a href="./p05-06-du-bao-ts-voi-prophet.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với prophet</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p05-07-du-bao-ts-voi-timetk.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với timetk</span></a>
+  <a href="./p05-07-du-bao-ts-voi-timetk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với timetk</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p05-08-abnomaly-detection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Abnomaly detection trong times series</span></a>
+  <a href="./p05-08-abnomaly-detection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Abnomaly detection trong times series</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">Natural Language Processing</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Natural Language Processing</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p06-01-nlp-co-ban.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Xử lý ngôn ngữ tự nhiên cơ bản</span></a>
+  <a href="./p06-01-nlp-co-ban.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Xử lý ngôn ngữ tự nhiên cơ bản</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p06-04-text-classification.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Phân loại text</span></a>
+  <a href="./p06-04-text-classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Phân loại text</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p06-07-nlp-api.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Sử dụng API từ các dịch vụ đám mây</span></a>
+  <a href="./p06-07-nlp-api.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">Sử dụng API từ các dịch vụ đám mây</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p06-10-ocr-tesseract.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">OCR với <code>tesseract</code></span></a>
+  <a href="./p06-10-ocr-tesseract.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">OCR với <code>tesseract</code></span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">Các phương pháp khác</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Các phương pháp khác</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p07-02-causal-impact.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Causal Impact</span></a>
+  <a href="./p07-02-causal-impact.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Causal Impact</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p07-03-collaborative-filtering.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Collaborative Filtering</span></a>
+  <a href="./p07-03-collaborative-filtering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Collaborative Filtering</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p07-04-survival-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Survival Analysis</span></a>
+  <a href="./p07-04-survival-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Survival Analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p07-05-vintage-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vintage analysis</span></a>
+  <a href="./p07-05-vintage-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Vintage analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p07-07-spatial-data.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Spatial data</span></a>
+  <a href="./p07-07-spatial-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Spatial data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p07-08-anomaly-detection.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Abnomaly detection</span></a>
+  <a href="./p07-08-anomaly-detection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Abnomaly detection</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p07-10-shiny.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Shiny apps</span></a>
+  <a href="./p07-10-shiny.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Shiny apps</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p07-15-quantile-regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Hồi quy phân vị</span></a>
+  <a href="./p07-15-quantile-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Hồi quy phân vị</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p07-16-retention-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Retention analysis</span></a>
+  <a href="./p07-16-retention-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Retention analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p07-20-network-analysis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Network analysis</span></a>
+  <a href="./p07-20-network-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Network analysis</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p07-30-python-voi-r.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Sử dụng Python với R</span></a>
+  <a href="./p07-30-python-voi-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Sử dụng Python với R</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">Cloud Computing</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Cloud Computing</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p10-01-cai-dat-rstudio-server-tren-amazon.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Cài đặt server RStudio trên Amazon</span></a>
+  <a href="./p10-01-cai-dat-rstudio-server-tren-amazon.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">Cài đặt server RStudio trên Amazon</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p10-02-deploy-shiny-app-aws.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Deploy Shiny Apps lên AWS</span></a>
+  <a href="./p10-02-deploy-shiny-app-aws.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Deploy Shiny Apps lên AWS</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p10-03-web-service-azure.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Xây dựng web service với Azure</span></a>
+  <a href="./p10-03-web-service-azure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Xây dựng web service với Azure</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p10-09-apis-voi-plumber.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">API với Plumber</span></a>
+  <a href="./p10-09-apis-voi-plumber.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">API với Plumber</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">Kiến thức bổ trợ</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text">Kiến thức bổ trợ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p11-01-git.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Sử dụng GIT</span></a>
+  <a href="./p11-01-git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Sử dụng GIT</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p11-02-cmd.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">CMD và Bash</span></a>
+  <a href="./p11-02-cmd.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">CMD và Bash</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p11-03-docker.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Sử dụng docker</span></a>
+  <a href="./p11-03-docker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Sử dụng docker</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p11-04-apis.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">API</span></a>
+  <a href="./p11-04-apis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">API</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p11-05-html-css.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Cơ bản về HTML và CSS</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./p11-10-nguyen-ly-thi-giac.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Nguyên lý thị giác và Business Dashboard</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./p11-30-tim-hieu-he-thong.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Tìm hiểu hệ thống dữ liệu</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./p11-40-aws-overview.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">73</span>&nbsp; <span class="chapter-title">AWS</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./p11-90-other.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">74</span>&nbsp; <span class="chapter-title">Các tricks khác</span></a>
+  <a href="./p11-90-other.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Các tricks khác</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">Case studies</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">
+ <span class="menu-text">Case studies</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p13-01-casestudy-truc-quan-hoa.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">75</span>&nbsp; <span class="chapter-title">Trực quan hóa dữ liệu</span></a>
+  <a href="./p13-01-casestudy-truc-quan-hoa.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Trực quan hóa dữ liệu</span></span></a>
   </div>
 </li>
       </ul>
@@ -637,40 +674,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#giới-thiệu" id="toc-giới-thiệu" class="nav-link active" data-scroll-target="#giới-thiệu"><span class="toc-section-number">19.1</span>  Giới thiệu</a></li>
-  <li><a href="#xây-dựng-mô-hình-cơ-bản" id="toc-xây-dựng-mô-hình-cơ-bản" class="nav-link" data-scroll-target="#xây-dựng-mô-hình-cơ-bản"><span class="toc-section-number">19.2</span>  Xây dựng mô hình cơ bản</a>
+  <li><a href="#giới-thiệu" id="toc-giới-thiệu" class="nav-link active" data-scroll-target="#giới-thiệu"><span class="header-section-number">18.1</span> Giới thiệu</a></li>
+  <li><a href="#xây-dựng-mô-hình-cơ-bản" id="toc-xây-dựng-mô-hình-cơ-bản" class="nav-link" data-scroll-target="#xây-dựng-mô-hình-cơ-bản"><span class="header-section-number">18.2</span> Xây dựng mô hình cơ bản</a>
   <ul class="collapse">
-  <li><a href="#mô-hình-hồi-quy-đơn-biến" id="toc-mô-hình-hồi-quy-đơn-biến" class="nav-link" data-scroll-target="#mô-hình-hồi-quy-đơn-biến"><span class="toc-section-number">19.2.1</span>  Mô hình hồi quy đơn biến</a></li>
-  <li><a href="#diễn-giải-mô-hình" id="toc-diễn-giải-mô-hình" class="nav-link" data-scroll-target="#diễn-giải-mô-hình"><span class="toc-section-number">19.2.2</span>  Diễn giải mô hình</a></li>
+  <li><a href="#mô-hình-hồi-quy-đơn-biến" id="toc-mô-hình-hồi-quy-đơn-biến" class="nav-link" data-scroll-target="#mô-hình-hồi-quy-đơn-biến"><span class="header-section-number">18.2.1</span> Mô hình hồi quy đơn biến</a></li>
+  <li><a href="#diễn-giải-mô-hình" id="toc-diễn-giải-mô-hình" class="nav-link" data-scroll-target="#diễn-giải-mô-hình"><span class="header-section-number">18.2.2</span> Diễn giải mô hình</a></li>
   </ul></li>
-  <li><a href="#đánh-giá-chất-lượng-mô-hình" id="toc-đánh-giá-chất-lượng-mô-hình" class="nav-link" data-scroll-target="#đánh-giá-chất-lượng-mô-hình"><span class="toc-section-number">19.3</span>  Đánh giá chất lượng mô hình</a>
+  <li><a href="#đánh-giá-chất-lượng-mô-hình" id="toc-đánh-giá-chất-lượng-mô-hình" class="nav-link" data-scroll-target="#đánh-giá-chất-lượng-mô-hình"><span class="header-section-number">18.3</span> Đánh giá chất lượng mô hình</a>
   <ul class="collapse">
-  <li><a href="#sai-số-của-mô-hình" id="toc-sai-số-của-mô-hình" class="nav-link" data-scroll-target="#sai-số-của-mô-hình"><span class="toc-section-number">19.3.1</span>  Sai số của mô hình</a></li>
-  <li><a href="#r-bình-phương-r2" id="toc-r-bình-phương-r2" class="nav-link" data-scroll-target="#r-bình-phương-r2"><span class="toc-section-number">19.3.2</span>  R bình phương <span class="math inline">\(R^2\)</span></a></li>
-  <li><a href="#f-statistic" id="toc-f-statistic" class="nav-link" data-scroll-target="#f-statistic"><span class="toc-section-number">19.3.3</span>  F statistic</a></li>
+  <li><a href="#sai-số-của-mô-hình" id="toc-sai-số-của-mô-hình" class="nav-link" data-scroll-target="#sai-số-của-mô-hình"><span class="header-section-number">18.3.1</span> Sai số của mô hình</a></li>
+  <li><a href="#r-bình-phương-r2" id="toc-r-bình-phương-r2" class="nav-link" data-scroll-target="#r-bình-phương-r2"><span class="header-section-number">18.3.2</span> R bình phương <span class="math inline">\(R^2\)</span></a></li>
+  <li><a href="#f-statistic" id="toc-f-statistic" class="nav-link" data-scroll-target="#f-statistic"><span class="header-section-number">18.3.3</span> F statistic</a></li>
   </ul></li>
-  <li><a href="#dự-báo" id="toc-dự-báo" class="nav-link" data-scroll-target="#dự-báo"><span class="toc-section-number">19.4</span>  Dự báo</a></li>
-  <li><a href="#thuật-toán-tối-ưu-với-gradient-decent" id="toc-thuật-toán-tối-ưu-với-gradient-decent" class="nav-link" data-scroll-target="#thuật-toán-tối-ưu-với-gradient-decent"><span class="toc-section-number">19.5</span>  Thuật toán tối ưu với gradient decent</a></li>
-  <li><a href="#các-lưu-ý-khác-trong-xây-dựng-mô-hình" id="toc-các-lưu-ý-khác-trong-xây-dựng-mô-hình" class="nav-link" data-scroll-target="#các-lưu-ý-khác-trong-xây-dựng-mô-hình"><span class="toc-section-number">19.6</span>  Các lưu ý khác trong xây dựng mô hình</a>
+  <li><a href="#dự-báo" id="toc-dự-báo" class="nav-link" data-scroll-target="#dự-báo"><span class="header-section-number">18.4</span> Dự báo</a></li>
+  <li><a href="#thuật-toán-tối-ưu-với-gradient-decent" id="toc-thuật-toán-tối-ưu-với-gradient-decent" class="nav-link" data-scroll-target="#thuật-toán-tối-ưu-với-gradient-decent"><span class="header-section-number">18.5</span> Thuật toán tối ưu với gradient decent</a></li>
+  <li><a href="#các-lưu-ý-khác-trong-xây-dựng-mô-hình" id="toc-các-lưu-ý-khác-trong-xây-dựng-mô-hình" class="nav-link" data-scroll-target="#các-lưu-ý-khác-trong-xây-dựng-mô-hình"><span class="header-section-number">18.6</span> Các lưu ý khác trong xây dựng mô hình</a>
   <ul class="collapse">
-  <li><a href="#heteroskedaticity" id="toc-heteroskedaticity" class="nav-link" data-scroll-target="#heteroskedaticity"><span class="toc-section-number">19.6.1</span>  Heteroskedaticity</a></li>
-  <li><a href="#phân-phối-chuẩn-của-phần-dư" id="toc-phân-phối-chuẩn-của-phần-dư" class="nav-link" data-scroll-target="#phân-phối-chuẩn-của-phần-dư"><span class="toc-section-number">19.6.2</span>  Phân phối chuẩn của phần dư</a></li>
-  <li><a href="#auto-correlation-của-residuals" id="toc-auto-correlation-của-residuals" class="nav-link" data-scroll-target="#auto-correlation-của-residuals"><span class="toc-section-number">19.6.3</span>  Auto correlation của residuals</a></li>
-  <li><a href="#multi-collinearity" id="toc-multi-collinearity" class="nav-link" data-scroll-target="#multi-collinearity"><span class="toc-section-number">19.6.4</span>  Multi-collinearity</a></li>
+  <li><a href="#heteroskedaticity" id="toc-heteroskedaticity" class="nav-link" data-scroll-target="#heteroskedaticity"><span class="header-section-number">18.6.1</span> Heteroskedaticity</a></li>
+  <li><a href="#phân-phối-chuẩn-của-phần-dư" id="toc-phân-phối-chuẩn-của-phần-dư" class="nav-link" data-scroll-target="#phân-phối-chuẩn-của-phần-dư"><span class="header-section-number">18.6.2</span> Phân phối chuẩn của phần dư</a></li>
+  <li><a href="#auto-correlation-của-residuals" id="toc-auto-correlation-của-residuals" class="nav-link" data-scroll-target="#auto-correlation-của-residuals"><span class="header-section-number">18.6.3</span> Auto correlation của residuals</a></li>
+  <li><a href="#multi-collinearity" id="toc-multi-collinearity" class="nav-link" data-scroll-target="#multi-collinearity"><span class="header-section-number">18.6.4</span> Multi-collinearity</a></li>
   </ul></li>
-  <li><a href="#các-quan-sát-ngoại-lai" id="toc-các-quan-sát-ngoại-lai" class="nav-link" data-scroll-target="#các-quan-sát-ngoại-lai"><span class="toc-section-number">19.7</span>  Các quan sát ngoại lai</a>
+  <li><a href="#các-quan-sát-ngoại-lai" id="toc-các-quan-sát-ngoại-lai" class="nav-link" data-scroll-target="#các-quan-sát-ngoại-lai"><span class="header-section-number">18.7</span> Các quan sát ngoại lai</a>
   <ul class="collapse">
-  <li><a href="#outliers" id="toc-outliers" class="nav-link" data-scroll-target="#outliers"><span class="toc-section-number">19.7.1</span>  Outliers</a></li>
-  <li><a href="#high-leverage-points" id="toc-high-leverage-points" class="nav-link" data-scroll-target="#high-leverage-points"><span class="toc-section-number">19.7.2</span>  High-leverage points</a></li>
-  <li><a href="#influential-observations" id="toc-influential-observations" class="nav-link" data-scroll-target="#influential-observations"><span class="toc-section-number">19.7.3</span>  Influential observations</a></li>
+  <li><a href="#outliers" id="toc-outliers" class="nav-link" data-scroll-target="#outliers"><span class="header-section-number">18.7.1</span> Outliers</a></li>
+  <li><a href="#high-leverage-points" id="toc-high-leverage-points" class="nav-link" data-scroll-target="#high-leverage-points"><span class="header-section-number">18.7.2</span> High-leverage points</a></li>
+  <li><a href="#influential-observations" id="toc-influential-observations" class="nav-link" data-scroll-target="#influential-observations"><span class="header-section-number">18.7.3</span> Influential observations</a></li>
   </ul></li>
-  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="toc-section-number">19.8</span>  Tài liệu tham khảo</a></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">18.8</span> Tài liệu tham khảo</a></li>
   </ul>
 </nav>
     </div>
@@ -679,7 +717,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mô hình hồi quy tuyến tính</span></h1>
+<h1 class="title"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Mô hình hồi quy tuyến tính</span></h1>
 </div>
 
 
@@ -694,8 +732,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="giới-thiệu" class="level2" data-number="19.1">
-<h2 data-number="19.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">19.1</span> Giới thiệu</h2>
+<section id="giới-thiệu" class="level2" data-number="18.1">
+<h2 data-number="18.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">18.1</span> Giới thiệu</h2>
 <p>Mô hình hồi quy tuyến tính là mô hình cơ bản nhất giúp ta nắm được nguyên lý làm việc của <code>machine learning</code>. Với mô hình này, ta cần tìm kiếm một tổ hợp giữa <span class="math inline">\(\theta_0\)</span> và <span class="math inline">\(\theta_1\)</span> sao cho khoảng cách giữa mô hình tìm được và các quan sát là nhỏ nhất.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -721,8 +759,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="xây-dựng-mô-hình-cơ-bản" class="level2" data-number="19.2">
-<h2 data-number="19.2" class="anchored" data-anchor-id="xây-dựng-mô-hình-cơ-bản"><span class="header-section-number">19.2</span> Xây dựng mô hình cơ bản</h2>
+<section id="xây-dựng-mô-hình-cơ-bản" class="level2" data-number="18.2">
+<h2 data-number="18.2" class="anchored" data-anchor-id="xây-dựng-mô-hình-cơ-bản"><span class="header-section-number">18.2</span> Xây dựng mô hình cơ bản</h2>
 <p>Để xây dựng mô hình, ta sử dụng tập dữ liệu phân tích về doanh số bán hàng với quảng cáo.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Packages</span></span>
@@ -768,8 +806,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> advertising[sample, ]</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> advertising[<span class="sc">!</span>sample, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="mô-hình-hồi-quy-đơn-biến" class="level3" data-number="19.2.1">
-<h3 data-number="19.2.1" class="anchored" data-anchor-id="mô-hình-hồi-quy-đơn-biến"><span class="header-section-number">19.2.1</span> Mô hình hồi quy đơn biến</h3>
+<section id="mô-hình-hồi-quy-đơn-biến" class="level3" data-number="18.2.1">
+<h3 data-number="18.2.1" class="anchored" data-anchor-id="mô-hình-hồi-quy-đơn-biến"><span class="header-section-number">18.2.1</span> Mô hình hồi quy đơn biến</h3>
 <p>Mô hình hồi quy đơn biến là mô hình chỉ có 1 biến X. Trong ví dụ này, ta sẽ xây dựng mô hình mối quan hệ giữa doanh số bán hàng và ngân sách được dành cho quảng cáo.</p>
 <p><span class="math display">\[ Y = \beta_0 + \beta_1X + \epsilon \tag{1}\]</span></p>
 <p>Trong đó:</p>
@@ -822,8 +860,8 @@ F-statistic: 175.8 on 1 and 118 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
 </section>
-<section id="diễn-giải-mô-hình" class="level3" data-number="19.2.2">
-<h3 data-number="19.2.2" class="anchored" data-anchor-id="diễn-giải-mô-hình"><span class="header-section-number">19.2.2</span> Diễn giải mô hình</h3>
+<section id="diễn-giải-mô-hình" class="level3" data-number="18.2.2">
+<h3 data-number="18.2.2" class="anchored" data-anchor-id="diễn-giải-mô-hình"><span class="header-section-number">18.2.2</span> Diễn giải mô hình</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> model1 <span class="sc">%&gt;%</span> tidy</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>result</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -865,16 +903,16 @@ tv          0.03716873 0.05022162</code></pre>
 </div>
 </section>
 </section>
-<section id="đánh-giá-chất-lượng-mô-hình" class="level2" data-number="19.3">
-<h2 data-number="19.3" class="anchored" data-anchor-id="đánh-giá-chất-lượng-mô-hình"><span class="header-section-number">19.3</span> Đánh giá chất lượng mô hình</h2>
+<section id="đánh-giá-chất-lượng-mô-hình" class="level2" data-number="18.3">
+<h2 data-number="18.3" class="anchored" data-anchor-id="đánh-giá-chất-lượng-mô-hình"><span class="header-section-number">18.3</span> Đánh giá chất lượng mô hình</h2>
 <p>Để đánh giá chất lượng mô hình, ta sẽ quan tâm đến 3 chỉ số sau:</p>
 <ol type="1">
 <li>Sai số của mô hình</li>
 <li><em>R</em> bình phương (<span class="math inline">\(R^2\)</span>)</li>
 <li>F-statistic</li>
 </ol>
-<section id="sai-số-của-mô-hình" class="level3" data-number="19.3.1">
-<h3 data-number="19.3.1" class="anchored" data-anchor-id="sai-số-của-mô-hình"><span class="header-section-number">19.3.1</span> Sai số của mô hình</h3>
+<section id="sai-số-của-mô-hình" class="level3" data-number="18.3.1">
+<h3 data-number="18.3.1" class="anchored" data-anchor-id="sai-số-của-mô-hình"><span class="header-section-number">18.3.1</span> Sai số của mô hình</h3>
 <p><span class="math display">\[ RSE = \sqrt{\frac{1}{n-2}\sum^n_{i=1}(y_i - \hat{y}_i)^2} \tag{6}\]</span></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sigma</span>(model1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -891,8 +929,8 @@ tv          0.03716873 0.05022162</code></pre>
 </div>
 <p>Như vậy, sai số của mô hình so với thực tế sẽ là 23.6%.</p>
 </section>
-<section id="r-bình-phương-r2" class="level3" data-number="19.3.2">
-<h3 data-number="19.3.2" class="anchored" data-anchor-id="r-bình-phương-r2"><span class="header-section-number">19.3.2</span> R bình phương <span class="math inline">\(R^2\)</span></h3>
+<section id="r-bình-phương-r2" class="level3" data-number="18.3.2">
+<h3 data-number="18.3.2" class="anchored" data-anchor-id="r-bình-phương-r2"><span class="header-section-number">18.3.2</span> R bình phương <span class="math inline">\(R^2\)</span></h3>
 <p>Chỉ số RSE cho ta biết được sai số của mô hình khi dự báo. Bên cạnh đó, 1 chỉ số thường xuyên được sử dụng là chỉ số <span class="math inline">\(R^2\)</span>. Chỉ số này đo lường tỷ lệ biến động của biến Y được dự báo qua việc sử dụng mô hình (proportion of variance explained). Nếu không sử dụng mô hình, ta có thể dự báo giá trị của Y bằng giá trị trung bình.</p>
 <ul>
 <li>Tổng bình phương các sai số giữa giá trị thực tế và giá trị trung bình được gọi là độ biến động của dữ liệu (TSS - Total Sum of Square)</li>
@@ -909,8 +947,8 @@ tv          0.03716873 0.05022162</code></pre>
 <p>Với kết quả trên, mô hình giải thích được 59.8335559% độ biến động của dữ liệu thực tế.</p>
 <p><img src="Images/ols-r2.png" class="img-fluid"></p>
 </section>
-<section id="f-statistic" class="level3" data-number="19.3.3">
-<h3 data-number="19.3.3" class="anchored" data-anchor-id="f-statistic"><span class="header-section-number">19.3.3</span> F statistic</h3>
+<section id="f-statistic" class="level3" data-number="18.3.3">
+<h3 data-number="18.3.3" class="anchored" data-anchor-id="f-statistic"><span class="header-section-number">18.3.3</span> F statistic</h3>
 <p>Chỉ số thống kê F được tính như sau.</p>
 <p><span class="math display">\[F = \frac{(TSS-RSS)/p}{RSS/(n-p-1)} \tag{8} \]</span></p>
 <p>Chỉ số này được sử dụng để kiểm định các hệ số trong mô hình có thực sự khác 0.</p>
@@ -918,8 +956,8 @@ tv          0.03716873 0.05022162</code></pre>
 <p>Trong mô hình trên, giá trị <code>p-value</code> của F-statistic rất thấp, như vậy, có ít nhất một hệ số trong mô hình khác không.</p>
 </section>
 </section>
-<section id="dự-báo" class="level2" data-number="19.4">
-<h2 data-number="19.4" class="anchored" data-anchor-id="dự-báo"><span class="header-section-number">19.4</span> Dự báo</h2>
+<section id="dự-báo" class="level2" data-number="18.4">
+<h2 data-number="18.4" class="anchored" data-anchor-id="dự-báo"><span class="header-section-number">18.4</span> Dự báo</h2>
 <p>Để dự báo kết quả mô hình, ta có thể dùng hàm <code>predict</code> trong R như sau.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model result</span></span>
@@ -961,8 +999,8 @@ tv          0.03716873 0.05022162</code></pre>
 </div>
 </div>
 </section>
-<section id="thuật-toán-tối-ưu-với-gradient-decent" class="level2" data-number="19.5">
-<h2 data-number="19.5" class="anchored" data-anchor-id="thuật-toán-tối-ưu-với-gradient-decent"><span class="header-section-number">19.5</span> Thuật toán tối ưu với gradient decent</h2>
+<section id="thuật-toán-tối-ưu-với-gradient-decent" class="level2" data-number="18.5">
+<h2 data-number="18.5" class="anchored" data-anchor-id="thuật-toán-tối-ưu-với-gradient-decent"><span class="header-section-number">18.5</span> Thuật toán tối ưu với gradient decent</h2>
 <p>Ở phần trước, ta đã học cách áp dụng mô hình hồi quy đơn giản trong việc dự báo các biến liên tục. Ở phần này, ta sẽ tìm hiểu thêm về cách sử dụng học máy trong việc xây dựng mô hình hồi quy tuyến tính.</p>
 <p>Việc ưu hóa hàm chi phí với các tham số khác nhau là vấn đề cốt lõi của bất kỳ thuật toán machine learning nào. Tuy nhiên làm thế nào để tối ưu được, ta cần phải áp dụng các thuật toán tối ưu. Trong đó, quan trọng và phổ biến nhất là thuật toan <code>gradient descent</code>.</p>
 <p>Để tối ưu hóa <em>cost function</em>, ta có thể thay đổi các tổ hợp giá trị của <span class="math inline">\(\theta\)</span> cho đến khi tìm được tổ hợp mà tại đó, <em>cost function</em> đạt giá trị nhỏ nhất. Tuy nhiên, với trường hợp mô hình nhiều biến, ta sử dụng thuật toán <em>gradient decient</em> để tìm tập <span class="math inline">\(\theta\)</span> mà tại đó, cost function đạt giá trị nhỏ nhất.</p>
@@ -1100,8 +1138,8 @@ tv          0.03716873 0.05022162</code></pre>
 </div>
 </div>
 </section>
-<section id="các-lưu-ý-khác-trong-xây-dựng-mô-hình" class="level2" data-number="19.6">
-<h2 data-number="19.6" class="anchored" data-anchor-id="các-lưu-ý-khác-trong-xây-dựng-mô-hình"><span class="header-section-number">19.6</span> Các lưu ý khác trong xây dựng mô hình</h2>
+<section id="các-lưu-ý-khác-trong-xây-dựng-mô-hình" class="level2" data-number="18.6">
+<h2 data-number="18.6" class="anchored" data-anchor-id="các-lưu-ý-khác-trong-xây-dựng-mô-hình"><span class="header-section-number">18.6</span> Các lưu ý khác trong xây dựng mô hình</h2>
 <p>Khi xây dựng mô hình, <code>OLS</code> cần phải đảm bảo 4 giả định sau.</p>
 <ul>
 <li>Phương sai của <code>sai số</code> không đổi theo thời gian (<code>Homoscedaticity</code>)</li>
@@ -1109,8 +1147,8 @@ tv          0.03716873 0.05022162</code></pre>
 <li>Sai số không có tự tương quan (<code>Auto correlation</code>)</li>
 <li>Không có hiện tượng đa cộng tuyến (<code>Msulti colinearity</code>)</li>
 </ul>
-<section id="heteroskedaticity" class="level3" data-number="19.6.1">
-<h3 data-number="19.6.1" class="anchored" data-anchor-id="heteroskedaticity"><span class="header-section-number">19.6.1</span> Heteroskedaticity</h3>
+<section id="heteroskedaticity" class="level3" data-number="18.6.1">
+<h3 data-number="18.6.1" class="anchored" data-anchor-id="heteroskedaticity"><span class="header-section-number">18.6.1</span> Heteroskedaticity</h3>
 <ul>
 <li>Định nghĩa: Phương sai của residuals là ổn định</li>
 <li>Test Goldfeld-Quandt:
@@ -1194,8 +1232,8 @@ alternative hypothesis: variance increases from segment 1 to 2</code></pre>
 </div>
 </div>
 </section>
-<section id="phân-phối-chuẩn-của-phần-dư" class="level3" data-number="19.6.2">
-<h3 data-number="19.6.2" class="anchored" data-anchor-id="phân-phối-chuẩn-của-phần-dư"><span class="header-section-number">19.6.2</span> Phân phối chuẩn của phần dư</h3>
+<section id="phân-phối-chuẩn-của-phần-dư" class="level3" data-number="18.6.2">
+<h3 data-number="18.6.2" class="anchored" data-anchor-id="phân-phối-chuẩn-của-phần-dư"><span class="header-section-number">18.6.2</span> Phân phối chuẩn của phần dư</h3>
 <ul>
 <li>Test Shapiro:
 <ul>
@@ -1270,8 +1308,8 @@ X-squared = 4.5872, df = 2, p-value = 0.1009</code></pre>
 </div>
 </div>
 </section>
-<section id="auto-correlation-của-residuals" class="level3" data-number="19.6.3">
-<h3 data-number="19.6.3" class="anchored" data-anchor-id="auto-correlation-của-residuals"><span class="header-section-number">19.6.3</span> Auto correlation của residuals</h3>
+<section id="auto-correlation-của-residuals" class="level3" data-number="18.6.3">
+<h3 data-number="18.6.3" class="anchored" data-anchor-id="auto-correlation-của-residuals"><span class="header-section-number">18.6.3</span> Auto correlation của residuals</h3>
 <ul>
 <li>Test Dublin Watson
 <ul>
@@ -1333,8 +1371,8 @@ LM test = 37.973, df = 2, p-value = 5.68e-09</code></pre>
 </div>
 </div>
 </section>
-<section id="multi-collinearity" class="level3" data-number="19.6.4">
-<h3 data-number="19.6.4" class="anchored" data-anchor-id="multi-collinearity"><span class="header-section-number">19.6.4</span> Multi-collinearity</h3>
+<section id="multi-collinearity" class="level3" data-number="18.6.4">
+<h3 data-number="18.6.4" class="anchored" data-anchor-id="multi-collinearity"><span class="header-section-number">18.6.4</span> Multi-collinearity</h3>
 <p>Hiện tượng đa cộng tuyến xảy ra khi các biến độc lập có tương quan với nhau.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
@@ -1380,8 +1418,8 @@ F-statistic: 438.8 on 2 and 97 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Nếu giá trị của <code>sqrt(VIF) &gt; 2</code>, khả năng có multi-collinearity là rất cao. Khi có đa cộng tuyến, ta có thể bỏ biến xảy ra hiện tượng trên hoặc sử dụng <code>Ridge regression</code>.</p>
 </section>
 </section>
-<section id="các-quan-sát-ngoại-lai" class="level2" data-number="19.7">
-<h2 data-number="19.7" class="anchored" data-anchor-id="các-quan-sát-ngoại-lai"><span class="header-section-number">19.7</span> Các quan sát ngoại lai</h2>
+<section id="các-quan-sát-ngoại-lai" class="level2" data-number="18.7">
+<h2 data-number="18.7" class="anchored" data-anchor-id="các-quan-sát-ngoại-lai"><span class="header-section-number">18.7</span> Các quan sát ngoại lai</h2>
 <p>Có 3 loại quan sát ngoại lai:</p>
 <ul>
 <li>Outliers (discrepancy): Y nằm ngoài giá trị thông thường</li>
@@ -1390,8 +1428,8 @@ F-statistic: 438.8 on 2 and 97 DF,  p-value: &lt; 2.2e-16</code></pre>
 </ul>
 <p>Xem phân biệt 3 loại trong bảng dưới đây</p>
 <p><img src="Images/ols-outlier-01.png" class="img-fluid"></p>
-<section id="outliers" class="level3" data-number="19.7.1">
-<h3 data-number="19.7.1" class="anchored" data-anchor-id="outliers"><span class="header-section-number">19.7.1</span> Outliers</h3>
+<section id="outliers" class="level3" data-number="18.7.1">
+<h3 data-number="18.7.1" class="anchored" data-anchor-id="outliers"><span class="header-section-number">18.7.1</span> Outliers</h3>
 <p>Outliers là các quan sát không được dự báo tốt trong mô hình. Các quan sát này có thể thấy rõ trên đường Q-Q plot</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
@@ -1425,8 +1463,8 @@ Nevada 3.542929         0.00095088     0.047544</code></pre>
 <li><span class="math inline">\(H_1\)</span>: Quan sát là outliers</li>
 </ul>
 </section>
-<section id="high-leverage-points" class="level3" data-number="19.7.2">
-<h3 data-number="19.7.2" class="anchored" data-anchor-id="high-leverage-points"><span class="header-section-number">19.7.2</span> High-leverage points</h3>
+<section id="high-leverage-points" class="level3" data-number="18.7.2">
+<h3 data-number="18.7.2" class="anchored" data-anchor-id="high-leverage-points"><span class="header-section-number">18.7.2</span> High-leverage points</h3>
 <p>Các quan sát được cho là có leverage cao được tính theo hat-statistics. Giá trị trung bình của chỉ số này là p/n.&nbsp;Nếu các quan sát có hat cao hơn 2 lần giá trị trung bình thì cần phải được xem xét kỹ.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>hat.plot <span class="ot">&lt;-</span> <span class="cf">function</span>(fit) {</span>
@@ -1453,8 +1491,8 @@ Nevada 3.542929         0.00095088     0.047544</code></pre>
 </div>
 </div>
 </section>
-<section id="influential-observations" class="level3" data-number="19.7.3">
-<h3 data-number="19.7.3" class="anchored" data-anchor-id="influential-observations"><span class="header-section-number">19.7.3</span> Influential observations</h3>
+<section id="influential-observations" class="level3" data-number="18.7.3">
+<h3 data-number="18.7.3" class="anchored" data-anchor-id="influential-observations"><span class="header-section-number">18.7.3</span> Influential observations</h3>
 <p>Các quan sát có ảnh hưởng mạnh đến mô hình là các quan sát mà khi ta loại bỏ quan sát đó ra, sẽ thay đổi mô hình.</p>
 <p>Cook-distance lớn hơn <span class="math inline">\(\frac{4}{n-k-1}\)</span> được gọi là các quan sát có ảnh hưởng</p>
 <div class="cell">
@@ -1486,8 +1524,8 @@ Rhode Island -2.0001631 0.04562377 0.035858963</code></pre>
 </div>
 </section>
 </section>
-<section id="tài-liệu-tham-khảo" class="level2" data-number="19.8">
-<h2 data-number="19.8" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">19.8</span> Tài liệu tham khảo</h2>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="18.8">
+<h2 data-number="18.8" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">18.8</span> Tài liệu tham khảo</h2>
 <ul>
 <li>http://www.sthda.com/english/articles/39-regression-model-diagnostics/161-linear-regression-assumptions-and-diagnostics-in-r-essentials/</li>
 <li>Chapter 8 - Regresssion - R in Actions</li>
@@ -1639,9 +1677,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -1706,6 +1758,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
@@ -1748,12 +1886,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./p03-01-nguyen-ly-du-bao.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Giới thiệu về học máy</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Giới thiệu về học máy</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./p03-03-logistic-regression.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Mô hình hồi quy logistic</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Mô hình hồi quy logistic</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
