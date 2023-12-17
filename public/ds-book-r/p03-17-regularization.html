@@ -724,17 +724,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="giới-thiệu" class="level2" data-number="27.1">
 <h2 data-number="27.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">27.1</span> Giới thiệu</h2>
-<p>Khi xây dựng mô hình dự báo, ta sẽ gặp phải các vấn đề sau.</p>
-<ul>
-<li><p><strong>Over fitting</strong>: Hiện tượng mô hình có chất lượng tốt trên tập train nhưng lại xây dựng không tốt trên tập test.</p></li>
-<li><p><strong>Độ chính xác kém khi số lượng quan sát không đủ</strong>: Khi <span class="math inline">\(n \gg p\)</span>, nghĩa là số lượng quan sát lớn hơn rất nhiều so với số biến, chất lượng mô hình có thể được đảm bảo. Tuy nhiên, nếu n không lớn hơn nhiều so với p, mô hình sẽ gặp phải vấn đề về chất lượng mô hình.</p></li>
-<li><p><strong>Khả năng giải thích ý nghĩa mô hình</strong>: Thông thường, khi đưa càng nhiều biến - độ chính xác của mô hình càng tăng lên. Tuy nhiên, nhiều biến trong đó không ảnh hưởng lớn đến mô hình. Việc giảm bớt biến trong mô hình có thể giúp việc giải thích mô hình trở nên đơn giản hơn.</p></li>
-</ul>
-<p>Để khắc phục các nhược điểm trên, khi xây dựng mô hình, ta có hai kỹ thuật lớn sau.</p>
-<ul>
-<li><strong>Subset selection</strong>: Xác định số lượng biến ảnh hưởng nhiều nhất đến biến cần dự báo và xây dựng mô hình dựa trên các biến này.</li>
-<li><strong>Shrinkage</strong>: Còn được gọi là <strong>regularization</strong> có tác dụng giảm <code>variance</code> của mô hình thông qua việc thay đổi <code>loss function</code>, tăng giá trị của hàm này khi mô hình trở nên phức tạp. Nhóm kỹ thuật này là nhóm được sử dụng đặc biệt nhiều trong tất cả các thuật toán của <code>machine learning</code></li>
-</ul>
+<p>Khi xây dựng mô hình dự báo, ta sẽ gặp phải các vấn đề sau. - <strong>Over fitting</strong>: Hiện tượng mô hình có chất lượng tốt trên tập train nhưng lại xây dựng không tốt trên tập test. - <strong>Độ chính xác kém khi số lượng quan sát không đủ</strong>: Khi <span class="math inline">\(n \gg p\)</span>, nghĩa là số lượng quan sát lớn hơn rất nhiều so với số biến, chất lượng mô hình có thể được đảm bảo. Tuy nhiên, nếu n không lớn hơn nhiều so với p, mô hình sẽ gặp phải vấn đề về chất lượng mô hình. - <strong>Khả năng giải thích ý nghĩa mô hình</strong>: Thông thường, khi đưa càng nhiều biến - độ chính xác của mô hình càng tăng lên. Tuy nhiên, nhiều biến trong đó không ảnh hưởng lớn đến mô hình. Việc giảm bớt biến trong mô hình có thể giúp việc giải thích mô hình trở nên đơn giản hơn.</p>
+<p>Để khắc phục các nhược điểm trên, khi xây dựng mô hình, ta có hai kỹ thuật lớn sau. - <strong>Subset selection</strong>: Xác định số lượng biến ảnh hưởng nhiều nhất đến biến cần dự báo và xây dựng mô hình dựa trên các biến này. - <strong>Shrinkage</strong>: Còn được gọi là <strong>regularization</strong> có tác dụng giảm <code>variance</code> của mô hình thông qua việc thay đổi <code>loss function</code>, tăng giá trị của hàm này khi mô hình trở nên phức tạp. Nhóm kỹ thuật này là nhóm được sử dụng đặc biệt nhiều trong tất cả các thuật toán của <code>machine learning</code></p>
 <p>Trong chương này, ta sẽ tìm hiểu các nhóm kỹ thuật này thông qua bài toán hồi quy tuyến tính.</p>
 </section>
 <section id="subset-selection" class="level2" data-number="27.2">
@@ -742,52 +733,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="best-subset-selection" class="level3" data-number="27.2.1">
 <h3 data-number="27.2.1" class="anchored" data-anchor-id="best-subset-selection"><span class="header-section-number">27.2.1</span> Best subset selection</h3>
 <p>Thuật toán này cho phép lựa chọn mô hình có số biến phụ thuộc tối ưu bằng việc xây dựng rất nhiều mô hình và chọn ra từ đó mô hình có RSS thấp nhất.</p>
-<p>Các bước thực hiện:</p>
+<p><strong>Các bước thực hiện</strong>:</p>
 <ol type="1">
-<li><p>Gọi <span class="math inline">\(M_0\)</span> là mô hình ban đầu (null model). Mô hình này không có biến độc lập, dự báo giá trị Y bằng giá trị trung bình của tập train</p></li>
-<li><p>Với k=1..p:</p></li>
+<li>Gọi <span class="math inline">\(M_0\)</span> là mô hình ban đầu (null model). Mô hình này không có biến độc lập, dự báo giá trị Y bằng giá trị trung bình của tập train</li>
+<li>Với k=1..p:</li>
 </ol>
 <ul>
-<li><p>Xây dựng <span class="math inline">\((\stackrel{p}{k})\)</span> mô hình với đúng k biến độc lập</p></li>
-<li><p>Lựa chọn từ mô hình gọi là <span class="math inline">\(M_k\)</span> với RSS có giá trị nhỏ nhất</p></li>
+<li>Xây dựng <span class="math inline">\((\stackrel{p}{k})\)</span> mô hình với đúng k biến độc lập</li>
+<li>Lựa chọn từ mô hình gọi là <span class="math inline">\(M_k\)</span> với RSS có giá trị nhỏ nhất</li>
 </ul>
 <ol start="3" type="1">
 <li>Chọn các mô hình <span class="math inline">\(M_0,...,M_k\)</span> bằng cross validation bằng các tiêu chí AIC, BIC hoặc <span class="math inline">\(\overline{R}^2\)</span></li>
 </ol>
+<hr>
 <p><strong>Lưu ý</strong>:</p>
 <ul>
-<li><p><code>Subset selection</code> lựa chọn mô hình tốt nhất từ <span class="math inline">\(2^p\)</span> mô hình. Trong bước 2, ta đã giảm việc lựa chọn cross validation từ <span class="math inline">\(2^p\)</span> xuông p+1 mô hình</p></li>
-<li><p>Phải xây dựng rất nhiều mô hình, điều này có thể khiến quá trình phân tích tốn nhiều thời gian</p></li>
+<li><code>Subset selection</code> lựa chọn mô hình tốt nhất từ <span class="math inline">\(2^p\)</span> mô hình. Trong bước 2, ta đã giảm việc lựa chọn cross validation từ <span class="math inline">\(2^p\)</span> xuông p+1 mô hình</li>
+<li>Phải xây dựng rất nhiều mô hình, điều này có thể khiến quá trình phân tích tốn nhiều thời gian</li>
 </ul>
 </section>
 <section id="stepwise-selection" class="level3" data-number="27.2.2">
 <h3 data-number="27.2.2" class="anchored" data-anchor-id="stepwise-selection"><span class="header-section-number">27.2.2</span> Stepwise selection</h3>
 <section id="forward-stepwise-selection" class="level4" data-number="27.2.2.1">
 <h4 data-number="27.2.2.1" class="anchored" data-anchor-id="forward-stepwise-selection"><span class="header-section-number">27.2.2.1</span> Forward stepwise selection</h4>
-<p>Các bước thực hiện:</p>
+<p>Kỹ thuật này cho phép tăng dần số lượng biến khi đưa vào mô hình để đưa ra các biến tối ưu.</p>
+<p><strong>Các bước thực hiện</strong>:</p>
 <ol type="1">
-<li><p>Xây dựng null model không chưa biến độc lập</p></li>
-<li><p>Thêm <strong>ĐÚNG</strong> 1 biến độc lập, lựa chọn mô hình có RSS nhỏ nhất, gọi là mô hình <span class="math inline">\(M_1\)</span></p></li>
-<li><p>Lặp lại bước 2 cho đến khi tất cả các biến đều được đưa vào mô hình, mô hình có tất cả các biến là <span class="math inline">\(M_p\)</span></p></li>
-<li><p>Lựa chọn mô hình tốt nhất của <span class="math inline">\(M_0,...,M_p\)</span> bằng cross validation</p></li>
+<li>Xây dựng null model không chưa biến độc lập</li>
+<li>Thêm <strong>ĐÚNG</strong> 1 biến độc lập, lựa chọn mô hình có RSS nhỏ nhất, gọi là mô hình <span class="math inline">\(M_1\)</span></li>
+<li>Lặp lại bước 2 cho đến khi tất cả các biến đều được đưa vào mô hình, mô hình có tất cả các biến là <span class="math inline">\(M_p\)</span></li>
+<li>Lựa chọn mô hình tốt nhất của <span class="math inline">\(M_0,...,M_p\)</span> bằng cross validation</li>
 </ol>
 <p>Ví dụ: Mô hình có 3 biến <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, <span class="math inline">\(X3\)</span>, biến phụ thuộc là Y, ta thực hiện như sau:</p>
 <ol type="1">
-<li><p>Gọi null model <span class="math inline">\(M_0\)</span> không chưa biến độc lập</p></li>
-<li><p>Lựa chọn <span class="math inline">\(M_1\)</span> là mô hình CHỈ chưa MỘT biến độc lập (cách thực hiện: Xây dưng 3 mô hình với lần lượt từng biến, chọn mô hình có RSS thấp nhât), giả sử là mô hình chỉ chưa biến <span class="math inline">\(X_1\)</span></p></li>
-<li><p>Lặp lại bước 2, xây dụng 2 mô hình bằng cách thêm lần lượt <span class="math inline">\(X_2\)</span>, <span class="math inline">\(X_3\)</span> vào mô hình 2</p></li>
-<li><p>Thực hiện cross validation để cọn mô hình tốt nhất</p></li>
+<li>Gọi null model <span class="math inline">\(M_0\)</span> không chưa biến độc lập</li>
+<li>Lựa chọn <span class="math inline">\(M_1\)</span> là mô hình CHỈ chưa <em>MỘT</em> biến độc lập (cách thực hiện: Xây dưng 3 mô hình với lần lượt từng biến, chọn mô hình có RSS thấp nhât), giả sử là mô hình chỉ chưa biến <span class="math inline">\(X_1\)</span></li>
+<li>Lặp lại bước 2, xây dụng 2 mô hình bằng cách thêm lần lượt <span class="math inline">\(X_2\)</span>, <span class="math inline">\(X_3\)</span> vào mô hình 2*</li>
+<li>Thực hiện cross validation để cọn mô hình tốt nhất</li>
 </ol>
-<p>*<strong>Ghi chú</strong>:</p>
-<ul>
-<li><p>Mô hình này giảm đáng kể số lượng mô hình. Tổng số mô hình được xây dựng là <span class="math inline">\(1+\frac{p(p+1)}{2}\)</span></p></li>
-<li><p>Phương pháp này không đảm bảo lựa chọn được mô hình tốt nhất từ <span class="math inline">\(2^p\)</span> mô hình. VD: Mô hình có 3 biến <span class="math inline">\(X_1\)</span>,…,<span class="math inline">\(X_3\)</span>, ta có:</p>
-<ul>
-<li>Mô hình 1 biến tốt nhất là mô hình với <span class="math inline">\(X_1\)</span></li>
-<li>Mô hình 2 biến tốt nhất là mô hình với <span class="math inline">\(X_2\)</span> và <span class="math inline">\(X_3\)</span></li>
-<li>Phương pháp stepwise selection, mô hình 2 biến tốt nhất là <span class="math inline">\(X_1\)</span> và <span class="math inline">\(X_2\)</span></li>
-</ul></li>
-</ul>
+<p><strong>Lưu ý</strong>: - Mô hình này giảm đáng kể số lượng mô hình. Tổng số mô hình được xây dựng là <span class="math inline">\(1+\frac{p(p+1)}{2}\)</span> - Phương pháp này không đảm bảo lựa chọn được mô hình tốt nhất từ <span class="math inline">\(2^p\)</span> mô hình. VD: Mô hình có 3 biến <span class="math inline">\(X_1\)</span>,…,<span class="math inline">\(X_3\)</span>, ta có: - Mô hình 1 biến tốt nhất là mô hình với <span class="math inline">\(X_1\)</span> - Mô hình 2 biến tốt nhất là mô hình với <span class="math inline">\(X_2\)</span> và <span class="math inline">\(X_3\)</span> - Phương pháp stepwise selection, mô hình 2 biến tốt nhất là <span class="math inline">\(X_1\)</span> và <span class="math inline">\(X_2\)</span></p>
 </section>
 <section id="backward-stepwise-selection" class="level4" data-number="27.2.2.2">
 <h4 data-number="27.2.2.2" class="anchored" data-anchor-id="backward-stepwise-selection"><span class="header-section-number">27.2.2.2</span> Backward stepwise selection</h4>
