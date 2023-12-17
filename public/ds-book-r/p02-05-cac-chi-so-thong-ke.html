@@ -686,7 +686,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#anova" id="toc-anova" class="nav-link" data-scroll-target="#anova"><span class="header-section-number">7.3</span> ANOVA</a></li>
   <li><a href="#kiểm-định-quan-hệ-chi-bình-phương" id="toc-kiểm-định-quan-hệ-chi-bình-phương" class="nav-link" data-scroll-target="#kiểm-định-quan-hệ-chi-bình-phương"><span class="header-section-number">7.4</span> Kiểm định quan hệ Chi-bình phương</a></li>
   <li><a href="#prop-test" id="toc-prop-test" class="nav-link" data-scroll-target="#prop-test"><span class="header-section-number">7.5</span> Prop test</a></li>
-  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">7.6</span> Tài liệu tham khảo</a></li>
+  <li><a href="#simpson-paradox" id="toc-simpson-paradox" class="nav-link" data-scroll-target="#simpson-paradox"><span class="header-section-number">7.6</span> Simpson paradox</a></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">7.7</span> Tài liệu tham khảo</a></li>
   </ul>
 </nav>
     </div>
@@ -724,6 +725,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>So sánh 1 biến liên tục với 1 biến rời rạc - Phương pháp phân tích phương sai - <code>ANOVA</code></li>
 <li>So sánh 2 biến liên tục - Đánh giá hệ số tương quan - <code>correlation</code></li>
 <li>So sánh 2 biến rời rạc - Phương pháp đánh giá chỉ số khi-bình phương - <code>Chi-Square</code> &amp; <code>prop.test</code></li>
+<li>Lưu ý với nghịch lý Simpson (<code>Simpson paradox</code>)</li>
 </ul>
 <section id="các-chỉ-số-thống-kê-cơ-bản" class="level2" data-number="7.1">
 <h2 data-number="7.1" class="anchored" data-anchor-id="các-chỉ-số-thống-kê-cơ-bản"><span class="header-section-number">7.1</span> Các chỉ số thống kê cơ bản</h2>
@@ -1025,7 +1027,6 @@ Users_{expected} &amp;= \frac{r_1}{T} \times \frac{c_1}{T} \times T \\
 </div>
 <p><span class="math inline">\(\chi^2\)</span> thực tế được tính bằng tổng các giá trị trên <span class="math inline">\(\chi^2 = 30.96\)</span></p>
 <p>Với dữ liệu trên, ta có 4 cột và 3 hàng. Như vậy, bậc tự do trong phân phôi <span class="math inline">\(\chi^2\)</span> là <span class="math inline">\((4-1)*(3-1) = 6\)</span>. Ta có thể so sánh giá trị vừa tìm được với giá trị <span class="math inline">\(\chi^2\)</span> tại <a href="http://www.danielsoper.com/statcalc/calculator.aspx?id=12">đây</a>. Với <span class="math inline">\(\alpha\)</span> bằng .1 và 6 bậc tự do, giá trị của <span class="math inline">\(\chi\)</span><sup>2</sup> là 10.64. Với giá trị thực tế lớn hơn giá trị lý thuyết, ta bác bỏ <span class="math inline">\(H_0\)</span>. Như vậy, về mặt thống kê, tồn tại mối quan hệ giữa phương thức marketing và thiết bị sử dụng.</p>
-<hr>
 <p><strong>Ví dụ với R</strong></p>
 <p>Trong thực tế, khi phân tích dữ liệu, ta có thể ra quyết định nhanh chóng về mối quan hệ giữa hai biến rời rạc thông qua <code>p-value</code>.</p>
 <div class="cell">
@@ -1096,7 +1097,9 @@ X-squared = 0, df = 1, p-value = 1</code></pre>
 </div>
 </div>
 <p>Trong trường hợp trên, ta không đủ kết luận rằng quảng cáo A tốt hơn quảng cáo B do <span class="math inline">\(p-value=0.8523\)</span></p>
-<hr>
+<center>
+<font size="4">§</font>
+</center>
 <p><strong>Lưu ý</strong>: <span class="math inline">\(\chi^2\)</span> và <code>prop.test</code> đều ra cùng kết quả của <span class="math inline">\(p-value\)</span></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1000</span>, <span class="dv">20</span>, <span class="dv">900</span>, <span class="dv">16</span>), <span class="at">ncol =</span> <span class="dv">2</span>)</span>
@@ -1123,7 +1126,9 @@ sample estimates:
 0.5263158 0.5555556 </code></pre>
 </div>
 </div>
-<hr>
+<center>
+<font size="4">§</font>
+</center>
 <p><strong>Lưu ý</strong>: <code>prop.test</code> chỉ được dùng khi đo lường tỷ lệ chuyển đổi, ảnh hưởng của các biến rời rạc (factor) lên đối tượng (<code>discrete number</code>). Do đó, nếu dùng prop.test để đánh giá trên biến giá trị, đặc biệt sau khi chuyển đổi đơn vị tiền tệ sẽ gây ra các nhận định sai lầm.</p>
 <p>VD: Đánh giá về tỷ lệ bảo hiểm tái tục năm 2 nếu khách hàng buộc phải mua bảo hiểm (không phải do tự nguyện), ta có bảng sau</p>
 <table class="table">
@@ -1217,10 +1222,85 @@ Lưu ý
 </div>
 </div>
 </section>
-<section id="tài-liệu-tham-khảo" class="level2" data-number="7.6">
-<h2 data-number="7.6" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">7.6</span> Tài liệu tham khảo</h2>
+<section id="simpson-paradox" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="simpson-paradox"><span class="header-section-number">7.6</span> Simpson paradox</h2>
+<p><code>Simpson paradox</code> là hiện tượng xảy ra khi xu hướng/ kết luận tổng thể lại khác biệt so với khi so sánh từ nhóm riêng biệt.</p>
+<p><img src="Images/simpson-paradox.png" class="img-fluid"></p>
+<center>
+<font size="4">§</font>
+</center>
+<p>Xem ví dụ sau - Có khảo sát nghiên cứu thị trường về tỷ lệ quan tâm đến uống trà sữa buổi trưa. Kết quả như sau</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th><strong>Nhóm</strong></th>
+<th><strong>Nam</strong></th>
+<th><strong>Tỷ lệ</strong></th>
+<th><strong>Nữ</strong></th>
+<th><strong>Tỷ lệ</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Dưới 30 tuổi</td>
+<td>630/900</td>
+<td><strong>70%</strong></td>
+<td>80/100</td>
+<td><strong>80%</strong></td>
+</tr>
+<tr class="even">
+<td>Trên 30 tuổi</td>
+<td>40/100</td>
+<td><strong>40%</strong></td>
+<td>450/900</td>
+<td><strong>50%</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>Tổng số</strong></td>
+<td><strong>670/1000</strong></td>
+<td><strong>67%</strong></td>
+<td><strong>530/1000</strong></td>
+<td><strong>53%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Khi quan sát riêng lẻ từng phân khúc, ta thấy kết quả như sau:</p>
 <ul>
-<li>R in actionK</li>
+<li><strong>Với nhóm dưới 30 tuổi</strong> - Nữ quan tâm nhiều hơn nam (80% &gt; 70%)</li>
+<li><strong>Với nhóm trên 30 tuổi</strong> - Nữ quan tâm nhiều hơn nam (50% &gt; 40%)</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Kết luận
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Nữ quan tâm đến việc uống trà sữa nhiều hơn nam.</p>
+</div>
+</div>
+<p>Tuy nhiên, khi phân tích tổng thể, kết quả ra ngược lại - nam giới lại quan tâm nhiều hơn nữ giời (67% &gt; 53%). Hiện tượng trên gọi là Simpson paradox.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Lưu ý
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Simpson paradox là phương pháp bẻ nhỏ dữ liệu và dùng phương pháp suy diễn - nếu xu hướng là đúng với tất cả tập con, sẽ đúng với tổng thể. Do đó, khi phân tích cần đặc biệt cẩn thận để tránh đi vào ngụy biện</p>
+</div>
+</div>
+</section>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">7.7</span> Tài liệu tham khảo</h2>
+<ul>
+<li>R in action</li>
 </ul>
 
 

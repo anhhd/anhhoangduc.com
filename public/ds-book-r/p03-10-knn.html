@@ -743,9 +743,84 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p><strong>Lưu ý khi thực hiện kNN</strong>: Khi xây dựng kNN trong thực tế, ta cần phải thực hiện các bước biến đổi dữ liệu sau:</p>
 <ul>
-<li>Chuyển đổi các biến <code>category</code> thành biến số</li>
-<li><code>Scale</code> dữ liệu để tránh bị ảnh hưởng bời đơn vị khác nhau giữa các biến.</li>
-<li><code>knn</code> có thể mở rộng để áp dụng cho bài toán <code>regression</code></li>
+<li>Chuyển đổi các biến <code>category</code> thành biến số. Ví dụ - <code>education</code> với 3 giá trị <code>School</code>, <code>Student</code>, <code>Master</code> trở thành 1 biến mới có giá trị 1, 2, 3 hoặc thành 3 biến với encoding dạng 0, 1.</li>
+</ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Biến ban đầu</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Biến đổi encoding</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Biến đổi encoding 0-1</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<table class="table">
+<thead>
+<tr class="header">
+<th>education</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>school</td>
+</tr>
+<tr class="even">
+<td>student</td>
+</tr>
+<tr class="odd">
+<td>master</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<table class="table">
+<thead>
+<tr class="header">
+<th>education_encode</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+</tr>
+<tr class="even">
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<table class="table">
+<thead>
+<tr class="header">
+<th>education_school</th>
+<th>education_student</th>
+<th>education_master</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<ul>
+<li><code>Scale</code> dữ liệu để tránh bị ảnh hưởng bời đơn vị khác nhau giữa các biến như scale theo <code>mean</code> hoặc <code>normalization</code></li>
+<li>Bên cạnh đó, <code>knn</code> có thể mở rộng để áp dụng cho bài toán <code>regression</code></li>
 </ul>
 <p><strong>Ứng dụng</strong>: kNN có thể áp dụng rất tốt khi ta chưa có nhiều thông tin về quan sát/đối tượng cần dự báo. Ví dụ, khách hàng sau khi mới đăng ký, ta có rất ít thông tin về hành vi giao dịch mà chủ yếu chỉ có các thông tin về demographics, 1 số sản phẩm đơn giản. Lúc này kNN có thể kết hợp cùng kmeans với k=1 để dự báo nhóm đặc trưng hành vi của khách hàng mới.</p>
 </section>
