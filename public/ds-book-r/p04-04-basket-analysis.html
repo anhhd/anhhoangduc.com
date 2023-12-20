@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -94,9 +94,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<link href="site_libs/vis-9.1.0/vis-network.min.css" rel="stylesheet">
+<script src="site_libs/vis-9.1.0/vis-network.min.js"></script>
+<script src="site_libs/visNetwork-binding-2.1.2/visNetwork.js"></script>
 
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -116,7 +121,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./p04-01-unsupervised-learning.html">Unsupervised Learning</a></li><li class="breadcrumb-item"><a href="./p04-04-basket-analysis.html"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Phân tích giỏ hàng</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -681,15 +686,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#các-khái-niệm-cơ-bản" id="toc-các-khái-niệm-cơ-bản" class="nav-link active" data-scroll-target="#các-khái-niệm-cơ-bản"><span class="header-section-number">38.1</span> Các khái niệm cơ bản</a></li>
-  <li><a href="#cách-thực-hiện-mô-hình" id="toc-cách-thực-hiện-mô-hình" class="nav-link" data-scroll-target="#cách-thực-hiện-mô-hình"><span class="header-section-number">38.2</span> Cách thực hiện mô hình</a></li>
-  <li><a href="#ba-câu-hỏi-khi-phân-tích-giỏ-hàng" id="toc-ba-câu-hỏi-khi-phân-tích-giỏ-hàng" class="nav-link" data-scroll-target="#ba-câu-hỏi-khi-phân-tích-giỏ-hàng"><span class="header-section-number">38.3</span> Ba câu hỏi khi phân tích giỏ hàng</a>
+  <li><a href="#giới-thiệu" id="toc-giới-thiệu" class="nav-link active" data-scroll-target="#giới-thiệu"><span class="header-section-number">38.1</span> Giới thiệu</a></li>
+  <li><a href="#cách-thực-hiện-mô-hình" id="toc-cách-thực-hiện-mô-hình" class="nav-link" data-scroll-target="#cách-thực-hiện-mô-hình"><span class="header-section-number">38.2</span> Cách thực hiện mô hình</a>
   <ul class="collapse">
-  <li><a href="#các-sản-phẩm-nào-hay-được-mua-cùng-nhau" id="toc-các-sản-phẩm-nào-hay-được-mua-cùng-nhau" class="nav-link" data-scroll-target="#các-sản-phẩm-nào-hay-được-mua-cùng-nhau"><span class="header-section-number">38.3.1</span> Các sản phẩm nào hay được mua cùng nhau</a></li>
-  <li><a href="#khách-hàng-mua-sản-phẩm-a-thì-sẽ-mua-sản-phẩm-nào-tiếp-theo" id="toc-khách-hàng-mua-sản-phẩm-a-thì-sẽ-mua-sản-phẩm-nào-tiếp-theo" class="nav-link" data-scroll-target="#khách-hàng-mua-sản-phẩm-a-thì-sẽ-mua-sản-phẩm-nào-tiếp-theo"><span class="header-section-number">38.3.2</span> Khách hàng mua sản phẩm A thì sẽ mua sản phẩm nào tiếp theo?</a></li>
-  <li><a href="#khách-hàng-mua-sản-phẩm-gì-thì-sẽ-mua-tiếp-sản-phẩm-a" id="toc-khách-hàng-mua-sản-phẩm-gì-thì-sẽ-mua-tiếp-sản-phẩm-a" class="nav-link" data-scroll-target="#khách-hàng-mua-sản-phẩm-gì-thì-sẽ-mua-tiếp-sản-phẩm-a"><span class="header-section-number">38.3.3</span> Khách hàng mua sản phẩm gì thì sẽ mua tiếp sản phẩm A?</a></li>
+  <li><a href="#các-sản-phẩm-nào-hay-được-mua-cùng-nhau" id="toc-các-sản-phẩm-nào-hay-được-mua-cùng-nhau" class="nav-link" data-scroll-target="#các-sản-phẩm-nào-hay-được-mua-cùng-nhau"><span class="header-section-number">38.2.1</span> Các sản phẩm nào hay được mua cùng nhau</a></li>
+  <li><a href="#khách-hàng-mua-sản-phẩm-a-thì-sẽ-mua-sản-phẩm-nào-tiếp-theo" id="toc-khách-hàng-mua-sản-phẩm-a-thì-sẽ-mua-sản-phẩm-nào-tiếp-theo" class="nav-link" data-scroll-target="#khách-hàng-mua-sản-phẩm-a-thì-sẽ-mua-sản-phẩm-nào-tiếp-theo"><span class="header-section-number">38.2.2</span> Khách hàng mua sản phẩm A thì sẽ mua sản phẩm nào tiếp theo?</a></li>
+  <li><a href="#khách-hàng-mua-sản-phẩm-gì-thì-sẽ-mua-tiếp-sản-phẩm-a" id="toc-khách-hàng-mua-sản-phẩm-gì-thì-sẽ-mua-tiếp-sản-phẩm-a" class="nav-link" data-scroll-target="#khách-hàng-mua-sản-phẩm-gì-thì-sẽ-mua-tiếp-sản-phẩm-a"><span class="header-section-number">38.2.3</span> Khách hàng mua sản phẩm gì thì sẽ mua tiếp sản phẩm A?</a></li>
   </ul></li>
-  <li><a href="#ưu-nhược-điểm" id="toc-ưu-nhược-điểm" class="nav-link" data-scroll-target="#ưu-nhược-điểm"><span class="header-section-number">38.4</span> Ưu nhược điểm</a></li>
+  <li><a href="#ưu-nhược-điểm" id="toc-ưu-nhược-điểm" class="nav-link" data-scroll-target="#ưu-nhược-điểm"><span class="header-section-number">38.3</span> Ưu nhược điểm</a></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">38.4</span> Tài liệu tham khảo</a></li>
   </ul>
 </nav>
     </div>
@@ -713,41 +718,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p>Phân tích giỏ hàng là 1 phương pháp phân tích với mục đích là để tìm ra được tổ hợp các sản phẩm hay được khách hàng mua cùng nhau. Phân tích giỏ hàng là một nhánh của Frequent Pattern Mining (FPM) là kỹ thuật được dùng trong việc phân tích các hành vi lặp đi lặp lại giữa các yêu tố có liên hệ với nhau. FPM được sử dụng đặc biệt rộng rãi trong các ngành như ecommerce, banking, retail… giúp người bán có thể phân tích hành vi mua sắm của khách hàng. Phương pháp phân tích thương được dùng nhất là sử dụng thuật toán<code>apriori</code></p>
-<section id="các-khái-niệm-cơ-bản" class="level2" data-number="38.1">
-<h2 data-number="38.1" class="anchored" data-anchor-id="các-khái-niệm-cơ-bản"><span class="header-section-number">38.1</span> Các khái niệm cơ bản</h2>
-<p>Trong phân tích giỏ hàng, chỉ có 5 thuật ngữ đơn giản ta cần phải nhớ là <code>transaction</code>, <code>rule</code>, <code>support</code>, <code>confidence</code> và <code>lift</code></p>
+<section id="giới-thiệu" class="level2" data-number="38.1">
+<h2 data-number="38.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">38.1</span> Giới thiệu</h2>
+<p>Phân tích giỏ hàng là 1 phương pháp phân tích để tìm ra được tổ hợp các sản phẩm hay được khách hàng mua cùng nhau dựa trên thực tiễn quan sát khách hàng mua hàng tại siêu thị, cửa hàng tiện lợi…</p>
+<p>Ví dụ:</p>
+<ul>
+<li>Khách hàng vào siêu thị, có thể mua cùng lúc nhiều sản phẩm bao gồm: sữa, cà phê, trứng, rau cải,…</li>
+<li>Khai hàng mua hàng online có thể mua cùng lúc nhiều các dòng sách khác nhau</li>
+</ul>
+<p>Mỗi một đơn hàng hay giỏ hàng khách hàng mua sẽ chứa đựng các thông tin về xu hướng, nhu cầu của khách hàng. Phân tích giỏ hàng (<code>basket analysis</code>) cho phép tìm ra được các hành vi và liên kết giữa các sản phẩm mà khách hàng mua.</p>
+<p><img src="Images/p04-04-basket-analysis.jpeg" class="img-fluid"></p>
+<center>
+<font size="4">§</font>
+</center>
+<p>Trong phân tích giỏ hàng, các khái niệm quan trọng cần nắm vững bao gồm:</p>
 <ul>
 <li><strong>Item</strong>: Sản phẩm chứa trong giỏ hàng</li>
 <li><strong>Transaction</strong>: Giao dịch là một hoặc một nhóm các sản phẩm được mua khi khách hàng thực hiện <em>trong cùng</em> một giao dịch</li>
 <li><strong>Rule</strong>: Rule là một quy tắc thể hiện mối quan hệ giữa các sản phẩm có trong cùng một giỏ hàng, có dạng <code>nếu A, thì B</code>.</li>
 </ul>
 <p><span class="math display">\[\left \{{i_{1},i_{2},...}\right \} =&gt; {i_{k}}\]</span></p>
-<p>Ví dụ:</p>
-<blockquote class="blockquote">
-<p>{Bánh mỳ} =&gt; {Sữa}: Nếu khách hàng mua bánh mỳ thì khách hàng sẽ mua thêm sữa</p>
-</blockquote>
+<p><strong>Ví dụ</strong>: {Bánh mỳ} =&gt; {Sữa}: Nếu khách hàng mua bánh mỳ thì khách hàng sẽ mua thêm sữa</p>
+<hr>
 <ul>
 <li><strong>Support</strong>：Tần suất (dưới dạng phần trăm) xuất hiện của các quy tắc trong tổng số các giao dịch.</li>
 </ul>
-<blockquote class="blockquote">
-<p>Ví dụ: Một cửa hàng trong tháng 1 có 100 khách hàng, mỗi khách hàng thực hiện một giao dịch. Trong đó 50 khách hàng mua sản phẩm A, 75 khách hàng mua sản phẩm B, và 25 khách hàng mua cả sản phẩm A và B - Support(sản phẩm A) = 50% - Support(Sản phẩm A, sản phẩm B) = 25%</p>
-</blockquote>
+<p><strong>Ví dụ</strong>: Một cửa hàng trong tháng 1 có 100 khách hàng, mỗi khách hàng thực hiện một giao dịch. Trong đó 50 khách hàng mua sản phẩm A, 75 khách hàng mua sản phẩm B, và 25 khách hàng mua cả sản phẩm A và B - Support(sản phẩm A) = 50% - Support(Sản phẩm A, sản phẩm B) = 25%</p>
 <ul>
 <li><strong>Confidence</strong>: Cơ hội mua sản phẩm tiếp theo trong hành vi giao dịch của khác hàng.</li>
 </ul>
-<p><span class="math display">\[Confidence (i_{m} =&gt; i_{n}) = \frac{support(i_{m}\frown i_{n})}{support (i_{m})}\]</span> &gt; Ví dụ: Confidence (sản phẩm A , sản phẩm B) = 25/50 = 50% - Tức là nếu 1 người mua sản phẩm A, thì xác suất họ cũng mua sản phẩm B là 50%</p>
+<p><span class="math display">\[Confidence (i_{m} =&gt; i_{n}) = \frac{support(i_{m}\frown i_{n})}{support (i_{m})}\]</span> <strong>Ví dụ</strong>: Confidence (sản phẩm A , sản phẩm B) = 25/50 = 50% - Nếu 1 người mua sản phẩm A, thì xác suất họ cũng mua sản phẩm B là 50%</p>
 <ul>
-<li>Lift: Nếu khách hàng mua sản phẩm A thì khả năng họ mua sản phẩm B sẽ tăng lên bao nhiêu % <span class="math display">\[Lift(i_{m} =&gt; i_{n}) = \frac{support(i_{m}\frown i_{n})}{support(i_{m}) * support (i_{n})} = \frac{Confidence (i_{m} =&gt; i_{n})}{support (i_{n})}\]</span>
-<ul>
-<li>Lift có thể cho 3 loại giá trị
-<ul>
-<li>Lift &gt; 1: tức là những sản phẩm ở vế trái của rule sẽ làm tăng khả năng xảy ra của những sản phẩm ở vế phải của rule (2 sản phẩm bổ trợ). Ví dụ, mua bia sẽ mua thêm lạc.</li>
-<li>Lift &lt; 1: tức là những sản phẩm ở vế trái của rule sẽ làm giảm khả năng xảy ra của những sản phẩm ở vế phải của rule ( 2 sản phẩm thay thế được cho nhau). Ví dụ, mua bia sẽ không mua thêm cafe.</li>
-<li>Lift = 1: Các sản phẩm ở vế trái và vế phải xuất hiện độc lập với nhau về mặt thống kê, ta không thể đưa ra kết luận về tương quan giữa các sản phẩm.</li>
-</ul></li>
-</ul></li>
+<li>Lift: Nếu khách hàng mua sản phẩm A thì khả năng họ mua sản phẩm B sẽ tăng lên bao nhiêu %</li>
 </ul>
+<p><span class="math display">\[Lift(i_{m} =&gt; i_{n}) = \frac{support(i_{m}\frown i_{n})}{support(i_{m}) * support (i_{n})} = \frac{Confidence (i_{m} =&gt; i_{n})}{support (i_{n})}\]</span> - Lift có thể cho 3 loại giá trị - Lift &gt; 1: tức là những sản phẩm ở vế trái của rule sẽ làm tăng khả năng xảy ra của những sản phẩm ở vế phải của rule (2 sản phẩm bổ trợ). Ví dụ, mua bia sẽ mua thêm lạc. - Lift &lt; 1: tức là những sản phẩm ở vế trái của rule sẽ làm giảm khả năng xảy ra của những sản phẩm ở vế phải của rule ( 2 sản phẩm thay thế được cho nhau). Ví dụ, mua bia sẽ không mua thêm cafe. - Lift = 1: Các sản phẩm ở vế trái và vế phải xuất hiện độc lập với nhau về mặt thống kê, ta không thể đưa ra kết luận về tương quan giữa các sản phẩm.</p>
 </section>
 <section id="cách-thực-hiện-mô-hình" class="level2" data-number="38.2">
 <h2 data-number="38.2" class="anchored" data-anchor-id="cách-thực-hiện-mô-hình"><span class="header-section-number">38.2</span> Cách thực hiện mô hình</h2>
@@ -837,7 +841,22 @@ attr(,"package")
      long life bakery product}</code></pre>
 </div>
 </div>
+<center>
+<font size="4">§</font>
+</center>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Lưu ý
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>Trong thực tế, khi triển khai phân tích, việc đầu tiên ta cần làm là biến đổi từ định dạng dataframe sang định dạng <code>transactions</code>. Ta có thể biến đổi định dạng của dataframe về <code>transactions</code> với hàm <code>as</code>.</p>
+</div>
+</div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">prod_1 =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>, <span class="dv">1</span>) <span class="sc">%&gt;%</span> as.factor,</span>
@@ -859,6 +878,9 @@ attr(,"package")
 [3] {prod_2=1, prod_3=0} 3            </code></pre>
 </div>
 </div>
+<center>
+<font size="4">§</font>
+</center>
 <p>Phân tích khám phá nhanh các sản phẩm được mua nhiều nhất.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vẽ barchart đơn giản về các item phổ biến nhất</span></span>
@@ -869,17 +891,18 @@ attr(,"package")
 <p><img src="p04-04-basket-analysis_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</section>
-<section id="ba-câu-hỏi-khi-phân-tích-giỏ-hàng" class="level2" data-number="38.3">
-<h2 data-number="38.3" class="anchored" data-anchor-id="ba-câu-hỏi-khi-phân-tích-giỏ-hàng"><span class="header-section-number">38.3</span> Ba câu hỏi khi phân tích giỏ hàng</h2>
+<center>
+<font size="4">§</font>
+</center>
+<p><strong>Ba câu hỏi khi phân tích giỏ hàng</strong></p>
 <p>Khi sử dụng kỹ thuật phân tích giỏ hàng, có 3 câu hỏi thường gặp về mặt kinh doanh cần phải trả lời là:</p>
 <ul>
 <li>Các sản phẩm nào hay được mua cùng nhau?</li>
 <li>Nếu khách hàng mua sản phẩm A rồi thì sẽ hay mua tiếp sản phẩm nào?</li>
 <li>Khách hàng nếu mua sản phẩm B thì trước đấy hay mua sản phẩm nào?</li>
 </ul>
-<section id="các-sản-phẩm-nào-hay-được-mua-cùng-nhau" class="level3" data-number="38.3.1">
-<h3 data-number="38.3.1" class="anchored" data-anchor-id="các-sản-phẩm-nào-hay-được-mua-cùng-nhau"><span class="header-section-number">38.3.1</span> Các sản phẩm nào hay được mua cùng nhau</h3>
+<section id="các-sản-phẩm-nào-hay-được-mua-cùng-nhau" class="level3" data-number="38.2.1">
+<h3 data-number="38.2.1" class="anchored" data-anchor-id="các-sản-phẩm-nào-hay-được-mua-cùng-nhau"><span class="header-section-number">38.2.1</span> Các sản phẩm nào hay được mua cùng nhau</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>rules <span class="ot">&lt;-</span> <span class="fu">apriori</span>(Groceries, </span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">parameter =</span> <span class="fu">list</span>(<span class="at">supp =</span> <span class="fl">0.001</span>, </span>
@@ -976,42 +999,111 @@ mining info:
 <li><code>confidence = 0.63157</code> - Nếu khách hàng mua đồ ăn nhanh (instant food products), 63.16% khách hàng sẽ mua thêm soda</li>
 <li><code>lift = 18.99</code> - Mối quan hệ giữa hai sản phẩm đồ ăn nhanh và soda cao gần 19 lần so với thông thường (khi hai sản phẩm hoàn toàn độc lập với nhau)</li>
 </ul>
-<p><strong>Lưu ý</strong>: Khi phân tích, ta cần loại bỏ các rule thừa (redundant) khi phân tích dữ liệu. Một rule A được gọi là một rule thừa nếu tồn tại một rule con có confidence lớn hơn hoặc bằng rule A này. Rule B được gọi là rule con của rule A nếu có cùng RHS nhưng các sản phẩm trong rule B ít hơn rule A</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Lưu ý
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Khi phân tích, ta cần loại bỏ các rule thừa (<code>redundant</code>) khi phân tích dữ liệu. Một rule A được gọi là một rule thừa nếu tồn tại một rule đơn giản hơn có <code>confidence</code> lớn hơn hoặc bằng rule A này.</p>
+</div>
+</div>
 <p>Ví dụ: Với 2 rule</p>
 <ul>
 <li>Rule A với {a,b,c} → {d}</li>
-<li>Rule B với {a,b} → {d} Rule B với {a,b} → {d} được gọi là rule thừa nếu <span class="math inline">\(conf(A) &gt;= conf(B)\)</span></li>
+<li>Rule B với {a,b} → {d}</li>
 </ul>
-<p>Cách loại bỏ rule thừa trong R</p>
+<p>Rule B với <code>{a,b,c} → {d}</code> được gọi là rule thừa nếu <span class="math inline">\(conf(A) &lt;= conf(B)\)</span></p>
+<center>
+<font size="4">§</font>
+</center>
+<p>Cách loại bỏ rule thừa:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>subset.matrix <span class="ot">&lt;-</span> <span class="fu">is.subset</span>(rules, rules)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>subset.matrix[<span class="fu">lower.tri</span>(subset.matrix, <span class="at">diag =</span> T)] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>redundant <span class="ot">&lt;-</span> <span class="fu">colSums</span>(subset.matrix, <span class="at">na.rm =</span> T) <span class="sc">&gt;=</span> <span class="dv">1</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>rules.pruned <span class="ot">&lt;-</span> rules[<span class="sc">!</span>redundant]</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>rules <span class="ot">&lt;-</span> rules.pruned</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>rules <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rules.pruned <span class="ot">&lt;-</span> rules[<span class="sc">!</span><span class="fu">is.redundant</span>(rules)]</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">is.redundant</span>(rules) <span class="sc">%&gt;%</span> sum</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 572</code></pre>
 </div>
-<p>Như vậy, sau khi lọc bỏ các rule thừa, số lượng rule trong dữ liệu giảm đi gần 3 lần xuống còn 1904 rules khác nhau. Ta có thể vẽ biểu đồ cho nhóm 10 rules có lift cao nhất như sau.</p>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>rules.pruned <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>set of 5096 rules
+
+rule length distribution (lhs + rhs):sizes
+   2    3    4    5    6 
+  11 1459 2874  723   29 
+
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  2.000   3.000   4.000   3.863   4.000   6.000 
+
+summary of quality measures:
+    support           confidence        coverage             lift       
+ Min.   :0.001017   Min.   :0.5000   Min.   :0.001017   Min.   : 1.957  
+ 1st Qu.:0.001118   1st Qu.:0.5455   1st Qu.:0.001729   1st Qu.: 2.532  
+ Median :0.001322   Median :0.6087   Median :0.002135   Median : 2.974  
+ Mean   :0.001699   Mean   :0.6287   Mean   :0.002830   Mean   : 3.323  
+ 3rd Qu.:0.001830   3rd Qu.:0.6875   3rd Qu.:0.003050   3rd Qu.: 3.735  
+ Max.   :0.022267   Max.   :1.0000   Max.   :0.043416   Max.   :18.996  
+     count       
+ Min.   : 10.00  
+ 1st Qu.: 11.00  
+ Median : 13.00  
+ Mean   : 16.71  
+ 3rd Qu.: 18.00  
+ Max.   :219.00  
+
+mining info:
+      data ntransactions support confidence
+ Groceries          9835   0.001        0.5
+                                                                  call
+ apriori(data = Groceries, parameter = list(supp = 0.001, conf = 0.5))</code></pre>
+</div>
+</div>
+<p>Như vậy, sau khi lọc bỏ các rule thừa, số lượng rule trong dữ liệu giảm 572 rules. Ta có thể vẽ biểu đồ cho nhóm 10 rules có lift cao nhất như sau.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>rules <span class="sc">%&gt;%</span> </span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">method =</span> <span class="st">"graph"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>rule_plot <span class="ot">&lt;-</span> rules.pruned <span class="sc">%&gt;%</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(<span class="at">method =</span> <span class="st">"graph"</span>) </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>rule_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p04-04-basket-analysis_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<hr>
+<p><strong>Vẽ các rule với <code>VisNetwork</code></strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  rules.pruned <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">head</span>(<span class="dv">10</span>),</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"graph"</span>,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">measure =</span> <span class="st">"lift"</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">shading =</span> <span class="st">"confidence"</span>,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">engine =</span> <span class="st">"htmlwidget"</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div class="visNetwork html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-e24a9cfa680f533bc926" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-e24a9cfa680f533bc926">{"x":{"nodes":{"id":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],"label":["other vegetables","whole milk","specialty cheese","tidbits","rolls/buns","rice","honey","cereals","pudding powder","jam","cocoa drinks","cooking chocolate","rule 1","rule 2","rule 3","rule 4","rule 5","rule 6","rule 7","rule 8","rule 9","rule 10"],"group":[1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2],"value":[1,1,1,1,1,1,1,1,1,1,1,1,100,96.03159474367297,33.90624999999997,21.98369565217388,1,58.0133928571429,13.60849056603774,66.0955563583815,78.35187861271676,44.31250000000001],"color":["#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#CBD2FC","#EE1B1B","#EECFCF","#EEA7A7","#EEB5B5","#EED0D0","#EE7B7B","#EEC1C1","#EEDCDC","#EED0D0","#EE9999"],"title":["other vegetables","whole milk","specialty cheese","tidbits","rolls/buns","rice","honey","cereals","pudding powder","jam","cocoa drinks","cooking chocolate","<B>[1]<\/B><BR><B>{honey}<\/B><BR>&nbsp;&nbsp; => <B>{whole milk}<\/B><BR><BR>support = 0.00112<BR>confidence = 0.733<BR>coverage = 0.00153<BR>lift = 2.87<BR>count = 11<BR>order = 2<BR>id = 1","<B>[2]<\/B><BR><B>{tidbits}<\/B><BR>&nbsp;&nbsp; => <B>{rolls/buns}<\/B><BR><BR>support = 0.00122<BR>confidence = 0.522<BR>coverage = 0.00234<BR>lift = 2.84<BR>count = 12<BR>order = 2<BR>id = 2","<B>[3]<\/B><BR><B>{cocoa drinks}<\/B><BR>&nbsp;&nbsp; => <B>{whole milk}<\/B><BR><BR>support = 0.00132<BR>confidence = 0.591<BR>coverage = 0.00224<BR>lift = 2.31<BR>count = 13<BR>order = 2<BR>id = 3","<B>[4]<\/B><BR><B>{pudding powder}<\/B><BR>&nbsp;&nbsp; => <B>{whole milk}<\/B><BR><BR>support = 0.00132<BR>confidence = 0.565<BR>coverage = 0.00234<BR>lift = 2.21<BR>count = 13<BR>order = 2<BR>id = 4","<B>[5]<\/B><BR><B>{cooking chocolate}<\/B><BR>&nbsp;&nbsp; => <B>{whole milk}<\/B><BR><BR>support = 0.00132<BR>confidence = 0.52<BR>coverage = 0.00254<BR>lift = 2.04<BR>count = 13<BR>order = 2<BR>id = 5","<B>[6]<\/B><BR><B>{cereals}<\/B><BR>&nbsp;&nbsp; => <B>{whole milk}<\/B><BR><BR>support = 0.00366<BR>confidence = 0.643<BR>coverage = 0.00569<BR>lift = 2.52<BR>count = 36<BR>order = 2<BR>id = 6","<B>[7]<\/B><BR><B>{jam}<\/B><BR>&nbsp;&nbsp; => <B>{whole milk}<\/B><BR><BR>support = 0.00295<BR>confidence = 0.547<BR>coverage = 0.00539<BR>lift = 2.14<BR>count = 29<BR>order = 2<BR>id = 7","<B>[8]<\/B><BR><B>{specialty cheese}<\/B><BR>&nbsp;&nbsp; => <B>{other vegetables}<\/B><BR><BR>support = 0.00427<BR>confidence = 0.5<BR>coverage = 0.00854<BR>lift = 2.58<BR>count = 42<BR>order = 2<BR>id = 8","<B>[9]<\/B><BR><B>{rice}<\/B><BR>&nbsp;&nbsp; => <B>{other vegetables}<\/B><BR><BR>support = 0.00397<BR>confidence = 0.52<BR>coverage = 0.00763<BR>lift = 2.69<BR>count = 39<BR>order = 2<BR>id = 9","<B>[10]<\/B><BR><B>{rice}<\/B><BR>&nbsp;&nbsp; => <B>{whole milk}<\/B><BR><BR>support = 0.00468<BR>confidence = 0.613<BR>coverage = 0.00763<BR>lift = 2.4<BR>count = 46<BR>order = 2<BR>id = 10"],"shape":["box","box","box","box","box","box","box","box","box","box","box","box","circle","circle","circle","circle","circle","circle","circle","circle","circle","circle"],"x":[-0.122136622914974,-0.2516692641468411,0.471677417690092,1,0.9193730397569715,-0.4961458957228116,0.5529068193928166,0.2169015991936505,0.3242800913177084,-1,-0.9428579134405889,-0.4584409161856523,0.2178619377349564,0.9695390376511575,-0.64972001993331,0.06621034356175604,-0.3879067734200971,-0.002050190272899099,-0.6723139822451452,0.1910439170163289,-0.4241700979404082,-0.3600564947653211],"y":[-1,0.2805519388574009,-0.8906370991159329,0.2019568091723003,-0.3769931290076209,-0.5866919155577603,0.5675186042848503,0.9857840757699494,-0.2189752047702112,0.4331578812531223,-0.1908741710851695,1,0.4146058024459571,-0.08958240406018014,0.01830857273891273,-2.102796576242127e-05,0.6838552597624892,0.6968296174548214,0.396447021761422,-0.9717896070712551,-0.8996930224332458,-0.2093669004572158]},"edges":{"from":[7,4,11,9,12,8,10,3,6,6,13,14,15,16,17,18,19,20,21,22],"to":[13,14,15,16,17,18,19,20,21,22,2,5,2,2,2,2,2,1,1,2],"arrows":["to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to","to"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","physics":false},"manipulation":{"enabled":false},"edges":{"smooth":false},"physics":{"stabilization":false},"interaction":{"hover":true,"zoomSpeed":1}},"groups":["1","2"],"width":null,"height":null,"idselection":{"enabled":true,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","igraphlayout":{"type":"square"},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);","highlight":{"enabled":true,"hoverNearest":true,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"}},"evals":[],"jsHooks":[]}</script>
+</div>
 </div>
 </section>
-<section id="khách-hàng-mua-sản-phẩm-a-thì-sẽ-mua-sản-phẩm-nào-tiếp-theo" class="level3" data-number="38.3.2">
-<h3 data-number="38.3.2" class="anchored" data-anchor-id="khách-hàng-mua-sản-phẩm-a-thì-sẽ-mua-sản-phẩm-nào-tiếp-theo"><span class="header-section-number">38.3.2</span> Khách hàng mua sản phẩm A thì sẽ mua sản phẩm nào tiếp theo?</h3>
+<section id="khách-hàng-mua-sản-phẩm-a-thì-sẽ-mua-sản-phẩm-nào-tiếp-theo" class="level3" data-number="38.2.2">
+<h3 data-number="38.2.2" class="anchored" data-anchor-id="khách-hàng-mua-sản-phẩm-a-thì-sẽ-mua-sản-phẩm-nào-tiếp-theo"><span class="header-section-number">38.2.2</span> Khách hàng mua sản phẩm A thì sẽ mua sản phẩm nào tiếp theo?</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>rules <span class="ot">&lt;-</span> <span class="fu">apriori</span>(<span class="at">data =</span> Groceries, </span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">parameter =</span> <span class="fu">list</span>(<span class="at">supp =</span> <span class="fl">0.001</span>, </span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">conf =</span> <span class="fl">0.15</span>,</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">minlen =</span> <span class="dv">2</span>), </span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">appearance =</span> <span class="fu">list</span>(<span class="at">default =</span> <span class="st">"rhs"</span>,</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">lhs =</span> <span class="st">"whole milk"</span>), </span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">control =</span> <span class="fu">list</span>(<span class="at">verbose =</span> F)) </span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>rules <span class="sc">%&gt;%</span> </span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sort</span>(<span class="at">by =</span> <span class="st">"lift"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  head <span class="sc">%&gt;%</span> </span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as</span>(<span class="st">"data.frame"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>rules <span class="ot">&lt;-</span> <span class="fu">apriori</span>(<span class="at">data =</span> Groceries, </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">parameter =</span> <span class="fu">list</span>(<span class="at">supp =</span> <span class="fl">0.001</span>, </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">conf =</span> <span class="fl">0.15</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">minlen =</span> <span class="dv">2</span>), </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">appearance =</span> <span class="fu">list</span>(<span class="at">default =</span> <span class="st">"rhs"</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">lhs =</span> <span class="st">"whole milk"</span>), </span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">control =</span> <span class="fu">list</span>(<span class="at">verbose =</span> F)) </span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>rules <span class="sc">%&gt;%</span> </span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sort</span>(<span class="at">by =</span> <span class="st">"lift"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  head <span class="sc">%&gt;%</span> </span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as</span>(<span class="st">"data.frame"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                               rules    support confidence coverage      lift
 2  {whole milk} =&gt; {root vegetables} 0.04890696  0.1914047 0.255516 1.7560310
@@ -1029,22 +1121,22 @@ mining info:
 3   394</code></pre>
 </div>
 </div>
-<p>Tham số <code>lhs</code> cho phép chúng ta lựa chọn điều kiện về sản phẩm được mua đầu tiên. Trong trường hợp này, ta thấy khách hàng mua sữa sẽ có xu hương mua thêm rau củ quả (root vegetables)</p>
+<p>Tham số <code>lhs</code> cho phép chúng ta lựa chọn điều kiện về sản phẩm được mua đầu tiên. Trong trường hợp này, ta thấy khách hàng mua sữa sẽ có xu hương mua thêm rau củ quả (root vegetables).</p>
 </section>
-<section id="khách-hàng-mua-sản-phẩm-gì-thì-sẽ-mua-tiếp-sản-phẩm-a" class="level3" data-number="38.3.3">
-<h3 data-number="38.3.3" class="anchored" data-anchor-id="khách-hàng-mua-sản-phẩm-gì-thì-sẽ-mua-tiếp-sản-phẩm-a"><span class="header-section-number">38.3.3</span> Khách hàng mua sản phẩm gì thì sẽ mua tiếp sản phẩm A?</h3>
+<section id="khách-hàng-mua-sản-phẩm-gì-thì-sẽ-mua-tiếp-sản-phẩm-a" class="level3" data-number="38.2.3">
+<h3 data-number="38.2.3" class="anchored" data-anchor-id="khách-hàng-mua-sản-phẩm-gì-thì-sẽ-mua-tiếp-sản-phẩm-a"><span class="header-section-number">38.2.3</span> Khách hàng mua sản phẩm gì thì sẽ mua tiếp sản phẩm A?</h3>
 <p>Tương tự với <code>lhs</code>, ta có thể sử dụng tham số <code>rhs</code> để tìm kiếm các khách hàng tiềm năng cho một sản phẩm đã xác định trước.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>rules <span class="ot">&lt;-</span> <span class="fu">apriori</span>(<span class="at">data =</span> Groceries,</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">parameter =</span> <span class="fu">list</span>(<span class="at">supp =</span> <span class="fl">0.001</span>, </span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">conf =</span> <span class="fl">0.08</span>), </span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">appearance =</span> <span class="fu">list</span>(<span class="at">default =</span> <span class="st">"lhs"</span>,</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">rhs =</span> <span class="st">"whole milk"</span>), </span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">control =</span> <span class="fu">list</span>(<span class="at">verbose =</span> F))</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>rules <span class="sc">%&gt;%</span> </span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sort</span>(<span class="at">by =</span> <span class="st">"lift"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  head <span class="sc">%&gt;%</span> </span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as</span>(<span class="st">"data.frame"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>rules <span class="ot">&lt;-</span> <span class="fu">apriori</span>(<span class="at">data =</span> Groceries,</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">parameter =</span> <span class="fu">list</span>(<span class="at">supp =</span> <span class="fl">0.001</span>, </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">conf =</span> <span class="fl">0.08</span>), </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">appearance =</span> <span class="fu">list</span>(<span class="at">default =</span> <span class="st">"lhs"</span>,</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">rhs =</span> <span class="st">"whole milk"</span>), </span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">control =</span> <span class="fu">list</span>(<span class="at">verbose =</span> F))</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>rules <span class="sc">%&gt;%</span> </span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sort</span>(<span class="at">by =</span> <span class="st">"lift"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  head <span class="sc">%&gt;%</span> </span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as</span>(<span class="st">"data.frame"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                                          rules     support
 196                                {rice,sugar} =&gt; {whole milk} 0.001220132
@@ -1064,8 +1156,8 @@ mining info:
 </div>
 </section>
 </section>
-<section id="ưu-nhược-điểm" class="level2" data-number="38.4">
-<h2 data-number="38.4" class="anchored" data-anchor-id="ưu-nhược-điểm"><span class="header-section-number">38.4</span> Ưu nhược điểm</h2>
+<section id="ưu-nhược-điểm" class="level2" data-number="38.3">
+<h2 data-number="38.3" class="anchored" data-anchor-id="ưu-nhược-điểm"><span class="header-section-number">38.3</span> Ưu nhược điểm</h2>
 <p>Như vậy, ta vừa thực hiện xong việc ứng dụng phân tích giỏ hàng. Đây là phương pháp cực kỳ hữu hiệu trong việc tìm kiếm các mối quan hệ ẩn, chưa được khám phá giữa các biến. Phương pháp này cũng có các ưu và nhược điểm như sau.</p>
 <p><strong>Ưu điểm</strong>:</p>
 <ul>
@@ -1076,7 +1168,13 @@ mining info:
 <p><strong>Nhược điểm</strong>:</p>
 <ul>
 <li>Chỉ dùng cho các biến factor, không dùng được cho các biến dạng số như thu nhập, độ tuổi,… Nếu muốn đưa các biến này vào cần phải biến đổi thành dạng factor</li>
-<li>Khi có quá nhiều nhóm, tốc độ tính toán có thể rất chậm và tràn bộ nhớ</li>
+<li>Khi có quá nhiều giao dịch, tốc độ tính toán có thể rất chậm và tràn bộ nhớ</li>
+</ul>
+</section>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="38.4">
+<h2 data-number="38.4" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">38.4</span> Tài liệu tham khảo</h2>
+<ul>
+<li><a href="">https://www.analyticsvidhya.com/blog/2021/10/end-to-end-introduction-to-market-basket-analysis-in-r/</a></li>
 </ul>
 
 
