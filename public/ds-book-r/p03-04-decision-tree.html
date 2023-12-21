@@ -687,7 +687,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#tổng-quan" id="toc-tổng-quan" class="nav-link" data-scroll-target="#tổng-quan"><span class="header-section-number">20.2.1</span> Tổng quan</a></li>
   <li><a href="#thực-hành" id="toc-thực-hành" class="nav-link" data-scroll-target="#thực-hành"><span class="header-section-number">20.2.2</span> Thực hành</a></li>
   </ul></li>
-  <li><a href="#cây-hồi-quy-regression-tree" id="toc-cây-hồi-quy-regression-tree" class="nav-link" data-scroll-target="#cây-hồi-quy-regression-tree"><span class="header-section-number">20.3</span> Cây hồi quy (`regression tree``)</a></li>
+  <li><a href="#cây-hồi-quy-regression-tree" id="toc-cây-hồi-quy-regression-tree" class="nav-link" data-scroll-target="#cây-hồi-quy-regression-tree"><span class="header-section-number">20.3</span> Cây hồi quy (<code>regression tree</code>)</a></li>
   <li><a href="#ưu-nhược-điểm" id="toc-ưu-nhược-điểm" class="nav-link" data-scroll-target="#ưu-nhược-điểm"><span class="header-section-number">20.4</span> Ưu nhược điểm</a></li>
   <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">20.5</span> Tài liệu tham khảo</a></li>
   </ul>
@@ -779,6 +779,21 @@ Lưu ý
 </center>
 <p>Mô hình cây quyết định rất dễ bị <code>overfitting</code> do có thể rẽ nhánh vô hạn để mô hình phân loại hoàn hảo. Do đó, khi xây dựng mô hình cần phải tuning để đảm bảo việc cân đối giữa chất lượng mô hình khi huấn luyên và độ phức tạp của cây quyết định.</p>
 <p>Với mô hình cây quyết định, số lần phân nhánh (số node hay <code>nplit</code>) là yếu tố chính ảnh hưởng đến độ phức tạp của mô hình.</p>
+<hr>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Lưu ý
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Mô hình cây quyết định mang tính <code>greedy</code>, nghĩa là việc tối ưu hóa phân nhánh tại mỗi <code>node</code> chỉ tối ưu hóa tại chính bước đó. Do đó, thuật toán chưa chắc đã đảm bảo yếu tố tối ưu hóa tổng thể</p>
+</div>
+</div>
+<p><img src="Images/p03-04-greedy.png" class="img-fluid"></p>
 </section>
 <section id="thực-hành" class="level3" data-number="20.2.2">
 <h3 data-number="20.2.2" class="anchored" data-anchor-id="thực-hành"><span class="header-section-number">20.2.2</span> Thực hành</h3>
@@ -968,7 +983,7 @@ Actual   No  Yes
 </section>
 </section>
 <section id="cây-hồi-quy-regression-tree" class="level2" data-number="20.3">
-<h2 data-number="20.3" class="anchored" data-anchor-id="cây-hồi-quy-regression-tree"><span class="header-section-number">20.3</span> Cây hồi quy (`regression tree``)</h2>
+<h2 data-number="20.3" class="anchored" data-anchor-id="cây-hồi-quy-regression-tree"><span class="header-section-number">20.3</span> Cây hồi quy (<code>regression tree</code>)</h2>
 <p>Tương tự như mô hình cây phân loại, cây quyết định hồi quy sẽ phân nhánh dữ liệu đầu vào và dự báo kết quả đầu ra ở mỗi lá. Tuy nhiên, sự khác biệt nằm ở chỗ, tất cả các lá đầu ra trong cây hồi quy sẽ có cùng một giá trị dự báo là một giá trị của biến số liên tục.</p>
 <center>
 <font size="4">§</font>
@@ -1045,12 +1060,16 @@ node), split, n, deviance, yval
 <p><strong>Ưu điểm</strong>:</p>
 <ul>
 <li>Dễ hiểu &amp; trực quan hóa</li>
-<li>Đơn giản</li>
+<li>Đơn giản, dễ thực hiện, không yêu cầu và đòi hỏi chuẩn hóa dữ liệu đầu vào &amp; xử lý với các trường hợp thiếu dữ liệu (<code>missing data</code>)</li>
+<li>Có khả năng xử lý khi tồn tại quan hệ phi tuyến tính</li>
 </ul>
+<hr>
 <p><strong>Nhược điểm</strong>:</p>
 <ul>
 <li>Thiếu ổn định (<code>non-robust</code>) với các tập dữ liệu khác nhau. Với một sự thay đổi nhỏ trong tập dữ liệu, có thể dẫn đến thay đổi mô hình cây quyết định cuối cùng.</li>
 <li>Dễ bị <code>overfitting</code> trong quá trình huấn luyên</li>
+<li>Dễ bị ảnh hưởng với class chiếm đa số trong tập dữ liệu</li>
+<li>Thuật toán mang tính tối ưu hóa tại từng bước (local optimization) nhiều hơn là tối ưu hóa tổng thể (global optimization) do đặc thù <code>greedy</code> của thuật toán</li>
 </ul>
 <center>
 <font size="4">§</font>

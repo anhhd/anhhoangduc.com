@@ -681,13 +681,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#bagging" id="toc-bagging" class="nav-link active" data-scroll-target="#bagging"><span class="header-section-number">21.1</span> Bagging</a></li>
-  <li><a href="#random-forests" id="toc-random-forests" class="nav-link" data-scroll-target="#random-forests"><span class="header-section-number">21.2</span> Random Forests</a></li>
-  <li><a href="#boosting" id="toc-boosting" class="nav-link" data-scroll-target="#boosting"><span class="header-section-number">21.3</span> Boosting</a>
+  <li><a href="#bagging-random-forest" id="toc-bagging-random-forest" class="nav-link active" data-scroll-target="#bagging-random-forest"><span class="header-section-number">21.1</span> Bagging &amp; Random Forest</a>
   <ul class="collapse">
-  <li><a href="#xây-dựng-boosting-tree-với-r" id="toc-xây-dựng-boosting-tree-với-r" class="nav-link" data-scroll-target="#xây-dựng-boosting-tree-với-r"><span class="header-section-number">21.3.1</span> Xây dựng <code>boosting tree</code> với R</a></li>
+  <li><a href="#giới-thiệu" id="toc-giới-thiệu" class="nav-link" data-scroll-target="#giới-thiệu"><span class="header-section-number">21.1.1</span> Giới thiệu</a></li>
+  <li><a href="#thực-hành" id="toc-thực-hành" class="nav-link" data-scroll-target="#thực-hành"><span class="header-section-number">21.1.2</span> Thực hành</a></li>
   </ul></li>
-  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">21.4</span> Tài liệu tham khảo</a></li>
+  <li><a href="#boosting" id="toc-boosting" class="nav-link" data-scroll-target="#boosting"><span class="header-section-number">21.2</span> Boosting</a>
+  <ul class="collapse">
+  <li><a href="#giới-thiệu-1" id="toc-giới-thiệu-1" class="nav-link" data-scroll-target="#giới-thiệu-1"><span class="header-section-number">21.2.1</span> Giới thiệu</a></li>
+  <li><a href="#hyperparameter" id="toc-hyperparameter" class="nav-link" data-scroll-target="#hyperparameter"><span class="header-section-number">21.2.2</span> Hyperparameter</a></li>
+  <li><a href="#thực-hành-1" id="toc-thực-hành-1" class="nav-link" data-scroll-target="#thực-hành-1"><span class="header-section-number">21.2.3</span> Thực hành</a></li>
+  </ul></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">21.3</span> Tài liệu tham khảo</a></li>
   </ul>
 </nav>
     </div>
@@ -711,50 +716,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="bagging" class="level2" data-number="21.1">
-<h2 data-number="21.1" class="anchored" data-anchor-id="bagging"><span class="header-section-number">21.1</span> Bagging</h2>
+<p>Thuật toán cây quyết dịnh với những ưu điểm nổi trội như dễ triển khai, dễ giải thích nhưng lại nhạy cảm với dữ liệu và dễ bị <code>overfitting</code>. Để khắc phục nhược điểm trên, người ta phát triển các thuật toán kết hợp nhiều cây quyết định riêng lẻ, bao gồm: <code>bagging</code>, <code>random forest</code> &amp; <code>boosting</code></p>
+<section id="bagging-random-forest" class="level2" data-number="21.1">
+<h2 data-number="21.1" class="anchored" data-anchor-id="bagging-random-forest"><span class="header-section-number">21.1</span> Bagging &amp; Random Forest</h2>
+<section id="giới-thiệu" class="level3" data-number="21.1.1">
+<h3 data-number="21.1.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">21.1.1</span> Giới thiệu</h3>
+<p>Thuật toán <code>bagging</code> còn được gọi là <code>Boostrap Aggregating</code> sẽ xây dựng nhiều cây quyết định độc lập từ tập dữ liệu gốc với các mẫu khác nhau và tổng hợp kết quả dựa trên từng cây quyết định. Thuật toán diễn ra như sau:</p>
+<ul>
+<li><strong>Bước 1</strong>: Lấy ngẫu nhiên có hoàn lại (<code>boostrap</code>) các quan sát từ tập dữ liệu gốc. Số lượng quan sát của mỗi bootstrap thông thường bằng số lượng quan sát từ tập dữ liệu ban đầu.</li>
+<li><strong>Bước 2</strong>: Với mỗi tập dữ liệu boostrap, xây dựng 1 cây quyết định</li>
+<li><strong>Bước 3</strong>: Tổng hợp mô hình &amp; kết quả dự báo từ tất cả các cây quyết định đã xây dựng</li>
+</ul>
+<p><strong>Lưu ý</strong>: Với bagging, tất các các biến đầu vào của các cây quyết định là giống nhau, chỉ khác nhau về các quan sát.</p>
 <hr>
+<p>Không giống với <code>bagging</code>, thuật toán <code>random forest</code> không chỉ lấy ngẫu nhiên các quan sát (theo dòng) mà còn lấy ngẫu nhiên các biến đầu vào cho từng cây quyết định.</p>
+<ul>
+<li><strong>Bước 1</strong>: Lấy ngẫu nhiên có hoàn lại (<code>boostrap</code>) các quan sát từ tập dữ liệu gốc. Số lượng quan sát của mỗi bootstrap thông thường bằng số lượng quan sát từ tập dữ liệu ban đầu.</li>
+<li><strong>Bước 2</strong>: Lấy ngẫu nhiên các biến đầu vào (theo <code>feature</code>)</li>
+<li><strong>Bước 3</strong>: Với mỗi tập dữ liệu boostrap, xây dựng 1 cây quyết định</li>
+<li><strong>Bước 4</strong>: Tổng hợp mô hình &amp; kết quả dự báo từ tất cả các cây quyết định đã xây dựng</li>
+</ul>
+<p><img src="Images/p03-05-random-forest.png" class="img-fluid"></p>
 <center>
-<img src="./Images/tree-2.png" class="img-fluid">
+<font size="4">§</font>
 </center>
-<hr>
-<p>Mô hình cây quyết định như đã đề cập, sẽ gặp phải vấn đề <code>high variance</code>. Nghĩa là nếu chúng ta chia ngẫu nhiên tập dữ liệu training làm 2 tập dữ liệu con, và sau đó xây dựng mô hình trên 2 tập dữ liệu con đó, kết quả nhận được sẽ có thể khá khác nhau. <code>Boostrap aggregation</code> hay <code>bagging</code> sẽ có thể làm giảm variance, đây là một phương pháp rất hiệu quả và phổ biến khi chúng ta sử dụng các phương pháp liên quan đến cây quyết định.</p>
-<p>Giả sử, có tập hợp n quan sát độc lập Z1,…, Zn, mỗi quan sát với variance <span class="math inline">\(σ^2\)</span>, variance của giá trị trung bình các quan sát Z là <span class="math inline">\(σ^2/n\)</span>. Nói cách khác, trung bình tập hợp các quan sát sẽ làm giảm variance. Vì thế cách tự nhiên nhất để làm giảm variance và tăng độ chính xác của dự báo là lấy thật nhiều các dữ liệu training khác nhau, rồi xây dựng các mô hình dự báo sử dụng các tập dữ liệu training đó, sau đó lấy trung bình các kết quả dự báo. Nói cách khác, chúng ta sẽ tính toán <span class="math inline">\(fˆ1(x), fˆ2(x)\)</span>, . . . , fˆB(x) sử dụng B tập dữ liệu training khác nhau, sau đó lấy trung bình để nhận được một mô hình đơn với variance thấp như sau:</p>
-<p><span class="math display">\[\widehat{f}_{avg}(x) = \frac{1}{B}\sum_{b=1}^{B}\widehat{f}^{b}(x)\]</span></p>
-<p>Tuy nhiên, điều đó là không thực tế vì chúng ta không thể có nhiều dữ liệu training khác nhau, dữ liệu là hữu hạn. Vì vậy, chúng ta sẽ sử dụng <code>boostrap</code>, tức phương pháp lấy mẫu ngẫu nhiên có hoàn lại từ tập dữ liệu training duy nhất của chúng ta. Theo đó, chúng ta sẽ tạo ra B boostrapped dữ liệu training khác nhau để có được các giá trị dự báo khác nhau, và sau đó sẽ lấy trung bình tất cả các kết quả dự báo, thu được kết quả cuối cùng:</p>
-<p><span class="math display">\[\widehat{f}_{bag}(x) = \frac{1}{B}\sum_{b=1}^{B}\widehat{f^{*}}^{b}(x)\]</span></p>
-<p>Đây gọi là <code>bagging</code>. Bagging có thể cải thiện chất lượng dự báo cho rất nhiều các mô hình hồi quy, đặc biệt hiệu quả đối với mô hình cây quyết định. Để áp dụng bagging với regression trees, chúng ta đơn giản chỉ cần xây dựng B regression trees sử dụng B boostrapped dữ liệu training, sau đó lấy trung bình các kết quả dự báo. Những cây quyết định này được xây dựng rất sâu (nhiều tầng) và không được “tỉa”. Vì thế mỗi cây quyết định trên sẽ có variance cao, nhưng bias thấp. Lấy trung bình kết quả B cây quyết định này sẽ làm giảm variance. Bagging có thể cải thiện chất lượng dự báo một cách đáng kể khi kết hợp hàng trăm hoặc thậm chí hàng nghìn cây quyết định lại với nhau.</p>
-<p>Cho đến thời điểm hiện tại, chúng ta đã mô tả phương pháp bagging đối với regression trees, tức dự báo biến đầu ra là biến liên tục. Vậy phương pháp bagging có thể sử dụng với bài toán mà biến đầu ra là biến rời rạc không? Trong trường hợp này, giả sử khi chúng ta muốn phân loại một quan sát mới, chúng ta có thể dự báo được quan sát mới trên thuộc class nào trong B cây quyết định khác nhau, rồi sau đó, lấy <code>majority vote</code> - tức là, quan sát mới trên sẽ rơi vào class mà tần suất xuất hiện của nó nhiều nhất trong B kết quả dự báo khác nhau.</p>
-<p>Trong phương pháp bagging, tham số về số lượng cây quyết định B nói trên mà càng lớn thì cũng không thể dẫn đến overfitting. Trong thực tế, chúng ta sẽ chọn số lượng cây quyết định đủ lớn để sao cho sai số đủ nhỏ.</p>
-<p><strong>Out-of-Bag Error Estimation</strong></p>
-<p>Có một cách khá đơn giản để ước lượng sai số dự báo (test error) của mô hình bagging mà không cần dùng cross-validation hoặc tập dữ liệu validation. Nhắc lại key của phương pháp bagging là việc các cây quyết định sẽ được xây dựng nhiều lần sử dụng những tập dữ liệu bootstrapped khác nhau. Mỗi một cây quyết định được xây đều sử dụng khoảng 2/3 số quan sát, còn 1/3 quan sát còn lại không được sử dụng trong quá trình xây dựng mô hình sẽ được gọi là những quan sát <code>out-of-bag</code> (OOB). Chúng ta có thể dự báo kết quả cho quan sát thứ i sử dụng từng cây quyết định mà các quan sát là OOB. Điều này sẽ mang lại khoảng B/3 giá trị dự báo cho quan sát thứ i này. Để dự báo giá trị cuối cùng của quan sát đó, chúng ta sẽ lấy trung bình các kết quả dự báo (đối với bài toán hồi quy - regression) hoặc lấy theo số đông - majority vote (đối với bài toán phân loại - classification). Đó chính là kết quả dự báo OOB (OOB prediction) cho quan sát i. OOB prediction có thể sử dụng cho từng n quan sát, và có thể tính toán được OOB MSE (đối với bài toán hồi quy) hoặc classification error (đối với bài toán phân loại). Cách sử dụng OOB để ước lượng sai số dự báo (test error) sẽ thuận tiện hơn so với cách cross-validation khi sử dụng bagging đối với tập dữ liệu lớn.</p>
-<p><strong>Variable Importance Measures</strong></p>
-<p>Như vừa tìm hiểu, <code>bagging</code> sẽ cải thiện được độ chính xác của dự báo so với mô hình cây quyết định đơn lẻ. Tuy nhiên, bagging lại rất khó để giải thích kết quả mô hình do việc tổng hợp rất nhiều cây quyết định khác nhau.</p>
-<p>Mặc dù đối với bagging rất khó để giải thích kết quả mô hình, nhưng chúng ta vẫn có thể xem được thống kê tổng quát về mức độ quan trọng của các biến đầu vào trong mô hình bằng việc sử dụng RSS (đối với bagging regression trees) hoặc chỉ số Gini (đối với bagging classification trees).</p>
-</section>
-<section id="random-forests" class="level2" data-number="21.2">
-<h2 data-number="21.2" class="anchored" data-anchor-id="random-forests"><span class="header-section-number">21.2</span> Random Forests</h2>
-<p>Cũng giống như <code>bagging</code>, <code>random forests</code> cũng xây dựng một tập hợp các cây quyết định sử dụng các tập dữ liệu con được chia theo phương pháp boostrap (lấy mẫu ngẫu nhiên có hoàn lại) từ tập dữ liệu training ban đầu. Tuy nhiên, với phương pháp <code>random forests</code> thì những tập dữ liệu con đó sẽ không bao gồm tất cả các biến đầu vào (p - tổng số lượng biến đầu vào) trong tập dữ liệu training ban đầu như <code>bagging</code> mà chỉ bao gồm m biến nhất định (thông thường m ~ sqrt(p)).</p>
-<p>Đối với <code>bagging</code> các cây quyết định có thể tương quan chặt chẽ với nhau (<code>highly correlated</code>) do các cây đều lấy cùng một số lượng là tất cả các biến đầu vào trong tập dữ liệu training ban đầu. Điều đó sẽ dẫn đến việc variance sẽ cao. Trong khi đó, <code>random forests</code> có thể khắc phục được vấn đề trên khi mỗi cây quyết định được xây dựng chỉ lấy ngẫu nhiên m biến đầu vào ngẫu nhiên. Quá trình đó được gọi là <code>decorrelating</code>. Quá trình này sẽ giúp kết quả dự báo đáng tin cậy hơn.</p>
 <p>Như vậy, điểm khác biệt quan trọng nhất giữa <code>bagging</code> và <code>random forests</code> là việc chọn số lượng biến đầu vào:</p>
 <ul>
-<li><p><code>bagging</code> lấy tất cả các biến đầu vào (p)</p></li>
-<li><p><code>random forests</code> lấy m biến nhất định (m ~ sqrt(p))</p></li>
+<li><code>bagging</code> lấy tất cả các biến đầu vào (p)</li>
+<li><code>random forests</code> lấy m biến nhất định - thông thường là <span class="math inline">\(m ~ sqrt(p)\)</span> với p là số lượng biến từ tập dữ liệu gốc</li>
 </ul>
-<p>Vì thế, nếu xây dựng mô hình <code>random forests</code> với số lượng biến đầu vào m = p (tức lấy tất cả các biến đầu vào) thì mô hình trở thành <code>bagging</code>. Do đó, có thể nói bagging là một trường hợp đặc biệt của random forests.</p>
-<p>Thuật toán của <code>Random Forest</code> sẽ bao gồm việc lấy mẫu và chọn biến để xây dựng một số lượng lớn các cây quyết định khác nhau. Kết quả dự báo cuối cùng của một quan sát sẽ lấy trung bình các kết quả dự báo của các cây quyết định (đối với bài toán hồi quy - regression) hoặc lấy majority vote từ các kết quả dự báo từ các cây quyết định để xác định quan sát đó thuộc class nào (đối với bài toán phân loại - classification).</p>
-<p>Giả định rằng N là số lượng quan sát của tập dữ liệu training và p là số lượng biến đầu vào. Thuật toán sẽ diễn ra theo các bước như sau:</p>
-<ul>
-<li><p><strong>Bước 1</strong>: Xây dựng số lượng lớn các cây quyết định bằng việc lấy mẫu ngẫu nhiên có hoàn lại N quan sát từ tập dữ liệu training</p></li>
-<li><p><strong>Bước 2</strong>: Với mỗi cây quyết định lựa chọn m &lt; p biến nhất định. Những biến này được cân nhắc lựa chọn để phân nhánh, với mỗi cây quyết định thì đều có số lượng biến là m.</p></li>
-<li><p><strong>Bước 3</strong>: Xây dựng các cây (không thực hiện tỉa cây)</p></li>
-<li><p><strong>Bước 4</strong>: Dự báo các quan sát mới bằng việc lấy trung bình các kết quả dự báo của các cây quyết định khác nhau đã được xây dựng (đối với bài toán hồi quy), hoặc lấy theo kết quả số đông của các cây quyết định khác nhau đã được xây dựng (đối với bài toán phân loại).</p></li>
-</ul>
-<p>Out-of-bag (OOB) error estimate được tính toán bằng việc phân loại quan sát mới mà không có trong tập dữ liệu training khi xây dựng cây quyết định. Việc này sẽ hữu ích khi mà chúng ta không có dữ liệu validation.</p>
-<p>Trong <code>R</code> để xây dựng mô hình random forests chúng ta có thể sử dụng hàm <code>randomForest()</code> trong package <strong>randomForest</strong>. Số lượng cây mặc định là 500, số lượng biến tại mỗi cây mặc định là sqrt(tổng số biến), và kích thước nhỏ nhất của cây mặc định là 1.</p>
+<p>Do đó, nếu xây dựng mô hình <code>random forests</code> với số lượng biến đầu vào m = p (tức lấy tất cả các biến đầu vào) thì mô hình trở thành <code>bagging</code>. Do đó, có thể nói <code>bagging</code> là một trường hợp đặc biệt của <code>random forest</code>.</p>
+<center>
+<font size="4">§</font>
+</center>
+<p><strong>Out-of-Bag Error Estimation</strong></p>
+<p>Có một cách khá đơn giản để ước lượng sai số dự báo (test error) của mô hình bagging mà không cần dùng cross-validation hoặc tập dữ liệu validation. Nhắc lại key của phương pháp bagging là việc các cây quyết định sẽ được xây dựng nhiều lần sử dụng những tập dữ liệu bootstrapped khác nhau. Mỗi một cây quyết định được xây đều sử dụng khoảng 2/3 số quan sát, còn 1/3 quan sát còn lại không được sử dụng trong quá trình xây dựng mô hình sẽ được gọi là những quan sát <code>out-of-bag</code> (OOB).</p>
+</section>
+<section id="thực-hành" class="level3" data-number="21.1.2">
+<h3 data-number="21.1.2" class="anchored" data-anchor-id="thực-hành"><span class="header-section-number">21.1.2</span> Thực hành</h3>
+<p>Do bagging là trường hợp đặc biệt của <code>random forest</code>, ta chỉ cần triển khai thuật toán vởi <code>random forest</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForest) <span class="co"># Package sử dụng cho Random Forests</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ranger)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Data</span></span>
@@ -781,284 +784,219 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 2898  102 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Xây dựng mô hình trên tập training</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>fit_rf <span class="ot">&lt;-</span> <span class="fu">randomForest</span>(default <span class="sc">~</span> .,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data =</span> df.train,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                       <span class="co"># na.action = na.roughfix, # Xử lý giá trị missing (nếu có)</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">importance =</span> T</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                       )</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>fit_rf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>fit_rf <span class="ot">&lt;-</span> <span class="fu">ranger</span>(default <span class="sc">~</span> .,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> df.train,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">importance =</span> <span class="st">"impurity"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>fit_rf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
- randomForest(formula = default ~ ., data = df.train, importance = T) 
-               Type of random forest: classification
-                     Number of trees: 500
-No. of variables tried at each split: 1
+<pre><code>Ranger result
 
-        OOB estimate of  error rate: 3%
-Confusion matrix:
-      No Yes class.error
-No  6746  23 0.003397843
-Yes  187  44 0.809523810</code></pre>
+Call:
+ ranger(default ~ ., data = df.train, importance = "impurity") 
+
+Type:                             Classification 
+Number of trees:                  500 
+Sample size:                      7000 
+Number of independent variables:  3 
+Mtry:                             1 
+Target node size:                 1 
+Variable importance mode:         impurity 
+Splitrule:                        gini 
+OOB prediction error:             2.96 % </code></pre>
 </div>
 </div>
+<hr>
+<p>Bên cạnh đó, ta có thể đánh giá độ quan trọng của các biến khi xây dựng mô hình như sau:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Biến quan trọng</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">importance</span>(fit_rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   student    balance     income 
+  1.990644 121.504200  27.097542 </code></pre>
+</div>
+</div>
+<p>Kết quả ở trên cho thấy mỗi biến thêm vào sẽ làm tăng độ thuần nhất (hay nói cách khác - giảm độ hỗn độn <code>impurity</code>) trong kết quả dự báo. Giá trị càng cao, biến đầu vào càng quan trọng.</p>
 </section>
-<section id="boosting" class="level2" data-number="21.3">
-<h2 data-number="21.3" class="anchored" data-anchor-id="boosting"><span class="header-section-number">21.3</span> Boosting</h2>
-<p>Bây giờ chúng ta sẽ cùng thảo luận về <code>boosting</code>, một phương pháp khác để cải thiện chất lượng dự báo từ việc sử dụng cây quyết định. Giống như các phương pháp trước, boosting có thể áp dụng được đối với cả 2 bài toán: Hồi quy (regression) và phân loại (classification).</p>
-<p>Nhắc lại một chút, boosting và random forests sử dụng phương pháp boostrap (lấy mẫu ngẫu nhiên có hoàn lại) để tạo các tập dữ liệu con từ dữ liệu training ban đầu, sau đó xây dựng các cây quyết định đối với từng tập dữ liệu con đó (các cây quyết định được xây dựng độc lập với nhau). Cuối cùng, sẽ tổng hợp lại các cây quyết định để ra được kết quả dự báo cuối cùng bằng cách lấy trung bình các kết quả dự báo của các cây quyết định (đối với bài toán hồi quy), hoặc lấy theo số đông các kết quả dự báo của các cây quyết định (đối với bài toán phân loại).</p>
-<p>Boosting cũng hoạt động theo cách tương tự, nhưng khác ở chỗ là việc xây dựng các cây quyết định từ những tập dữ liệu con khác nhau không phải là độc lập hoàn toàn với nhau như bagging hay random forests. Thay vào đó, boosting xây dựng các cây quyết định một cách có trình tự (<code>sequentially</code>): Mỗi cây kế tiếp được xây dựng bằng cách sử dụng kết quả từ những cây trước đó. Boosting tập trung nhiều hơn vào những quan sát bị dự báo sai từ những cây trước để góp phần cải thiện kết quả dự báo cuối cùng. Boosting không dùng boostrap để chia tập dữ liệu training ban đầu, mà thay vào đó là việc dùng các phiên bản đã được modified từ tập dữ liệu train ban đầu để xây dựng các cây quyết định.</p>
-<p>Chúng ta sẽ cùng xem xét bài toán hồi quy. Giống như bagging và randomforests, boosting kết hợp nhiều cây quyết định lại với nhau: f1,…, fB.</p>
-<p>Thuật toán boosting đối với bài toán hồi quy:</p>
+</section>
+<section id="boosting" class="level2" data-number="21.2">
+<h2 data-number="21.2" class="anchored" data-anchor-id="boosting"><span class="header-section-number">21.2</span> Boosting</h2>
+<section id="giới-thiệu-1" class="level3" data-number="21.2.1">
+<h3 data-number="21.2.1" class="anchored" data-anchor-id="giới-thiệu-1"><span class="header-section-number">21.2.1</span> Giới thiệu</h3>
+<p>Boosting cũng hoạt động theo cách tương tự như bagging, nhưng khác ở chỗ là việc xây dựng các cây quyết định từ những tập dữ liệu con khác nhau không phải là độc lập hoàn toàn với nhau như <code>bagging</code> hay <code>random forests</code>.</p>
+<p>Thay vào đó, <code>boosting</code> xây dựng các cây quyết định một cách có trình tự:</p>
 <ul>
-<li><p><strong>Bước 1</strong>: Đặt fˆ(x) = 0 và ri = yi với mọi i trên tập dữ liệu training</p></li>
-<li><p><strong>Bước 2</strong>: Với b = 1,2.., B, lặp lại:</p>
-<ul>
-<li>Xây dựng một cây fˆb với d splits (d+1 terminal nodes) với dữ liệu training (X,r).</li>
-<li>Update fˆ bằng việc adding in a shrunken version of the new tree, và update residuals:</li>
-</ul></li>
+<li>Mỗi cây kế tiếp được xây dựng bằng cách sử dụng kết quả từ những cây trước đó.</li>
+<li>Boosting tập trung nhiều hơn vào những quan sát bị dự báo sai từ những cây trước để góp phần cải thiện kết quả dự báo cuối cùng.</li>
+<li>Boosting không dùng boostrap để chia tập dữ liệu training ban đầu, mà thay vào đó là việc dùng các phiên bản đã được điều chỉnh từ tập dữ liệu train ban đầu để xây dựng các cây quyết định.</li>
 </ul>
-<p><span class="math display">\[\widehat{f}(x) = \widehat{f}(x) + λ\widehat{f}^{b}(x)\]</span></p>
-<p><span class="math display">\[r_i = r_i - λ\widehat{f}^{b}(x_i)\]</span></p>
-<ul>
-<li><strong>Bước 3</strong>: Kết quả của boosted model:</li>
-</ul>
-<p><span class="math display">\[\widehat{f}(x) = \sum_{b=1}^{P}λ\widehat{f}^{b}(x)\]</span></p>
-<p>Thay vì việc xây dựng các cây quyết định đơn lẻ với kích thước lớn có thể dẫn đến vấn đề overfitting, phương pháp boosting sẽ “học” chậm (<code>learn slowly</code>). Khi xây dựng xong cây quyết định đầu tiên, chúng ta sẽ xây dựng cây quyết định tiếp theo sử dụng biến đầu ra là phần dư (residuals) của cây trước đó. Sau đó, sẽ xây dựng các cây quyết định tiếp theo để update residuals. Mỗi cây có thể có kích thước nhỏ, với chỉ một vài terminal nodes được quyết định bởi tham số d trong thuật toán. Bằng việc xây dựng những cây nhỏ với residuals, chúng ta có thể dần dần cải thiện fˆ. Tham số <code>shrinkage</code> hay <code>learning rate</code>(tốc độ học của mô hình) λ sẽ làm mô hình “học” chậm và kỹ hơn nữa giúp cải thiện chất lượng mô hình. Lưu ý rằng khác với bagging, đối với boosting thì việc xây dựng các cây quyết định tiếp theo sẽ phụ thuộc vào kết quả của các cây trước đó.</p>
-<p>Như vậy, chúng ta đã vừa cùng tìm hiểu về boosting regression trees. Bây giờ chúng sẽ cùng tìm hiểu về 2 thuật toán trong boosting là <code>Adaboost</code> và <code>Gradient Boosting</code>.</p>
-<p><strong>AdaBoost</strong></p>
-<p><code>AdaBoost</code> kết hợp các “weak learners” để tạo thành “strong learner” (“weak learners” được hiểu là các cây phân loại chỉ tốt hơn một chút so với việc đoán ngẫu nhiên). Sau mỗi bước lặp, những quan sát bị phân loại sai sẽ được đánh trọng số cao hơn, những quan sát được phân loại đúng sẽ đánh trọng số thấp hơn. Mỗi cây tiếp theo được xây dựng với mục tiêu phân loại đúng những quan sát đã bị phân loại sai ở cây trước đó.</p>
-<p>Chúng ta sẽ mô tả thuật toán <code>Adaboost</code> thông qua việc sử dụng ví dụ sau đây: Phân loại các quan sát vào 2 nhóm <code>+</code> hoặc <code>-</code>. Chúng ta sẽ thực hiện các bước sau:</p>
-<hr>
-<p><img src="./Images/tree-3.jpg" class="img-fluid"></p>
-<hr>
-<p><em>Diễn giải</em>:</p>
-<ul>
-<li><p>Box 1: Đánh trọng số bằng nhau đối với tất cả quan sát và xây dựng một decision stump - D1 (cây chỉ gồm 1 split hay 1 tầng) để phân loại các quan sát thành 2 nhóm <code>+</code> và <code>-</code>. Kết quả cho thấy có 3 quan sát bị phân loại sai (là <code>+</code> nhưng lại bị cho vào nhóm <code>-</code>), 3 quan sát này sẽ được đánh trọng số cao hơn và tiếp tục xây dựng decision stump khác - D2.</p></li>
-<li><p>Box 2: D2 được xây dựng với mục đích phân loại đúng 3 quan sát bị phân loại sai ở D1. Kết quả cho thấy, lại có 3 quan sát bị phân loại sai (là <code>-</code> nhưng bị cho vào nhóm <code>+</code>). Lại tiếp tục đánh trọng số cao hơn đối với những quan sát này và tiếp tục xây dựng decision stump - D3.</p></li>
-<li><p>Box 3: D3 được xây dựng với mục đích phân loại đúng 3 quan sát bị phân loại sai ở D2. Kết quả cho thấy vẫn có những quan sát bị phân loại sai.</p></li>
-<li><p>Box 4: Kết hợp D1, D2, D3 để tạo thành D4 - phân loại tốt hơn so với D1, D2, D3 (nhóm <code>+</code> và <code>-</code> đã được phân loại hoàn toàn).</p></li>
-</ul>
-<p><strong>Gradient Boosting</strong></p>
-<p>Gradient Boosting = Gradient Descent + Boosting</p>
-<p>Cả <code>AdaBoost</code> và <code>Gradient Boosting</code> đều kết hợp các “weak learners” để tạo thành một “strong learner” và đều tập trung vào những quan sát bị dự báo sai. AdaBoost thì đánh trong số cao hơn vào những quan sát bị dự báo sai tại mỗi cây trước, và cố gắng dự báo đúng những quan sát đó tại cây tiếp theo. Trong khi đó, với Gradient Boosting, mỗi một cây mới sẽ được xây dựng với mục tiêu tối thiểu hóa dần tổng loss của cây trước đó bằng việc sử dụng phương pháp <code>gradient descent</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Thuật toán
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Cho tập training <span class="math inline">\(d=(X,y)\)</span>. Số lượng cây quyết định (bước) B, tốc độ thuật toán thay đổi (shrinkage factor/learning rate) <span class="math inline">\(\epsilon\)</span>, số tầng của mỗi cây là d đã được xác định trước. Đặt mô hình đầu tiên <span class="math inline">\(\widehat{G_0} \equiv 0\)</span> và sai số ban đầu <span class="math inline">\(r=y\)</span>.</p>
+<p>Với từng bước xây dựng cây quyết định <span class="math inline">\(b=1,2,…,B\)</span>, thực hiện các bước sau:</p>
+<ol type="1">
+<li>Xây mô hình cây quyết định <span class="math inline">\(\widetilde{g}_b\)</span> với dữ liệu (X,r), với số tầng d</li>
+<li>Cập nhật mô hình dự báo mới nhất <span class="math inline">\(\widetilde{g}_b\)</span>: <span class="math inline">\(\widetilde{G}_b=\widetilde{G}_{b−1} + \epsilon*\widetilde{g}_b\)</span></li>
+<li>Cập nhật sai số mô hình để xây dựng mô hình cho bước tiếp theo: <span class="math inline">\(r_i=r_i−\epsilon*\widetilde{g}_b\)</span>, i=1,2,…,n Trả ra kết quả của <span class="math inline">\(\widehat{G}_b\)</span>, b=1,2,…,B. Trong đó, B, ϵ, và d là các tham số cần tối ưu</li>
+</ol>
+</div>
+</div>
+<center>
+<font size="4">§</font>
+</center>
+<p>Để tìm hiểu kỹ hơn thuật toán boosting, ta sẽ phân tích kỹ thuật toán <code>gradient boosting</code> với hàm <code>loss</code> là tổng bình phương sai số trong bài toán hồi quy <code>regression</code></p>
+<p><strong>Xây dựng thuật toán với Regression</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">2</span> <span class="sc">*</span> pi, <span class="at">length =</span> <span class="dv">500</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">sin</span>(x) <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(x), <span class="at">sd =</span> <span class="fl">0.3</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot dữ liệu</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(x, y), <span class="at">color =</span> <span class="st">"darkblue"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Ví dụ sample dự báo với boosting"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-05-bagging-boosting_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to calculate residuals</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>calculate_residuals <span class="ot">&lt;-</span> <span class="cf">function</span>(y, y_pred) {</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(y <span class="sc">-</span> y_pred)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Gradient Boosting Machine implementation</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>gbm_func <span class="ot">&lt;-</span> <span class="cf">function</span>(X, y, n_trees, learning_rate) {</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Bước 1: Tạo mô hình với giá trị trung bình y</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  initial_prediction <span class="ot">&lt;-</span> <span class="fu">mean</span>(x)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Tạo vector prediction</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  predictions <span class="ot">&lt;-</span> <span class="fu">rep</span>(initial_prediction, <span class="fu">length</span>(y))</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Iterate to add trees to the ensemble</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_trees) {</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Tính toán sai số tại bước i</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    residuals <span class="ot">&lt;-</span> <span class="fu">calculate_residuals</span>(y, predictions)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Xây dựng mô hình mới, sử dụng y là residual mới</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    tree <span class="ot">&lt;-</span> <span class="fu">rpart</span>(residuals <span class="sc">~</span> X)</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Make predictions using the weak learner</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    tree_predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(tree, <span class="at">newdata =</span> <span class="fu">data.frame</span>(X))</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Update predictions with the weighted contribution of the weak learner</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    predictions <span class="ot">&lt;-</span> predictions <span class="sc">+</span> learning_rate <span class="sc">*</span> tree_predictions</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(predictions)</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 2: Set hyperparameters</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>n_trees <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>learning_rate <span class="ot">&lt;-</span> <span class="fl">0.1</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart)</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 3: Train the GBM model</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">gbm_func</span>(x, y, n_trees, learning_rate)</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the original data and the GBM predictions</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y), <span class="at">color =</span> <span class="st">"darkblue"</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> predictions), <span class="at">color =</span> <span class="st">"darkred"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Gradient Boosting Machine Regression"</span>,</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"x"</span>, <span class="at">y =</span> <span class="st">"y"</span>) <span class="sc">+</span></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-05-bagging-boosting_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Quá trình huấn luyện có thể thể hiện như sau:</p>
+<p><img src="Images/tree-6.gif" class="img-fluid"></p>
+</section>
+<section id="hyperparameter" class="level3" data-number="21.2.2">
+<h3 data-number="21.2.2" class="anchored" data-anchor-id="hyperparameter"><span class="header-section-number">21.2.2</span> Hyperparameter</h3>
 <p>Trong Gradient Boosting, việc tính tổng loss dựa vào việc lựa chọn loại “loss function” nào, ví dụ như: square loss, absolute loss, huber loss. Mỗi loại đều có những ưu/nhược điểm riêng.</p>
 <ul>
-<li>Square loss:</li>
+<li>Square loss: <span class="math inline">\(L(y,F) = (y-F)^2/2\)</span></li>
+<li>Absolute loss: <span class="math inline">\(L(y,F) = |y-F|\)</span></li>
+<li>Huber loss: <span class="math inline">\(\begin{cases}(y-F)^2/2 &amp; |x-F| \leqslant \delta\\\delta(|y-F| - \delta/2) &amp; |x-F| &gt; \delta\end{cases}\)</span></li>
 </ul>
-<p><span class="math display">\[L(y,F) = (y-F)^2/2\]</span></p>
-<ul>
-<li>Absolute loss:</li>
-</ul>
-<p><span class="math display">\[L(y,F) = |y-F|\]</span></p>
-<ul>
-<li>Huber loss:</li>
-</ul>
-<p><span class="math display">\[\begin{cases}(y-F)^2/2 &amp; |x-F| \leqslant \delta\\\delta(|y-F| - \delta/2) &amp; |x-F| &gt; \delta\end{cases}\]</span></p>
-<p><em>Ví dụ</em>:</p>
+<p><strong>Ví dụ</strong>:</p>
 <p><img src="./Images/tree-5.jpg" class="img-fluid"></p>
-<hr>
+<center>
+<font size="4">§</font>
+</center>
 <p>Boosting có 3 tham số cơ bản để tối ưu hóa mô hình (<code>tuning parameters</code>):</p>
 <ul>
-<li><p>Số lượng cây quyết định (B): Với boosting khi số lượng cây quá nhiều có thể dẫn đến overfitting, nên chúng ta sẽ sử dụng cross-validation để lựa chọn số lượng cây</p></li>
-<li><p>Tốc độ học λ (<code>learning rate</code> hoặc <code>shrinkage</code>): Giá trị nhỏ, dương. λ có thể nhận các giá trị như: 0.1, 0.01, hay 0.001 tùy từng trường hợp. λ càng nhỏ thì mô hình sẽ “học” càng chậm, càng lâu.</p></li>
-<li><p>Số lần splits, hay phân nhánh (d) của mỗi cây: Tham số này dùng để kiểm soát độ phức tạp của mô hình. Tham số này còn có thể gọi là số tầng cây (<code>interactive depth</code>). Nếu d = 1 (tức cây chỉ có 1 tầng hay 1 split) thì cây quyết định đó được gọi là <code>stump</code>.</p></li>
+<li><strong>Số lượng cây quyết định (B)</strong>: Với boosting khi số lượng cây quá nhiều có thể dẫn đến overfitting, nên chúng ta sẽ sử dụng cross-validation để lựa chọn số lượng cây</li>
+<li><strong>Tốc độ học λ</strong> (<code>learning rate</code> hoặc <code>shrinkage</code>): Giá trị nhỏ, dương. λ có thể nhận các giá trị như: 0.1, 0.01, hay 0.001 tùy từng trường hợp. λ càng nhỏ thì mô hình sẽ “học” càng chậm, càng lâu.</li>
+<li><strong>Số lần splits, hay phân nhánh (d) của mỗi cây</strong>: Tham số này dùng để kiểm soát độ phức tạp của mô hình. Tham số này còn có thể gọi là số tầng cây (<code>interactive depth</code>). Nếu d = 1 (tức cây chỉ có 1 tầng hay 1 split) thì cây quyết định đó được gọi là <code>stump</code>.</li>
 </ul>
+</section>
+<section id="thực-hành-1" class="level3" data-number="21.2.3">
+<h3 data-number="21.2.3" class="anchored" data-anchor-id="thực-hành-1"><span class="header-section-number">21.2.3</span> Thực hành</h3>
 <p>Để thực hành xây dựng mô hình boosting trên <code>R</code>, chúng ta sẽ sử dụng dữ liệu có sẵn trong <code>R</code> - <code>GermanCredit</code>.</p>
 <p>Đây là dữ liệu ghi nhận về lịch sử vay của khách hàng, với các 61 biến đầu vào cùng với biến đầu ra <code>Class</code> ghi nhận thực tế là các khoản vay đó có phải là khoản nợ xấu hay không.</p>
 <p>Để xây dựng mô hình boosting trên <code>R</code>, chúng ta sẽ sử dụng hàm <code>gbm()</code> trong package <strong>gbm</strong>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"GermanCredit"</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> GermanCredit</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(GermanCredit)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Hàm tính toán các chỉ số đo lường chất lượng dự báo của mô hình</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>model.performance <span class="ot">&lt;-</span> <span class="cf">function</span>(confusion_matrix) {</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  a <span class="ot">&lt;-</span> confusion_matrix[<span class="dv">1</span>,<span class="dv">1</span>]</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  b <span class="ot">&lt;-</span> confusion_matrix[<span class="dv">1</span>,<span class="dv">2</span>]</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  c <span class="ot">&lt;-</span> confusion_matrix[<span class="dv">2</span>,<span class="dv">2</span>]</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">&lt;-</span> confusion_matrix[<span class="dv">2</span>,<span class="dv">1</span>]</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  tpr <span class="ot">&lt;-</span> c<span class="sc">/</span>(b<span class="sc">+</span>c)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  precision <span class="ot">&lt;-</span> c<span class="sc">/</span>(c<span class="sc">+</span>d)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  accuracy <span class="ot">&lt;-</span> (a<span class="sc">+</span>c)<span class="sc">/</span>(a<span class="sc">+</span>b<span class="sc">+</span>c<span class="sc">+</span>d)</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">'recall :'</span>,<span class="fu">round</span>(tpr,<span class="dv">2</span>)))</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">'precision :'</span>, <span class="fu">round</span>(precision,<span class="dv">2</span>)))</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">'accuracy :'</span>,<span class="fu">round</span>(accuracy,<span class="dv">2</span>)))</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Chia data: training/testing tỷ lệ 8/2</span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>) </span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>indxTrain <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(<span class="at">y =</span> data<span class="sc">$</span>Class,<span class="at">p =</span> <span class="dv">8</span><span class="sc">/</span><span class="dv">10</span>,<span class="at">list =</span> <span class="cn">FALSE</span>) </span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>training <span class="ot">&lt;-</span> data[indxTrain,] </span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>testing <span class="ot">&lt;-</span> data[<span class="sc">-</span>indxTrain,] </span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>df.train <span class="ot">&lt;-</span> training</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>df.train<span class="sc">$</span>Status[df.train<span class="sc">$</span>Class <span class="sc">==</span> <span class="st">"Good"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>df.train<span class="sc">$</span>Status[df.train<span class="sc">$</span>Class <span class="sc">==</span> <span class="st">"Bad"</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>df.test <span class="ot">&lt;-</span> testing</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>df.test<span class="sc">$</span>Status[df.test<span class="sc">$</span>Class <span class="sc">==</span> <span class="st">"Good"</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>df.test<span class="sc">$</span>Status[df.test<span class="sc">$</span>Class <span class="sc">==</span> <span class="st">"Bad"</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(training, testing)</span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Gradient Boosting</span></span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">9999</span>)</span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Xây dựng mô hình trên tập train</span></span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gbm)</span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>gbm.train <span class="ot">&lt;-</span> <span class="fu">gbm</span>(Status <span class="sc">~</span> . <span class="sc">-</span> Class,</span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> df.train,</span>
-<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>                 <span class="at">distribution =</span> <span class="st">"bernoulli"</span>, </span>
-<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>                 <span class="at">n.trees =</span> <span class="dv">1000</span>,</span>
-<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>                 <span class="at">shrinkage =</span> <span class="fl">0.01</span>,</span>
-<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>                 <span class="at">interaction.depth =</span> <span class="dv">4</span>)</span>
-<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Dự báo quan sát trên tập test</span></span>
-<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>gbm.result <span class="ot">&lt;-</span> <span class="fu">predict</span>(gbm.train,</span>
-<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>                      <span class="at">newdata =</span> df.test,</span>
-<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>                      <span class="at">n.trees =</span> <span class="dv">1000</span>,</span>
-<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>                      <span class="at">type =</span> <span class="st">"response"</span>)</span>
-<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a><span class="co"># Confusion matrix</span></span>
-<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>gbm.conf  <span class="ot">&lt;-</span>  <span class="fu">rep</span> (<span class="st">"Bad"</span>, <span class="dv">200</span>) </span>
-<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>gbm.conf[gbm.result <span class="sc">&gt;</span> <span class="fl">0.5</span>] <span class="ot">=</span> <span class="st">"Good"</span> </span>
-<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>gbm.confusion <span class="ot">&lt;-</span> <span class="fu">table</span>(gbm.conf, df.test<span class="sc">$</span>Class)</span>
-<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>gbm.confusion </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>        
-gbm.conf Bad Good
-    Bad   25   16
-    Good  35  124</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">model.performance</span>(gbm.confusion)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "recall : 0.89"
-[1] "precision : 0.78"
-[1] "accuracy : 0.74"</code></pre>
-</div>
-</div>
-<ul>
-<li><p>Kết quả <code>confusion matrix</code> trên tập dữ liệu testing cho chúng ta thấy:</p>
-<ul>
-<li><p>Tỷ lệ dự báo đúng trên tổng quan sát là 80% (tức 35 khách hàng có nợ xấu và 124 khách hàng không có nợ xấu được dự báo đúng trên tổng số 200 khách hàng trên tập dữ liệu testing)</p></li>
-<li><p>Trong số 140 khách hàng thực tế không có nợ xấu thì chúng ta dự báo chính xác 124 khách hàng (tỷ lệ 124/140 = 89%)</p></li>
-<li><p>Trong số 149 khách hàng mà chúng ta dự báo là không có nợ xấu, có 124 khách hàng được dự báo chính xác (tỷ lệ 124/149 = 83%)</p></li>
-</ul></li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ROC</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ROCR) <span class="co"># Dùng để vẽ đường ROC và tính toán AUC</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>gbm.ROC <span class="ot">&lt;-</span> <span class="fu">prediction</span>(gbm.result, df.test<span class="sc">$</span>Class)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>gbm.ROCperf_test <span class="ot">&lt;-</span> <span class="fu">performance</span>(gbm.ROC, <span class="st">"tpr"</span>, <span class="st">"fpr"</span>)</span>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gbm)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the Iris dataset</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(iris)</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Vẽ ROC</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gbm.ROCperf_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="p03-05-bagging-boosting_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tính toán AUC</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>gbm.auc_test <span class="ot">&lt;-</span> <span class="fu">performance</span>(gbm.ROC, <span class="st">"auc"</span>, <span class="st">"cutoff"</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>gbm.auc_test<span class="sc">@</span>y.values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the seed for reproducibility</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Split the data into training and testing sets</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>split_index <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(iris), <span class="fl">0.7</span> <span class="sc">*</span> <span class="fu">nrow</span>(iris))</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> iris[split_index, ]</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> iris[<span class="sc">-</span>split_index, ]</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the boosting model</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>boost_model <span class="ot">&lt;-</span> gbm<span class="sc">::</span><span class="fu">gbm</span>(</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  Species <span class="sc">~</span> .,          <span class="co"># Target variable and features</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train_data,    <span class="co"># Training data</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">distribution =</span> <span class="st">"multinomial"</span>, <span class="co"># Multi class classification</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">n.trees =</span> <span class="dv">100</span>,        <span class="co"># Number of trees (iterations)</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">interaction.depth =</span> <span class="dv">3</span>, <span class="co"># Maximum depth of each tree</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">shrinkage =</span> <span class="fl">0.1</span>       <span class="co"># Learning rate (shrinkage)</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Make predictions on the test set</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(boost_model,</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>                       <span class="at">newdata =</span> test_data,</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>                       <span class="at">n.trees =</span> <span class="dv">100</span>,</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>                       <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert predicted probabilities to class predictions</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>predicted_classes <span class="ot">&lt;-</span> <span class="fu">apply</span>(predictions, <span class="dv">1</span>, which.max)</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>predicted_classes[predicted_classes <span class="sc">==</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"setosa"</span></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>predicted_classes[predicted_classes <span class="sc">==</span> <span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">"versicolor"</span></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>predicted_classes[predicted_classes <span class="sc">==</span> <span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">"virginica"</span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare predicted classes with actual classes</span></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>accuracy <span class="ot">&lt;-</span> <span class="fu">mean</span>(predicted_classes <span class="sc">==</span> test_data<span class="sc">$</span>Species)</span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Accuracy on the test set:"</span>, accuracy, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[[1]]
-[1] 0.7639286</code></pre>
+<pre><code>Accuracy on the test set: 0.9777778 </code></pre>
 </div>
 </div>
-<ul>
-<li>Kết quả <code>AUC ~ 82%</code> trên tập testing cho thấy chất lượng dự báo của mô hình đạt chất lượng khá tốt</li>
-</ul>
-<section id="xây-dựng-boosting-tree-với-r" class="level3" data-number="21.3.1">
-<h3 data-number="21.3.1" class="anchored" data-anchor-id="xây-dựng-boosting-tree-với-r"><span class="header-section-number">21.3.1</span> Xây dựng <code>boosting tree</code> với R</h3>
-<p>Để tìm hiểu kỹ hơn thuật toán boosting, ta sẽ phân tích kỹ thuật toán <code>gradient boosting</code> với hàm <code>loss</code> là tổng bình phương sai số. Thuật toán diễn ra như sau.</p>
-<blockquote class="blockquote">
-<p>Cho tập training d=(X,y). Số lượng cây quyết định (bước) B, tốc độ thuật toán thay đổi (shrinkage factor/learning rate) ϵ, số tầng của mỗi cây là d đã được xác định trước. Đặt mô hình đầu tiên <span class="math inline">\(\widehat{G_0} \equiv 0\)</span> và sai số ban đầu r=y.</p>
-<p>Với b=1,2,…,B thực hiện các bước sau: &gt; a) Xây mô hình cây quyết định <span class="math inline">\(\widetilde{g}_b\)</span> với dữ liệu (X,r), với số tầng d &gt; b) Cập nhật mô hình dự báo mới nhất <span class="math inline">\(\widetilde{g}_b\)</span>: <span class="math inline">\(\widetilde{G}_b=\widetilde{G}_{b−1} + \epsilon*\widetilde{g}_b\)</span> &gt; c) Cập nhật sai số mô hình để xây dựng mô hình cho bước tiếp theo: <span class="math inline">\(r_i=r_i−\epsilon*\widetilde{g}_b\)</span>, i=1,2,…,n</p>
-<p>Trả ra kết quả của $<span class="math inline">\(\widehat{G}_b\)</span>, b=1,2,…,B.</p>
-<p>Trong đó, B, ϵ, và d là các tham số cần tối ưu</p>
-</blockquote>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Color pallete</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="dv">9</span>, <span class="st">"Set1"</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to implement gradient boosting with squared-error loss. Based on algorithm 17.2 on page 333 of Computer Age Statistical Inference, by Bradley, Efron amd Trevor Hastie</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>rpartBoost <span class="ot">&lt;-</span> <span class="cf">function</span>(X, y, data, <span class="at">num_trees =</span> <span class="dv">100</span>, <span class="at">learn_rate =</span> <span class="fl">0.1</span>, </span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">tree_depth =</span> <span class="dv">6</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>) {</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(rpart)</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Tạo ma trận chứa kết quả</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  G_b_hat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, <span class="at">nrow =</span> <span class="fu">length</span>(y), <span class="at">ncol =</span> num_trees <span class="sc">+</span> <span class="dv">1</span>)</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> y</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (tree <span class="cf">in</span> <span class="fu">seq_len</span>(num_trees)) {</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (verbose) {</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">message</span>(<span class="st">"iter "</span>, tree, <span class="st">" of "</span>, num_trees)</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Step 1: Xây mô hình r ~ X</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    g_b_tilde <span class="ot">&lt;-</span> <span class="fu">rpart</span>(r <span class="sc">~</span> X, <span class="at">control =</span> <span class="fu">list</span>(<span class="at">cp =</span> <span class="dv">0</span>, <span class="at">maxdepth =</span> tree_depth))</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Step 2.1: Tính toán e*g_b</span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    g_b_hat <span class="ot">&lt;-</span> learn_rate <span class="sc">*</span> <span class="fu">predict</span>(g_b_tilde)</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Step 3: Kết quả dự báo của tree + 1</span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    G_b_hat[, tree <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> G_b_hat[, tree] <span class="sc">+</span> <span class="fu">matrix</span>(g_b_hat)</span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Update r</span></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    r <span class="ot">&lt;-</span> r <span class="sc">-</span> g_b_hat</span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(G_b_hat) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"tree_"</span>, <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">seq_len</span>(num_trees)))</span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  G_b_hat</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Xây dựng hàm vẽ kết quả mô hình ở bước thứ i</span></span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>plotIter <span class="ot">&lt;-</span> <span class="cf">function</span>(object, iter, <span class="at">show_legend =</span> <span class="cn">FALSE</span>, ...) {</span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(x, y, ...)</span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(x, <span class="fu">sin</span>(x), <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> cols[2L])</span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(x, object[, iter <span class="sc">+</span> <span class="dv">1</span>], <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> cols[1L])</span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (show_legend) {</span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"Boosted prediction"</span>, <span class="st">"True function"</span>),</span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>           <span class="at">lty =</span> 1L, <span class="at">lwd =</span> 3L, <span class="at">col =</span> cols[1L<span class="sc">:</span>2L], <span class="at">inset =</span> <span class="fl">0.01</span>)</span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate some sine wave data</span></span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">101</span>)</span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="dv">0</span>, <span class="at">to =</span> <span class="dv">2</span> <span class="sc">*</span> pi, <span class="at">length =</span> <span class="dv">500</span>)</span>
-<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">sin</span>(x) <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="fu">length</span>(x), <span class="at">sd =</span> <span class="fl">0.3</span>)</span>
-<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(x, y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="p03-05-bagging-boosting_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gradient boosted decision trees</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>bst <span class="ot">&lt;-</span> <span class="fu">rpartBoost</span>(<span class="at">X =</span> x, <span class="at">y =</span> y, <span class="at">num_trees =</span> <span class="dv">1000</span>, <span class="at">learn_rate =</span> <span class="fl">0.1</span>, </span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">tree_depth =</span> <span class="dv">3</span>, <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot first 15 iterations</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">3</span>))</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">500</span>, <span class="dv">1000</span>)) {</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotIter</span>(bst, <span class="at">iter =</span> i, <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Iter:"</span>, i))</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="p03-05-bagging-boosting_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plotIter(bst, iter = 10)</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># # # Tạo gif file</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># png(file = "gifs/boosted-stumps%02d.png", width = 500, height = 500)</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># for (i in c(0:100)){</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   plotIter(bst, iter = i, show_legend = TRUE)</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># }</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># dev.off()</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># system("magick convert -delay 10 gifs/*.png gifs/boosted_stumps.gif")</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co"># file.remove(list.files(path = "gifs", pattern = ".png", full.names = TRUE))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><img src="Images/tree-6.gif" class="img-fluid"></p>
 </section>
 </section>
-<section id="tài-liệu-tham-khảo" class="level2" data-number="21.4">
-<h2 data-number="21.4" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">21.4</span> Tài liệu tham khảo</h2>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="21.3">
+<h2 data-number="21.3" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">21.3</span> Tài liệu tham khảo</h2>
 <ul>
+<li><a href="https://parsnip.tidymodels.org/reference/details_rand_forest_ranger.html">https://parsnip.tidymodels.org/reference/details_rand_forest_ranger.html</a></li>
 <li><a href="https://bgreenwell.github.io/MLDay18/MLDay18.html#59">https://bgreenwell.github.io/MLDay18/MLDay18.html#59</a></li>
+<li><a href="">https://xgboost.readthedocs.io/en/stable/tutorials/model.html</a></li>
 </ul>
 
 
