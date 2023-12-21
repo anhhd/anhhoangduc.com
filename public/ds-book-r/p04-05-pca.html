@@ -682,8 +682,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#giới-thiệu" id="toc-giới-thiệu" class="nav-link active" data-scroll-target="#giới-thiệu"><span class="header-section-number">39.1</span> Giới thiệu</a></li>
-  <li><a href="#lý-thuyết" id="toc-lý-thuyết" class="nav-link" data-scroll-target="#lý-thuyết"><span class="header-section-number">39.2</span> Lý thuyết</a></li>
+  <li><a href="#lý-thuyết-pca" id="toc-lý-thuyết-pca" class="nav-link" data-scroll-target="#lý-thuyết-pca"><span class="header-section-number">39.2</span> Lý thuyết PCA</a></li>
   <li><a href="#thực-hành" id="toc-thực-hành" class="nav-link" data-scroll-target="#thực-hành"><span class="header-section-number">39.3</span> Thực hành</a></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">39.4</span> Tài liệu tham khảo</a></li>
   </ul>
 </nav>
     </div>
@@ -709,21 +710,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="giới-thiệu" class="level2" data-number="39.1">
 <h2 data-number="39.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">39.1</span> Giới thiệu</h2>
-<p><code>Pricipal Component Analysis</code> và <code>Factor Analysis</code> không quan tâm đến việc dự báo do không có biến cần dự báo trước. Các kỹ thuật này trả lời các câu hỏi sau</p>
+<p>Trong nhóm kỹ thuật <code>unsupervised learning</code>, có 2 kỹ thuật thuộc về nhóm tìm kiếm mối quan hệ giữa các biến mà không quan tâm đến dự báo là <code>Pricipal Component Analysis</code> và <code>Factor Analysis</code>. Các kỹ thuật này trả lời các câu hỏi sau</p>
 <ul>
 <li>Liệu tồn tại các nhóm giữa các đối tượng trong dữ liệu?</li>
 <li>Làm thế nào để giảm số lượng các biến?</li>
 <li>Liệu có tồn tại mối quan hệ ẩn giữa các biến?</li>
 </ul>
+<hr>
 <p><strong>So sánh giữa PCA và FA</strong></p>
-<p>PCA &amp; FA là 2 phương pháp có quan hệ mật thiết với nhau. Có thể coi FA là phương pháp ngược lại với PCA</p>
+<p>PCA &amp; FA là 2 phương pháp có quan hệ mật thiết với nhau và có thể coi FA là phương pháp ngược lại với PCA</p>
 <ul>
 <li>PCA là kỹ thuật giảm số lượng các biến có tương quan với nhau thành 1 số ít biến không tương quan và vẫn đảm bảo được càng nhiều thông tin (variance) của tập dữ liệu gốc càng tốt. VD: Giảm 30 biến thành 2 biến mới không tương quan với nhau, vẫn giữ được phần lớn lượng thông tin (ít nhất 80%) so với dữ liệu gốc. Mỗi biến mới được gọi là 1 “Principal Component”</li>
 <li>FA là kỹ thuật tìm những biến “ẩn” ảnh hưởng đến các dữ liệu gốc. VD: 30 biến từ tập dữ liệu gốc được tổ hợp từ 4 biến ẩn (latent factor)</li>
 </ul>
 </section>
-<section id="lý-thuyết" class="level2" data-number="39.2">
-<h2 data-number="39.2" class="anchored" data-anchor-id="lý-thuyết"><span class="header-section-number">39.2</span> Lý thuyết</h2>
+<section id="lý-thuyết-pca" class="level2" data-number="39.2">
+<h2 data-number="39.2" class="anchored" data-anchor-id="lý-thuyết-pca"><span class="header-section-number">39.2</span> Lý thuyết PCA</h2>
 <p>Gọi <span class="math inline">\(X_1,...,X_p\)</span> là các biến trong tập dữ liệu ban đầu. <span class="math inline">\(PC_1\)</span> (<code>The first principal component</code>) là tổ hơp tuyến tính đã chuẩn hóa của X (<code>normalized linear combination</code>):</p>
 <p><span class="math display">\[Z_1=\phi_{11} X_1 + \phi_{21}X_2+...+\phi_{p1}X_p\]</span></p>
 <p>Chuẩn hóa (normalized) được định nghĩa là:</p>
@@ -740,8 +742,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Ý nghĩa</strong>:</p>
 <ul>
 <li><span class="math inline">\(PC_1\)</span> là tổ hợp tuyến tính của các biến X mà trong đó, phương sai của cả tập dữ liệu thay đổi nhiều nhất</li>
-<li><span class="math inline">\(PC_2\)</span> là chiều thứ 2 của dữ liệu, vuông góc với dữ liệu 1, var biến đổi nhiều thứ nhì</li>
+<li><span class="math inline">\(PC_2\)</span> là chiều thứ 2 của dữ liệu, vuông góc với dữ liệu 1, var biến đổi nhiều thứ hai.</li>
 </ul>
+<p><img src="Images/p04-05-pca.png" class="img-fluid"></p>
 <p><strong>Lựa chọn số PC</strong>:</p>
 <p>Có 3 cách lựa chọn sau:</p>
 <ul>
@@ -749,6 +752,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Lựa chọn PC có giá trị riêng lớn hơn 1</li>
 <li>Lựa chọn số PC cho đến khi tổng var của tất cả các PC lớn hơn hoặc bằng 80% var của tập dữ liệu gốc</li>
 </ul>
+<hr>
+<p>Về mặt bản chất, PCA là kỹ thuật tìm tổ hợp các mặt phẳng tuyến tính có ít chiều hơn và gần nhất với dữ liệu gốc.</p>
+<p><img src="Images/p04-05-principal-component.png" class="img-fluid"></p>
 </section>
 <section id="thực-hành" class="level2" data-number="39.3">
 <h2 data-number="39.3" class="anchored" data-anchor-id="thực-hành"><span class="header-section-number">39.3</span> Thực hành</h2>
@@ -809,6 +815,13 @@ Cumulative Proportion  0.7296 0.9581 0.99482 1.00000</code></pre>
 </div>
 </div>
 <p>Trong ví dụ trên, ta thấy loài hoa <code>setosa</code> được phân thành nhóm riêng và yếu tố được tách nhánh nhiều nhất của nhóm này là <code>Sepal</code>. Trong khi đó, hai loại hoa còn lại khác nhau phần lớn ở thuộc tính <code>Petal</code></p>
+</section>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="39.4">
+<h2 data-number="39.4" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">39.4</span> Tài liệu tham khảo</h2>
+<ul>
+<li><a href="https://www.r-bloggers.com/2021/05/principal-component-analysis-pca-in-r/">https://www.r-bloggers.com/2021/05/principal-component-analysis-pca-in-r/</a></li>
+<li>R in action</li>
+</ul>
 
 
 </section>

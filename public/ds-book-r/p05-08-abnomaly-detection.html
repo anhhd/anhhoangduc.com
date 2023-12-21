@@ -710,7 +710,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Để xác định các quan sát bất thường trong chuỗi thời gian, ta có thể sử dụng packages <code>anomalize</code> và <code>tibbletime</code>. Các bước để phân tích <code>abnomaly</code> như sau:</p>
 <ol type="1">
 <li>Convert dataframe sang <code>tibbletime</code>, để index với dạng <code>date</code></li>
-<li>Phân rã các thành phần trong time series thành <code>trend</code>, <code>seaonal</code> và <code>remainder</code> với hàm <code>time_decompose()</code></li>
+<li>Phân rã các thành phần trong time series thành <code>trend</code>, <code>seasonal</code> và <code>remainder</code> với hàm <code>time_decompose()</code></li>
 <li>Xác định các quan sát ngoại lai với hàm <code>anomalize()</code></li>
 <li>Xác định các khoảng quan sát bất thường với <code>time_recompose()</code></li>
 </ol>
@@ -808,18 +808,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Phân tách các quan sát bất thường trong chuỗi thời gian.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>tidyverse_cran_downloads <span class="sc">%&gt;%</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Select a single time series</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(package <span class="sc">==</span> <span class="st">"lubridate"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Anomalize</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">time_decompose</span>(count, <span class="at">method =</span> <span class="st">"stl"</span>, <span class="at">frequency =</span> <span class="st">"auto"</span>, <span class="at">trend =</span> <span class="st">"auto"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">anomalize</span>(remainder, <span class="at">method =</span> <span class="st">"iqr"</span>, <span class="at">alpha =</span> <span class="fl">0.05</span>, <span class="at">max_anoms =</span> <span class="fl">0.2</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Plot Anomaly Decomposition</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_anomaly_decomposition</span>() <span class="sc">+</span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Lubridate Downloads: Anomaly Decomposition"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Select a single time series</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(package <span class="sc">==</span> <span class="st">"lubridate"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Anomalize</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">time_decompose</span>(count, <span class="at">method =</span> <span class="st">"stl"</span>, <span class="at">frequency =</span> <span class="st">"auto"</span>, <span class="at">trend =</span> <span class="st">"auto"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">anomalize</span>(remainder, <span class="at">method =</span> <span class="st">"iqr"</span>, <span class="at">alpha =</span> <span class="fl">0.05</span>, <span class="at">max_anoms =</span> <span class="fl">0.2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Plot Anomaly Decomposition</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_anomaly_decomposition</span>() <span class="sc">+</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Lubridate Downloads: Anomaly Decomposition"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="p05-08-abnomaly-detection_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>

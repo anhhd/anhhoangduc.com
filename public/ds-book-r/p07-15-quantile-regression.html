@@ -685,7 +685,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#xây-dựng-mô-hình" id="toc-xây-dựng-mô-hình" class="nav-link" data-scroll-target="#xây-dựng-mô-hình"><span class="header-section-number">58.2</span> Xây dựng mô hình</a></li>
   <li><a href="#so-sánh-với-ols" id="toc-so-sánh-với-ols" class="nav-link" data-scroll-target="#so-sánh-với-ols"><span class="header-section-number">58.3</span> So sánh với OLS</a></li>
   <li><a href="#thực-hành-với-r" id="toc-thực-hành-với-r" class="nav-link" data-scroll-target="#thực-hành-với-r"><span class="header-section-number">58.4</span> Thực hành với R</a></li>
-  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">58.5</span> Tài liệu tham khảo</a></li>
+  <li><a href="#random-forest-trong-dự-báo-phân-vị" id="toc-random-forest-trong-dự-báo-phân-vị" class="nav-link" data-scroll-target="#random-forest-trong-dự-báo-phân-vị"><span class="header-section-number">58.5</span> Random Forest trong dự báo phân vị</a></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">58.6</span> Tài liệu tham khảo</a></li>
   </ul>
 </nav>
     </div>
@@ -814,8 +815,79 @@ Lưu ý
 </div>
 </div>
 </section>
-<section id="tài-liệu-tham-khảo" class="level2" data-number="58.5">
-<h2 data-number="58.5" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">58.5</span> Tài liệu tham khảo</h2>
+<section id="random-forest-trong-dự-báo-phân-vị" class="level2" data-number="58.5">
+<h2 data-number="58.5" class="anchored" data-anchor-id="random-forest-trong-dự-báo-phân-vị"><span class="header-section-number">58.5</span> Random Forest trong dự báo phân vị</h2>
+<p>Hồi quy phân vị thông thường có thể sử dụng nâng cao với nhóm <code>random forest</code> với <code>ranger</code>. Tương tự như mô hình cây hồi quy thông thường nhưng được xây dựng với từng mốc quantile.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ranger)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> engel <span class="sc">%&gt;%</span> <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">floor</span>(<span class="fl">0.75</span><span class="sc">*</span><span class="fu">nrow</span>(engel)))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> engel <span class="sc">%&gt;%</span> <span class="fu">slice</span>(<span class="fu">ceiling</span>(<span class="fl">0.75</span><span class="sc">*</span><span class="fu">nrow</span>(engel))<span class="sc">:</span><span class="fu">nrow</span>(engel))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>rf_model <span class="ot">&lt;-</span> <span class="fu">ranger</span>(</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  foodexp <span class="sc">~</span> income,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">quantreg =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">importance =</span> <span class="st">'permutation'</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">keep.inbag =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># needed for QRF</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">scale.permutation.importance =</span> <span class="cn">TRUE</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>rf_model</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Ranger result
+
+Call:
+ ranger(foodexp ~ income, data = train, quantreg = TRUE, importance = "permutation",      keep.inbag = TRUE, scale.permutation.importance = TRUE) 
+
+Type:                             Regression 
+Number of trees:                  500 
+Sample size:                      176 
+Number of independent variables:  1 
+Mtry:                             1 
+Target node size:                 5 
+Variable importance mode:         permutation 
+Splitrule:                        variance 
+OOB prediction error (MSE):       18548.67 
+R squared (OOB):                  0.7738309 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dự báo</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>pred.qrf <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf_model, test, <span class="at">type =</span> <span class="st">"quantiles"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                    <span class="co"># default is c(0.1, 0.5, 0.9)</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">quantiles =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.9</span>))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>pred.qrf<span class="sc">$</span>predictions <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     quantile= 0.1 quantile= 0.25 quantile= 0.5 quantile= 0.75 quantile= 0.9
+[1,]      543.3969       628.4522      645.9874       708.7958      708.8968
+[2,]      543.3969       628.4522      645.9874       708.8968      708.8968
+[3,]      495.5608       503.3572      522.7012       538.7491      538.7491
+[4,]      296.9192       317.7198      338.0014       354.6389      372.3186
+[5,]      495.5608       495.5608      520.0006       522.7012      538.7491
+[6,]      527.8014       543.3969      679.9981       700.4409      708.8968</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tổng hợp dự báo</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pred.qrf<span class="sc">$</span>predictions)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> quantile= 0.1    quantile= 0.25   quantile= 0.5    quantile= 0.75  
+ Min.   : 242.3   Min.   : 248.8   Min.   : 263.7   Min.   : 276.6  
+ 1st Qu.: 381.5   1st Qu.: 401.3   1st Qu.: 423.7   1st Qu.: 443.8  
+ Median : 495.6   Median : 503.4   Median : 522.7   Median : 538.7  
+ Mean   : 506.0   Mean   : 532.5   Mean   : 572.8   Mean   : 605.5  
+ 3rd Qu.: 602.9   3rd Qu.: 622.9   3rd Qu.: 650.0   3rd Qu.: 708.9  
+ Max.   :1068.0   Max.   :1301.1   Max.   :1504.4   Max.   :1570.4  
+ quantile= 0.9   
+ Min.   : 335.0  
+ 1st Qu.: 452.3  
+ Median : 550.7  
+ Mean   : 635.4  
+ 3rd Qu.: 757.1  
+ Max.   :1570.4  </code></pre>
+</div>
+</div>
+</section>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="58.6">
+<h2 data-number="58.6" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">58.6</span> Tài liệu tham khảo</h2>
 <ul>
 <li>https://data.library.virginia.edu/getting-started-with-quantile-regression/</li>
 </ul>
