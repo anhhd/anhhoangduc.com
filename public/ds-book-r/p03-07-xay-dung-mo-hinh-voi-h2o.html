@@ -299,7 +299,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">XGBoost &amp; LightGBM</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -721,34 +721,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="giới-thiệu" class="level2" data-number="22.1">
 <h2 data-number="22.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">22.1</span> Giới thiệu</h2>
 <ul>
-<li><p>H2O là một phần mềm dựa trên nền tảng của Java dùng để mô hình hóa dữ liệu (data modeling) và tính toán nói chung (general computing).</p></li>
-<li><p>H2O là một platform mã nguồn mở hàng đầu thế giới hiện nay về Machine Learning và AI.</p></li>
-<li><p>Hỗ trợ nhiều phần mềm khác nhau như: R, Python, Azure, Spark…</p></li>
+<li>H2O là một phần mềm dựa trên nền tảng của Java dùng để mô hình hóa dữ liệu (data modeling) và tính toán nói chung (general computing).</li>
+<li>H2O là một platform mã nguồn mở hàng đầu thế giới hiện nay về Machine Learning và AI.</li>
+<li>Hỗ trợ nhiều phần mềm khác nhau như: R, Python, Azure, Spark…</li>
 </ul>
 </section>
 <section id="cài-đặt-và-khởi-động" class="level2" data-number="22.2">
 <h2 data-number="22.2" class="anchored" data-anchor-id="cài-đặt-và-khởi-động"><span class="header-section-number">22.2</span> Cài đặt và khởi động</h2>
 <p>Để cài đặt và khởi động H2O, chúng ta cần thực hiện các bước sau:</p>
 <ul>
-<li><p>Bước 1: Cài đặt Java</p></li>
-<li><p>Bước 2: Cài đặt R package <code>h2o</code></p></li>
+<li><strong>Bước 1</strong>: Cài đặt Java</li>
 </ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"h2o"</span>, <span class="at">method =</span> <span class="st">"wininet"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Windows</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Ubuntu</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<ul>
+<li>Download &amp; cài đặt Java <a href="">https://www.java.com/download/ie_manual.jsp</a></li>
+</ul>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Thực hiện câu lệnh sau</p>
+<pre><code>sudo apt-get update
+sudo apt install default-jdk</code></pre>
+</div>
+</div>
 </div>
 <ul>
-<li>Bước 3: Khởi động H2O từ R - sử dụng câu lệnh <code>h2o.init()</code></li>
+<li><strong>Bước 2</strong>: Cài đặt R package <code>h2o</code></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(h2o)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.init</span>(<span class="at">ip =</span> <span class="st">"localhost"</span>, </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">port =</span> <span class="dv">54321</span>, </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">nthreads=</span> <span class="sc">-</span><span class="dv">1</span>,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">max_mem_size =</span> <span class="st">"4g"</span>) <span class="co"># Đặt mức RAM tối đa</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"h2o"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><strong>Bước 3</strong>: Khởi động H2O từ R - sử dụng câu lệnh <code>h2o.init()</code></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(h2o)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.init</span>(<span class="at">ip =</span> <span class="st">"localhost"</span>, </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">port =</span> <span class="dv">54321</span>, </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">nthreads=</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">max_mem_size =</span> <span class="st">"4g"</span>) <span class="co"># Đặt mức RAM tối đa</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Connection successful!
+
+R is connected to the H2O cluster: 
+    H2O cluster uptime:         23 minutes 57 seconds 
+    H2O cluster timezone:       Etc/UTC 
+    H2O data parsing timezone:  UTC 
+    H2O cluster version:        3.42.0.2 
+    H2O cluster version age:    4 months and 27 days 
+    H2O cluster name:           H2O_started_from_R_jovyan_xih461 
+    H2O cluster total nodes:    1 
+    H2O cluster total memory:   0.82 GB 
+    H2O cluster total cores:    2 
+    H2O cluster allowed cores:  2 
+    H2O cluster healthy:        TRUE 
+    H2O Connection ip:          localhost 
+    H2O Connection port:        54321 
+    H2O Connection proxy:       NA 
+    H2O Internal Security:      FALSE 
+    R Version:                  R version 4.3.0 (2023-04-21) </code></pre>
+</div>
 </div>
 <p><strong>Lưu ý</strong>: Trong trường hợp chúng ta muốn tắt H2O trên R, chúng ta có thể sử dụng câu lệnh sau:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.shutdown</span>(<span class="at">prompt =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.shutdown</span>(<span class="at">prompt =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="thực-hành-với-r" class="level2" data-number="22.3">
@@ -758,18 +796,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="lấy-dữ-liệu" class="level3" data-number="22.3.1">
 <h3 data-number="22.3.1" class="anchored" data-anchor-id="lấy-dữ-liệu"><span class="header-section-number">22.3.1</span> Lấy dữ liệu</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 1: Lấy dữ liệu</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"GermanCredit"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 1: Lấy dữ liệu</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"GermanCredit"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="kiểm-tra-dữ-liệu" class="level3" data-number="22.3.2">
 <h3 data-number="22.3.2" class="anchored" data-anchor-id="kiểm-tra-dữ-liệu"><span class="header-section-number">22.3.2</span> Kiểm tra dữ liệu</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 2: Kiểm tra dữ liệu</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra định dạng các biến trong tập dữ liệu</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>GermanCredit <span class="sc">%&gt;%</span> str</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 2: Kiểm tra dữ liệu</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra định dạng các biến trong tập dữ liệu</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>GermanCredit <span class="sc">%&gt;%</span> str</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   1000 obs. of  62 variables:
  $ Duration                              : int  6 48 12 42 24 36 24 36 12 30 ...
@@ -835,10 +873,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  $ Job.SkilledEmployee                   : num  1 1 0 1 1 0 1 0 0 0 ...
  $ Job.Management.SelfEmp.HighlyQualified: num  0 0 0 0 0 0 0 1 0 1 ...</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra biến đầu ra (biến muốn dự báo)</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>GermanCredit<span class="sc">$</span>Class <span class="sc">%&gt;%</span> </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  table <span class="sc">%&gt;%</span> </span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  prop.table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra biến đầu ra (biến muốn dự báo)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>GermanCredit<span class="sc">$</span>Class <span class="sc">%&gt;%</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  table <span class="sc">%&gt;%</span> </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  prop.table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>.
  Bad Good 
@@ -847,39 +885,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Như vậy, chúng ta thấy trong tập dữ liệu này:</p>
 <ul>
-<li><p>70% là các khoản vay không có nợ xấu</p></li>
-<li><p>30% là các khoản vay có nợ xấu</p></li>
+<li>70% là các khoản vay không có nợ xấu</li>
+<li>30% là các khoản vay có nợ xấu</li>
 </ul>
 </section>
 <section id="khởi-động-h2o" class="level3" data-number="22.3.3">
 <h3 data-number="22.3.3" class="anchored" data-anchor-id="khởi-động-h2o"><span class="header-section-number">22.3.3</span> Khởi động H2O</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 3: Khởi động H2O</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(h2o)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.init</span>(<span class="at">ip =</span> <span class="st">"localhost"</span>, </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">port =</span> <span class="dv">54321</span>, </span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">nthreads=</span> <span class="sc">-</span><span class="dv">1</span>,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">max_mem_size =</span> <span class="st">"4g"</span>) <span class="co"># Đặt mức RAM tối đa</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 3: Khởi động H2O</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(h2o)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.init</span>(<span class="at">ip =</span> <span class="st">"localhost"</span>, </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">port =</span> <span class="dv">54321</span>, </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">nthreads=</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">max_mem_size =</span> <span class="st">"4g"</span>) <span class="co"># Đặt mức RAM tối đa</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> Connection successful!
 
 R is connected to the H2O cluster: 
-    H2O cluster uptime:         3 minutes 28 seconds 
-    H2O cluster timezone:       UTC 
+    H2O cluster uptime:         23 minutes 57 seconds 
+    H2O cluster timezone:       Etc/UTC 
     H2O data parsing timezone:  UTC 
-    H2O cluster version:        3.40.0.1 
-    H2O cluster version age:    2 months and 9 days 
-    H2O cluster name:           H2O_started_from_R_r110786_ocv184 
+    H2O cluster version:        3.42.0.2 
+    H2O cluster version age:    4 months and 27 days 
+    H2O cluster name:           H2O_started_from_R_jovyan_xih461 
     H2O cluster total nodes:    1 
-    H2O cluster total memory:   3.80 GB 
-    H2O cluster total cores:    1 
-    H2O cluster allowed cores:  1 
+    H2O cluster total memory:   0.82 GB 
+    H2O cluster total cores:    2 
+    H2O cluster allowed cores:  2 
     H2O cluster healthy:        TRUE 
     H2O Connection ip:          localhost 
     H2O Connection port:        54321 
     H2O Connection proxy:       NA 
     H2O Internal Security:      FALSE 
-    R Version:                  R version 4.2.3 (2023-03-15) </code></pre>
+    R Version:                  R version 4.3.0 (2023-04-21) </code></pre>
 </div>
 </div>
 </section>
@@ -887,8 +925,165 @@ R is connected to the H2O cluster:
 <h3 data-number="22.3.4" class="anchored" data-anchor-id="đưa-dữ-liệu-vào-h2o"><span class="header-section-number">22.3.4</span> Đưa dữ liệu vào H2O</h3>
 <p>Để đưa dữ liệu vào H2O, chúng ta sử dụng câu lệnh: <code>as.h2o()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 4: Đưa dữ liệu vào h2o</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>data_h2o <span class="ot">&lt;-</span> <span class="fu">as.h2o</span>(GermanCredit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>GermanCredit <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Duration Amount InstallmentRatePercentage ResidenceDuration Age
+1        6   1169                         4                 4  67
+2       48   5951                         2                 2  22
+3       12   2096                         2                 3  49
+4       42   7882                         2                 4  45
+5       24   4870                         3                 4  53
+6       36   9055                         2                 4  35
+  NumberExistingCredits NumberPeopleMaintenance Telephone ForeignWorker Class
+1                     2                       1         0             1  Good
+2                     1                       1         1             1   Bad
+3                     1                       2         1             1  Good
+4                     1                       2         1             1  Good
+5                     2                       2         1             1   Bad
+6                     1                       2         0             1  Good
+  CheckingAccountStatus.lt.0 CheckingAccountStatus.0.to.200
+1                          1                              0
+2                          0                              1
+3                          0                              0
+4                          1                              0
+5                          1                              0
+6                          0                              0
+  CheckingAccountStatus.gt.200 CheckingAccountStatus.none
+1                            0                          0
+2                            0                          0
+3                            0                          1
+4                            0                          0
+5                            0                          0
+6                            0                          1
+  CreditHistory.NoCredit.AllPaid CreditHistory.ThisBank.AllPaid
+1                              0                              0
+2                              0                              0
+3                              0                              0
+4                              0                              0
+5                              0                              0
+6                              0                              0
+  CreditHistory.PaidDuly CreditHistory.Delay CreditHistory.Critical
+1                      0                   0                      1
+2                      1                   0                      0
+3                      0                   0                      1
+4                      1                   0                      0
+5                      0                   1                      0
+6                      1                   0                      0
+  Purpose.NewCar Purpose.UsedCar Purpose.Furniture.Equipment
+1              0               0                           0
+2              0               0                           0
+3              0               0                           0
+4              0               0                           1
+5              1               0                           0
+6              0               0                           0
+  Purpose.Radio.Television Purpose.DomesticAppliance Purpose.Repairs
+1                        1                         0               0
+2                        1                         0               0
+3                        0                         0               0
+4                        0                         0               0
+5                        0                         0               0
+6                        0                         0               0
+  Purpose.Education Purpose.Vacation Purpose.Retraining Purpose.Business
+1                 0                0                  0                0
+2                 0                0                  0                0
+3                 1                0                  0                0
+4                 0                0                  0                0
+5                 0                0                  0                0
+6                 1                0                  0                0
+  Purpose.Other SavingsAccountBonds.lt.100 SavingsAccountBonds.100.to.500
+1             0                          0                              0
+2             0                          1                              0
+3             0                          1                              0
+4             0                          1                              0
+5             0                          1                              0
+6             0                          0                              0
+  SavingsAccountBonds.500.to.1000 SavingsAccountBonds.gt.1000
+1                               0                           0
+2                               0                           0
+3                               0                           0
+4                               0                           0
+5                               0                           0
+6                               0                           0
+  SavingsAccountBonds.Unknown EmploymentDuration.lt.1 EmploymentDuration.1.to.4
+1                           1                       0                         0
+2                           0                       0                         1
+3                           0                       0                         0
+4                           0                       0                         0
+5                           0                       0                         1
+6                           1                       0                         1
+  EmploymentDuration.4.to.7 EmploymentDuration.gt.7
+1                         0                       1
+2                         0                       0
+3                         1                       0
+4                         1                       0
+5                         0                       0
+6                         0                       0
+  EmploymentDuration.Unemployed Personal.Male.Divorced.Seperated
+1                             0                                0
+2                             0                                0
+3                             0                                0
+4                             0                                0
+5                             0                                0
+6                             0                                0
+  Personal.Female.NotSingle Personal.Male.Single Personal.Male.Married.Widowed
+1                         0                    1                             0
+2                         1                    0                             0
+3                         0                    1                             0
+4                         0                    1                             0
+5                         0                    1                             0
+6                         0                    1                             0
+  Personal.Female.Single OtherDebtorsGuarantors.None
+1                      0                           1
+2                      0                           1
+3                      0                           1
+4                      0                           0
+5                      0                           1
+6                      0                           1
+  OtherDebtorsGuarantors.CoApplicant OtherDebtorsGuarantors.Guarantor
+1                                  0                                0
+2                                  0                                0
+3                                  0                                0
+4                                  0                                1
+5                                  0                                0
+6                                  0                                0
+  Property.RealEstate Property.Insurance Property.CarOther Property.Unknown
+1                   1                  0                 0                0
+2                   1                  0                 0                0
+3                   1                  0                 0                0
+4                   0                  1                 0                0
+5                   0                  0                 0                1
+6                   0                  0                 0                1
+  OtherInstallmentPlans.Bank OtherInstallmentPlans.Stores
+1                          0                            0
+2                          0                            0
+3                          0                            0
+4                          0                            0
+5                          0                            0
+6                          0                            0
+  OtherInstallmentPlans.None Housing.Rent Housing.Own Housing.ForFree
+1                          1            0           1               0
+2                          1            0           1               0
+3                          1            0           1               0
+4                          1            0           0               1
+5                          1            0           0               1
+6                          1            0           0               1
+  Job.UnemployedUnskilled Job.UnskilledResident Job.SkilledEmployee
+1                       0                     0                   1
+2                       0                     0                   1
+3                       0                     1                   0
+4                       0                     0                   1
+5                       0                     0                   1
+6                       0                     1                   0
+  Job.Management.SelfEmp.HighlyQualified
+1                                      0
+2                                      0
+3                                      0
+4                                      0
+5                                      0
+6                                      0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 4: Đưa dữ liệu vào h2o</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>data_h2o <span class="ot">&lt;-</span> <span class="fu">as.h2o</span>(GermanCredit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   |                                                                            
@@ -902,28 +1097,26 @@ R is connected to the H2O cluster:
 <h3 data-number="22.3.5" class="anchored" data-anchor-id="chia-dữ-liệu-traintest"><span class="header-section-number">22.3.5</span> Chia dữ liệu train/test</h3>
 <p>Chia tập dữ liệu thành 2 tập dữ liệu train và test (tỷ lệ 80-20)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 5: Chia tập dữ liệu thành: train/test (tỷ lệ 80/20) </span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>data_split <span class="ot">=</span> <span class="fu">h2o.splitFrame</span>(<span class="at">data =</span> data_h2o, </span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">ratios =</span> <span class="fl">0.8</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>train <span class="ot">=</span> data_split[[<span class="dv">1</span>]]</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>test <span class="ot">=</span> data_split[[<span class="dv">2</span>]]</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Tập dữ liệu train (data frame)</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>train_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(train)</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>train_df<span class="sc">$</span>Class <span class="sc">%&gt;%</span> table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 5: Chia tập dữ liệu thành: train/test (tỷ lệ 80/20) </span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>data_split <span class="ot">=</span> <span class="fu">h2o.splitFrame</span>(<span class="at">data =</span> data_h2o, </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                            <span class="at">ratios =</span> <span class="fl">0.8</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>train <span class="ot">=</span> data_split[[<span class="dv">1</span>]]</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>test <span class="ot">=</span> data_split[[<span class="dv">2</span>]]</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Tập dữ liệu train (data frame)</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>train_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(train)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>train_df<span class="sc">$</span>Class <span class="sc">%&gt;%</span> table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>.
  Bad Good 
  235  551 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tập dữ liệu test (data frame)</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>test_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(test)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>test_df<span class="sc">$</span>Class <span class="sc">%&gt;%</span> table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tập dữ liệu test (data frame)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>test_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(test)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>test_df<span class="sc">$</span>Status <span class="sc">%&gt;%</span> table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>.
- Bad Good 
-  65  149 </code></pre>
+<pre><code>&lt; table of extent 0 &gt;</code></pre>
 </div>
 </div>
 </section>
@@ -931,47 +1124,47 @@ R is connected to the H2O cluster:
 <h3 data-number="22.3.6" class="anchored" data-anchor-id="xây-dựng-mô-hình-trên-tập-train"><span class="header-section-number">22.3.6</span> Xây dựng mô hình trên tập train</h3>
 <p>Để xây dựng mô hình dự báo với H2O, chúng ta có thể sử dụng những câu lệnh khác nhau tương ứng với từng phương pháp/thuật toán như: Logistic regression, Random Forests, Boosting…</p>
 <ul>
-<li><p><code>h2o.glm()</code> - Logistic regression</p></li>
-<li><p><code>h2o.randomForest()</code> - Random Forests</p></li>
-<li><p><code>h2o.gbm()</code> - Boosting</p></li>
+<li><code>h2o.glm()</code> - Logistic regression</li>
+<li><code>h2o.randomForest()</code> - Random Forests</li>
+<li><code>h2o.gbm()</code> - Boosting</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 6: Xây dựng mô hình trên train</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>start_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>gbm_model1 <span class="ot">&lt;-</span> <span class="fu">h2o.gbm</span>(<span class="at">training_frame =</span> train, <span class="co"># Tập dữ liệu train</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(GermanCredit), <span class="st">"Class"</span>),  <span class="co"># Các biến đầu vào</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="st">"Class"</span> <span class="co"># Biến đầu ra (biến muốn dự báo)</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 6: Xây dựng mô hình trên train</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>start_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>gbm_model1 <span class="ot">&lt;-</span> <span class="fu">h2o.gbm</span>(<span class="at">training_frame =</span> train, <span class="co"># Tập dữ liệu train</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(GermanCredit), <span class="st">"Class"</span>),  <span class="co"># Các biến đầu vào</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="st">"Class"</span> <span class="co"># Biến đầu ra (biến muốn dự báo)</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>                      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   |                                                                            
   |                                                                      |   0%
   |                                                                            
-  |===================================================================   |  96%
+  |============================================================          |  86%
   |                                                                            
   |======================================================================| 100%</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>end_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>time <span class="ot">&lt;-</span> end_time <span class="sc">-</span> start_time</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>time</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>end_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>time <span class="ot">&lt;-</span> end_time <span class="sc">-</span> start_time</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>time</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 2.223689 secs</code></pre>
+<pre><code>Time difference of 2.40049 secs</code></pre>
 </div>
 </div>
-<p>Chúng ta thấy việc xây dựng mô hình với H2O có tốc độ rất nhanh, xây dựng mô hình với các tham số cơ bản với dữ liệu này chỉ mất khoảng 2.22 giây. Đương nhiên trong trường hợp này dữ liệu nhỏ nên chúng ta chưa nhìn thấy rõ ưu điểm vượt trội của H2O về tốc độ, nhưng trong trường hơp dữ liệu lớn, việc sử dụng H2O sẽ rút ngắn thời gian xây dựng mô hình dự báo của chúng ta đi rất nhiều.</p>
+<p>Chúng ta thấy việc xây dựng mô hình với H2O có tốc độ rất nhanh, xây dựng mô hình với các tham số cơ bản với dữ liệu này chỉ mất khoảng 2.4 giây. Đương nhiên trong trường hợp này dữ liệu nhỏ nên chúng ta chưa nhìn thấy rõ ưu điểm vượt trội của H2O về tốc độ, nhưng trong trường hơp dữ liệu lớn, việc sử dụng H2O sẽ rút ngắn thời gian xây dựng mô hình dự báo của chúng ta đi rất nhiều.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary model</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>gbm_model1 <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary model</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>gbm_model1 <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Model Details:
 ==============
 
 H2OBinomialModel: gbm
-Model Key:  GBM_model_R_1681781433609_248 
+Model Key:  GBM_model_R_1703327262723_206 
 Model Summary: 
   number_of_trees number_of_internal_trees model_size_in_bytes min_depth
-1              50                       50               13981         5
+1              50                       50               13980         5
   max_depth mean_depth min_leaves max_leaves mean_leaves
 1         5    5.00000          9         26    17.58000
 
@@ -1020,11 +1213,11 @@ Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `
 
 Scoring History: 
             timestamp   duration number_of_trees training_rmse training_logloss
-1 2023-04-18 01:34:07  0.002 sec               0       0.45781          0.61000
-2 2023-04-18 01:34:07  0.069 sec               1       0.44489          0.58254
-3 2023-04-18 01:34:07  0.078 sec               2       0.43324          0.55877
-4 2023-04-18 01:34:07  0.085 sec               3       0.42313          0.53861
-5 2023-04-18 01:34:07  0.093 sec               4       0.41501          0.52240
+1 2023-12-23 10:51:44  0.002 sec               0       0.45781          0.61000
+2 2023-12-23 10:51:44  0.031 sec               1       0.44489          0.58254
+3 2023-12-23 10:51:44  0.056 sec               2       0.43324          0.55877
+4 2023-12-23 10:51:44  0.081 sec               3       0.42313          0.53861
+5 2023-12-23 10:51:44  0.103 sec               4       0.41501          0.52240
   training_auc training_pr_auc training_lift training_classification_error
 1      0.50000         0.70102       1.00000                       0.29898
 2      0.82314         0.91958       1.42650                       0.22774
@@ -1034,12 +1227,12 @@ Scoring History:
 
 ---
              timestamp   duration number_of_trees training_rmse
-46 2023-04-18 01:34:08  0.990 sec              45       0.27706
-47 2023-04-18 01:34:08  0.997 sec              46       0.27555
-48 2023-04-18 01:34:08  1.006 sec              47       0.27383
-49 2023-04-18 01:34:08  1.073 sec              48       0.27225
-50 2023-04-18 01:34:08  1.081 sec              49       0.27105
-51 2023-04-18 01:34:08  1.089 sec              50       0.26942
+46 2023-12-23 10:51:45  1.128 sec              45       0.27706
+47 2023-12-23 10:51:45  1.149 sec              46       0.27555
+48 2023-12-23 10:51:45  1.171 sec              47       0.27383
+49 2023-12-23 10:51:45  1.209 sec              48       0.27225
+50 2023-12-23 10:51:45  1.231 sec              49       0.27105
+51 2023-12-23 10:51:45  1.250 sec              50       0.26942
    training_logloss training_auc training_pr_auc training_lift
 46          0.27988      0.97668         0.98933       1.42650
 47          0.27727      0.97715         0.98965       1.42650
@@ -1085,27 +1278,27 @@ Variable Importances:
 </div>
 <p>Nhìn vào kết quả mô hình vừa được xây dựng trên tập train, chúng ta có thể thấy một số thông tin quan trọng sau:</p>
 <ul>
-<li><p>Các tham số (<code>parameters</code>) cơ bản của mô hình:</p>
+<li>Các tham số (<code>parameters</code>) cơ bản của mô hình:
 <ul>
-<li>number_of_trees = 50: Số lượng cây là 50</li>
-<li>max_depth = 5: Mỗi cây có 5 tầng (mức độ phức tạp của mô hình)</li>
+<li><code>number_of_trees</code> = 50: Số lượng cây là 50</li>
+<li><code>max_depth</code> = 5: Mỗi cây có 5 tầng (mức độ phức tạp của mô hình)</li>
 </ul></li>
-<li><p>AUC trên tập train: 0.9794455</p></li>
-<li><p>Dựa vào mục <code>Confusion Matrix</code> (tối ưu hóa F1-score) có thể tính toán được:</p>
+<li>AUC trên tập train: 0.97</li>
+<li>Dựa vào mục <code>Confusion Matrix</code> (tối ưu hóa F1-score) có thể tính toán được:
 <ul>
-<li>error rate (tỷ lệ quan sát dự báo sai): 45/786 = 0.057 (5.7%)</li>
-<li>accuracy (tỷ lệ quan sát dự báo đúng): 1 - 0.057 = 0.943 (94.3%)</li>
-<li>precision: 531/551 = 0.96 (96%)</li>
-<li>recall: 531/556 = 0.96 (96%)</li>
+<li><code>error rate</code> (tỷ lệ quan sát dự báo sai): 45/786 = 0.057 (5.7%)</li>
+<li><code>accuracy</code> (tỷ lệ quan sát dự báo đúng): 1 - 0.057 = 0.943 (94.3%)</li>
+<li><code>precision</code>: 531/551 = 0.96 (96%)</li>
+<li><code>recall</code>: 531/556 = 0.96 (96%)</li>
 </ul></li>
-<li><p>Dựa vào mục <code>Maximum Metrics</code>, chúng ta có thể biết được các ngưỡng cutoff xác suất để tối ưu hóa các chỉ số như accuracy, precision, recall, f1-score…</p>
+<li>Dựa vào mục <code>Maximum Metrics</code>, chúng ta có thể biết được các ngưỡng cutoff xác suất để tối ưu hóa các chỉ số như accuracy, precision, recall, f1-score…
 <ul>
-<li>max f1: Điểm cutoff xác suất là 0.585928</li>
-<li>max accuracy: 0.585928</li>
-<li>max recall: 0.301839</li>
-<li>max precision: 0.985738</li>
+<li><code>max f1</code>: Điểm cutoff xác suất là 0.585928</li>
+<li><code>max accuracy</code>: 0.585928</li>
+<li><code>max recall</code>: 0.301839</li>
+<li><code>max precision</code>: 0.985738</li>
 </ul></li>
-<li><p>Dựa vào mục <code>Variable Importances</code>, chúng ta có thể biết được những biến nào có ảnh hưởng nhiều nhất đến biến đầu ra mà chúng ta muốn dự báo (có thể sử dụng câu lệnh <code>h2o.varimp()</code> để xem chi tiết). Trong trường hợp này, các biến có ảnh hưởng nhiều nhất tới biến <code>Class</code> theo thứ tự là:</p>
+<li>Dựa vào mục <code>Variable Importances</code>, chúng ta có thể biết được những biến nào có ảnh hưởng nhiều nhất đến biến đầu ra mà chúng ta muốn dự báo (có thể sử dụng câu lệnh <code>h2o.varimp()</code> để xem chi tiết). Trong trường hợp này, các biến có ảnh hưởng nhiều nhất tới biến <code>Class</code> theo thứ tự là:
 <ul>
 <li>CheckingAccountStatus.none</li>
 <li>Amount</li>
@@ -1115,11 +1308,11 @@ Variable Importances:
 </ul></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra chi tiết các biến có ảnh hướng nhiều tới biến dự báo trong mô hình</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>gbm_model1 <span class="sc">%&gt;%</span> </span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">h2o.varimp</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  as.data.frame <span class="sc">%&gt;%</span> </span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra chi tiết các biến có ảnh hướng nhiều tới biến dự báo trong mô hình</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>gbm_model1 <span class="sc">%&gt;%</span> </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">h2o.varimp</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  as.data.frame <span class="sc">%&gt;%</span> </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <colgroup>
@@ -1499,9 +1692,9 @@ Variable Importances:
 <section id="dự-báo-trên-tập-test" class="level3" data-number="22.3.7">
 <h3 data-number="22.3.7" class="anchored" data-anchor-id="dự-báo-trên-tập-test"><span class="header-section-number">22.3.7</span> Dự báo trên tập test</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 7: Dự báo trên tập test</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>pred_test1 <span class="ot">&lt;-</span> <span class="fu">h2o.predict</span>(gbm_model1, <span class="at">newdata =</span> test) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 7: Dự báo trên tập test</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>pred_test1 <span class="ot">&lt;-</span> <span class="fu">h2o.predict</span>(gbm_model1, <span class="at">newdata =</span> test) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   |                                                                            
@@ -1509,7 +1702,7 @@ Variable Importances:
   |                                                                            
   |======================================================================| 100%</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>pred_test1 <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>pred_test1 <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  predict        Bad      Good
 1     Bad 0.71166405 0.2883359
@@ -1522,24 +1715,24 @@ Variable Importances:
 </div>
 <p>Nhìn vào kết quả trên, ta có thể biết được những thông tin sau:</p>
 <ul>
-<li><p>Cột <code>predict</code>: Là <code>Class</code> của khoản vay được dự báo</p>
+<li>Cột <code>predict</code>: Là <code>Class</code> của khoản vay được dự báo
 <ul>
 <li>Good: Khoản vay không phải là khoản nợ xấu</li>
 <li>Bad: Khoản vay là khoản nợ xấu</li>
 </ul></li>
-<li><p><code>Bad</code>: Xác suất khoản vay là khoản nợ xấu</p></li>
-<li><p><code>Good</code>: Xác suất khoản vay là khoản không có nợ xấu</p></li>
+<li><code>Bad</code>: Xác suất khoản vay là khoản nợ xấu</li>
+<li><code>Good</code>: Xác suất khoản vay là khoản không có nợ xấu</li>
 </ul>
 </section>
 <section id="đánh-giá-chất-lượng-dự-báo-trên-test" class="level3" data-number="22.3.8">
 <h3 data-number="22.3.8" class="anchored" data-anchor-id="đánh-giá-chất-lượng-dự-báo-trên-test"><span class="header-section-number">22.3.8</span> Đánh giá chất lượng dự báo trên test</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 8: Đánh giá chất lượng dự báo trên test</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Confusion matrix</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">as.vector</span>(pred_test1<span class="sc">$</span>predict), </span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>      test_df<span class="sc">$</span>Class,</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">dnn =</span> <span class="fu">c</span>(<span class="st">"Predicted"</span>, <span class="st">"Actual"</span>)</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 8: Đánh giá chất lượng dự báo trên test</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Confusion matrix</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">as.vector</span>(pred_test1<span class="sc">$</span>predict), </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>      test_df<span class="sc">$</span>Class,</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">dnn =</span> <span class="fu">c</span>(<span class="st">"Predicted"</span>, <span class="st">"Actual"</span>)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         Actual
 Predicted Bad Good
@@ -1547,41 +1740,33 @@ Predicted Bad Good
      Good  25  119</code></pre>
 </div>
 </div>
-<p>Dựa vào confusion matrix trên tập test, chúng ta có thể tính toán được:</p>
-<ul>
-<li><p>Accuracy: (40+119)/214 = 0.74 (74%)</p></li>
-<li><p>Error rate: (25+30)/186 = 1 - 0.74 = 0.26 (26%)</p></li>
-<li><p>Precision: 119/(119+25) = 0.83 (83%)</p></li>
-<li><p>Recall: 119/(119+30) = 0.80 (80%)</p></li>
-</ul>
-<hr>
 <p><strong>Note</strong>: Với H2O, chúng ta hoàn toàn có thể xây dựng mô hình trên tập train, rồi sau đó đánh giá chất lượng trên tập train và test đồng thời bằng một câu lệnh sau:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2</span>)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>gbm_model2 <span class="ot">&lt;-</span> <span class="fu">h2o.gbm</span>(<span class="at">training_frame =</span> train, <span class="co"># Xây dựng trên train</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(GermanCredit), <span class="st">"Class"</span>),  <span class="co"># Các biến đầu vào</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="st">"Class"</span>, <span class="co"># Biến đầu ra (biến muốn dự báo)</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">validation_frame =</span> test <span class="co"># Đánh giá trên test</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>                      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>gbm_model2 <span class="ot">&lt;-</span> <span class="fu">h2o.gbm</span>(<span class="at">training_frame =</span> train, <span class="co"># Xây dựng trên train</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(GermanCredit), <span class="st">"Class"</span>),  <span class="co"># Các biến đầu vào</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="st">"Class"</span>, <span class="co"># Biến đầu ra (biến muốn dự báo)</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">validation_frame =</span> test <span class="co"># Đánh giá trên test</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>                      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   |                                                                            
   |                                                                      |   0%
   |                                                                            
-  |=====================================================                 |  76%
+  |==================================================                    |  72%
   |                                                                            
   |======================================================================| 100%</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>gbm_model2 <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>gbm_model2 <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Model Details:
 ==============
 
 H2OBinomialModel: gbm
-Model Key:  GBM_model_R_1681781433609_300 
+Model Key:  GBM_model_R_1703327262723_258 
 Model Summary: 
   number_of_trees number_of_internal_trees model_size_in_bytes min_depth
-1              50                       50               13979         5
+1              50                       50               13977         5
   max_depth mean_depth min_leaves max_leaves mean_leaves
 1         5    5.00000          9         26    17.58000
 
@@ -1669,11 +1854,11 @@ Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `
 
 Scoring History: 
             timestamp   duration number_of_trees training_rmse training_logloss
-1 2023-04-18 01:34:09  0.001 sec               0       0.45781          0.61000
-2 2023-04-18 01:34:09  0.069 sec               1       0.44489          0.58254
-3 2023-04-18 01:34:09  0.077 sec               2       0.43324          0.55877
-4 2023-04-18 01:34:09  0.086 sec               3       0.42313          0.53861
-5 2023-04-18 01:34:09  0.168 sec               4       0.41501          0.52240
+1 2023-12-23 10:51:46  0.006 sec               0       0.45781          0.61000
+2 2023-12-23 10:51:46  0.050 sec               1       0.44489          0.58254
+3 2023-12-23 10:51:46  0.105 sec               2       0.43324          0.55877
+4 2023-12-23 10:51:46  0.141 sec               3       0.42313          0.53861
+5 2023-12-23 10:51:46  0.168 sec               4       0.41501          0.52240
   training_auc training_pr_auc training_lift training_classification_error
 1      0.50000         0.70102       1.00000                       0.29898
 2      0.82314         0.91958       1.42650                       0.22774
@@ -1695,12 +1880,12 @@ Scoring History:
 
 ---
              timestamp   duration number_of_trees training_rmse
-46 2023-04-18 01:34:11  1.280 sec              45       0.27706
-47 2023-04-18 01:34:11  1.293 sec              46       0.27555
-48 2023-04-18 01:34:11  1.365 sec              47       0.27383
-49 2023-04-18 01:34:11  1.375 sec              48       0.27225
-50 2023-04-18 01:34:11  1.386 sec              49       0.27105
-51 2023-04-18 01:34:11  1.396 sec              50       0.26942
+46 2023-12-23 10:51:48  1.369 sec              45       0.27706
+47 2023-12-23 10:51:48  1.400 sec              46       0.27555
+48 2023-12-23 10:51:48  1.432 sec              47       0.27383
+49 2023-12-23 10:51:48  1.460 sec              48       0.27225
+50 2023-12-23 10:51:48  1.486 sec              49       0.27105
+51 2023-12-23 10:51:48  1.514 sec              50       0.26942
    training_logloss training_auc training_pr_auc training_lift
 46          0.27988      0.97668         0.98933       1.42650
 47          0.27727      0.97715         0.98965       1.42650
@@ -1763,119 +1948,119 @@ Variable Importances:
 <h3 data-number="22.3.9" class="anchored" data-anchor-id="tuning"><span class="header-section-number">22.3.9</span> Tuning</h3>
 <p><strong>Tuning</strong> là quá trình tìm kiếm tổ hợp các tham số để tối ưu hóa mô hình (chất lượng dự báo tốt nhất có thể).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 9: Tuning</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.1. Set hyper parameters</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>hyper_params <span class="ot">=</span> <span class="fu">list</span>( </span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="do">## restrict the search to the range of max_depth established above</span></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_depth =</span> <span class="fu">c</span>(<span class="dv">5</span><span class="sc">:</span><span class="dv">9</span>),                                      </span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of row sampling rates per tree</span></span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_rate =</span> <span class="fu">seq</span>(<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="fl">0.05</span>),                                             </span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of column sampling rates per split</span></span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_sample_rate =</span> <span class="fu">seq</span>(<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="fl">0.05</span>),                                  </span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of the number of min rows in a terminal node</span></span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_rows =</span> <span class="dv">2</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="fu">log2</span>(<span class="fu">nrow</span>(train))<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>),                                 </span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of the number of bins for split-finding for continuous and integer columns</span></span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">nbins =</span> <span class="dv">2</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">4</span>,<span class="dv">10</span>,<span class="dv">1</span>),                                                     </span>
-<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of the number of bins for split-finding for categorical columns</span></span>
-<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">nbins_cats =</span> <span class="dv">2</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">4</span>,<span class="dv">12</span>,<span class="dv">1</span>),                                                </span>
-<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a few minimum required relative error improvement thresholds for a split to happen</span></span>
-<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_split_improvement =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">1e-8</span>,<span class="fl">1e-6</span>,<span class="fl">1e-4</span>),                               </span>
-<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>  <span class="do">## try all histogram types (QuantilesGlobal and RoundRobin are good for numeric columns with outliers)</span></span>
-<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">histogram_type =</span> <span class="fu">c</span>(<span class="st">"UniformAdaptive"</span>,<span class="st">"QuantilesGlobal"</span>,<span class="st">"RoundRobin"</span>)      </span>
-<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.2. Set search criteria</span></span>
-<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>search_criteria <span class="ot">=</span> <span class="fu">list</span>(</span>
-<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Random grid search</span></span>
-<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">strategy =</span> <span class="st">"RandomDiscrete"</span>,      </span>
-<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>  <span class="do">## limit the runtime to xx minutes</span></span>
-<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_runtime_secs =</span> <span class="dv">10</span>,         </span>
-<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>  <span class="do">## build no more than xx models</span></span>
-<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_models =</span> <span class="dv">5</span>,                  </span>
-<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>  <span class="do">## random number generator seed to make sampling of parameter combinations reproducible</span></span>
-<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">1234</span>,                        </span>
-<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a>  <span class="do">## early stopping once the leaderboard of the top 5 models is converged to 0.1% relative difference</span></span>
-<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_rounds =</span> <span class="dv">5</span>,                </span>
-<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_metric =</span> <span class="st">"AUC"</span>,</span>
-<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_tolerance =</span> <span class="fl">1e-3</span></span>
-<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.3. Grid search</span></span>
-<span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">h2o.grid</span>(</span>
-<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a>  <span class="do">## hyper parameters</span></span>
-<span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">hyper_params =</span> hyper_params,</span>
-<span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a>  <span class="do">## hyper-parameter search configuration (see above)</span></span>
-<span id="cb34-55"><a href="#cb34-55" aria-hidden="true" tabindex="-1"></a>  <span class="at">search_criteria =</span> search_criteria,</span>
-<span id="cb34-56"><a href="#cb34-56" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-57"><a href="#cb34-57" aria-hidden="true" tabindex="-1"></a>  <span class="do">## which algorithm to run</span></span>
-<span id="cb34-58"><a href="#cb34-58" aria-hidden="true" tabindex="-1"></a>  <span class="at">algorithm =</span> <span class="st">"gbm"</span>,</span>
-<span id="cb34-59"><a href="#cb34-59" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-60"><a href="#cb34-60" aria-hidden="true" tabindex="-1"></a>  <span class="do">## identifier for the grid, to later retrieve it</span></span>
-<span id="cb34-61"><a href="#cb34-61" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid_id =</span> <span class="st">"model_id"</span>, </span>
-<span id="cb34-62"><a href="#cb34-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-63"><a href="#cb34-63" aria-hidden="true" tabindex="-1"></a>  <span class="do">## standard model parameters</span></span>
-<span id="cb34-64"><a href="#cb34-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(GermanCredit), <span class="st">"Class"</span>), </span>
-<span id="cb34-65"><a href="#cb34-65" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="st">"Class"</span>, </span>
-<span id="cb34-66"><a href="#cb34-66" aria-hidden="true" tabindex="-1"></a>  <span class="at">training_frame =</span> train, </span>
-<span id="cb34-67"><a href="#cb34-67" aria-hidden="true" tabindex="-1"></a>  <span class="at">validation_frame =</span> test,</span>
-<span id="cb34-68"><a href="#cb34-68" aria-hidden="true" tabindex="-1"></a>  <span class="co">#balance_classes = T, #Option to solve imbalanced classification</span></span>
-<span id="cb34-69"><a href="#cb34-69" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-70"><a href="#cb34-70" aria-hidden="true" tabindex="-1"></a>  <span class="do">## more trees is better if the learning rate is small enough</span></span>
-<span id="cb34-71"><a href="#cb34-71" aria-hidden="true" tabindex="-1"></a>  <span class="do">## use "more than enough" trees - we have early stopping</span></span>
-<span id="cb34-72"><a href="#cb34-72" aria-hidden="true" tabindex="-1"></a>  <span class="at">ntrees =</span> <span class="dv">200</span>,                                                            </span>
-<span id="cb34-73"><a href="#cb34-73" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-74"><a href="#cb34-74" aria-hidden="true" tabindex="-1"></a>  <span class="do">## smaller learning rate is better</span></span>
-<span id="cb34-75"><a href="#cb34-75" aria-hidden="true" tabindex="-1"></a>  <span class="do">## since we have learning_rate_annealing, we can afford to start with a bigger learning rate</span></span>
-<span id="cb34-76"><a href="#cb34-76" aria-hidden="true" tabindex="-1"></a>  <span class="at">learn_rate =</span> <span class="fl">0.05</span>,                                                         </span>
-<span id="cb34-77"><a href="#cb34-77" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-78"><a href="#cb34-78" aria-hidden="true" tabindex="-1"></a>  <span class="do">## learning rate annealing: learning_rate shrinks by 1% after every tree </span></span>
-<span id="cb34-79"><a href="#cb34-79" aria-hidden="true" tabindex="-1"></a>  <span class="do">## (use 1.00 to disable, but then lower the learning_rate)</span></span>
-<span id="cb34-80"><a href="#cb34-80" aria-hidden="true" tabindex="-1"></a>  <span class="at">learn_rate_annealing =</span> <span class="fl">0.99</span>,                                               </span>
-<span id="cb34-81"><a href="#cb34-81" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-82"><a href="#cb34-82" aria-hidden="true" tabindex="-1"></a>  <span class="do">## early stopping based on timeout (no model should take more than 1 hour - modify as needed)</span></span>
-<span id="cb34-83"><a href="#cb34-83" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_runtime_secs =</span> <span class="dv">30</span>,                                                 </span>
-<span id="cb34-84"><a href="#cb34-84" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-85"><a href="#cb34-85" aria-hidden="true" tabindex="-1"></a>  <span class="do">## early stopping once the validation AUC doesn't improve by at least 0.01% for 5 consecutive scoring events</span></span>
-<span id="cb34-86"><a href="#cb34-86" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_rounds =</span> <span class="dv">5</span>, <span class="at">stopping_tolerance =</span> <span class="fl">1e-3</span>, <span class="at">stopping_metric =</span> <span class="st">"AUC"</span>, </span>
-<span id="cb34-87"><a href="#cb34-87" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-88"><a href="#cb34-88" aria-hidden="true" tabindex="-1"></a>  <span class="do">## score every 10 trees to make early stopping reproducible (it depends on the scoring interval)</span></span>
-<span id="cb34-89"><a href="#cb34-89" aria-hidden="true" tabindex="-1"></a>  <span class="at">score_tree_interval =</span> <span class="dv">10</span>,                                                </span>
-<span id="cb34-90"><a href="#cb34-90" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb34-91"><a href="#cb34-91" aria-hidden="true" tabindex="-1"></a>  <span class="do">## base random number generator seed for each model (automatically gets incremented internally for each model)</span></span>
-<span id="cb34-92"><a href="#cb34-92" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">1234</span>                                                             </span>
-<span id="cb34-93"><a href="#cb34-93" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 9: Tuning</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.1. Set hyper parameters</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>hyper_params <span class="ot">=</span> <span class="fu">list</span>( </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="do">## restrict the search to the range of max_depth established above</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_depth =</span> <span class="fu">c</span>(<span class="dv">5</span><span class="sc">:</span><span class="dv">9</span>),                                      </span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of row sampling rates per tree</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_rate =</span> <span class="fu">seq</span>(<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="fl">0.05</span>),                                             </span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of column sampling rates per split</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_sample_rate =</span> <span class="fu">seq</span>(<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="fl">0.05</span>),                                  </span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of the number of min rows in a terminal node</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_rows =</span> <span class="dv">2</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="fu">log2</span>(<span class="fu">nrow</span>(train))<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>),                                 </span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of the number of bins for split-finding for continuous and integer columns</span></span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">nbins =</span> <span class="dv">2</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">4</span>,<span class="dv">10</span>,<span class="dv">1</span>),                                                     </span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of the number of bins for split-finding for categorical columns</span></span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">nbins_cats =</span> <span class="dv">2</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">4</span>,<span class="dv">12</span>,<span class="dv">1</span>),                                                </span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a few minimum required relative error improvement thresholds for a split to happen</span></span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_split_improvement =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">1e-8</span>,<span class="fl">1e-6</span>,<span class="fl">1e-4</span>),                               </span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>  <span class="do">## try all histogram types (QuantilesGlobal and RoundRobin are good for numeric columns with outliers)</span></span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">histogram_type =</span> <span class="fu">c</span>(<span class="st">"UniformAdaptive"</span>,<span class="st">"QuantilesGlobal"</span>,<span class="st">"RoundRobin"</span>)      </span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.2. Set search criteria</span></span>
+<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>search_criteria <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Random grid search</span></span>
+<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">strategy =</span> <span class="st">"RandomDiscrete"</span>,      </span>
+<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a>  <span class="do">## limit the runtime to xx minutes</span></span>
+<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_runtime_secs =</span> <span class="dv">10</span>,         </span>
+<span id="cb38-36"><a href="#cb38-36" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-37"><a href="#cb38-37" aria-hidden="true" tabindex="-1"></a>  <span class="do">## build no more than xx models</span></span>
+<span id="cb38-38"><a href="#cb38-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_models =</span> <span class="dv">5</span>,                  </span>
+<span id="cb38-39"><a href="#cb38-39" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-40"><a href="#cb38-40" aria-hidden="true" tabindex="-1"></a>  <span class="do">## random number generator seed to make sampling of parameter combinations reproducible</span></span>
+<span id="cb38-41"><a href="#cb38-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">1234</span>,                        </span>
+<span id="cb38-42"><a href="#cb38-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-43"><a href="#cb38-43" aria-hidden="true" tabindex="-1"></a>  <span class="do">## early stopping once the leaderboard of the top 5 models is converged to 0.1% relative difference</span></span>
+<span id="cb38-44"><a href="#cb38-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_rounds =</span> <span class="dv">5</span>,                </span>
+<span id="cb38-45"><a href="#cb38-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_metric =</span> <span class="st">"AUC"</span>,</span>
+<span id="cb38-46"><a href="#cb38-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_tolerance =</span> <span class="fl">1e-3</span></span>
+<span id="cb38-47"><a href="#cb38-47" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-48"><a href="#cb38-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-49"><a href="#cb38-49" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.3. Grid search</span></span>
+<span id="cb38-50"><a href="#cb38-50" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">h2o.grid</span>(</span>
+<span id="cb38-51"><a href="#cb38-51" aria-hidden="true" tabindex="-1"></a>  <span class="do">## hyper parameters</span></span>
+<span id="cb38-52"><a href="#cb38-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">hyper_params =</span> hyper_params,</span>
+<span id="cb38-53"><a href="#cb38-53" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-54"><a href="#cb38-54" aria-hidden="true" tabindex="-1"></a>  <span class="do">## hyper-parameter search configuration (see above)</span></span>
+<span id="cb38-55"><a href="#cb38-55" aria-hidden="true" tabindex="-1"></a>  <span class="at">search_criteria =</span> search_criteria,</span>
+<span id="cb38-56"><a href="#cb38-56" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-57"><a href="#cb38-57" aria-hidden="true" tabindex="-1"></a>  <span class="do">## which algorithm to run</span></span>
+<span id="cb38-58"><a href="#cb38-58" aria-hidden="true" tabindex="-1"></a>  <span class="at">algorithm =</span> <span class="st">"gbm"</span>,</span>
+<span id="cb38-59"><a href="#cb38-59" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-60"><a href="#cb38-60" aria-hidden="true" tabindex="-1"></a>  <span class="do">## identifier for the grid, to later retrieve it</span></span>
+<span id="cb38-61"><a href="#cb38-61" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid_id =</span> <span class="st">"model_id"</span>, </span>
+<span id="cb38-62"><a href="#cb38-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-63"><a href="#cb38-63" aria-hidden="true" tabindex="-1"></a>  <span class="do">## standard model parameters</span></span>
+<span id="cb38-64"><a href="#cb38-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(GermanCredit), <span class="st">"Class"</span>), </span>
+<span id="cb38-65"><a href="#cb38-65" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="st">"Class"</span>, </span>
+<span id="cb38-66"><a href="#cb38-66" aria-hidden="true" tabindex="-1"></a>  <span class="at">training_frame =</span> train, </span>
+<span id="cb38-67"><a href="#cb38-67" aria-hidden="true" tabindex="-1"></a>  <span class="at">validation_frame =</span> test,</span>
+<span id="cb38-68"><a href="#cb38-68" aria-hidden="true" tabindex="-1"></a>  <span class="co">#balance_classes = T, #Option to solve imbalanced classification</span></span>
+<span id="cb38-69"><a href="#cb38-69" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-70"><a href="#cb38-70" aria-hidden="true" tabindex="-1"></a>  <span class="do">## more trees is better if the learning rate is small enough</span></span>
+<span id="cb38-71"><a href="#cb38-71" aria-hidden="true" tabindex="-1"></a>  <span class="do">## use "more than enough" trees - we have early stopping</span></span>
+<span id="cb38-72"><a href="#cb38-72" aria-hidden="true" tabindex="-1"></a>  <span class="at">ntrees =</span> <span class="dv">200</span>,                                                            </span>
+<span id="cb38-73"><a href="#cb38-73" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-74"><a href="#cb38-74" aria-hidden="true" tabindex="-1"></a>  <span class="do">## smaller learning rate is better</span></span>
+<span id="cb38-75"><a href="#cb38-75" aria-hidden="true" tabindex="-1"></a>  <span class="do">## since we have learning_rate_annealing, we can afford to start with a bigger learning rate</span></span>
+<span id="cb38-76"><a href="#cb38-76" aria-hidden="true" tabindex="-1"></a>  <span class="at">learn_rate =</span> <span class="fl">0.05</span>,                                                         </span>
+<span id="cb38-77"><a href="#cb38-77" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-78"><a href="#cb38-78" aria-hidden="true" tabindex="-1"></a>  <span class="do">## learning rate annealing: learning_rate shrinks by 1% after every tree </span></span>
+<span id="cb38-79"><a href="#cb38-79" aria-hidden="true" tabindex="-1"></a>  <span class="do">## (use 1.00 to disable, but then lower the learning_rate)</span></span>
+<span id="cb38-80"><a href="#cb38-80" aria-hidden="true" tabindex="-1"></a>  <span class="at">learn_rate_annealing =</span> <span class="fl">0.99</span>,                                               </span>
+<span id="cb38-81"><a href="#cb38-81" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-82"><a href="#cb38-82" aria-hidden="true" tabindex="-1"></a>  <span class="do">## early stopping based on timeout (no model should take more than 1 hour - modify as needed)</span></span>
+<span id="cb38-83"><a href="#cb38-83" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_runtime_secs =</span> <span class="dv">30</span>,                                                 </span>
+<span id="cb38-84"><a href="#cb38-84" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-85"><a href="#cb38-85" aria-hidden="true" tabindex="-1"></a>  <span class="do">## early stopping once the validation AUC doesn't improve by at least 0.01% for 5 consecutive scoring events</span></span>
+<span id="cb38-86"><a href="#cb38-86" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_rounds =</span> <span class="dv">5</span>, <span class="at">stopping_tolerance =</span> <span class="fl">1e-3</span>, <span class="at">stopping_metric =</span> <span class="st">"AUC"</span>, </span>
+<span id="cb38-87"><a href="#cb38-87" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-88"><a href="#cb38-88" aria-hidden="true" tabindex="-1"></a>  <span class="do">## score every 10 trees to make early stopping reproducible (it depends on the scoring interval)</span></span>
+<span id="cb38-89"><a href="#cb38-89" aria-hidden="true" tabindex="-1"></a>  <span class="at">score_tree_interval =</span> <span class="dv">10</span>,                                                </span>
+<span id="cb38-90"><a href="#cb38-90" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-91"><a href="#cb38-91" aria-hidden="true" tabindex="-1"></a>  <span class="do">## base random number generator seed for each model (automatically gets incremented internally for each model)</span></span>
+<span id="cb38-92"><a href="#cb38-92" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">1234</span>                                                             </span>
+<span id="cb38-93"><a href="#cb38-93" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   |                                                                            
   |                                                                      |   0%
   |                                                                            
-  |=======                                                               |  10%
+  |=======                                                               |  11%
   |                                                                            
-  |=====================                                                 |  30%
+  |======================                                                |  31%
   |                                                                            
-  |===================================                                   |  50%
+  |====================================                                  |  51%
   |                                                                            
-  |=================================================                     |  70%
+  |==================================================                    |  71%
   |                                                                            
-  |===============================================================       |  90%
+  |================================================================      |  91%
   |                                                                            
   |======================================================================| 100%</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.4. Get models</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>sortedGrid <span class="ot">&lt;-</span> <span class="fu">h2o.getGrid</span>(<span class="st">"model_id"</span>, <span class="at">sort_by =</span> <span class="st">"auc"</span>, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)    </span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>sortedGrid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.4. Get models</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>sortedGrid <span class="ot">&lt;-</span> <span class="fu">h2o.getGrid</span>(<span class="st">"model_id"</span>, <span class="at">sort_by =</span> <span class="st">"auc"</span>, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)    </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>sortedGrid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>H2O Grid Details
 ================
@@ -1890,59 +2075,48 @@ Used hyper parameters:
   -  nbins 
   -  nbins_cats 
   -  sample_rate 
-Number of models: 7 
+Number of models: 3 
 Number of failed models: 0 
 
 Hyper-Parameter Search Summary: ordered by decreasing auc
   col_sample_rate  histogram_type max_depth min_rows min_split_improvement
-1         0.80000 UniformAdaptive   7.00000  1.00000               0.00000
-2         0.80000 UniformAdaptive   7.00000  8.00000               0.00010
+1         0.75000 QuantilesGlobal   5.00000 32.00000               0.00000
+2         0.85000      RoundRobin   8.00000  1.00000               0.00010
 3         0.80000 UniformAdaptive   7.00000  1.00000               0.00000
-4         0.75000 QuantilesGlobal   5.00000 32.00000               0.00000
-5         0.75000 QuantilesGlobal   5.00000 32.00000               0.00000
-6         0.85000      RoundRobin   8.00000  1.00000               0.00010
-7         0.85000      RoundRobin   8.00000  1.00000               0.00010
       nbins nbins_cats sample_rate        model_ids     auc
-1 512.00000 2048.00000     0.55000 model_id_model_6 0.77656
-2  16.00000   16.00000     1.00000 model_id_model_7 0.77408
-3 512.00000 2048.00000     0.55000 model_id_model_3 0.77315
-4  64.00000  512.00000     0.50000 model_id_model_2 0.77233
-5  64.00000  512.00000     0.50000 model_id_model_5 0.77233
-6  16.00000  256.00000     0.55000 model_id_model_1 0.76386
-7  16.00000  256.00000     0.55000 model_id_model_4 0.76386</code></pre>
+1  64.00000  512.00000     0.50000 model_id_model_2 0.77233
+2  16.00000  256.00000     0.55000 model_id_model_1 0.76386
+3 512.00000 2048.00000     0.55000 model_id_model_3 0.71270</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.5. Get best model</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>gbm <span class="ot">&lt;-</span> <span class="fu">h2o.getModel</span>(sortedGrid<span class="sc">@</span>model_ids[[<span class="dv">1</span>]])</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters of the best model</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>gbm<span class="sc">@</span>parameters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.5. Get best model</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>gbm <span class="ot">&lt;-</span> <span class="fu">h2o.getModel</span>(sortedGrid<span class="sc">@</span>model_ids[[<span class="dv">1</span>]])</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters of the best model</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>gbm<span class="sc">@</span>parameters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$model_id
-[1] "model_id_model_6"
+[1] "model_id_model_2"
 
 $training_frame
-[1] "RTMP_sid_9333_3"
+[1] "RTMP_sid_a7cd_3"
 
 $validation_frame
-[1] "RTMP_sid_9333_5"
+[1] "RTMP_sid_a7cd_5"
 
 $score_tree_interval
 [1] 10
 
 $ntrees
-[1] 190
-
-$max_depth
-[1] 7
+[1] 200
 
 $min_rows
-[1] 1
+[1] 32
 
 $nbins
-[1] 512
+[1] 64
 
 $nbins_cats
-[1] 2048
+[1] 512
 
 $stopping_rounds
 [1] 5
@@ -1951,7 +2125,7 @@ $stopping_metric
 [1] "AUC"
 
 $max_runtime_secs
-[1] 3.775
+[1] 2.957
 
 $seed
 [1] 1234
@@ -1966,16 +2140,16 @@ $distribution
 [1] "bernoulli"
 
 $sample_rate
-[1] 0.55
+[1] 0.5
 
 $col_sample_rate
-[1] 0.8
+[1] 0.75
 
 $min_split_improvement
 [1] 1e-08
 
 $histogram_type
-[1] "UniformAdaptive"
+[1] "QuantilesGlobal"
 
 $categorical_encoding
 [1] "Enum"
@@ -2047,228 +2221,191 @@ $x
 $y
 [1] "Class"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary best model</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>gbm <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary best model</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>gbm <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Model Details:
 ==============
 
 H2OBinomialModel: gbm
-Model Key:  model_id_model_6 
+Model Key:  model_id_model_2 
 Model Summary: 
   number_of_trees number_of_internal_trees model_size_in_bytes min_depth
-1             190                      190              154044         7
+1             200                      200               32734         4
   max_depth mean_depth min_leaves max_leaves mean_leaves
-1         7    7.00000         37         90    59.70526
+1         5    4.98000          6         11     8.29000
 
 H2OBinomialMetrics: gbm
 ** Reported on training data. **
 
-MSE:  0.02755389
-RMSE:  0.1659936
-LogLoss:  0.1418825
-Mean Per-Class Error:  0.003035101
-AUC:  0.9998533
-AUCPR:  0.9999372
-Gini:  0.9997065
-R^2:  0.8685355
+MSE:  0.1225323
+RMSE:  0.3500462
+LogLoss:  0.3928745
+Mean Per-Class Error:  0.2597946
+AUC:  0.8989574
+AUCPR:  0.9528937
+Gini:  0.7979148
+R^2:  0.4153763
 
 Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:
-       Bad Good    Error    Rate
-Bad    234    1 0.004255  =1/235
-Good     1  550 0.001815  =1/551
-Totals 235  551 0.002545  =2/786
+       Bad Good    Error      Rate
+Bad    121  114 0.485106  =114/235
+Good    19  532 0.034483   =19/551
+Totals 140  646 0.169211  =133/786
 
 Maximum Metrics: Maximum metrics at their respective thresholds
                         metric threshold      value idx
-1                       max f1  0.562943   0.998185 224
-2                       max f2  0.562943   0.998185 224
-3                 max f0point5  0.562943   0.998185 224
-4                 max accuracy  0.562943   0.997455 224
-5                max precision  0.989264   1.000000   0
-6                   max recall  0.519195   1.000000 231
-7              max specificity  0.989264   1.000000   0
-8             max absolute_mcc  0.562943   0.993930 224
-9   max min_per_class_accuracy  0.600199   0.995745 223
-10 max mean_per_class_accuracy  0.562943   0.996965 224
-11                     max tns  0.989264 235.000000   0
-12                     max fns  0.989264 550.000000   0
-13                     max fps  0.044299 235.000000 399
-14                     max tps  0.519195 551.000000 231
-15                     max tnr  0.989264   1.000000   0
-16                     max fnr  0.989264   0.998185   0
-17                     max fpr  0.044299   1.000000 399
-18                     max tpr  0.519195   1.000000 231
+1                       max f1  0.450973   0.888889 302
+2                       max f2  0.386073   0.940526 326
+3                 max f0point5  0.672833   0.899723 205
+4                 max accuracy  0.582752   0.840967 251
+5                max precision  0.974326   1.000000   0
+6                   max recall  0.270892   1.000000 368
+7              max specificity  0.974326   1.000000   0
+8             max absolute_mcc  0.635304   0.624125 227
+9   max min_per_class_accuracy  0.671835   0.825771 206
+10 max mean_per_class_accuracy  0.672833   0.828999 205
+11                     max tns  0.974326 235.000000   0
+12                     max fns  0.974326 550.000000   0
+13                     max fps  0.106189 235.000000 399
+14                     max tps  0.270892 551.000000 368
+15                     max tnr  0.974326   1.000000   0
+16                     max fnr  0.974326   0.998185   0
+17                     max fpr  0.106189   1.000000 399
+18                     max tpr  0.270892   1.000000 368
 
 Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`
 H2OBinomialMetrics: gbm
 ** Reported on validation data. **
 
-MSE:  0.1704193
-RMSE:  0.4128187
-LogLoss:  0.5140953
-Mean Per-Class Error:  0.3946825
-AUC:  0.7765617
-AUCPR:  0.8842813
-Gini:  0.5531234
-R^2:  0.1941639
+MSE:  0.1714058
+RMSE:  0.4140119
+LogLoss:  0.5121906
+Mean Per-Class Error:  0.3162106
+AUC:  0.7723283
+AUCPR:  0.8843448
+Gini:  0.5446567
+R^2:  0.1894991
 
 Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:
        Bad Good    Error     Rate
-Bad     15   50 0.769231   =50/65
-Good     3  146 0.020134   =3/149
-Totals  18  196 0.247664  =53/214
+Bad     30   35 0.538462   =35/65
+Good    14  135 0.093960  =14/149
+Totals  44  170 0.228972  =49/214
 
 Maximum Metrics: Maximum metrics at their respective thresholds
                         metric threshold      value idx
-1                       max f1  0.294319   0.846377 195
-2                       max f2  0.265576   0.928482 200
-3                 max f0point5  0.629027   0.820896 146
-4                 max accuracy  0.572423   0.757009 158
-5                max precision  0.986755   1.000000   0
-6                   max recall  0.132550   1.000000 210
-7              max specificity  0.986755   1.000000   0
-8             max absolute_mcc  0.629027   0.408635 146
-9   max min_per_class_accuracy  0.742643   0.692308 123
-10 max mean_per_class_accuracy  0.731343   0.708570 127
-11                     max tns  0.986755  65.000000   0
-12                     max fns  0.986755 148.000000   0
-13                     max fps  0.091295  65.000000 213
-14                     max tps  0.132550 149.000000 210
-15                     max tnr  0.986755   1.000000   0
-16                     max fnr  0.986755   0.993289   0
-17                     max fpr  0.091295   1.000000 213
-18                     max tpr  0.132550   1.000000 210
+1                       max f1  0.518103   0.846395 169
+2                       max f2  0.260256   0.924318 209
+3                 max f0point5  0.604423   0.816993 153
+4                 max accuracy  0.518103   0.771028 169
+5                max precision  0.971617   1.000000   0
+6                   max recall  0.260256   1.000000 209
+7              max specificity  0.971617   1.000000   0
+8             max absolute_mcc  0.518103   0.418263 169
+9   max min_per_class_accuracy  0.707842   0.692308 123
+10 max mean_per_class_accuracy  0.808423   0.716985  90
+11                     max tns  0.971617  65.000000   0
+12                     max fns  0.971617 148.000000   0
+13                     max fps  0.160318  65.000000 213
+14                     max tps  0.260256 149.000000 209
+15                     max tnr  0.971617   1.000000   0
+16                     max fnr  0.971617   0.993289   0
+17                     max fpr  0.160318   1.000000 213
+18                     max tpr  0.260256   1.000000 209
 
 Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`
 
 
 Scoring History: 
+            timestamp   duration number_of_trees training_rmse training_logloss
+1 2023-12-23 10:51:56  7.056 sec               0       0.45781          0.61000
+2 2023-12-23 10:51:56  7.195 sec              10       0.42622          0.54390
+3 2023-12-23 10:51:56  7.329 sec              20       0.40833          0.50832
+4 2023-12-23 10:51:57  7.450 sec              30       0.39713          0.48648
+5 2023-12-23 10:51:57  7.601 sec              40       0.38919          0.47011
+  training_auc training_pr_auc training_lift training_classification_error
+1      0.50000         0.70102       1.00000                       0.29898
+2      0.80768         0.90085       1.42650                       0.22901
+3      0.82581         0.91100       1.42650                       0.20611
+4      0.83981         0.91916       1.42650                       0.18448
+5      0.84947         0.92618       1.42650                       0.18830
+  validation_rmse validation_logloss validation_auc validation_pr_auc
+1         0.45990            0.61405        0.50000           0.69626
+2         0.44157            0.57353        0.71719           0.86269
+3         0.43129            0.55111        0.73805           0.86826
+4         0.42673            0.54103        0.74817           0.87796
+5         0.42324            0.53305        0.75457           0.88031
+  validation_lift validation_classification_error
+1         1.00000                         0.30374
+2         1.43624                         0.28505
+3         1.43624                         0.27103
+4         1.43624                         0.29439
+5         1.43624                         0.24766
+
+---
              timestamp   duration number_of_trees training_rmse
-1  2023-04-18 01:34:18  6.228 sec               0       0.45781
-2  2023-04-18 01:34:18  6.423 sec              10       0.38021
-3  2023-04-18 01:34:18  6.542 sec              20       0.33012
-4  2023-04-18 01:34:18  6.641 sec              30       0.29559
-5  2023-04-18 01:34:18  6.735 sec              40       0.27103
-6  2023-04-18 01:34:19  6.832 sec              50       0.25164
-7  2023-04-18 01:34:19  6.933 sec              60       0.23528
-8  2023-04-18 01:34:19  7.036 sec              70       0.22403
-9  2023-04-18 01:34:19  7.145 sec              80       0.21344
-10 2023-04-18 01:34:19  7.235 sec              90       0.20578
-11 2023-04-18 01:34:19  7.325 sec             100       0.19796
-12 2023-04-18 01:34:19  7.418 sec             110       0.19256
-13 2023-04-18 01:34:19  7.542 sec             120       0.18836
-14 2023-04-18 01:34:19  7.638 sec             130       0.18327
-15 2023-04-18 01:34:19  7.737 sec             140       0.17954
-16 2023-04-18 01:34:20  7.832 sec             150       0.17647
-17 2023-04-18 01:34:20  7.923 sec             160       0.17356
-18 2023-04-18 01:34:20  8.022 sec             170       0.17036
-19 2023-04-18 01:34:20  8.121 sec             180       0.16797
-20 2023-04-18 01:34:20  8.214 sec             190       0.16599
+16 2023-12-23 10:51:58  9.266 sec             150       0.35468
+17 2023-12-23 10:51:58  9.383 sec             160       0.35350
+18 2023-12-23 10:51:59  9.506 sec             170       0.35246
+19 2023-12-23 10:51:59  9.643 sec             180       0.35155
+20 2023-12-23 10:51:59  9.765 sec             190       0.35072
+21 2023-12-23 10:51:59  9.902 sec             200       0.35005
    training_logloss training_auc training_pr_auc training_lift
-1           0.61000      0.50000         0.70102       1.00000
-2           0.45947      0.96683         0.98507       1.42650
-3           0.37361      0.98343         0.99259       1.42650
-4           0.31846      0.99070         0.99579       1.42650
-5           0.28075      0.99421         0.99734       1.42650
-6           0.25232      0.99597         0.99820       1.42650
-7           0.22911      0.99682         0.99859       1.42650
-8           0.21353      0.99772         0.99901       1.42650
-9           0.19968      0.99841         0.99931       1.42650
-10          0.18953      0.99878         0.99947       1.42650
-11          0.17986      0.99908         0.99961       1.42650
-12          0.17317      0.99919         0.99965       1.42650
-13          0.16761      0.99928         0.99969       1.42650
-14          0.16165      0.99944         0.99976       1.42650
-15          0.15721      0.99957         0.99981       1.42650
-16          0.15372      0.99963         0.99984       1.42650
-17          0.15041      0.99970         0.99987       1.42650
-18          0.14672      0.99975         0.99989       1.42650
-19          0.14401      0.99980         0.99992       1.42650
-20          0.14188      0.99985         0.99994       1.42650
+16          0.40204      0.89415         0.95038       1.42650
+17          0.39981      0.89543         0.95101       1.42650
+18          0.39771      0.89639         0.95157       1.42650
+19          0.39585      0.89732         0.95205       1.42650
+20          0.39426      0.89808         0.95245       1.42650
+21          0.39287      0.89896         0.95289       1.42650
    training_classification_error validation_rmse validation_logloss
-1                        0.29898         0.45990            0.61405
-2                        0.08524         0.43380            0.55706
-3                        0.06107         0.42038            0.52747
-4                        0.04453         0.41787            0.52099
-5                        0.03181         0.41491            0.51435
-6                        0.02417         0.41453            0.51243
-7                        0.02163         0.41477            0.51231
-8                        0.01908         0.41367            0.51055
-9                        0.01527         0.41347            0.51122
-10                       0.01527         0.41203            0.50889
-11                       0.01145         0.41213            0.50923
-12                       0.01018         0.41182            0.50903
-13                       0.00891         0.41179            0.50945
-14                       0.00763         0.41150            0.50925
-15                       0.00763         0.41181            0.51021
-16                       0.00636         0.41169            0.51012
-17                       0.00382         0.41213            0.51182
-18                       0.00382         0.41218            0.51246
-19                       0.00382         0.41278            0.51395
-20                       0.00254         0.41282            0.51410
+16                       0.17048         0.41517            0.51440
+17                       0.16794         0.41484            0.51394
+18                       0.17048         0.41475            0.51370
+19                       0.16794         0.41442            0.51299
+20                       0.16794         0.41420            0.51259
+21                       0.16921         0.41401            0.51219
    validation_auc validation_pr_auc validation_lift
-1         0.50000           0.69626         1.00000
-2         0.74734           0.88451         1.43624
-3         0.76851           0.88894         1.43624
-4         0.76489           0.88515         1.43624
-5         0.77078           0.88528         1.43624
-6         0.77202           0.88675         1.43624
-7         0.77481           0.88866         1.43624
-8         0.77584           0.88846         1.43624
-9         0.77739           0.88715         1.43624
-10        0.77904           0.88849         1.43624
-11        0.77801           0.88722         1.43624
-12        0.78007           0.88798         1.43624
-13        0.78152           0.88848         1.43624
-14        0.78286           0.88893         1.43624
-15        0.78080           0.88712         1.43624
-16        0.78090           0.88723         1.43624
-17        0.77873           0.88623         1.43624
-18        0.77894           0.88555         1.43624
-19        0.77728           0.88529         1.43624
-20        0.77656           0.88428         1.43624
+16        0.76985           0.88400         1.43624
+17        0.77099           0.88377         1.43624
+18        0.77099           0.88349         1.43624
+19        0.77223           0.88414         1.43624
+20        0.77192           0.88430         1.43624
+21        0.77233           0.88434         1.43624
    validation_classification_error
-1                          0.30374
-2                          0.28972
-3                          0.27103
-4                          0.26636
-5                          0.25234
-6                          0.25234
-7                          0.25701
-8                          0.27570
-9                          0.26636
-10                         0.26168
-11                         0.25701
-12                         0.25701
-13                         0.26168
-14                         0.25701
-15                         0.25701
-16                         0.25234
-17                         0.25234
-18                         0.24766
-19                         0.24766
-20                         0.24766
+16                         0.23364
+17                         0.22897
+18                         0.22897
+19                         0.22897
+20                         0.22897
+21                         0.22897
 
 Variable Importances: (Extract with `h2o.varimp`) 
 =================================================
 
 Variable Importances: 
                     variable relative_importance scaled_importance percentage
-1                     Amount          332.317505          1.000000   0.157845
-2                        Age          204.717499          0.616030   0.097237
-3                   Duration          190.941040          0.574574   0.090694
-4 CheckingAccountStatus.none          184.693298          0.555774   0.087726
-5          ResidenceDuration           78.698425          0.236817   0.037380
+1                     Amount          173.596863          1.000000   0.159458
+2 CheckingAccountStatus.none          160.748611          0.925988   0.147656
+3                   Duration          111.886330          0.644518   0.102774
+4                        Age           84.459564          0.486527   0.077581
+5             Purpose.NewCar           39.987671          0.230348   0.036731
 
 ---
-                    variable relative_importance scaled_importance percentage
-54           Purpose.Repairs            8.946022          0.026920   0.004249
-55 Purpose.DomesticAppliance            6.825329          0.020539   0.003242
-56   Job.UnemployedUnskilled            6.578030          0.019794   0.003124
-57             ForeignWorker            6.199419          0.018655   0.002945
-58        Purpose.Retraining            3.083785          0.009280   0.001465
-59             Purpose.Other            1.568497          0.004720   0.000745</code></pre>
+                             variable relative_importance scaled_importance
+54      EmploymentDuration.Unemployed            0.000000          0.000000
+55   Personal.Male.Divorced.Seperated            0.000000          0.000000
+56        OtherDebtorsGuarantors.None            0.000000          0.000000
+57 OtherDebtorsGuarantors.CoApplicant            0.000000          0.000000
+58       OtherInstallmentPlans.Stores            0.000000          0.000000
+59            Job.UnemployedUnskilled            0.000000          0.000000
+   percentage
+54   0.000000
+55   0.000000
+56   0.000000
+57   0.000000
+58   0.000000
+59   0.000000</code></pre>
 </div>
 </div>
 </section>
@@ -2276,16 +2413,18 @@ Variable Importances:
 <h3 data-number="22.3.10" class="anchored" data-anchor-id="lưu-và-load-mô-hình"><span class="header-section-number">22.3.10</span> Lưu và load mô hình</h3>
 <p>Để lưu lại mô hình trên H2O, chúng ta sử dụng câu lệnh <code>h2o.saveModel()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lưu model</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.saveModel</span>(gbm, <span class="co"># Tên mô hình</span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">path =</span> <span class="fu">getwd</span>(), <span class="co"># Đường dẫn muốn lưu</span></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">force =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lưu model</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.saveModel</span>(gbm, <span class="co"># Tên mô hình</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">path =</span> <span class="fu">getwd</span>(), <span class="co"># Đường dẫn muốn lưu</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">force =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Để load mô hình trên H2O, chúng ta sử dụng câu lệnh <code>h2o.loadModel()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.shutdown</span>(<span class="at">prompt =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.shutdown</span>(<span class="at">prompt =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<hr>
+<center>
+<font size="4">§</font>
+</center>
 <p>Như vậy, trong chương này, chúng ta được học cách xây dựng mô hình dự báo với H2O. Đây là một platform rất mạnh giúp cải thiện chất lượng dự báo, tốc độ xử lý, tối ưu hóa mô hình, cũng như hiển thị kết quả mô hình một cách rất hiệu quả.</p>
 </section>
 </section>
@@ -2655,7 +2794,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="./p03-08-xgboost.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">XGBoost &amp; LightGBM</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -301,7 +301,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">XGBoost &amp; LightGBM</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -691,9 +691,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#giới-thiệu-1" id="toc-giới-thiệu-1" class="nav-link" data-scroll-target="#giới-thiệu-1"><span class="header-section-number">21.2.1</span> Giới thiệu</a></li>
   <li><a href="#hyperparameter" id="toc-hyperparameter" class="nav-link" data-scroll-target="#hyperparameter"><span class="header-section-number">21.2.2</span> Hyperparameter</a></li>
   <li><a href="#thực-hành-1" id="toc-thực-hành-1" class="nav-link" data-scroll-target="#thực-hành-1"><span class="header-section-number">21.2.3</span> Thực hành</a></li>
+  <li><a href="#ưu-nhược-điểm" id="toc-ưu-nhược-điểm" class="nav-link" data-scroll-target="#ưu-nhược-điểm"><span class="header-section-number">21.2.4</span> Ưu nhược điểm</a></li>
   </ul></li>
-  <li><a href="#ưu-nhược-điểm" id="toc-ưu-nhược-điểm" class="nav-link" data-scroll-target="#ưu-nhược-điểm"><span class="header-section-number">21.3</span> Ưu nhược điểm</a></li>
-  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">21.4</span> Tài liệu tham khảo</a></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">21.3</span> Tài liệu tham khảo</a></li>
   </ul>
 </nav>
     </div>
@@ -718,6 +718,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 <p>Thuật toán cây quyết dịnh với những ưu điểm nổi trội như dễ triển khai, dễ giải thích nhưng lại nhạy cảm với dữ liệu và dễ bị <code>overfitting</code>. Để khắc phục nhược điểm trên, người ta phát triển các thuật toán kết hợp nhiều cây quyết định riêng lẻ, bao gồm: <code>bagging</code>, <code>random forest</code> &amp; <code>boosting</code></p>
+<p>Các nhóm thuật toán trên dựa trên nguyên lý kết hợp nhiều mô hình yếu (<code>weak learner</code>) sẽ tạo ra một mô hình mạnh hơn.</p>
+<p><img src="Images/p03-05-weak-learners.png" class="img-fluid"></p>
 <section id="bagging-random-forest" class="level2" data-number="21.1">
 <h2 data-number="21.1" class="anchored" data-anchor-id="bagging-random-forest"><span class="header-section-number">21.1</span> Bagging &amp; Random Forest</h2>
 <section id="giới-thiệu" class="level3" data-number="21.1.1">
@@ -728,6 +730,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Bước 2</strong>: Với mỗi tập dữ liệu boostrap, xây dựng 1 cây quyết định</li>
 <li><strong>Bước 3</strong>: Tổng hợp mô hình &amp; kết quả dự báo từ tất cả các cây quyết định đã xây dựng</li>
 </ul>
+<p><img src="Images/p03-05-bagging.png" class="img-fluid"></p>
 <p><strong>Lưu ý</strong>: Với bagging, tất các các biến đầu vào của các cây quyết định là giống nhau, chỉ khác nhau về các quan sát.</p>
 <hr>
 <p>Không giống với <code>bagging</code>, thuật toán <code>random forest</code> không chỉ lấy ngẫu nhiên các quan sát (theo dòng) mà còn lấy ngẫu nhiên các biến đầu vào cho từng cây quyết định.</p>
@@ -752,6 +755,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </center>
 <p><strong>Out-of-Bag Error Estimation</strong></p>
 <p>Có một cách khá đơn giản để ước lượng sai số dự báo (test error) của mô hình bagging mà không cần dùng cross-validation hoặc tập dữ liệu validation. Nhắc lại key của phương pháp bagging là việc các cây quyết định sẽ được xây dựng nhiều lần sử dụng những tập dữ liệu bootstrapped khác nhau. Mỗi một cây quyết định được xây đều sử dụng khoảng 2/3 số quan sát, còn 1/3 quan sát còn lại không được sử dụng trong quá trình xây dựng mô hình sẽ được gọi là những quan sát <code>out-of-bag</code> (OOB).</p>
+<p><img src="Images/p03-05-out-of-bag.png" class="img-fluid"></p>
 </section>
 <section id="thực-hành" class="level3" data-number="21.1.2">
 <h3 data-number="21.1.2" class="anchored" data-anchor-id="thực-hành"><span class="header-section-number">21.1.2</span> Thực hành</h3>
@@ -831,6 +835,12 @@ OOB prediction error:             2.96 % </code></pre>
 <li>Boosting tập trung nhiều hơn vào những quan sát bị dự báo sai từ những cây trước để góp phần cải thiện kết quả dự báo cuối cùng.</li>
 <li>Boosting không dùng boostrap để chia tập dữ liệu training ban đầu, mà thay vào đó là việc dùng các phiên bản đã được điều chỉnh từ tập dữ liệu train ban đầu để xây dựng các cây quyết định.</li>
 </ul>
+<p><img src="Images/p03-05-boosting.png" class="img-fluid"></p>
+<hr>
+<p>Boosting có 2 nhánh lớn là <code>adaboost</code> và <code>gradient boosting</code>. Do sự vượt trội và phổ biến của <code>gradient boosting</code> với các thuật toán như <code>gbm</code>, <code>xgboost</code>, <code>lightgbm</code>, ta chỉ cần tập trung vào <code>gradient boosting</code>.</p>
+<center>
+<font size="4">§</font>
+</center>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -989,12 +999,24 @@ Thuật toán
 </div>
 </div>
 </section>
+<section id="ưu-nhược-điểm" class="level3" data-number="21.2.4">
+<h3 data-number="21.2.4" class="anchored" data-anchor-id="ưu-nhược-điểm"><span class="header-section-number">21.2.4</span> Ưu nhược điểm</h3>
+<p>Các nhóm mô hình <code>random forest</code> &amp; <code>boosting</code> có các ưu nhược điểm điển hình sau.</p>
+<p><strong>Ưu điểm</strong>:</p>
+<ul>
+<li>Độ chính xác cao</li>
+<li>Giảm thiểu overfitting</li>
+<li>Độ ổn định cao</li>
+</ul>
+<p><strong>Nhược điểm</strong></p>
+<ul>
+<li>Thiếu khả năng giải thích mô hình</li>
+<li>Thời gian &amp; bộ nhớ phục vụ huấn luyện lâu</li>
+</ul>
 </section>
-<section id="ưu-nhược-điểm" class="level2" data-number="21.3">
-<h2 data-number="21.3" class="anchored" data-anchor-id="ưu-nhược-điểm"><span class="header-section-number">21.3</span> Ưu nhược điểm</h2>
 </section>
-<section id="tài-liệu-tham-khảo" class="level2" data-number="21.4">
-<h2 data-number="21.4" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">21.4</span> Tài liệu tham khảo</h2>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="21.3">
+<h2 data-number="21.3" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">21.3</span> Tài liệu tham khảo</h2>
 <ul>
 <li><a href="https://parsnip.tidymodels.org/reference/details_rand_forest_ranger.html">https://parsnip.tidymodels.org/reference/details_rand_forest_ranger.html</a></li>
 <li><a href="https://bgreenwell.github.io/MLDay18/MLDay18.html#59">https://bgreenwell.github.io/MLDay18/MLDay18.html#59</a></li>
