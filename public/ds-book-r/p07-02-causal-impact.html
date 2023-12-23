@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -94,7 +94,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 
@@ -114,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./p07-02-causal-impact.html">Các phương pháp khác</a></li><li class="breadcrumb-item"><a href="./p07-02-causal-impact.html"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Causal Impact</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -299,7 +300,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">XGBoost &amp; LightGBM</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -680,9 +681,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#giới-thiệu" id="toc-giới-thiệu" class="nav-link active" data-scroll-target="#giới-thiệu"><span class="header-section-number">51.1</span> Giới thiệu</a></li>
-  <li><a href="#ví-dụ-1" id="toc-ví-dụ-1" class="nav-link" data-scroll-target="#ví-dụ-1"><span class="header-section-number">51.2</span> Ví dụ 1</a></li>
-  <li><a href="#ví-dụ-2" id="toc-ví-dụ-2" class="nav-link" data-scroll-target="#ví-dụ-2"><span class="header-section-number">51.3</span> Ví dụ 2</a></li>
-  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">51.4</span> Tài liệu tham khảo</a></li>
+  <li><a href="#xây-dựng-mô-hình" id="toc-xây-dựng-mô-hình" class="nav-link" data-scroll-target="#xây-dựng-mô-hình"><span class="header-section-number">51.2</span> Xây dựng mô hình</a></li>
+  <li><a href="#ví-dụ-1" id="toc-ví-dụ-1" class="nav-link" data-scroll-target="#ví-dụ-1"><span class="header-section-number">51.3</span> Ví dụ 1</a></li>
+  <li><a href="#ví-dụ-2" id="toc-ví-dụ-2" class="nav-link" data-scroll-target="#ví-dụ-2"><span class="header-section-number">51.4</span> Ví dụ 2</a></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">51.5</span> Tài liệu tham khảo</a></li>
   </ul>
 </nav>
     </div>
@@ -708,17 +710,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="giới-thiệu" class="level2" data-number="51.1">
 <h2 data-number="51.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">51.1</span> Giới thiệu</h2>
-<p>Phương pháp này dùng để phân tích ảnh hưởng của sự kiện đến chuỗi thời gian. Ví dụ:</p>
+<p><strong>Causal Impact</strong> là phương pháp được sử dụng để phân tích &amp; đánh giá ảnh hưởng của sự kiện đến chuỗi thời gian.</p>
+<p>Ví dụ:</p>
 <ul>
 <li>Thay đổi tag name của website ảnh hưởng đến organic traffic như thế nào?</li>
 <li>Thay đổi ASO ảnh hưởng đến organic download của app như thế nào?</li>
+<li>Một chương trình marketing ảnh hưởng đến xu hướng chung như thế nào?</li>
 </ul>
-<p><strong>Giả định</strong> (Assumption)</p>
+<p>Phương pháp này được Google đưa ra từ 2015 bằng cách phân rã chuỗi thời gian thành nhiều cấu phần khác nhau như yếu tố xu hướng, chu kỳ,… và được tham chiếu đến một chuỗi thời gian khác, không bị ảnh hưởng bởi sự kiện diễn ra.</p>
+</section>
+<section id="xây-dựng-mô-hình" class="level2" data-number="51.2">
+<h2 data-number="51.2" class="anchored" data-anchor-id="xây-dựng-mô-hình"><span class="header-section-number">51.2</span> Xây dựng mô hình</h2>
+<p><strong>Giả định mô hình</strong></p>
 <ul>
 <li>Tồn tại cặp biến Y và X, trong đó Y là biến cần đo ảnh hưởng của sự kiện A tại thời điểm t, X là biến tham chiếu (control variable). Mối quan hệ giữa Y &amp; X có các giả định sau:
 <ul>
 <li>X không bị ảnh hưởng bởi sự kiện A</li>
-<li>Y &amp; X có mối tương quan và “covariate” không đổi theo thời gian</li>
+<li>Y &amp; X có mối tương quan không đổi theo thời gian</li>
 </ul></li>
 <li>Các khái niệm:
 <ul>
@@ -732,8 +740,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"google/CausalImpact"</span>, <span class="at">force =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="ví-dụ-1" class="level2" data-number="51.2">
-<h2 data-number="51.2" class="anchored" data-anchor-id="ví-dụ-1"><span class="header-section-number">51.2</span> Ví dụ 1</h2>
+<section id="ví-dụ-1" class="level2" data-number="51.3">
+<h2 data-number="51.3" class="anchored" data-anchor-id="ví-dụ-1"><span class="header-section-number">51.3</span> Ví dụ 1</h2>
 <p>Tạo dữ liệu với 100 quan sát có tương quan không đổi theo thời gian x và y. Từ quan sát thứ 71, xảy ra sự kiện A khiến y tăng thêm trung bình 10 đơn vị nhưng không ảnh hưởng đến x.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
@@ -764,8 +772,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Ảnh hưởng (effect) của A lên y là 10 đơn vị/ngày. Trong toàn bộ giai đoạn là 294</li>
 </ul>
 </section>
-<section id="ví-dụ-2" class="level2" data-number="51.3">
-<h2 data-number="51.3" class="anchored" data-anchor-id="ví-dụ-2"><span class="header-section-number">51.3</span> Ví dụ 2</h2>
+<section id="ví-dụ-2" class="level2" data-number="51.4">
+<h2 data-number="51.4" class="anchored" data-anchor-id="ví-dụ-2"><span class="header-section-number">51.4</span> Ví dụ 2</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="sc">+</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar =</span> <span class="fl">0.999</span>), <span class="at">n =</span> <span class="dv">120</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>x[<span class="dv">101</span><span class="sc">:</span><span class="dv">120</span>] <span class="ot">&lt;-</span> <span class="dv">110</span> <span class="sc">+</span> <span class="fu">arima.sim</span>(<span class="at">model =</span> <span class="fu">list</span>(<span class="at">ar =</span> <span class="fl">0.999</span>), <span class="at">n =</span> <span class="dv">20</span>)</span>
@@ -779,8 +787,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(impact)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="tài-liệu-tham-khảo" class="level2" data-number="51.4">
-<h2 data-number="51.4" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">51.4</span> Tài liệu tham khảo</h2>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="51.5">
+<h2 data-number="51.5" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">51.5</span> Tài liệu tham khảo</h2>
 <ul>
 <li><a href="https://github.com/google/CausalImpact/blob/master/CausalImpact.Rmd">Google Causal Impact</a></li>
 </ul>

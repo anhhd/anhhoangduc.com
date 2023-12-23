@@ -299,7 +299,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">XGBoost &amp; LightGBM</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -681,9 +681,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#log-in-vào-azure" id="toc-log-in-vào-azure" class="nav-link active" data-scroll-target="#log-in-vào-azure"><span class="header-section-number">64.1</span> Log in vào Azure</a></li>
   <li><a href="#tạo-web-service" id="toc-tạo-web-service" class="nav-link" data-scroll-target="#tạo-web-service"><span class="header-section-number">64.2</span> Tạo web service</a></li>
-  <li><a href="#xây-dựng-api-đơn-giản" id="toc-xây-dựng-api-đơn-giản" class="nav-link" data-scroll-target="#xây-dựng-api-đơn-giản"><span class="header-section-number">64.3</span> Xây dựng API đơn giản</a></li>
-  <li><a href="#xây-dựng-api-web-service-cho-mô-hình-dự-báo" id="toc-xây-dựng-api-web-service-cho-mô-hình-dự-báo" class="nav-link" data-scroll-target="#xây-dựng-api-web-service-cho-mô-hình-dự-báo"><span class="header-section-number">64.4</span> Xây dựng API web service cho mô hình dự báo</a></li>
-  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">64.5</span> Tài liệu tham khảo</a></li>
+  <li><a href="#xây-dựng-api-web-service-cho-mô-hình-dự-báo" id="toc-xây-dựng-api-web-service-cho-mô-hình-dự-báo" class="nav-link" data-scroll-target="#xây-dựng-api-web-service-cho-mô-hình-dự-báo"><span class="header-section-number">64.3</span> Xây dựng API web service cho mô hình dự báo</a></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">64.4</span> Tài liệu tham khảo</a></li>
   </ul>
 </nav>
     </div>
@@ -707,6 +706,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
+<p>Với các service của Azure, ta có thể xây dựng các web service dạng API bằng các <code>function</code> xây dựng từ R như sau.</p>
 <section id="log-in-vào-azure" class="level2" data-number="64.1">
 <h2 data-number="64.1" class="anchored" data-anchor-id="log-in-vào-azure"><span class="header-section-number">64.1</span> Log in vào Azure</h2>
 <div class="cell">
@@ -716,16 +716,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Tạo workspace</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>ws <span class="ot">&lt;-</span> <span class="fu">workspace</span>(</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="st">"2052e86780c342fcb7cdf5a7179b447a"</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">auth =</span> <span class="st">"76186c54e53443e38b78226ebb5f2873"</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="st">"xxx"</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">auth =</span> <span class="st">"xxx"</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="tạo-web-service" class="level2" data-number="64.2">
 <h2 data-number="64.2" class="anchored" data-anchor-id="tạo-web-service"><span class="header-section-number">64.2</span> Tạo web service</h2>
 <ul>
-<li><p>Cài đặt <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a></p></li>
-<li><p>Điều chỉnh Path cho zip tool &amp; khởi động lại R (tắt RStudio và bật lại)</p></li>
+<li>Cài đặt <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a></li>
+<li>Điều chỉnh <code>Path</code> cho zip tool &amp; khởi động lại R (tắt RStudio và bật lại)</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.which</span>(<span class="st">"zip"</span>)</span>
@@ -741,9 +741,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.which</span>(<span class="st">"zip"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="xây-dựng-api-đơn-giản" class="level2" data-number="64.3">
-<h2 data-number="64.3" class="anchored" data-anchor-id="xây-dựng-api-đơn-giản"><span class="header-section-number">64.3</span> Xây dựng API đơn giản</h2>
+<hr>
+<p><strong>Xây dựng API đơn giản</strong></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>add <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y){</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">+</span> y</span>
@@ -794,8 +793,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">deleteWebService</span>(ws, <span class="at">name =</span> <span class="st">"AzureML-vignette-silly"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="xây-dựng-api-web-service-cho-mô-hình-dự-báo" class="level2" data-number="64.4">
-<h2 data-number="64.4" class="anchored" data-anchor-id="xây-dựng-api-web-service-cho-mô-hình-dự-báo"><span class="header-section-number">64.4</span> Xây dựng API web service cho mô hình dự báo</h2>
+<section id="xây-dựng-api-web-service-cho-mô-hình-dự-báo" class="level2" data-number="64.3">
+<h2 data-number="64.3" class="anchored" data-anchor-id="xây-dựng-api-web-service-cho-mô-hình-dự-báo"><span class="header-section-number">64.3</span> Xây dựng API web service cho mô hình dự báo</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gbm)</span>
@@ -832,8 +831,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">consume</span>(ep, test))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="tài-liệu-tham-khảo" class="level2" data-number="64.5">
-<h2 data-number="64.5" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">64.5</span> Tài liệu tham khảo</h2>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="64.4">
+<h2 data-number="64.4" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">64.4</span> Tài liệu tham khảo</h2>
 <ul>
 <li>Hướng dẫn AzureML <a href="https://cran.r-project.org/web/packages/AzureML/vignettes/getting_started.html">https://cran.r-project.org/web/packages/AzureML/vignettes/getting_started.html</a></li>
 </ul>

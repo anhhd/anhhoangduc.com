@@ -301,7 +301,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">XGBoost &amp; LightGBM</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -682,7 +682,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#thành-phần-của-chuỗi-thời-gian" id="toc-thành-phần-của-chuỗi-thời-gian" class="nav-link active" data-scroll-target="#thành-phần-của-chuỗi-thời-gian"><span class="header-section-number">41.1</span> Thành phần của chuỗi thời gian</a></li>
-  <li><a href="#smoothing" id="toc-smoothing" class="nav-link" data-scroll-target="#smoothing"><span class="header-section-number">41.2</span> Smoothing</a></li>
+  <li><a href="#làm-trơn---smoothing" id="toc-làm-trơn---smoothing" class="nav-link" data-scroll-target="#làm-trơn---smoothing"><span class="header-section-number">41.2</span> Làm trơn - <code>smoothing</code></a></li>
   <li><a href="#phân-rã-các-thành-phần-chuỗi-thời-gian" id="toc-phân-rã-các-thành-phần-chuỗi-thời-gian" class="nav-link" data-scroll-target="#phân-rã-các-thành-phần-chuỗi-thời-gian"><span class="header-section-number">41.3</span> Phân rã các thành phần chuỗi thời gian</a></li>
   <li><a href="#exponential-forecasting-model" id="toc-exponential-forecasting-model" class="nav-link" data-scroll-target="#exponential-forecasting-model"><span class="header-section-number">41.4</span> Exponential Forecasting Model</a>
   <ul class="collapse">
@@ -714,16 +714,111 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
+<p>Định dạng dữ liệu chuỗi thời gian là một lại dữ liệu điển hình thường gặp trong thực tế. Khác so với các định dạng dữ liệu thông thường, dữ liệu chuỗi thời gian thông thường chỉ 1 giá trị nhưng trải dài theo thời gian.</p>
+<div class="quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<table class="table">
+<caption>Dữ liệu thường</caption>
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">x</th>
+<th style="text-align: left;">y</th>
+<th style="text-align: left;">z</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">6</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">8</td>
+<td style="text-align: left;">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<table class="table">
+<caption>Dữ liệu chuỗi thời gian</caption>
+<colgroup>
+<col style="width: 75%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">time</th>
+<th style="text-align: left;">value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">2022-01-01</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2022-01-02</td>
+<td style="text-align: left;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2022-01-03</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2022-01-04</td>
+<td style="text-align: left;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2022-01-05</td>
+<td style="text-align: left;">9</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Các kỹ thuật phân tích chuỗi thời gian tìm ra mối tương quan, ảnh hưởng giữa các biến quá khứ và ảnh hưởng của biến thời gian lên biến cần dự báo.</p>
+<center>
+<font size="4">§</font>
+</center>
 <p>Khi phân tích dữ liệu, có hai khái niệm đều được gọi là <em>dự báo</em> khi được dịch sang tiếng Việt, đó là <code>forcast</code> và <code>predict</code>. Tuy nhiên, hai khái niệm này rất khác nhau.</p>
 <ul>
 <li><strong>Predict</strong>: Thường được dùng để chỉ việc dự báo xác suất xảy ra các sự kiện. Ví dụ, xác suất vỡ nợ, xác suất khách hàng churn,…</li>
 <li><strong>Forecast</strong>: Thường dùng trong việc dự báo chuỗi thời gian. Ví dụ, dựa vào lịch sử biến động của tổng khách hàng uống cafe theo tuần, ta có thể <em>dự báo</em> được số lượng khách hàng uống cafe của 1 tuần tới, hai tuần tới,…</li>
 </ul>
 <p>Trong những phần trước, chúng ta đã bàn nhiều về các kỹ thuật <code>predict</code>, trong phần này, ta sẽ bàn thêm về nhóm <code>forecast</code>, về các cấu phần và cách thức dự báo đối với chuỗi thời gian. Do đó, trong phần này, khi nói về dự báo, chúng ta đang bàn về vấn đề <code>forecast</code>.</p>
+<center>
+<font size="4">§</font>
+</center>
 <p><strong>Phân biệt <em>dự báo</em>, <em>mục tiêu</em> và <em>kế hoạch</em></strong></p>
-<p><strong>Dự báo</strong>: là quá trình sử dụng các thông tin hiện hữu đưa ra các nhận định chính xác nhất có thể có trong tương lai trong một khoảng thời gian xác định về một chỉ số nào đó.</p>
-<p><strong>Mục tiêu</strong>: là thứ mà cá nhân, tổ chức mong muốn đạt được trong một khoảng thời gian xác định trong tương lai. Thường thì mục tiêu được đặt mà không quan tâm đến bất kỳ đến việc dự báo nào cả. Ví dụ, mục tiêu tăng trưởng của doanh nghiệp thường là năm sau cao gấp đôi năm trước trong khi dự báo chỉ có thể tăng được 30%.</p>
-<p><strong>Kế hoạch</strong>: Là phản ứng của tổ chức, cá nhân đối với <em>dự báo</em> và <em>mục tiêu</em>. Việc lập kế hoạch đòi hỏi nhiều hành động cụ thể để điều hướng dự báo sát sát với mục tiêu (hoặc vượt mục tiêu)</p>
+<ul>
+<li><strong>Dự báo</strong>: là quá trình sử dụng các thông tin hiện hữu đưa ra các nhận định chính xác nhất có thể có trong tương lai trong một khoảng thời gian xác định về một chỉ số nào đó.</li>
+<li><strong>Mục tiêu</strong>: là thứ mà cá nhân, tổ chức mong muốn đạt được trong một khoảng thời gian xác định trong tương lai. Thường thì mục tiêu được đặt mà không quan tâm đến bất kỳ đến việc dự báo nào cả. Ví dụ, mục tiêu tăng trưởng của doanh nghiệp thường là năm sau cao gấp đôi năm trước trong khi dự báo chỉ có thể tăng được 30%.</li>
+<li><strong>Kế hoạch</strong>: Là phản ứng của tổ chức, cá nhân đối với <em>dự báo</em> và <em>mục tiêu</em>. Việc lập kế hoạch đòi hỏi nhiều hành động cụ thể để điều hướng dự báo sát sát với mục tiêu (hoặc vượt mục tiêu)</li>
+</ul>
 <p>Xét về yếu tố thời gian, việc dự báo có thể chia thành dự báo ngắn hạn, trung hạn và dài hạn.</p>
 <p>Ứng dụng của dự báo chuỗi thời gian có thể có các ứng dụng sau:</p>
 <ul>
@@ -733,6 +828,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Dự báo lượng khách du lịch hàng năm</li>
 </ul>
 <p>Việc nắm vững các kỹ thuật dự báo chuỗi thời gian sẽ hỗ trợ hoạt động ra quyết định của doanh nghiệp được tốt hơn.</p>
+<center>
+<font size="4">§</font>
+</center>
 <p><strong>Các điểm khi dự báo</strong></p>
 <p>Khi dự báo, có hai điểm quan trọng chúng ta phải trả lời trước khi đi vào dự báo thực tế.</p>
 <ul>
@@ -740,7 +838,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Thứ hai</strong>, yếu tố thời gian xét trong vấn đề dự báo này là gì? Ta cần dự báo trong bao lâu? Tần xuất như thế nào? Ví dụ, dư báo doanh số bán hàng mỗi tháng/tuần 1 lần trong 1 năm tới?</li>
 </ul>
 <p>Việc trả lời các câu hỏi trên là rất quan trọng, giúp ta tránh đi chệch hương bởi lẽ dự báo chuỗi thời gian sẽ có xu hướng đúng trên tập số lớn và dữ liệu tổng hợp. Khi đi vào từng sản phẩm, đơn vị nhỏ sẽ thiếu độ chính xác. Ví dụ, dự báo doanh số bán hàng của cả 200 chi nhánh sẽ chính xác hơn khi dự báo từng chi nhánh con.</p>
-<p><strong>Lưu ý</strong>: Khi phân tích dữ liệu, ta cần phải tìm hiểu các đơn vị nghiệp vụ sẽ sử dụng kết quả dự báo như thế nào, để tránh việc bỏ quá nhiều thời gian và công sức dự báo nhưng không ai sử dụng.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Lưu ý
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Khi phân tích dữ liệu, ta cần phải tìm hiểu các đơn vị nghiệp vụ sẽ sử dụng kết quả dự báo như thế nào, để tránh việc bỏ quá nhiều thời gian và công sức dự báo nhưng không ai sử dụng.</p>
+</div>
+</div>
 <section id="thành-phần-của-chuỗi-thời-gian" class="level2" data-number="41.1">
 <h2 data-number="41.1" class="anchored" data-anchor-id="thành-phần-của-chuỗi-thời-gian"><span class="header-section-number">41.1</span> Thành phần của chuỗi thời gian</h2>
 <p>Trong bất cứ chuỗi thời gian nào, cũng có 3 thành phần sau.</p>
@@ -755,11 +865,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Cái gì sẽ xảy ra, với độ tin cậy bao nhiêu phần trăm</li>
 </ul>
 <p>Phân tích chuỗi thời gian sử dụng rất nhiều trong việc dự báo tăng trưởng, lên kế hoạch. Mô hình này dùng rất nhiều trong Macroeconomics, Finance…</p>
-<p><strong>Lưu ý</strong>:</p>
-<ul>
-<li>Để phân tích chuỗi thời gian, R lưu object dưới dạng <code>ts</code> (time series)</li>
-<li>Chuỗi thời gian có 1 loạt các kỹ thuật và câu lệnh phân tích riêng biệt</li>
-</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Lưu ý
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Để phân tích chuỗi thời gian, R lưu object dưới dạng <code>ts</code> (time series)</p>
+</div>
+</div>
 <p>Khi lưu trữ trong R, chuỗi thời gian được lưu dưới dạng <code>ts</code> như sau.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Tạo chuỗi thời gian</span></span>
@@ -769,10 +887,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>tsales</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
-2003  11  11   5  10   8  12   9   8  13  11  11   8
-2004   6  10  10  10  10  12  10  13   8  13  11   9
-2005  13  12   7  10   9   8  10   9   7   9   7   9
-2006  12  14  11  11   8  13  11  11  11  14   7  12</code></pre>
+2003  10   9  12  12   9  11  11  13   8   9  12   8
+2004  11   7   8   7  11  11  10   9  12   8  11   7
+2005  14   8  10   9  10   9   9  12   8   9  15  11
+2006  12  12   8  12  11  11  12  13  16  12   8  11</code></pre>
 </div>
 </div>
 <p>Hàm <code>ts</code> quy định dữ liệu tối thiểu là ngày và có các <code>frequency</code> được quy định như sau.</p>
@@ -807,16 +925,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggfortify)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>tsales <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>() <span class="sc">+</span> </span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>tsales <span class="sc">%&gt;%</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>() <span class="sc">+</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="p05-01-chuoi-thoi-gian_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
-<section id="smoothing" class="level2" data-number="41.2">
-<h2 data-number="41.2" class="anchored" data-anchor-id="smoothing"><span class="header-section-number">41.2</span> Smoothing</h2>
-<p>Centered Moving Average là kỹ thuật làm trơn để giảm đi các yếu tố gây nhiễu trong chuỗi thời gian.</p>
+<section id="làm-trơn---smoothing" class="level2" data-number="41.2">
+<h2 data-number="41.2" class="anchored" data-anchor-id="làm-trơn---smoothing"><span class="header-section-number">41.2</span> Làm trơn - <code>smoothing</code></h2>
+<p>Khi phân tích, sẽ có rất nhiều các yếu tố gây nhiễu như mùa vụ, quan sát bất thường… Để xử lý vấn đề này và nhìn rõ xu hướng, ta có thể làm trơn dữ liệu - hay nói cách khác làm giảm ảnh hưởng gây nhiễu.</p>
+<p><code>Centered Moving Average</code> là kỹ thuật làm trơn để giảm đi các yếu tố gây nhiễu trong chuỗi thời gian.</p>
 <p><span class="math display">\[S_t=\frac{Y_{t-q}+...+Y_t+...+Y_{t+q}}{2q+1}\]</span></p>
 <p><span class="math inline">\(S_t\)</span> được gọi là giá trị làm trơn (smoothed value) tại thời điểm t, <span class="math inline">\(k=2q+1\)</span> là số quan sát được lấy giá trị trung bình. k thường là giá trị lẻ.</p>
 <p>Mô hình trên được gọi là <code>Moving Average (MA)</code></p>
@@ -851,7 +971,7 @@ Frequency = 1
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Nile <span class="sc">%&gt;%</span> </span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>(<span class="at">series =</span> <span class="st">"Original"</span>) <span class="sc">+</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">ma</span>(Nile, <span class="dv">12</span>), <span class="at">series =</span> <span class="st">"12-MA"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autolayer</span>(<span class="fu">ma</span>(Nile, <span class="dv">12</span>), <span class="at">series =</span> <span class="st">"12-MA"</span>, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"darkred"</span>) <span class="sc">+</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -869,11 +989,11 @@ Frequency = 1
 </ul>
 <p>Mô hình chuỗi thời gian cơ bản có hai dạng:</p>
 <ul>
-<li>Mô hình cộng (<code>Additive</code>) - chuỗi thời gian do tổng các thành phần cấu thành tạo nên.</li>
+<li>Mô hình hiệu ứng cộng (<code>Additive</code>) - chuỗi thời gian do tổng các thành phần cấu thành tạo nên.</li>
 </ul>
 <p><span class="math display">\[Y_t=Trend_t + Seasonal_t + Irregular_t\]</span></p>
 <ul>
-<li>Mô hình nhân (<code>Multiplicative</code>) - chuỗi thời gian do tích các thành phần cấu tạo nên.</li>
+<li>Mô hình hiệu ứng nhân (<code>Multiplicative</code>) - chuỗi thời gian do tích các thành phần cấu tạo nên.</li>
 </ul>
 <p><span class="math display">\[Y_t=Trend_t * Seasonal_t * Irregular_t\]</span></p>
 <p>Mô hình trên tương đương với.</p>
@@ -887,22 +1007,25 @@ Frequency = 1
 <li>Hàm trên chỉ dùng được cho Additive model</li>
 <li>Đối với Multiplicative, ta cần biến đổi như sau;</li>
 </ul>
-<p><span class="math display">\[log(Y_t) = log(Trend_t * Seasonal_t * Irregular_t)=log(Trend_t)+log(Seasonal_t)+log(Irregular_t)\]</span></p>
+<p><span class="math display">\[
+log(Y_t) = log(T_t * S_t * I_t) = log(T_t)+log(S_t)+log(I_t)
+\]</span></p>
 <ul>
 <li><code>s.window</code>: kiểm soát tốc độ thay đổi của yếu tố thời vụ (<code>seasonal</code>) ảnh hưởng đên chuối thời gian thế nào. Nếu <span class="math inline">\(s.window="period"\)</span> thì yếu tố thời vụ sẽ giống hệt nhau qua các năm.</li>
 <li><code>t.window</code>: kiểm soát tốc độ của yếu tố xu hướng (<code>trend</code>) thay đổi theo thời gian thế nào</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> AirPassengers <span class="sc">%&gt;%</span> autoplot <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Original data"</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Chuyển sang dạng Additive</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>lAirPassengers <span class="ot">&lt;-</span> <span class="fu">log</span>(AirPassengers)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> lAirPassengers <span class="sc">%&gt;%</span> autoplot <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Log data"</span>)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> AirPassengers <span class="sc">%&gt;%</span> autoplot <span class="sc">+</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Original data"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Chuyển sang dạng Additive</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>lAirPassengers <span class="ot">&lt;-</span> <span class="fu">log</span>(AirPassengers)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> lAirPassengers <span class="sc">%&gt;%</span> autoplot <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Log data"</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="p05-01-chuoi-thoi-gian_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -925,7 +1048,7 @@ Jun 1949  0.10978976 4.838166 -0.04268143
 Jul 1949  0.21640041 4.840927 -0.06011517</code></pre>
 </div>
 </div>
-<p><strong>Lưu ý</strong>: Nhìn vào bảng, ta có thể có các nhận định sau:</p>
+<p><strong>Lưu ý</strong>: Nhìn vào kết quả của bảng trên, ta có thể có các nhận định sau:</p>
 <ul>
 <li>Tháng một, yếu tố thời vụ khiến khách hàng giảm 9% (seasonal=-0.091)</li>
 <li>Tháng bảy, yếu tố thời vụ khiến khách hàng tăng 21% (seasonal = 0.216)</li>
@@ -975,7 +1098,7 @@ Jul 1949 1.2415994 126.5866 0.9416561</code></pre>
 <p><span class="math display">\[Y_t=level + irregular_t\]</span></p>
 <p>Dự báo giá trị của <span class="math inline">\(Y_{t+1}\)</span> (1-step ahead forecast) là:</p>
 <p><span class="math display">\[Y_{t+1}=c_0Y_t + c_1Y_{t-1}+c_2Y_{t-2}+...\]</span></p>
-<p>với <span class="math display">\[c_i=\alpha(1-\alpha)^i\]</span>, <span class="math display">\[\sum c_i=1\]</span>, <span class="math display">\[i=0,1,2...\]</span>, <span class="math display">\[\alpha\in[0,1]\]</span></p>
+<p>với <span class="math inline">\(c_i=\alpha(1-\alpha)^i\)</span>, <span class="math inline">\(\sum c_i=1\)</span>, <span class="math inline">\(i=0,1,2...\)</span>, <span class="math inline">\(\alpha\in[0,1]\)</span></p>
 <p>đo lường độ ảnh hưởng của các biến trước đó đến giá trị dự báo <span class="math inline">\(Y_{t+1}\)</span>. Do đó, <span class="math inline">\(\alpha\)</span> có đặc điểm sau:</p>
 <ul>
 <li>càng gần 1, các biến càng gần có trọng số càng lớn</li>
@@ -1135,7 +1258,8 @@ Call:
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>(fit <span class="ot">&lt;-</span> <span class="fu">ets</span>(AirPassengers)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">ets</span>(AirPassengers)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>ETS(M,Ad,M) 
 
@@ -1159,7 +1283,9 @@ Call:
      AIC     AICc      BIC 
 1395.166 1400.638 1448.623 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">forecast</span>(fit) <span class="sc">%&gt;%</span> autoplot <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">forecast</span>(fit) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  autoplot <span class="sc">+</span> </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="p05-01-chuoi-thoi-gian_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
