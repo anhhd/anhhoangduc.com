@@ -301,7 +301,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">XGBoost &amp; LightGBM</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -681,21 +681,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#so-sánh-giữa-efa-và-pca" id="toc-so-sánh-giữa-efa-và-pca" class="nav-link active" data-scroll-target="#so-sánh-giữa-efa-và-pca"><span class="header-section-number">40.1</span> So sánh giữa EFA và PCA</a>
+  <li><a href="#giới-thiệu" id="toc-giới-thiệu" class="nav-link active" data-scroll-target="#giới-thiệu"><span class="header-section-number">40.1</span> Giới thiệu</a></li>
+  <li><a href="#so-sánh-giữa-efa-và-pca" id="toc-so-sánh-giữa-efa-và-pca" class="nav-link" data-scroll-target="#so-sánh-giữa-efa-và-pca"><span class="header-section-number">40.2</span> So sánh giữa EFA và PCA</a></li>
+  <li><a href="#các-bước-thực-hiện" id="toc-các-bước-thực-hiện" class="nav-link" data-scroll-target="#các-bước-thực-hiện"><span class="header-section-number">40.3</span> Các bước thực hiện</a>
   <ul class="collapse">
-  <li><a href="#các-điểm-giống-nhau" id="toc-các-điểm-giống-nhau" class="nav-link" data-scroll-target="#các-điểm-giống-nhau"><span class="header-section-number">40.1.1</span> Các điểm giống nhau</a></li>
-  <li><a href="#các-điểm-khác-nhau" id="toc-các-điểm-khác-nhau" class="nav-link" data-scroll-target="#các-điểm-khác-nhau"><span class="header-section-number">40.1.2</span> Các điểm khác nhau</a></li>
+  <li><a href="#thực-hiện-factor-analysis" id="toc-thực-hiện-factor-analysis" class="nav-link" data-scroll-target="#thực-hiện-factor-analysis"><span class="header-section-number">40.3.1</span> Thực hiện factor analysis</a></li>
+  <li><a href="#đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình" id="toc-đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình" class="nav-link" data-scroll-target="#đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình"><span class="header-section-number">40.3.2</span> Đánh giá độ tin cậy và độ chính xác của mô hình</a></li>
+  <li><a href="#đặt-tên-cho-các-factor" id="toc-đặt-tên-cho-các-factor" class="nav-link" data-scroll-target="#đặt-tên-cho-các-factor"><span class="header-section-number">40.3.3</span> Đặt tên cho các factor</a></li>
   </ul></li>
-  <li><a href="#các-bước-thực-hiện" id="toc-các-bước-thực-hiện" class="nav-link" data-scroll-target="#các-bước-thực-hiện"><span class="header-section-number">40.2</span> Các bước thực hiện</a>
-  <ul class="collapse">
-  <li><a href="#kiểm-định-xem-tập-dữ-liệu-có-đủ-điều-kiện-cho-factor-analysis-không" id="toc-kiểm-định-xem-tập-dữ-liệu-có-đủ-điều-kiện-cho-factor-analysis-không" class="nav-link" data-scroll-target="#kiểm-định-xem-tập-dữ-liệu-có-đủ-điều-kiện-cho-factor-analysis-không"><span class="header-section-number">40.2.1</span> Kiểm định xem tập dữ liệu có đủ điều kiện cho factor analysis không</a></li>
-  <li><a href="#chọn-số-factor" id="toc-chọn-số-factor" class="nav-link" data-scroll-target="#chọn-số-factor"><span class="header-section-number">40.2.2</span> Chọn số factor</a></li>
-  <li><a href="#thực-hiện-factor-analysis" id="toc-thực-hiện-factor-analysis" class="nav-link" data-scroll-target="#thực-hiện-factor-analysis"><span class="header-section-number">40.2.3</span> Thực hiện factor analysis</a></li>
-  <li><a href="#đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình" id="toc-đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình" class="nav-link" data-scroll-target="#đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình"><span class="header-section-number">40.2.4</span> Đánh giá độ tin cậy và độ chính xác của mô hình</a></li>
-  <li><a href="#đặt-tên-cho-các-factor" id="toc-đặt-tên-cho-các-factor" class="nav-link" data-scroll-target="#đặt-tên-cho-các-factor"><span class="header-section-number">40.2.5</span> Đặt tên cho các factor</a></li>
-  </ul></li>
-  <li><a href="#thực-hành-trong-r" id="toc-thực-hành-trong-r" class="nav-link" data-scroll-target="#thực-hành-trong-r"><span class="header-section-number">40.3</span> Thực hành trong R</a></li>
-  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">40.4</span> Tài liệu tham khảo</a></li>
+  <li><a href="#thực-hành-trong-r" id="toc-thực-hành-trong-r" class="nav-link" data-scroll-target="#thực-hành-trong-r"><span class="header-section-number">40.4</span> Thực hành trong R</a></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">40.5</span> Tài liệu tham khảo</a></li>
   </ul>
 </nav>
     </div>
@@ -719,26 +714,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p>Phân tích nhân tố khám phá (exploratory factor analysis) là kỹ thuật giúp làm giảm số chiều dữ liệu (giảm số biến) nhằm tìm ra các biến ẩn (factor) đằng sau các nhóm biến ban đầu. Thực chất, phương pháp này được sử dụng để đo các khái niệm (concept) phức tạp và đa chiều mà ta không thể đo trực tiếp bằng 1 biến duy nhất, mà phải đo từ nhiều khía cạnh hay các hành vi là kết quả cụ thể của khái niệm đó (quan hệ nhân-quả)</p>
-<section id="so-sánh-giữa-efa-và-pca" class="level2" data-number="40.1">
-<h2 data-number="40.1" class="anchored" data-anchor-id="so-sánh-giữa-efa-và-pca"><span class="header-section-number">40.1</span> So sánh giữa EFA và PCA</h2>
-<section id="các-điểm-giống-nhau" class="level3" data-number="40.1.1">
-<h3 data-number="40.1.1" class="anchored" data-anchor-id="các-điểm-giống-nhau"><span class="header-section-number">40.1.1</span> Các điểm giống nhau</h3>
-<ul>
-<li>Đều là các kỹ thuật làm giảm dữ liệu, bằng cách sử dụng sự tương quan giữa các biến ban đầu để gộp thành các biến mới. Với k biến ban đầu, k biến mới sẽ được tạo ra. Tuy nhiên, ta sẽ chỉ giữ lại n biến mới với n &lt; k sao cho lượng thông tin vẫn được bảo toàn nhất có thể (Eigen Value &gt; 1 hoặc Cumulative Variance Percentage &gt; 80 % như trong <code>PCA</code>)</li>
-</ul>
+<section id="giới-thiệu" class="level2" data-number="40.1">
+<h2 data-number="40.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">40.1</span> Giới thiệu</h2>
+<p>Phân tích nhân tố ẩn (<code>factor analysis</code>)là kỹ thuật giúp làm giảm số chiều dữ liệu (giảm số biến) nhằm tìm ra các biến ẩn (<code>factor</code>) đằng sau các nhóm biến ban đầu.</p>
 </section>
-<section id="các-điểm-khác-nhau" class="level3" data-number="40.1.2">
-<h3 data-number="40.1.2" class="anchored" data-anchor-id="các-điểm-khác-nhau"><span class="header-section-number">40.1.2</span> Các điểm khác nhau</h3>
-<section id="thuật-toán" class="level4" data-number="40.1.2.1">
-<h4 data-number="40.1.2.1" class="anchored" data-anchor-id="thuật-toán"><span class="header-section-number">40.1.2.1</span> Thuật toán</h4>
+<section id="so-sánh-giữa-efa-và-pca" class="level2" data-number="40.2">
+<h2 data-number="40.2" class="anchored" data-anchor-id="so-sánh-giữa-efa-và-pca"><span class="header-section-number">40.2</span> So sánh giữa EFA và PCA</h2>
+<p><strong>Cả PCA &amp; FA</strong> các kỹ thuật làm giảm dữ liệu, bằng cách sử dụng sự tương quan giữa các biến ban đầu để gộp thành các biến mới. Với k biến ban đầu, k biến mới sẽ được tạo ra. Tuy nhiên, ta sẽ chỉ giữ lại n biến mới với n &lt; k sao cho lượng thông tin vẫn được bảo toàn nhất có thể (Eigen Value &gt; 1 hoặc Cumulative Variance Percentage &gt; 80 % như trong <code>PCA</code>)</p>
+<p>Tuy nhiên, 2 phương pháp này có sự khác biệt về thuật toán cũng như ứng dụng.</p>
+<p><strong>Thuật toán</strong></p>
 <ul>
 <li><p>Trong PCA, các thành phần chính (<code>principal components</code>) là các tổ hợp tuyến tính của tất cả các biến ban đầu, sao cho PC1 là tổ hợp giữ được lượng thông tin nhiều nhất, PC2 được bổ sung vuông góc với PC1 nhằm thêm các thông tin còn thiếu trong PC1 và chứa lượng thông tin ít hơn PC1,…cứ như vậy, các PC được bổ sung sau sẽ vuông góc với các PC trước đó và chứa lượng thông tin giảm dần. Như vây các PC <strong>phải vuông góc</strong> với nhau, đồng nghĩa với việc các <strong>PC không được tương quan với nhau</strong>.</p></li>
 <li><p>Trong EFA, các nhân tố (factor) là tổ hợp tuyến tính của các biến ban đầu có tương quan với nhau, sao cho mỗi nhân tố giữ lại được lượng thông tin nhiều nhất của 1 nhóm các biến ban đầu. Khác với PCA, các factor <strong>có thể không vuông góc</strong> với nhau, đồng nghĩa với việc các <strong>factor có thể tương quan với nhau</strong></p></li>
 </ul>
-</section>
-<section id="mục-đích-sử-dụng" class="level4" data-number="40.1.2.2">
-<h4 data-number="40.1.2.2" class="anchored" data-anchor-id="mục-đích-sử-dụng"><span class="header-section-number">40.1.2.2</span> Mục đích sử dụng</h4>
+<p><strong>Mục đích sử dụng</strong></p>
 <ul>
 <li>PCA được sử dụng để đơn giản hoá tập dữ liệu, sao cho với số biến mới tối thiểu vẫn giữ lại được tối đa lượng thông tin của tập dữ liệu ban đầu. Do đó, các biến mới (<code>principal components</code>) không cần được đặt tên</li>
 </ul>
@@ -751,54 +740,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <center>
 <img src="Images/57-fa-efa-model.png" class="img-fluid">
 </center>
-</section>
-<section id="ứng-dụng-trong-kinh-doanh" class="level4" data-number="40.1.2.3">
-<h4 data-number="40.1.2.3" class="anchored" data-anchor-id="ứng-dụng-trong-kinh-doanh"><span class="header-section-number">40.1.2.3</span> Ứng dụng trong kinh doanh</h4>
+<p><strong>Ứng dụng</strong></p>
 <ul>
-<li><p>PCA được ứng dụng để tìm ra số nhóm tối ưu cho các bài toán phân lớp khách hàng (K-means clustering), hoặc làm giảm số biến đầu vào cho các mô hình dự báo</p></li>
-<li><p>EFA thường được sử dụng trong trong lĩnh vực marketing và nghiên cứu thị trường, xây dựng các bộ câu hỏi cho survey để đánh giá nhận thức/ hành vi của khách hàng về sản phẩm/ dịch vụ như: mức độ hài lòng với sản phẩm, sự trung thành với nhãn hiệu, lý do khách hàng mua sản phẩm…Sau đó các biến mới cũng có thể được sử dụng làm biến đầu vào cho các mô hình</p></li>
+<li>PCA được ứng dụng để tìm ra số nhóm tối ưu cho các bài toán phân lớp khách hàng (K-means clustering), hoặc làm giảm số biến đầu vào cho các mô hình dự báo</li>
+<li>EFA thường được sử dụng trong trong lĩnh vực marketing và nghiên cứu thị trường, xây dựng các bộ câu hỏi cho survey để đánh giá nhận thức/ hành vi của khách hàng về sản phẩm/ dịch vụ như: mức độ hài lòng với sản phẩm, sự trung thành với nhãn hiệu, lý do khách hàng mua sản phẩm…Sau đó các biến mới cũng có thể được sử dụng làm biến đầu vào cho các mô hình</li>
 </ul>
 <center>
 <img src="Images/57-fa-survey.jpg" class="img-fluid">
 </center>
 </section>
-</section>
-</section>
-<section id="các-bước-thực-hiện" class="level2" data-number="40.2">
-<h2 data-number="40.2" class="anchored" data-anchor-id="các-bước-thực-hiện"><span class="header-section-number">40.2</span> Các bước thực hiện</h2>
-<section id="kiểm-định-xem-tập-dữ-liệu-có-đủ-điều-kiện-cho-factor-analysis-không" class="level3" data-number="40.2.1">
-<h3 data-number="40.2.1" class="anchored" data-anchor-id="kiểm-định-xem-tập-dữ-liệu-có-đủ-điều-kiện-cho-factor-analysis-không"><span class="header-section-number">40.2.1</span> Kiểm định xem tập dữ liệu có đủ điều kiện cho factor analysis không</h3>
+<section id="các-bước-thực-hiện" class="level2" data-number="40.3">
+<h2 data-number="40.3" class="anchored" data-anchor-id="các-bước-thực-hiện"><span class="header-section-number">40.3</span> Các bước thực hiện</h2>
 <ul>
+<li><p><strong>Bước 1</strong>: Kiểm định xem tập dữ liệu có đủ điều kiện cho factor analysis không</p></li>
 <li><p>Số quan sát <strong>tối thiểu là 50</strong></p></li>
 <li><p>KMO test (0-&gt;1) kiểm tra mức độ tương quan của các biến ban đầu. <strong>KMO result &gt; 0.5</strong> là chấp nhận được</p></li>
 </ul>
-<center>
-<img src="Images/57-fa-kmo.jpg" class="img-fluid">
-</center>
-</section>
-<section id="chọn-số-factor" class="level3" data-number="40.2.2">
-<h3 data-number="40.2.2" class="anchored" data-anchor-id="chọn-số-factor"><span class="header-section-number">40.2.2</span> Chọn số factor</h3>
-<p>Cân nhắc các điểm sau:</p>
+<p><img src="Images/57-fa-kmo.jpg" class="img-fluid"></p>
 <ul>
-<li><p>Ý nghĩa kinh doanh</p></li>
-<li><p>Eigen value &gt; 1</p></li>
-<li><p>Scree plot tại điểm thay đổi độ dốc</p></li>
+<li><strong>Bước 2</strong>: Chọn số factor (nhóm các biến ẩn) trong tập dữ liệu. Đây là bước khó nhất vì cần phải đảm bảo yếu tố giải thích được trong thực tiễn. Khi thực hiện, cần lưu ý các điểm sau.
+<ul>
+<li>Ý nghĩa kinh doanh</li>
+<li>Eigen value &gt; 1</li>
+<li>Scree plot tại điểm thay đổi độ dốc</li>
+</ul></li>
 </ul>
-</section>
-<section id="thực-hiện-factor-analysis" class="level3" data-number="40.2.3">
-<h3 data-number="40.2.3" class="anchored" data-anchor-id="thực-hiện-factor-analysis"><span class="header-section-number">40.2.3</span> Thực hiện factor analysis</h3>
+<section id="thực-hiện-factor-analysis" class="level3" data-number="40.3.1">
+<h3 data-number="40.3.1" class="anchored" data-anchor-id="thực-hiện-factor-analysis"><span class="header-section-number">40.3.1</span> Thực hiện factor analysis</h3>
 <p>Trong đó chọn 1 trong 2 phương pháp xoay vector sau:</p>
 <ul>
-<li><p>Chọn Orthogonal (rotate = “varimax”) khi ta cho rằng các factors không có tương quan với nhau</p></li>
-<li><p>Chọn Oblique (rotate = “oblimin”) khi ta cho rằng các factors có tương quan với nhau (chủ yếu chọn phương pháp này)</p></li>
+<li>Chọn Orthogonal (rotate = “varimax”) khi ta cho rằng các factors không có tương quan với nhau</li>
+<li>Chọn Oblique (rotate = “oblimin”) khi ta cho rằng các factors có tương quan với nhau (chủ yếu chọn phương pháp này)</li>
 </ul>
 <center>
 <img src="Images/57-fa-rotation.jpg" class="img-fluid">
 </center>
 <p>=&gt; Xem loadings (correlation value) xem có hiện tượng 1 biến ban đầu tương quan mạnh với nhiều hơn 1 factor không (high multi-loadings)</p>
 </section>
-<section id="đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình" class="level3" data-number="40.2.4">
-<h3 data-number="40.2.4" class="anchored" data-anchor-id="đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình"><span class="header-section-number">40.2.4</span> Đánh giá độ tin cậy và độ chính xác của mô hình</h3>
+<section id="đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình" class="level3" data-number="40.3.2">
+<h3 data-number="40.3.2" class="anchored" data-anchor-id="đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình"><span class="header-section-number">40.3.2</span> Đánh giá độ tin cậy và độ chính xác của mô hình</h3>
 <p>Ta mong đợi các biến đo được phải tương quan với nhau theo từng nhóm, đồng nghĩa chúng đo cùng 1 khái niệm (độ tin cậy, reliability) và phải đo đúng khái niệm ta cần (độ chính xác, validity)</p>
 <p>Độ tin cậy được đo bằng chỉ số Cronbach’s alpha. <strong>() &gt;= 0.3</strong> là pass. Ta có thể cân nhắc loại bỏ 1 vài biến ban đầu không có tương quan với các biến khác, tuy nhiên phải đánh đổi bằng thông tin bị mất đi</p>
 <p>Độ chính xác được đo theo 2 tiêu chí:</p>
@@ -824,14 +804,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 </ul>
 </section>
-<section id="đặt-tên-cho-các-factor" class="level3" data-number="40.2.5">
-<h3 data-number="40.2.5" class="anchored" data-anchor-id="đặt-tên-cho-các-factor"><span class="header-section-number">40.2.5</span> Đặt tên cho các factor</h3>
+<section id="đặt-tên-cho-các-factor" class="level3" data-number="40.3.3">
+<h3 data-number="40.3.3" class="anchored" data-anchor-id="đặt-tên-cho-các-factor"><span class="header-section-number">40.3.3</span> Đặt tên cho các factor</h3>
 <p>Tùy theo kết quả loadings các nhóm biến để đặt tên cho biến ẩn (khái niệm) sao cho biến ẩn có ý nghĩa tổng hợp nhất</p>
 <p><strong>Lưu ý</strong>: Các bước 2 -&gt; 4 có thể phải thực hiện nhiều lần để có kết quả ưng ý</p>
 </section>
 </section>
-<section id="thực-hành-trong-r" class="level2" data-number="40.3">
-<h2 data-number="40.3" class="anchored" data-anchor-id="thực-hành-trong-r"><span class="header-section-number">40.3</span> Thực hành trong R</h2>
+<section id="thực-hành-trong-r" class="level2" data-number="40.4">
+<h2 data-number="40.4" class="anchored" data-anchor-id="thực-hành-trong-r"><span class="header-section-number">40.4</span> Thực hành trong R</h2>
 <p>Sử dụng tập dữ liệu là kết quả phản hồi survey của 90 KH cho 14 tiêu chí họ ưu tiên khi chọn mua ô tô (bao gồm giá, tính an toàn, tiết kiệm nhiên liệu, dịch vụ hậu mãi…). Survey được thiết kế dưới dạng thang đo Likert với 5 lựa chọn (5-point Likert scale) từ “Very low” (tương ứng với 1) đến “Very high” (tương ứng với 5)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
@@ -965,86 +945,7 @@ Cumulative Var 0.117 0.234 0.309 0.378</code></pre>
 </ul>
 <p>() = 0.61 cho thấy mô hình đáng tin cậy. Xem thêm bảng Reliability if an item is dropped ta thấy nếu loại bỏ các biến Safety, Exterior_Looks, Testimonials có thể cải thiện () tuy nhiên rất ít =&gt; Ta chọn giữ lại tất cả các biến này để không bị mất thông tin</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">alpha</span>(df,<span class="at">check.keys=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Reliability analysis   
-Call: alpha(x = df, check.keys = TRUE)
-
-  raw_alpha std.alpha G6(smc) average_r S/N   ase mean   sd median_r
-      0.61      0.62    0.71       0.1 1.6 0.059  3.7 0.34    0.091
-
-    95% confidence boundaries 
-         lower alpha upper
-Feldt     0.48  0.61  0.72
-Duhachek  0.49  0.61  0.73
-
- Reliability if an item is dropped:
-                    raw_alpha std.alpha G6(smc) average_r S/N alpha se var.r
-Price                    0.59      0.59    0.69     0.101 1.5    0.063 0.027
-Safety-                  0.62      0.64    0.72     0.120 1.8    0.059 0.026
-Exterior_Looks-          0.63      0.65    0.72     0.123 1.8    0.056 0.025
-Space_comfort            0.60      0.61    0.68     0.106 1.5    0.061 0.023
-Technology               0.60      0.61    0.70     0.107 1.6    0.060 0.028
-After_Sales_Service      0.58      0.59    0.68     0.099 1.4    0.064 0.026
-Resale_Value             0.61      0.61    0.69     0.107 1.6    0.059 0.024
-Fuel_Type                0.60      0.61    0.70     0.108 1.6    0.060 0.026
-Fuel_Efficiency          0.53      0.54    0.64     0.084 1.2    0.072 0.025
-Color                    0.57      0.59    0.68     0.099 1.4    0.065 0.027
-Maintenance              0.55      0.56    0.65     0.090 1.3    0.069 0.026
-Test_drive               0.60      0.61    0.70     0.106 1.5    0.061 0.028
-Product_reviews          0.56      0.57    0.67     0.094 1.3    0.067 0.028
-Testimonials             0.62      0.63    0.71     0.116 1.7    0.058 0.026
-                    med.r
-Price               0.095
-Safety-             0.112
-Exterior_Looks-     0.115
-Space_comfort       0.087
-Technology          0.104
-After_Sales_Service 0.087
-Resale_Value        0.095
-Fuel_Type           0.101
-Fuel_Efficiency     0.079
-Color               0.094
-Maintenance         0.082
-Test_drive          0.095
-Product_reviews     0.082
-Testimonials        0.107
-
- Item statistics 
-                     n raw.r std.r r.cor  r.drop mean   sd
-Price               90  0.41  0.45 0.382  0.3032  4.2 0.59
-Safety-             90  0.19  0.20 0.073  0.0556  1.8 0.64
-Exterior_Looks-     90  0.16  0.16 0.022 -0.0069  2.2 0.82
-Space_comfort       90  0.32  0.38 0.342  0.1872  4.0 0.65
-Technology          90  0.35  0.37 0.269  0.1735  4.2 0.87
-After_Sales_Service 90  0.45  0.48 0.433  0.3265  4.4 0.65
-Resale_Value        90  0.44  0.38 0.326  0.1971  3.7 1.22
-Fuel_Type           90  0.30  0.36 0.280  0.1643  4.1 0.65
-Fuel_Efficiency     90  0.69  0.69 0.710  0.5863  3.9 0.82
-Color               90  0.51  0.48 0.437  0.3428  3.7 0.92
-Maintenance         90  0.62  0.61 0.603  0.5001  4.0 0.77
-Test_drive          90  0.44  0.39 0.302  0.2283  3.4 1.11
-Product_reviews     90  0.56  0.55 0.511  0.4073  4.1 0.89
-Testimonials        90  0.26  0.25 0.149  0.0839  3.9 0.87
-
-Non missing response frequency for each item
-                       1    2    3    4    5 miss
-Price               0.00 0.00 0.10 0.63 0.27    0
-Safety              0.00 0.00 0.12 0.56 0.32    0
-Exterior_Looks      0.01 0.02 0.30 0.47 0.20    0
-Space_comfort       0.00 0.01 0.18 0.61 0.20    0
-Technology          0.01 0.03 0.14 0.41 0.40    0
-After_Sales_Service 0.00 0.01 0.06 0.44 0.49    0
-Resale_Value        0.06 0.11 0.28 0.21 0.34    0
-Fuel_Type           0.00 0.00 0.17 0.58 0.26    0
-Fuel_Efficiency     0.01 0.03 0.24 0.50 0.21    0
-Color               0.02 0.08 0.22 0.50 0.18    0
-Maintenance         0.00 0.01 0.27 0.44 0.28    0
-Test_drive          0.02 0.23 0.22 0.33 0.19    0
-Product_reviews     0.00 0.08 0.10 0.43 0.39    0
-Testimonials        0.01 0.04 0.24 0.46 0.24    0</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">alpha</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Có thể tính toán thêm AVE và Shared Variance cho validity test</p>
 <ul>
@@ -1054,8 +955,8 @@ Testimonials        0.01 0.04 0.24 0.46 0.24    0</code></pre>
 <img src="Images/57-fa-naming.jpg" class="img-fluid">
 </center>
 </section>
-<section id="tài-liệu-tham-khảo" class="level2" data-number="40.4">
-<h2 data-number="40.4" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">40.4</span> Tài liệu tham khảo</h2>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="40.5">
+<h2 data-number="40.5" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">40.5</span> Tài liệu tham khảo</h2>
 <ol type="1">
 <li><p><a href="http://www.theanalysisfactor.com/the-fundamental-difference-between-principal-component-analysis-and-factor-analysis/" class="uri">http://www.theanalysisfactor.com/the-fundamental-difference-between-principal-component-analysis-and-factor-analysis/</a></p></li>
 <li><p><a href="https://www.promptcloud.com/blog/exploratory-factor-analysis-in-r/" class="uri">https://www.promptcloud.com/blog/exploratory-factor-analysis-in-r/</a></p></li>
