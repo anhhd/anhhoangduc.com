@@ -299,7 +299,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">XGBoost &amp; LightGBM</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -680,7 +680,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#giới-thiệu" id="toc-giới-thiệu" class="nav-link active" data-scroll-target="#giới-thiệu"><span class="header-section-number">54.1</span> Giới thiệu</a></li>
-  <li><a href="#phân-tích-vintage-loại-1" id="toc-phân-tích-vintage-loại-1" class="nav-link" data-scroll-target="#phân-tích-vintage-loại-1"><span class="header-section-number">54.2</span> Phân tích vintage loại 1</a></li>
+  <li><a href="#phân-tích-vintage-chỉ-theo-thời-gian" id="toc-phân-tích-vintage-chỉ-theo-thời-gian" class="nav-link" data-scroll-target="#phân-tích-vintage-chỉ-theo-thời-gian"><span class="header-section-number">54.2</span> Phân tích vintage chỉ theo thời gian</a></li>
   <li><a href="#phân-tích-vintage-loại-2" id="toc-phân-tích-vintage-loại-2" class="nav-link" data-scroll-target="#phân-tích-vintage-loại-2"><span class="header-section-number">54.3</span> Phân tích vintage loại 2</a></li>
   <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">54.4</span> Tài liệu tham khảo</a></li>
   </ul>
@@ -708,21 +708,97 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="giới-thiệu" class="level2" data-number="54.1">
 <h2 data-number="54.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">54.1</span> Giới thiệu</h2>
-<p><code>Vintage analysis</code> là kỹ thuật phân tích giữa các nhóm khác nhau theo thời gian. <code>Vintage analysis</code> được sử dụng lần đầu khi so sánh chất lượng giữa các nhóm khách hàng bằng cách xem tỷ lệ nợ xấu của khách hàng sau cùng 1 khoảng thời gian. Ví dụ, tỷ lệ nợ xấu của khách hàng vay tín dụng sau 6 tháng, 12 tháng theo năm vay. Tuy nhiên, bên cạnh hoạt động quản trị rủi ro, <code>Vintage Analysis</code> còn có rất nhiều ứng dụng trong các hoạt động phân tích khám phá dữ liệu khác nhau như Marketing, Business Analaytics. <code>Vintage Analysis</code> có 2 loại cơ bản sau:</p>
+<p><code>Vintage analysis</code> là kỹ thuật phân tích giữa các nhóm khác nhau theo thời gian tương đối :</p>
 <ul>
-<li>Phân tích tỷ lệ theo chiều thời gian: Đây là loại phân tích vintage gốc của quản trị rủi ro. Trong loại phân tích này, dữ liệu được chia thành các nhóm chỉ theo chiều thời gian. Chỉ số được đăng ký Ví dụ: Phân tích tỷ lệ convert của marketing theo tháng/quý đăng ký hồ sơ</li>
-<li>Phân tích tỷ lệ dịch chuyển theo nhóm: Loại phân tích này được mở rộng từ loại hình phân tích gốc, cho phép phân tích không chỉ theo chiều thời gian mà còn nhiều chiều khác nhau. Xét về bản chất, phân tích <code>vintage</code> theo nhóm 1 chỉ là 1 trường hợp đặc biệt</li>
+<li>Tỷ lệ nợ xấu của khách hàng vay tín dụng sau 6 tháng, 12 tháng kể từ khi nhận giải ngân</li>
+<li>Tỷ lệ chuyển đổi (<code>conversion rate</code>) kể từ khi tương tác lần đầu</li>
 </ul>
+<center>
+<font size="4">§</font>
+</center>
+<p><strong>Phân biệt thời gian tương đối &amp; tuyệt đối</strong>: Bản chất của kỹ thuật phân tích theo <code>vintage</code> là biến đổi dữ liệu thời gian tuyệt đối (theo lịch) trở thành thời gian tương đối (theo 1 sự kiện cần so sánh). Thời gian tương đối này thường được gọi là Month on Book hoặc thời gian kể từ khi xảy ra 1 sự kiên. Xem ví dụ sau:</p>
+<ul>
+<li>Khách hàng A mở tài khoản tại ngân hàng vào tháng 1/2022</li>
+<li>Khách hàng B mở tài khoảng tại ngân hàng vào tháng 6/2022</li>
+</ul>
+<p>Tại thời điểm 12/2022, khi ta phân tích 2 khách hàng này, có 2 cách như sau:</p>
+<ul>
+<li><strong>Thời gian tuyệt đối</strong>: Lấy mốc quan sát là tháng 12/2022</li>
+<li><strong>Thời gian tương đối</strong>: Lấy mốc quan sát từ khi khách hàng mở tài khoản - 12 tháng (với khách hàng A), 6 tháng với khách hàng B</li>
+</ul>
+<div class="quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<table class="table">
+<caption>Tháng mở tài khoản</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">ID</th>
+<th style="text-align: left;">Khách hàng</th>
+<th style="text-align: left;">Tháng mở tài khoản</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">1/2022</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">B</td>
+<td style="text-align: left;">6/2022</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<table class="table">
+<caption>Chuyển đổi <code>Month on Book</code></caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">ID</th>
+<th style="text-align: left;">Khách hàng</th>
+<th style="text-align: left;">Tháng phân tích</th>
+<th style="text-align: left;">Month on Book</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">12/2022</td>
+<td style="text-align: left;">12</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">B</td>
+<td style="text-align: left;">12/2022</td>
+<td style="text-align: left;">6</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<center>
+<font size="4">§</font>
+</center>
+<p><code>Vintage Analysis</code> có 2 nhóm cơ bản sau:</p>
+<ul>
+<li><strong>Phân tích tỷ lệ chỉ theo chiều thời gian</strong>: Trong loại phân tích này, dữ liệu được chia thành các nhóm chỉ theo chiều thời gian. Chỉ số được đăng ký Ví dụ: Phân tích tỷ lệ convert của marketing theo tháng/quý đăng ký hồ sơ</li>
+<li><strong>Phân tích tỷ lệ dịch chuyển theo nhóm</strong>: Loại phân tích này được mở rộng từ loại hình phân tích gốc, cho phép phân tích không chỉ theo chiều thời gian mà còn nhiều chiều khác nhau. Xét về bản chất, phân tích <code>vintage</code> theo nhóm 1 chỉ là 1 trường hợp đặc biệt của phân tích chuyển dịch theo nhóm.</li>
+</ul>
+</section>
+<section id="phân-tích-vintage-chỉ-theo-thời-gian" class="level2" data-number="54.2">
+<h2 data-number="54.2" class="anchored" data-anchor-id="phân-tích-vintage-chỉ-theo-thời-gian"><span class="header-section-number">54.2</span> Phân tích vintage chỉ theo thời gian</h2>
 <p>Để thuận tiện, ta sẽ phân tích tập dữ liệu marketing như dưới đây.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggthemes)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/marketing.rda"</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>marketing <span class="sc">%&gt;%</span> head</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>marketing <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/marketing.rda"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>marketing <span class="sc">%&gt;%</span> head</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>marketing <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Trong tập dữ liệu trên, mỗi dòng ứng với 1 quan sát (khách hàng).</p>
 <ul>
@@ -750,21 +826,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(result)</span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="phân-tích-vintage-loại-1" class="level2" data-number="54.2">
-<h2 data-number="54.2" class="anchored" data-anchor-id="phân-tích-vintage-loại-1"><span class="header-section-number">54.2</span> Phân tích vintage loại 1</h2>
 <p>Trong loại phân tích này, ta sẽ xem xét tỷ lệ chuyển đổi theo thời gian giữa các nhóm khách hàng, dựa vào thời gian đăng ký.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lấy tập dữ liệu test</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> marketing <span class="sc">%&gt;%</span> </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(start <span class="sc">&lt;=</span> event <span class="sc">|</span> <span class="fu">is.na</span>(event))</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">size =</span> <span class="fu">nrow</span>(.), <span class="at">replace =</span> T)) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">floor_date</span>(start, <span class="st">"months"</span>))</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">analyze_vintage_group</span>(df, start, event, start, start, <span class="at">type =</span> <span class="st">"day"</span>)</span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lấy tập dữ liệu</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> marketing <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(start <span class="sc">&lt;=</span> event <span class="sc">|</span> <span class="fu">is.na</span>(event))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="at">size =</span> <span class="fu">nrow</span>(.), <span class="at">replace =</span> T)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">floor_date</span>(start, <span class="st">"months"</span>))</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">analyze_vintage_group</span>(df, start, event, start, <span class="at">type =</span> <span class="st">"day"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Ví dụ khách hàng đăng ký vào ngày `20180823`</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>result <span class="sc">%&gt;%</span> <span class="fu">filter</span>(start <span class="sc">==</span> <span class="fu">ymd</span>(<span class="st">"2018-08-23"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -775,16 +848,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Sau 50 ngày (<code>time = 50</code>), có 10 khách hàng, tương ứng với <code>221.3%</code> khách hàng mua sản phẩm</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>result <span class="sc">%&gt;%</span> </span>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>result <span class="sc">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, percent)) <span class="sc">+</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> start), <span class="at">col =</span> <span class="st">"darkgrey"</span>) <span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>() <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">col =</span> <span class="st">"darkred"</span>) <span class="sc">+</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>() <span class="sc">+</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_tableau</span>() <span class="sc">+</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Days since registered"</span>, <span class="at">y =</span> <span class="st">"Conversion rate"</span>,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Conversion rate of different registration time"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Days since registered"</span>, <span class="at">y =</span> <span class="st">"Conversion rate"</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Conversion rate of different registration time"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="phân-tích-vintage-loại-2" class="level2" data-number="54.3">
@@ -805,15 +877,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>result_group <span class="sc">%&gt;%</span> </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">as.factor</span>(group)) <span class="sc">%&gt;%</span> </span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(time, percent)) <span class="sc">+</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">col =</span> group), <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">col =</span> group)) <span class="sc">+</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>() <span class="sc">+</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_tableau</span>() <span class="sc">+</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>month, <span class="at">scale =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Days since registered"</span>, <span class="at">y =</span> <span class="st">"Conversion rate"</span>,</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Conversion rate of different registration time"</span>) <span class="sc">+</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>month, <span class="at">scale =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> percent) <span class="sc">+</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Days since registered"</span>, <span class="at">y =</span> <span class="st">"Conversion rate"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Conversion rate of different registration time"</span>) <span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>) <span class="sc">+</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Lưu ý
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Khi phân tích hành vi, nếu bế tắc khi dùng góc nhìn tuyệt đối (theo lịch), ta cần c<em>huyển đổi sang góc nhìn thời gian tương đối từ khi xảy ra một sự kiện</em></li>
+<li>Không nên lạm dụng việc biến đổi dữ liệu theo hướng tương đối với tất cả các sự kiện, mà chỉ nên biến đổi với các sự kiện thực sự quan trọng.</li>
+<li>Phân tích <code>vintage</code> có thể mở rộng với các chỉ số đòi hỏi tính toán phức tạp hơn như tỷ lệ nợ xấu, số lượng giao dịch,… - chỉ cần nắm vững bản chất đây là biến đổi sang dữ liệu thời gian tương đối.</li>
+</ul>
+</div>
 </div>
 </section>
 <section id="tài-liệu-tham-khảo" class="level2" data-number="54.4">

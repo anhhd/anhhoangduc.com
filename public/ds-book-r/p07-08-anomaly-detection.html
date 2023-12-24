@@ -299,7 +299,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Extreme Gradient Boosting</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">XGBoost &amp; LightGBM</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -707,7 +707,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="giới-thiệu" class="level2" data-number="56.1">
 <h2 data-number="56.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">56.1</span> Giới thiệu</h2>
-<p><code>Abnomaly detection</code> là một nhánh ứng dụng của phân tích dữ liệu cho phép phát hiện những quan sát bất thường trong cả tập dữ liệu mà không cần <code>target</code>. Do đó, có thể coi <code>abnomaly detection</code> thuộc và nhóm <code>unsupervised learning</code>. Các</p>
+<p><code>Abnomaly detection</code> là một nhánh ứng dụng của phân tích dữ liệu cho phép phát hiện những quan sát bất thường trong cả tập dữ liệu mà không cần <code>target</code>. Do đó, có thể coi <code>abnomaly detection</code> thuộc và nhóm <code>unsupervised learning</code>.</p>
+<p>Nhóm thuật toán xác định quan sát bất thường dựa trên mạng neural chia làm 3 bước sau:</p>
+<ul>
+<li>Xây dựng mô hinh mạng neural đơn giản với (<code>encoder</code>) để học cấu trúc dữ liệu</li>
+<li>Dự báo với tập dữ liệu mới</li>
+<li>Xác định sai số giữa 2 nhóm dữ liệu để xác định các quan sát bất thường</li>
+</ul>
+<hr>
+<p><img src="Images/p07-08-anomaly.webp" class="img-fluid"></p>
+<hr>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Lưu ý
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Để hiểu rõ các thuật toán về <code>deep learning</code>, cần dành thời gian nghiên cứu kỹ. Nội dung chương này tập trung phần ứng dụng của <code>deep learning</code> trong việc xác định các quan sát bất thường.</p>
+</div>
+</div>
 </section>
 <section id="thực-hành" class="level2" data-number="56.2">
 <h2 data-number="56.2" class="anchored" data-anchor-id="thực-hành"><span class="header-section-number">56.2</span> Thực hành</h2>
@@ -716,60 +738,186 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(h2o)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.init</span>(<span class="at">nthreads =</span> <span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Connection successful!
+
+R is connected to the H2O cluster: 
+    H2O cluster uptime:         52 minutes 51 seconds 
+    H2O cluster timezone:       Etc/UTC 
+    H2O data parsing timezone:  UTC 
+    H2O cluster version:        3.42.0.2 
+    H2O cluster version age:    4 months and 28 days 
+    H2O cluster name:           H2O_started_from_R_jovyan_dus033 
+    H2O cluster total nodes:    1 
+    H2O cluster total memory:   0.82 GB 
+    H2O cluster total cores:    2 
+    H2O cluster allowed cores:  2 
+    H2O cluster healthy:        TRUE 
+    H2O Connection ip:          localhost 
+    H2O Connection port:        54321 
+    H2O Connection proxy:       NA 
+    H2O Internal Security:      FALSE 
+    R Version:                  R version 4.3.0 (2023-04-21) </code></pre>
+</div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> mtcars <span class="sc">%&gt;%</span> </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(.)) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(gear, carb, cyl, vs, am), as.factor)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> head</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>h2o_mtcars <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> as.h2o</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> mtcars <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(.)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(gear, carb, cyl, vs, am), as.factor)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   mpg cyl disp  hp drat    wt  qsec vs am gear carb id
+Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4  1
+Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4  2
+Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1  3
+Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1  4
+Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2  5
+Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1  6</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>h2o_mtcars <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> as.h2o</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+</div>
 </div>
 <ul>
 <li><strong>Bước 1</strong>: Sử dụng <code>deep learning</code> để tự học về cấu trúc dữ liệu</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">h2o.deeplearning</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">11</span>,</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">training_frame =</span> h2o_mtcars,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">autoencoder =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">activation =</span> <span class="st">"RectifierWithDropout"</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">hidden =</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">50</span>, <span class="dv">50</span>),</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">epochs =</span> <span class="dv">100</span>)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">h2o.deeplearning</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">11</span>,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">training_frame =</span> h2o_mtcars,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">autoencoder =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">activation =</span> <span class="st">"RectifierWithDropout"</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">hidden =</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">50</span>, <span class="dv">50</span>),</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">epochs =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>model <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Model Details:
+==============
+
+H2OAutoEncoderModel: deeplearning
+Model Key:  DeepLearning_model_R_1703339586992_3 
+Status of Neuron Layers: auto-encoder, gaussian distribution, Quadratic loss, 7,877 weights/biases, 99.3 KB, 3,200 training samples, mini-batch size 1
+  layer units             type dropout       l1       l2 mean_rate rate_rms
+1     1    27            Input  0.00 %       NA       NA        NA       NA
+2     2    50 RectifierDropout 50.00 % 0.000000 0.000000  0.192882 0.396796
+3     3    50 RectifierDropout 50.00 % 0.000000 0.000000  0.002125 0.001373
+4     4    50 RectifierDropout 50.00 % 0.000000 0.000000  0.000858 0.000482
+5     5    27        Rectifier      NA 0.000000 0.000000  0.000743 0.000417
+  momentum mean_weight weight_rms mean_bias bias_rms
+1       NA          NA         NA        NA       NA
+2 0.000000   -0.002728   0.178382  0.496204 0.097016
+3 0.000000   -0.011630   0.147749  0.929815 0.079723
+4 0.000000   -0.029919   0.137586  0.894228 0.049452
+5 0.000000   -0.008382   0.149861 -0.039092 0.177646
+
+H2OAutoEncoderMetrics: deeplearning
+** Reported on training data. **
+
+Training Set Metrics: 
+=====================
+
+MSE: (Extract with `h2o.mse`) 0.0794892
+RMSE: (Extract with `h2o.rmse`) 0.2819383
+
+
+
+
+
+
+Scoring History: 
+            timestamp   duration  training_speed    epochs iterations
+1 2023-12-23 14:46:02  0.053 sec 0.00000 obs/sec   0.00000          0
+2 2023-12-23 14:46:02  0.426 sec    8743 obs/sec 100.00000         10
+      samples training_rmse training_mse
+1    0.000000       0.72189      0.52113
+2 3200.000000       0.28194      0.07949
+
+Variable Importances: (Extract with `h2o.varimp`) 
+=================================================
+
+Variable Importances: 
+  variable relative_importance scaled_importance percentage
+1      mpg            1.000000          1.000000   0.061860
+2     drat            0.875080          0.875080   0.054132
+3    cyl.4            0.846472          0.846472   0.052363
+4       wt            0.824353          0.824353   0.050994
+5       hp            0.800000          0.800000   0.049488
+
+---
+           variable relative_importance scaled_importance percentage
+22           gear.5            0.597929          0.597929   0.036988
+23 carb.missing(NA)            0.000000          0.000000   0.000000
+24 gear.missing(NA)            0.000000          0.000000   0.000000
+25  cyl.missing(NA)            0.000000          0.000000   0.000000
+26   vs.missing(NA)            0.000000          0.000000   0.000000
+27   am.missing(NA)            0.000000          0.000000   0.000000</code></pre>
+</div>
 </div>
 <ul>
-<li><strong>Bước 2</strong>: Xác định outlier</li>
+<li><strong>Bước 2</strong>: Xác định <code>outlier</code></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tính errors</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>errors <span class="ot">&lt;-</span> <span class="fu">h2o.anomaly</span>(model, h2o_mtcars, <span class="at">per_feature =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>errors <span class="ot">&lt;-</span> errors <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(.))</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>errors <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tính errors</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>errors <span class="ot">&lt;-</span> <span class="fu">h2o.anomaly</span>(model, h2o_mtcars, <span class="at">per_feature =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>errors <span class="ot">&lt;-</span> errors <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">id =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(.))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>errors <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Reconstruction.MSE id
+1         0.10764359  1
+2         0.10676716  2
+3         0.02989329  3
+4         0.10310028  4
+5         0.05131023  5
+6         0.10773972  6</code></pre>
+</div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>errors <span class="sc">%&gt;%</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(Reconstruction.MSE) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">new_id =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(.)) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(new_id, Reconstruction.MSE)) <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fl">0.12</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, </span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">col =</span> <span class="st">"darkred"</span>, <span class="at">size =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>errors <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(Reconstruction.MSE) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">new_id =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(.)) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(new_id, Reconstruction.MSE)) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fl">0.12</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">col =</span> <span class="st">"darkred"</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Abnomaly with H2O"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p07-08-anomaly-detection_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
 </div>
 <ul>
 <li><strong>Bước 3</strong>: Lọc các outlier</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>outlier <span class="ot">&lt;-</span> errors <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Reconstruction.MSE <span class="sc">&gt;</span> <span class="fl">0.12</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(id <span class="sc">%in%</span> outlier<span class="sc">$</span>id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>outlier <span class="ot">&lt;-</span> errors <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Reconstruction.MSE <span class="sc">&gt;</span> <span class="fl">0.12</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(id <span class="sc">%in%</span> outlier<span class="sc">$</span>id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                mpg cyl  disp  hp drat    wt qsec vs am gear carb id
+Porsche 914-2  26.0   4 120.3  91 4.43 2.140 16.7  0  1    5    2 27
+Lotus Europa   30.4   4  95.1 113 3.77 1.513 16.9  1  1    5    2 28
+Ford Pantera L 15.8   8 351.0 264 4.22 3.170 14.5  0  1    5    4 29
+Ferrari Dino   19.7   6 145.0 175 3.62 2.770 15.5  0  1    5    6 30
+Maserati Bora  15.0   8 301.0 335 3.54 3.570 14.6  0  1    5    8 31</code></pre>
+</div>
 </div>
 </section>
 <section id="tài-liệu-tham-khảo" class="level2" data-number="56.3">
 <h2 data-number="56.3" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">56.3</span> Tài liệu tham khảo</h2>
 <ul>
 <li><a href="https://www.slideshare.net/ds_mi/h2o-for-iot-jofai-joe-chow-h2o">https://www.slideshare.net/ds_mi/h2o-for-iot-jofai-joe-chow-h2o</a></li>
-<li>[https://towardsdatascience.com/credit-card-fraud-detection-using-autoencoders-in-h2o-399cbb7ae4f1]</li>
+<li><a href="https://towardsdatascience.com/credit-card-fraud-detection-using-autoencoders-in-h2o-399cbb7ae4f1">https://towardsdatascience.com/credit-card-fraud-detection-using-autoencoders-in-h2o-399cbb7ae4f1</a></li>
 </ul>
 
 
