@@ -668,15 +668,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#woe-iv" id="toc-woe-iv" class="nav-link" data-scroll-target="#woe-iv"><span class="header-section-number">31.2.1</span> WOE &amp; IV</a></li>
   <li><a href="#các-bước-xây-dựng" id="toc-các-bước-xây-dựng" class="nav-link" data-scroll-target="#các-bước-xây-dựng"><span class="header-section-number">31.2.2</span> Các bước xây dựng</a></li>
+  <li><a href="#đo-lường-độ-ổn-định-mô-hình" id="toc-đo-lường-độ-ổn-định-mô-hình" class="nav-link" data-scroll-target="#đo-lường-độ-ổn-định-mô-hình"><span class="header-section-number">31.2.3</span> Đo lường độ ổn định mô hình</a></li>
   </ul></li>
-  <li><a href="#thực-hành" id="toc-thực-hành" class="nav-link" data-scroll-target="#thực-hành"><span class="header-section-number">31.3</span> Thực hành</a>
+  <li><a href="#thực-hành-với-r" id="toc-thực-hành-với-r" class="nav-link" data-scroll-target="#thực-hành-với-r"><span class="header-section-number">31.3</span> Thực hành với R</a>
   <ul>
-  <li><a href="#import-dữ-liệu" id="toc-import-dữ-liệu" class="nav-link" data-scroll-target="#import-dữ-liệu"><span class="header-section-number">31.3.1</span> Import dữ liệu</a></li>
-  <li><a href="#xử-lý-missing-value" id="toc-xử-lý-missing-value" class="nav-link" data-scroll-target="#xử-lý-missing-value"><span class="header-section-number">31.3.2</span> Xử lý <code>missing value</code></a></li>
-  <li><a href="#đo-lường-độ-ổn-định-mô-hình" id="toc-đo-lường-độ-ổn-định-mô-hình" class="nav-link" data-scroll-target="#đo-lường-độ-ổn-định-mô-hình"><span class="header-section-number">31.3.3</span> Đo lường độ ổn định mô hình</a></li>
+  <li><a href="#kiểm-tra-dữ-liệu" id="toc-kiểm-tra-dữ-liệu" class="nav-link" data-scroll-target="#kiểm-tra-dữ-liệu"><span class="header-section-number">31.3.1</span> Kiểm tra dữ liệu</a></li>
+  <li><a href="#phân-chia-data" id="toc-phân-chia-data" class="nav-link" data-scroll-target="#phân-chia-data"><span class="header-section-number">31.3.2</span> Phân chia data</a></li>
+  <li><a href="#xử-lý-missing-value" id="toc-xử-lý-missing-value" class="nav-link" data-scroll-target="#xử-lý-missing-value"><span class="header-section-number">31.3.3</span> Xử lý <code>missing value</code></a></li>
+  <li><a href="#bin-với-woe" id="toc-bin-với-woe" class="nav-link" data-scroll-target="#bin-với-woe"><span class="header-section-number">31.3.4</span> Bin với WOE</a></li>
+  <li><a href="#xây-dựng-mô-hình-logistic" id="toc-xây-dựng-mô-hình-logistic" class="nav-link" data-scroll-target="#xây-dựng-mô-hình-logistic"><span class="header-section-number">31.3.5</span> Xây dựng mô hình logistic</a></li>
+  <li><a href="#xây-dựng-scorecard-1" id="toc-xây-dựng-scorecard-1" class="nav-link" data-scroll-target="#xây-dựng-scorecard-1"><span class="header-section-number">31.3.6</span> Xây dựng scorecard</a></li>
+  <li><a href="#dự-báo-với-tập-dữ-liệu-mới" id="toc-dự-báo-với-tập-dữ-liệu-mới" class="nav-link" data-scroll-target="#dự-báo-với-tập-dữ-liệu-mới"><span class="header-section-number">31.3.7</span> Dự báo với tập dữ liệu mới</a></li>
+  <li><a href="#độ-ổn-định-mô-hình" id="toc-độ-ổn-định-mô-hình" class="nav-link" data-scroll-target="#độ-ổn-định-mô-hình"><span class="header-section-number">31.3.8</span> Độ ổn định mô hình</a></li>
   </ul></li>
-  <li><a href="#đánh-giá-độ-ổn-định-của-mô-hình" id="toc-đánh-giá-độ-ổn-định-của-mô-hình" class="nav-link" data-scroll-target="#đánh-giá-độ-ổn-định-của-mô-hình"><span class="header-section-number">31.4</span> Đánh giá độ ổn định của mô hình</a></li>
-  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">31.5</span> Tài liệu tham khảo</a></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">31.4</span> Tài liệu tham khảo</a></li>
   </ul>
 </nav>
     </div>
@@ -722,18 +727,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><code>WOE</code> (<code>Weight of Evidence</code>): Đo lường độ mạnh của việc phân loại good vs.&nbsp;bad giữa một nhóm (ví dụ - khoảng tuổi từ 27-29). Nếu <code>WOE</code> có giá trị âm càng lớn, càng thể hiện khả năng khoản vay xấu trong nhóm càng cao.</li>
 </ul>
-<p><span class="math display">\[WOE = ln(\frac{Distr\:Good}{Distr\: Bad})\]</span></p>
+<p><span class="math display">\[WOE = ln(\frac{Distr\:Good}{Distr\: Bad}) \tag{1}\]</span></p>
 <ul>
-<li><code>IV</code> (<code>Information Value</code>): Đo lường độ mạnh dự báo của biến dự báo với biến cần được dự báo (response). Các đặc tính như sau:
-<ul>
-<li><code>IV &lt; 0.02</code>: Không có giá trị dự báo</li>
-<li><code>0.02 - 0.1</code>: thấp</li>
-<li><code>0.1 - 0.3</code>: trung bình</li>
-<li><code>0.3 - 0.5</code>: cao</li>
-<li><code>IV &gt; 0.5</code>: Cần kiểm tra lại</li>
-</ul></li>
+<li><code>IV</code> (<code>Information Value</code>): Đo lường độ mạnh dự báo của biến dự báo với biến cần được dự báo (response).</li>
 </ul>
-<p><span class="math display">\[IV = \sum_{i = 1}^{n}(Distr\:Good - Distr\:Bad)*ln(\frac{Distr\:Good}{Distr\:Bad})\]</span></p>
+<p><span class="math display">\[IV = \sum_{i = 1}^{n}(Distr\:Good - Distr\:Bad)*ln(\frac{Distr\:Good}{Distr\:Bad}) \tag{2}\]</span></p>
+<p>Các đặc tính như sau: - <code>IV &lt; 0.02</code>: Không có giá trị dự báo - <code>0.02 - 0.1</code>: thấp - <code>0.1 - 0.3</code>: trung bình - <code>0.3 - 0.5</code>: cao - <code>IV &gt; 0.5</code>: rất mạnh, cần kiểm tra thêm để giảm thiểu ảnh hưởng trực tiếp đến việc ra quyết định</p>
 <center>
 <font size="4">§</font>
 </center>
@@ -855,7 +854,7 @@ Lưu ý
 <font size="4">§</font>
 </center>
 <p>Khi tính hệ số điểm cho score card từ mô hình <code>logistics</code> thông thường, ta có thể xây dựng như sau.</p>
-<p><span class="math display">\[\text{Score} = (\beta.\text{WOE}+\frac{\alpha}{n}).\text{Factor}+\frac{\text{Offset}}{n}\]</span></p>
+<p><span class="math display">\[\text{Score} = (\beta.\text{WOE}+\frac{\alpha}{n}).\text{Factor}+\frac{\text{Offset}}{n} \tag{3}\]</span></p>
 <p>Trong đó:</p>
 <ul>
 <li><span class="math inline">\(\beta\)</span>: Hệ số của biến trong phương trình hồi qui logistic.</li>
@@ -866,579 +865,14 @@ Lưu ý
 </ul>
 <p>Trong đó, các tham số về <code>factor</code> và <code>offset</code> được tính như sau</p>
 <ul>
-<li><span class="math inline">\(\text{Factor} = \frac{\text{pdo}}{\ln(2)}\)</span></li>
-<li><span class="math inline">\(\text{Offset} = \text{Base Score}- \text{Factor} * \ln(\text{Odds})\)</span></li>
+<li><span class="math inline">\(\text{Factor} = \frac{\text{pdo}}{\ln(2)} \tag{4}\)</span></li>
+<li><span class="math inline">\(\text{Offset} = \text{Base Score}- \text{Factor} * \ln(\text{Odds}) \tag{5}\)</span></li>
 </ul>
 </section>
-</section>
-<section id="thực-hành" class="level2" data-number="31.3">
-<h2 data-number="31.3" class="anchored" data-anchor-id="thực-hành"><span class="header-section-number">31.3</span> Thực hành</h2>
-<section id="import-dữ-liệu" class="level3" data-number="31.3.1">
-<h3 data-number="31.3.1" class="anchored" data-anchor-id="import-dữ-liệu"><span class="header-section-number">31.3.1</span> Import dữ liệu</h3>
+<section id="đo-lường-độ-ổn-định-mô-hình" class="level3" data-number="31.2.3">
+<h3 data-number="31.2.3" class="anchored" data-anchor-id="đo-lường-độ-ổn-định-mô-hình"><span class="header-section-number">31.2.3</span> Đo lường độ ổn định mô hình</h3>
+<p>Xem bảng <code>scorecard</code> sau:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"http://www.creditriskanalytics.net/uploads/1/9/5/1/19511601/hmeq.csv"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(data, <span class="at">file =</span> <span class="st">"data/hmeq.rda"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scorecard)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/hmeq.rda"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(data) <span class="ot">&lt;-</span> <span class="fu">names</span>(data) <span class="sc">%&gt;%</span> tolower</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  bad loan mortdue  value  reason    job  yoj derog delinq     clage ninq clno
-1   1 1100   25860  39025 HomeImp  Other 10.5     0      0  94.36667    1    9
-2   1 1300   70053  68400 HomeImp  Other  7.0     0      2 121.83333    0   14
-3   1 1500   13500  16700 HomeImp  Other  4.0     0      0 149.46667    1   10
-4   1 1500      NA     NA                  NA    NA     NA        NA   NA   NA
-5   0 1700   97800 112000 HomeImp Office  3.0     0      0  93.33333    0   14
-6   1 1700   30548  40320 HomeImp  Other  9.0     0      0 101.46600    1    8
-   debtinc
-1       NA
-2       NA
-3       NA
-4       NA
-5       NA
-6 37.11361</code></pre>
-</div>
-</div>
-<ul>
-<li>Kiểm tra dữ liệu missing</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>check_na <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  (x <span class="sc">%&gt;%</span> is.na <span class="sc">%&gt;%</span> sum)<span class="sc">/</span><span class="fu">length</span>(x)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> <span class="fu">map_df</span>(check_na)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 13
-    bad  loan mortdue  value reason   job    yoj derog delinq  clage   ninq
-  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-1     0     0  0.0869 0.0188      0     0 0.0864 0.119 0.0973 0.0517 0.0856
-# ℹ 2 more variables: clno &lt;dbl&gt;, debtinc &lt;dbl&gt;</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>      bad              loan          mortdue           value       
- Min.   :0.0000   Min.   : 1100   Min.   :  2063   Min.   :  8000  
- 1st Qu.:0.0000   1st Qu.:11100   1st Qu.: 46276   1st Qu.: 66076  
- Median :0.0000   Median :16300   Median : 65019   Median : 89236  
- Mean   :0.1995   Mean   :18608   Mean   : 73761   Mean   :101776  
- 3rd Qu.:0.0000   3rd Qu.:23300   3rd Qu.: 91488   3rd Qu.:119824  
- Max.   :1.0000   Max.   :89900   Max.   :399550   Max.   :855909  
-                                  NA's   :518      NA's   :112     
-     reason          job            yoj             derog        
-        : 252          : 279   Min.   : 0.000   Min.   : 0.0000  
- DebtCon:3928   Mgr    : 767   1st Qu.: 3.000   1st Qu.: 0.0000  
- HomeImp:1780   Office : 948   Median : 7.000   Median : 0.0000  
-                Other  :2388   Mean   : 8.922   Mean   : 0.2546  
-                ProfExe:1276   3rd Qu.:13.000   3rd Qu.: 0.0000  
-                Sales  : 109   Max.   :41.000   Max.   :10.0000  
-                Self   : 193   NA's   :515      NA's   :708      
-     delinq            clage             ninq             clno     
- Min.   : 0.0000   Min.   :   0.0   Min.   : 0.000   Min.   : 0.0  
- 1st Qu.: 0.0000   1st Qu.: 115.1   1st Qu.: 0.000   1st Qu.:15.0  
- Median : 0.0000   Median : 173.5   Median : 1.000   Median :20.0  
- Mean   : 0.4494   Mean   : 179.8   Mean   : 1.186   Mean   :21.3  
- 3rd Qu.: 0.0000   3rd Qu.: 231.6   3rd Qu.: 2.000   3rd Qu.:26.0  
- Max.   :15.0000   Max.   :1168.2   Max.   :17.000   Max.   :71.0  
- NA's   :580       NA's   :308      NA's   :510      NA's   :222   
-    debtinc        
- Min.   :  0.5245  
- 1st Qu.: 29.1400  
- Median : 34.8183  
- Mean   : 33.7799  
- 3rd Qu.: 39.0031  
- Max.   :203.3121  
- NA's   :1267      </code></pre>
-</div>
-</div>
-</section>
-<section id="xử-lý-missing-value" class="level3" data-number="31.3.2">
-<h3 data-number="31.3.2" class="anchored" data-anchor-id="xử-lý-missing-value"><span class="header-section-number">31.3.2</span> Xử lý <code>missing value</code></h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Thay NA bằng mean</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>replace_by_mean <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  x[<span class="fu">is.na</span>(x)] <span class="ot">&lt;-</span> <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Thay NA bằng category</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>replace_na_categorical <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">%&gt;%</span> </span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">table</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="sc">-</span>Freq) <span class="ot">-&gt;&gt;</span> my_df</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  n_obs <span class="ot">&lt;-</span> <span class="fu">sum</span>(my_df<span class="sc">$</span>Freq)</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  pop <span class="ot">&lt;-</span> my_df<span class="sc">$</span>. <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">129</span>)</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  x[<span class="fu">is.na</span>(x)] <span class="ot">&lt;-</span> <span class="fu">sample</span>(pop, <span class="fu">sum</span>(<span class="fu">is.na</span>(x)), </span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>                        <span class="at">replace =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>                        <span class="at">prob =</span> my_df<span class="sc">$</span>Freq)</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x)</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is.factor, as.character) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">reason =</span> <span class="fu">case_when</span>(reason <span class="sc">==</span> <span class="st">""</span> <span class="sc">~</span> <span class="cn">NA_character_</span>, </span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>                            <span class="cn">TRUE</span> <span class="sc">~</span> reason), </span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>         <span class="at">job =</span> <span class="fu">case_when</span>(job <span class="sc">==</span> <span class="st">""</span> <span class="sc">~</span> <span class="cn">NA_character_</span>, </span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>                         <span class="cn">TRUE</span> <span class="sc">~</span> job)) <span class="sc">%&gt;%</span></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is_character, as.factor) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is.numeric, replace_by_mean) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is.factor, replace_na_categorical)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<ul>
-<li>Phân chia train/test</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(bad) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sample_frac</span>(<span class="fl">0.5</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() </span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(df, train)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<ul>
-<li>Xây dựng WOE</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scorecard)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>bins_var <span class="ot">&lt;-</span> <span class="fu">woebin</span>(train, <span class="at">y =</span> <span class="st">"bad"</span>, <span class="at">no_cores =</span> <span class="dv">1</span>, <span class="at">positive =</span> <span class="st">"bad|1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>✔ Binning on 2980 rows and 13 columns in 00:00:06</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra derog</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>bins_var<span class="sc">$</span>derog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   variable                 bin count count_distr  neg pos   posprob        woe
-1:    derog [-Inf,0.2545696877)  2262   0.7590604 1882 380 0.1679929 -0.2094248
-2:    derog    [0.2545696877,1)   341   0.1144295  303  38 0.1114370 -0.6856524
-3:    derog            [1, Inf)   377   0.1265101  201 176 0.4668435  1.2576734
-       bin_iv  total_iv       breaks is_special_values
-1: 0.03121208 0.3411161 0.2545696877             FALSE
-2: 0.04320825 0.3411161            1             FALSE
-3: 0.26669579 0.3411161          Inf             FALSE</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lọc các biến có woe cao</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>bins_var<span class="sc">$</span>loan <span class="sc">%&gt;%</span> <span class="fu">select</span>(total_iv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    total_iv
-1: 0.1586945
-2: 0.1586945
-3: 0.1586945
-4: 0.1586945
-5: 0.1586945
-6: 0.1586945</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra IV cho tất cả các biến</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>bins_var <span class="sc">%&gt;%</span> <span class="fu">map_df</span>(<span class="cf">function</span>(df) {</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  df <span class="sc">%&gt;%</span> <span class="fu">select</span>(total_iv) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">1</span>) <span class="sc">%&gt;%</span> pull</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 12
-   loan mortdue value  reason    job    yoj derog delinq clage  ninq   clno
-  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-1 0.159  0.0555 0.174 0.00604 0.0833 0.0895 0.341  0.575 0.207 0.107 0.0665
-# ℹ 1 more variable: debtinc &lt;dbl&gt;</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Biểu đồ WOE cho biến loan</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>bins_var<span class="sc">$</span>derog </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   variable                 bin count count_distr  neg pos   posprob        woe
-1:    derog [-Inf,0.2545696877)  2262   0.7590604 1882 380 0.1679929 -0.2094248
-2:    derog    [0.2545696877,1)   341   0.1144295  303  38 0.1114370 -0.6856524
-3:    derog            [1, Inf)   377   0.1265101  201 176 0.4668435  1.2576734
-       bin_iv  total_iv       breaks is_special_values
-1: 0.03121208 0.3411161 0.2545696877             FALSE
-2: 0.04320825 0.3411161            1             FALSE
-3: 0.26669579 0.3411161          Inf             FALSE</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">woebin_plot</span>(bins_var<span class="sc">$</span>derog)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>p<span class="sc">$</span>derog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Lưu ý
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ul>
-<li>Trong package <code>scorecard</code>, WOE được tính đảo ngược lại, nghĩa là <span class="math inline">\(WOE = ln(\frac{Distr\:Bad}{Distr\:Good})\)</span>.</li>
-<li>Do đó, với bucket nào có hệ số dương, nhóm đó có xu hướng tăng nợ xấu</li>
-</ul>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tạo dataframe woe</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>train_woe <span class="ot">&lt;-</span> <span class="fu">woebin_ply</span>(train, bins_var)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>✔ Woe transformating on 2980 rows and 12 columns in 00:00:00</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Logistic Regression:</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>my_logistic <span class="ot">&lt;-</span> <span class="fu">glm</span>(bad <span class="sc">~</span> ., <span class="at">family =</span> binomial, <span class="at">data =</span> train_woe)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Kết quả</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>my_logistic <span class="sc">%&gt;%</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-glm(formula = bad ~ ., family = binomial, data = train_woe)
-
-Coefficients:
-            Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept) -1.39388    0.06267 -22.241  &lt; 2e-16 ***
-loan_woe     0.55661    0.15662   3.554 0.000379 ***
-mortdue_woe  0.45576    0.26473   1.722 0.085139 .  
-value_woe    0.72577    0.14587   4.975 6.51e-07 ***
-reason_woe   1.06208    0.81259   1.307 0.191202    
-job_woe      0.93845    0.21525   4.360 1.30e-05 ***
-yoj_woe      1.05720    0.21329   4.957 7.17e-07 ***
-derog_woe    0.67661    0.09936   6.810 9.77e-12 ***
-delinq_woe   0.95015    0.07827  12.140  &lt; 2e-16 ***
-clage_woe    0.83732    0.13584   6.164 7.10e-10 ***
-ninq_woe     0.36784    0.18398   1.999 0.045569 *  
-clno_woe     0.92563    0.22804   4.059 4.93e-05 ***
-debtinc_woe  0.91605    0.04644  19.727  &lt; 2e-16 ***
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-(Dispersion parameter for binomial family taken to be 1)
-
-    Null deviance: 2976.8  on 2979  degrees of freedom
-Residual deviance: 1831.7  on 2967  degrees of freedom
-AIC: 1857.7
-
-Number of Fisher Scoring iterations: 6</code></pre>
-</div>
-</div>
-<ul>
-<li>Xây dựng scorecard</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate scorecard scores for variables based on the results from woebin and glm: </span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>my_card <span class="ot">&lt;-</span> <span class="fu">scorecard</span>(bins_var, my_logistic, <span class="at">points0 =</span> <span class="dv">600</span>, <span class="at">odds0 =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">20</span>, <span class="at">pdo =</span> <span class="dv">50</span>)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>my_card</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$basepoints
-     variable bin woe points
-1: basepoints  NA  NA    484
-
-$loan
-   variable           bin count count_distr  neg pos   posprob         woe
-1:     loan   [-Inf,6000)   152  0.05100671   87  65 0.4276316  1.09897343
-2:     loan  [6000,13000)   868  0.29127517  683 185 0.2131336  0.08435525
-3:     loan [13000,15000)   249  0.08355705  212  37 0.1485944 -0.35517408
-4:     loan [15000,16000)   190  0.06375839  135  55 0.2894737  0.49255269
-5:     loan [16000,38000)  1339  0.44932886 1134 205 0.1530993 -0.32000222
-6:     loan  [38000, Inf)   182  0.06107383  135  47 0.2582418  0.33536711
-        bin_iv  total_iv breaks is_special_values points
-1: 0.080186498 0.1586945   6000             FALSE    -44
-2: 0.002125302 0.1586945  13000             FALSE     -3
-3: 0.009434160 0.1586945  15000             FALSE     14
-4: 0.017738075 0.1586945  16000             FALSE    -20
-5: 0.041649754 0.1586945  38000             FALSE     13
-6: 0.007560693 0.1586945    Inf             FALSE    -13
-
-$mortdue
-   variable            bin count count_distr neg pos   posprob         woe
-1:  mortdue   [-Inf,30000)   323  0.10838926 233  90 0.2786378  0.43926550
-2:  mortdue  [30000,55000)   659  0.22114094 513 146 0.2215478  0.13382506
-3:  mortdue  [55000,75000)   950  0.31879195 765 185 0.1947368 -0.02902573
-4:  mortdue  [75000,85000)   260  0.08724832 224  36 0.1384615 -0.43763283
-5:  mortdue [85000,145000)   612  0.20536913 513  99 0.1617647 -0.25466171
-6:  mortdue  [145000, Inf)   176  0.05906040 138  38 0.2159091  0.10082676
-         bin_iv   total_iv breaks is_special_values points
-1: 0.0236597956 0.05553666  30000             FALSE    -14
-2: 0.0041200794 0.05553666  55000             FALSE     -4
-3: 0.0002662377 0.05553666  75000             FALSE      1
-4: 0.0145621938 0.05553666  85000             FALSE     14
-5: 0.0123097167 0.05553666 145000             FALSE      8
-6: 0.0006186406 0.05553666    Inf             FALSE     -3
-
-$value
-   variable             bin count count_distr  neg pos   posprob        woe
-1:    value    [-Inf,45000)   220  0.07382550  142  78 0.3545455  0.7913761
-2:    value   [45000,90000)  1269  0.42583893 1039 230 0.1812451 -0.1174404
-3:    value  [90000,100000)   285  0.09563758  247  38 0.1333333 -0.4813079
-4:    value [100000,105000)   204  0.06845638  124  80 0.3921569  0.9522394
-5:    value   [105000, Inf)  1002  0.33624161  834 168 0.1676647 -0.2117751
-        bin_iv  total_iv breaks is_special_values points
-1: 0.056820247 0.1744091  45000             FALSE    -41
-2: 0.005666669 0.1744091  90000             FALSE      6
-3: 0.019034511 0.1744091 100000             FALSE     25
-4: 0.078760013 0.1744091 105000             FALSE    -50
-5: 0.014127667 0.1744091    Inf             FALSE     11
-
-$reason
-   variable     bin count count_distr  neg pos   posprob         woe
-1:   reason DebtCon  2063   0.6922819 1669 394 0.1909840 -0.05313473
-2:   reason HomeImp   917   0.3077181  717 200 0.2181025  0.11373581
-        bin_iv   total_iv  breaks is_special_values points
-1: 0.001923339 0.00604028 DebtCon             FALSE      4
-2: 0.004116941 0.00604028 HomeImp             FALSE     -9
-
-$job
-   variable                    bin count count_distr neg pos   posprob
-1:      job                    Mgr   409   0.1372483 312  97 0.2371638
-2:      job                 Office   494   0.1657718 434  60 0.1214575
-3:      job                  Other  1278   0.4288591 978 300 0.2347418
-4:      job ProfExe%,%Sales%,%Self   799   0.2681208 662 137 0.1714643
-          woe      bin_iv   total_iv                 breaks is_special_values
-1:  0.2222021 0.007229762 0.08332294                    Mgr             FALSE
-2: -0.5882057 0.047576595 0.08332294                 Office             FALSE
-3:  0.2087671 0.019866166 0.08332294                  Other             FALSE
-4: -0.1847903 0.008650419 0.08332294 ProfExe%,%Sales%,%Self             FALSE
-   points
-1:    -15
-2:     40
-3:    -14
-4:     13
-
-$yoj
-   variable       bin count count_distr neg pos   posprob         woe
-1:      yoj  [-Inf,5)   975  0.32718121 748 227 0.2328205  0.19804132
-2:      yoj     [5,6)   173  0.05805369 122  51 0.2947977  0.51829887
-3:      yoj     [6,9)   693  0.23255034 591 102 0.1471861 -0.36634892
-4:      yoj    [9,21)   874  0.29328859 691 183 0.2093822  0.06184061
-5:      yoj [21, Inf)   265  0.08892617 234  31 0.1169811 -0.63083963
-        bin_iv   total_iv breaks is_special_values points
-1: 0.013597417 0.08951837      5             FALSE    -15
-2: 0.017998957 0.08951837      6             FALSE    -40
-3: 0.027834354 0.08951837      9             FALSE     28
-4: 0.001142491 0.08951837     21             FALSE     -5
-5: 0.028945152 0.08951837    Inf             FALSE     48
-
-$derog
-   variable                 bin count count_distr  neg pos   posprob        woe
-1:    derog [-Inf,0.2545696877)  2262   0.7590604 1882 380 0.1679929 -0.2094248
-2:    derog    [0.2545696877,1)   341   0.1144295  303  38 0.1114370 -0.6856524
-3:    derog            [1, Inf)   377   0.1265101  201 176 0.4668435  1.2576734
-       bin_iv  total_iv       breaks is_special_values points
-1: 0.03121208 0.3411161 0.2545696877             FALSE     10
-2: 0.04320825 0.3411161            1             FALSE     33
-3: 0.26669579 0.3411161          Inf             FALSE    -61
-
-$delinq
-   variable                 bin count count_distr  neg pos   posprob        woe
-1:   delinq [-Inf,0.4494423792)  2084  0.69932886 1800 284 0.1362764 -0.4560734
-2:   delinq    [0.4494423792,1)   289  0.09697987  258  31 0.1072664 -0.7284781
-3:   delinq            [1, Inf)   607  0.20369128  328 279 0.4596376  1.2286925
-       bin_iv total_iv       breaks is_special_values points
-1: 0.12600679 0.574966 0.4494423792             FALSE     31
-2: 0.04075268 0.574966            1             FALSE     50
-3: 0.40820653 0.574966          Inf             FALSE    -84
-
-$clage
-   variable        bin count count_distr neg pos   posprob         woe
-1:    clage  [-Inf,70)   158  0.05302013 101  57 0.3607595  0.81842503
-2:    clage   [70,150)  1037  0.34798658 770 267 0.2574735  0.33135243
-3:    clage  [150,230)  1048  0.35167785 853 195 0.1860687 -0.08526571
-4:    clage [230, Inf)   737  0.24731544 662  75 0.1017639 -0.78728316
-        bin_iv  total_iv breaks is_special_values points
-1: 0.043891591 0.2074202     70             FALSE    -49
-2: 0.042008565 0.2074202    150             FALSE    -20
-3: 0.002491401 0.2074202    230             FALSE      5
-4: 0.119028692 0.2074202    Inf             FALSE     48
-
-$ninq
-   variable      bin count count_distr  neg pos   posprob        woe
-1:     ninq [-Inf,2)  2229  0.74798658 1843 386 0.1731718 -0.1728183
-2:     ninq    [2,3)   378  0.12684564  295  83 0.2195767  0.1223595
-3:     ninq    [3,4)   182  0.06107383  131  51 0.2802198  0.4471226
-4:     ninq [4, Inf)   191  0.06409396  117  74 0.3874346  0.9323854
-        bin_iv total_iv breaks is_special_values points
-1: 0.021185937 0.107431      2             FALSE      5
-2: 0.001969102 0.107431      3             FALSE     -3
-3: 0.013840672 0.107431      4             FALSE    -12
-4: 0.070435269 0.107431    Inf             FALSE    -25
-
-$clno
-   variable       bin count count_distr  neg pos   posprob         woe
-1:     clno  [-Inf,9)   232  0.07785235  159  73 0.3146552  0.61204952
-2:     clno    [9,27)  2038  0.68389262 1679 359 0.1761531 -0.15213699
-3:     clno   [27,36)   455  0.15268456  363  92 0.2021978  0.01788003
-4:     clno [36, Inf)   255  0.08557047  185  70 0.2745098  0.41863370
-         bin_iv   total_iv breaks is_special_values points
-1: 3.443201e-02 0.06646488      9             FALSE    -41
-2: 1.510889e-02 0.06646488     27             FALSE     10
-3: 4.907506e-05 0.06646488     36             FALSE     -1
-4: 1.687491e-02 0.06646488    Inf             FALSE    -28
-
-$debtinc
-   variable       bin count count_distr  neg pos    posprob        woe
-1:  debtinc [-Inf,31)   803  0.26946309  756  47 0.05853051 -1.3873995
-2:  debtinc   [31,33)   175  0.05872483  156  19 0.10857143 -0.7149227
-3:  debtinc   [33,34)   703  0.23590604  316 387 0.55049787  1.5931768
-4:  debtinc   [34,42)  1128  0.37852349 1043  85 0.07535461 -1.1167109
-5:  debtinc [42, Inf)   171  0.05738255  115  56 0.32748538  0.6709138
-       bin_iv total_iv breaks is_special_values points
-1: 0.32981774  1.53994     31             FALSE     92
-2: 0.02387474  1.53994     33             FALSE     47
-3: 0.82697970  1.53994     34             FALSE   -105
-4: 0.32835280  1.53994     42             FALSE     74
-5: 0.03091455  1.53994    Inf             FALSE    -44</code></pre>
-</div>
-</div>
-<p><strong>Lưu ý</strong>:</p>
-<ul>
-<li>Default là 600 điểm tương ứng với <code>odd</code> là 20 (tỷ lệ <code>good:bad</code> là 20 )</li>
-<li><code>pdo</code> là 50 - cứ mỗi 50 điểm tăng thêm sẽ khiên cho <code>odd</code> tăng gấp đôi</li>
-<li><code>Basepoint</code> là điểm offset 485 điểm</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># So sánh điểm score tương ứng với prob trên train</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span>  <span class="fu">scorecard_ply</span>(train, my_card)<span class="sc">$</span>score</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(my_logistic, train_woe, <span class="at">type =</span> <span class="st">"response"</span>)</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">score =</span> score,</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">pred =</span> pred) <span class="sc">%&gt;%</span> </span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">odds =</span> (<span class="dv">1</span><span class="sc">-</span>pred)<span class="sc">/</span>pred <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(score <span class="sc">%in%</span> <span class="fu">c</span>(<span class="dv">600</span>, <span class="dv">650</span>, <span class="dv">700</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(score)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     score       pred     odds
-408    600 0.04758053 19.04839
-469    600 0.04712668 19.05747
-470    600 0.04758053 19.04839
-553    600 0.04743332 19.05133
-893    600 0.04729674 19.05407
-1174   600 0.04688205 19.06236
-2098   600 0.04712668 19.05747
-2144   600 0.04688205 19.06236
-101    650 0.02427593 48.78620
-299    650 0.02406126 48.79694
-427    650 0.02464834 48.76758
-556    650 0.02406126 48.79694
-704    650 0.02406126 48.79694
-1079   650 0.02445743 48.77713
-1263   650 0.02406126 48.79694
-1337   650 0.02433431 48.78328
-1671   650 0.02406126 48.79694
-1728   650 0.02402389 48.79881
-1866   650 0.02406126 48.79694
-2070   650 0.02425974 48.78701
-2074   650 0.02435031 48.78248
-21     700 0.01237180 98.76282
-442    700 0.01237180 98.76282
-871    700 0.01237180 98.76282
-1123   700 0.01237180 98.76282
-1296   700 0.01237180 98.76282
-1309   700 0.01237180 98.76282</code></pre>
-</div>
-</div>
-<p><strong>Dự báo với tập mới</strong>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>test_woe <span class="ot">&lt;-</span> <span class="fu">woebin_ply</span>(test, bins_var)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>✔ Woe transformating on 2980 rows and 12 columns in 00:00:00</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>test_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(my_logistic, test_woe, <span class="at">type =</span> <span class="st">"response"</span>)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Đánh giá chất lượng mô hình</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">perf_eva</span>(test_pred, test<span class="sc">$</span>bad,  </span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">c</span>(<span class="st">"ks"</span>, <span class="st">"lift"</span>, <span class="st">"roc"</span>, <span class="st">"pr"</span>), </span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">"Test Data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>$binomial_metric
-$binomial_metric$`Test Data`
-          MSE      RMSE   LogLoss        R2        KS       AUC      Gini
-1: 0.09501332 0.3082423 0.3125839 0.4054181 0.6188503 0.8871089 0.7742177
-
-
-$pic
-TableGrob (1 x 2) "arrange": 2 grobs
-  z     cells    name           grob
-1 1 (1-1,1-1) arrange gtable[layout]
-2 2 (1-1,2-2) arrange gtable[layout]</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>test_woe <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   bad loan_woe mortdue_woe  value_woe  reason_woe    job_woe     yoj_woe
-1:   1 1.098973  0.43926550  0.7913761  0.11373581  0.2087671  0.06184061
-2:   1 1.098973 -0.02902573 -0.1174404  0.11373581  0.2087671 -0.36634892
-3:   1 1.098973  0.43926550  0.7913761  0.11373581  0.2087671  0.19804132
-4:   1 1.098973 -0.02902573  0.9522394 -0.05313473  0.2087671 -0.36634892
-5:   0 1.098973 -0.25466171 -0.2117751  0.11373581 -0.5882057  0.19804132
-6:   1 1.098973  0.43926550  0.7913761  0.11373581  0.2087671  0.06184061
-    derog_woe delinq_woe   clage_woe   ninq_woe   clno_woe debtinc_woe
-1: -0.2094248 -0.4560734  0.33135243 -0.1728183 -0.1521370    1.593177
-2: -0.2094248  1.2286925  0.33135243 -0.1728183 -0.1521370    1.593177
-3: -0.2094248 -0.4560734  0.33135243 -0.1728183 -0.1521370    1.593177
-4: -0.6856524 -0.4560734 -0.08526571 -0.1728183 -0.1521370    1.593177
-5: -0.2094248 -0.4560734  0.33135243 -0.1728183 -0.1521370    1.593177
-6: -0.2094248 -0.4560734  0.33135243 -0.1728183  0.6120495   -1.116711</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>score_result <span class="ot">&lt;-</span> <span class="fu">scorecard_ply</span>(test, my_card, <span class="at">only_total_score =</span> F)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>score_result <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   loan_points mortdue_points value_points reason_points job_points yoj_points
-1:         -44            -14          -41            -9        -14         -5
-2:         -44              1            6            -9        -14         28
-3:         -44            -14          -41            -9        -14        -15
-4:         -44              1          -50             4        -14         28
-5:         -44              8           11            -9         40        -15
-6:         -44            -14          -41            -9        -14         -5
-   derog_points delinq_points clage_points ninq_points clno_points
-1:           10            31          -20           5          10
-2:           10           -84          -20           5          10
-3:           10            31          -20           5          10
-4:           33            31            5           5          10
-5:           10            31          -20           5          10
-6:           10            31          -20           5         -41
-   debtinc_points score
-1:           -105   288
-2:           -105   268
-3:           -105   278
-4:           -105   388
-5:           -105   406
-6:             74   416</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">predict =</span> test_pred, <span class="at">actual =</span> test<span class="sc">$</span>bad)</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>result <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>    predict actual
-1 0.7911585      1
-2 0.8329938      1
-3 0.8139546      1
-4 0.4835735      1
-5 0.4215718      0
-6 0.3909958      1</code></pre>
-</div>
-</div>
-</section>
-<section id="đo-lường-độ-ổn-định-mô-hình" class="level3" data-number="31.3.3">
-<h3 data-number="31.3.3" class="anchored" data-anchor-id="đo-lường-độ-ổn-định-mô-hình"><span class="header-section-number">31.3.3</span> Đo lường độ ổn định mô hình</h3>
-<p>Độ ổn định</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>index <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="fu">textConnection</span>(</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="st">"Score_bands    Actual  Expected    Diff    log_Ac_Ex   Index</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="st">&lt; 251   5%  8%  -3% -0.47   0.014</span></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="st">251–290 6%  9%  -3% -0.41   0.012</span></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="st">291–320 6%  10% -4% -0.51   0.020</span></span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="st">321–350 8%  13% -5% -0.49   0.024</span></span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="st">351–380 10% 12% -2% -0.18   0.004</span></span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="st">381–410 12% 11% 1%  0.09    0.001</span></span>
-<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="st">411–440 14% 10% 4%  0.34    0.013</span></span>
-<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a><span class="st">441–470 14% 9%  5%  0.44    0.022</span></span>
-<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a><span class="st">471–520 13% 9%  4%  0.37    0.015</span></span>
-<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="st">520 &lt;   9%  8%  1%  0.12    0.001"</span>)</span>
-<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>), <span class="at">header =</span> T, <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>)</span>
-<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>index <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <thead>
@@ -1447,7 +881,7 @@ TableGrob (1 x 2) "arrange": 2 grobs
 <th style="text-align: left;">Actual</th>
 <th style="text-align: left;">Expected</th>
 <th style="text-align: left;">Diff</th>
-<th style="text-align: right;">log_Ac_Ex</th>
+<th style="text-align: right;">log.Ac.Ex</th>
 <th style="text-align: right;">Index</th>
 </tr>
 </thead>
@@ -1536,108 +970,400 @@ TableGrob (1 x 2) "arrange": 2 grobs
 </table>
 </div>
 </div>
-<p><span class="math display">\[log_{AC/EC} = log(\frac{Actual}{Expected})\]</span> <span class="math display">\[Diff = AC - EC\]</span> <span class="math display">\[Index = (AC - EC)*log(\frac{AC}{EC})\]</span></p>
-<p><span class="math display">\[Population\:Stability\:Index\:(PSI) = \sum{Index} = 0.1269\]</span> :::{.callout-note}</p>
-</section>
-</section>
-<section id="đánh-giá-độ-ổn-định-của-mô-hình" class="level2" data-number="31.4">
-<h2 data-number="31.4" class="anchored" data-anchor-id="đánh-giá-độ-ổn-định-của-mô-hình"><span class="header-section-number">31.4</span> Đánh giá độ ổn định của mô hình</h2>
+<p>Trong đó:</p>
+<ul>
+<li><span class="math inline">\(log(\text{AC}/\text{EC}) = log(\frac{\text{Actual}}{\text{Expected}})\)</span></li>
+<li><span class="math inline">\(\text{Diff} = \text{AC} - \text{EC}\)</span></li>
+<li><span class="math inline">\(\text{Index} = (\text{AC} - \text{EC})*log(\frac{\text{AC}}{\text{EC}})\)</span></li>
+<li><span class="math inline">\(\text{Population Stability Index (PSI)} = \sum{\text{Index}_{i}}\)</span></li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Đánh giá độ ổn định của mô hình
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <ul>
 <li><code>PSI &lt; 0.1</code>: Mô hình ổn định</li>
 <li><code>0.1 &lt;= PSI &lt;= 0.25</code>: Kiểm tra lại mô hình</li>
-<li><code>PSI &gt;= 0.25</code>: Mô hình cần phải xây lại :::</li>
+<li><code>PSI &gt;= 0.25</code>: Mô hình cần phải xây lại</li>
 </ul>
+</div>
+</div>
+<p><strong>Lưu ý</strong>:</p>
+<ul>
+<li>Default là 600 điểm tương ứng với <code>odd</code> là 20 (tỷ lệ <code>good:bad</code> là 20 )</li>
+<li><code>pdo</code> là 50 - cứ mỗi 50 điểm tăng thêm sẽ khiên cho <code>odd</code> tăng gấp đôi</li>
+<li><code>Basepoint</code> là điểm offset 485 điểm</li>
+</ul>
+</section>
+</section>
+<section id="thực-hành-với-r" class="level2" data-number="31.3">
+<h2 data-number="31.3" class="anchored" data-anchor-id="thực-hành-với-r"><span class="header-section-number">31.3</span> Thực hành với R</h2>
+<section id="kiểm-tra-dữ-liệu" class="level3" data-number="31.3.1">
+<h3 data-number="31.3.1" class="anchored" data-anchor-id="kiểm-tra-dữ-liệu"><span class="header-section-number">31.3.1</span> Kiểm tra dữ liệu</h3>
+<p>Để phân tích, ta sử dụng dữ liệu <code>credit_data</code> trong package <code>modeldata</code> &amp; xử lý dữ liệu trước bằng <code>tidymodels</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>train_score <span class="ot">&lt;-</span> <span class="fu">scorecard_ply</span>(train, my_card)</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>test_score <span class="ot">&lt;-</span> <span class="fu">scorecard_ply</span>(test, my_card)</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="fu">perf_psi</span>(</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">score =</span> <span class="fu">list</span>(<span class="at">train =</span> train_score, <span class="at">test =</span> test_score),</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> <span class="fu">list</span>(<span class="at">train =</span> train<span class="sc">$</span>bad, <span class="at">test =</span> test<span class="sc">$</span>bad)</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>psi<span class="sc">$</span>psi  <span class="co"># psi dataframe</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scorecard)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modeldata)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"credit_data"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Xem dữ liệu</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(credit_data) <span class="ot">&lt;-</span> <span class="fu">names</span>(credit_data) <span class="sc">%&gt;%</span> tolower</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>credit_data <span class="sc">%&gt;%</span> str</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   variable    dataset        psi
-1:    score train_test 0.01135422</code></pre>
+<pre><code>'data.frame':   4454 obs. of  14 variables:
+ $ status   : Factor w/ 2 levels "bad","good": 2 2 1 2 2 2 2 2 2 1 ...
+ $ seniority: int  9 17 10 0 0 1 29 9 0 0 ...
+ $ home     : Factor w/ 6 levels "ignore","other",..: 6 6 3 6 6 3 3 4 3 4 ...
+ $ time     : int  60 60 36 60 36 60 60 12 60 48 ...
+ $ age      : int  30 58 46 24 26 36 44 27 32 41 ...
+ $ marital  : Factor w/ 5 levels "divorced","married",..: 2 5 2 4 4 2 2 4 2 2 ...
+ $ records  : Factor w/ 2 levels "no","yes": 1 1 2 1 1 1 1 1 1 1 ...
+ $ job      : Factor w/ 4 levels "fixed","freelance",..: 2 1 2 1 1 1 1 1 2 4 ...
+ $ expenses : int  73 48 90 63 46 75 75 35 90 90 ...
+ $ income   : int  129 131 200 182 107 214 125 80 107 80 ...
+ $ assets   : int  0 0 3000 2500 0 3500 10000 0 15000 0 ...
+ $ debt     : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ amount   : int  800 1000 2000 900 310 650 1600 200 1200 1200 ...
+ $ price    : int  846 1658 2985 1325 910 1645 1800 1093 1957 1468 ...</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> psi<span class="sc">$</span>pic</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>p<span class="sc">$</span>score</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> train_score <span class="sc">%&gt;%</span> </span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">class =</span> <span class="st">"train"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">actual =</span> train<span class="sc">$</span>bad) <span class="sc">%&gt;%</span> </span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(test_score <span class="sc">%&gt;%</span> </span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>              <span class="fu">mutate</span>(<span class="at">class =</span> <span class="st">"test"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>              <span class="fu">mutate</span>(<span class="at">actual =</span> test<span class="sc">$</span>bad))</span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra missing value</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>credit_data <span class="sc">%&gt;%</span> <span class="fu">map_dbl</span>(<span class="cf">function</span>(x) <span class="fu">mean</span>(<span class="fu">is.na</span>(x))<span class="sc">*</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     score          class               actual      
- Min.   : 36.0   Length:5960        Min.   :0.0000  
- 1st Qu.:453.0   Class :character   1st Qu.:0.0000  
- Median :566.0   Mode  :character   Median :0.0000  
- Mean   :536.8                      Mean   :0.1995  
- 3rd Qu.:638.0                      3rd Qu.:0.0000  
- Max.   :811.0                      Max.   :1.0000  </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bucket =</span> <span class="fu">cut</span>(score, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">150</span>, <span class="dv">850</span>, <span class="at">by =</span> <span class="dv">50</span>)))  <span class="sc">%&gt;%</span> </span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bucket =</span> <span class="fu">as.character</span>(bucket)) <span class="sc">%&gt;%</span> </span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bucket =</span> <span class="fu">case_when</span>(</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    score <span class="sc">&lt;</span> <span class="dv">200</span> <span class="sc">~</span> <span class="st">"(-50,200]"</span>,</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    score <span class="sc">&gt;</span> <span class="dv">750</span> <span class="sc">~</span> <span class="st">"[750, 850)"</span>,</span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> bucket</span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">%&gt;%</span> </span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">class =</span> <span class="fu">as.factor</span>(class),</span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">actual =</span> <span class="fu">as.factor</span>(actual),</span>
-<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">bucket =</span> <span class="fu">as.factor</span>(bucket)</span>
-<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(bucket)) <span class="sc">+</span></span>
-<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> class),</span>
-<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>           <span class="at">stat =</span> <span class="st">"count"</span>,</span>
-<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>           <span class="at">position =</span> <span class="st">"dodge"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>p<span class="sc">$</span>score</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-14-3.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>bucket <span class="sc">%&gt;%</span> levels</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] "(-50,200]"  "(150,200]"  "(200,250]"  "(250,300]"  "(300,350]" 
- [6] "(350,400]"  "(400,450]"  "(450,500]"  "(500,550]"  "(550,600]" 
-[11] "(600,650]"  "(650,700]"  "(700,750]"  "[750, 850)"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> </span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(bucket <span class="sc">==</span> <span class="st">"(300,350]"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class, actual) <span class="sc">%&gt;%</span> </span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">no =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  ungroup <span class="sc">%&gt;%</span> </span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(class) <span class="sc">%&gt;%</span> </span>
-<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">perc =</span> no<span class="sc">/</span><span class="fu">sum</span>(no))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 4
-# Groups:   class [2]
-  class actual    no  perc
-  &lt;fct&gt; &lt;fct&gt;  &lt;int&gt; &lt;dbl&gt;
-1 test  0         37 0.316
-2 test  1         80 0.684
-3 train 0         54 0.397
-4 train 1         82 0.603</code></pre>
+<pre><code>    status  seniority       home       time        age    marital    records 
+0.00000000 0.00000000 0.13471037 0.00000000 0.00000000 0.02245173 0.00000000 
+       job   expenses     income     assets       debt     amount      price 
+0.04490346 0.00000000 8.55410867 1.05523125 0.40413112 0.00000000 0.00000000 </code></pre>
 </div>
 </div>
 </section>
-<section id="tài-liệu-tham-khảo" class="level2" data-number="31.5">
-<h2 data-number="31.5" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">31.5</span> Tài liệu tham khảo</h2>
+<section id="phân-chia-data" class="level3" data-number="31.3.2">
+<h3 data-number="31.3.2" class="anchored" data-anchor-id="phân-chia-data"><span class="header-section-number">31.3.2</span> Phân chia data</h3>
+<p>Chia train &amp; test với <code>tidymodels</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(credit_data, <span class="at">prop =</span> <span class="dv">3</span><span class="sc">/</span><span class="dv">4</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>credit_train <span class="ot">&lt;-</span> <span class="fu">training</span>(split)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>credit_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(split)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="xử-lý-missing-value" class="level3" data-number="31.3.3">
+<h3 data-number="31.3.3" class="anchored" data-anchor-id="xử-lý-missing-value"><span class="header-section-number">31.3.3</span> Xử lý <code>missing value</code></h3>
+<p>Với tỷ lệ biến missing ít, ta có thể làm như sau</p>
+<ul>
+<li>Với biến numeric - impute với <code>mean</code></li>
+<li>Với biến category - impute với <code>mode</code></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pre_processing <span class="ot">&lt;-</span> <span class="fu">recipe</span>(status <span class="sc">~</span> ., credit_train) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Impute mean</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_impute_mean</span>(<span class="fu">all_numeric</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Impute missing</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_impute_mode</span>(<span class="fu">all_nominal</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  prep</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>pre_processing</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Xử lý missing</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>train_df <span class="ot">&lt;-</span> pre_processing <span class="sc">%&gt;%</span> <span class="fu">bake</span>(credit_train)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>test_df <span class="ot">&lt;-</span> pre_processing <span class="sc">%&gt;%</span> <span class="fu">bake</span>(credit_test)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra dữ liệu</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>train_df <span class="sc">%&gt;%</span> <span class="fu">map_dbl</span>(<span class="cf">function</span>(x){<span class="fu">mean</span>(<span class="fu">is.na</span>(x))})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>seniority      home      time       age   marital   records       job  expenses 
+        0         0         0         0         0         0         0         0 
+   income    assets      debt    amount     price    status 
+        0         0         0         0         0         0 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>test_df <span class="sc">%&gt;%</span> <span class="fu">map_dbl</span>(<span class="cf">function</span>(x){<span class="fu">mean</span>(<span class="fu">is.na</span>(x))})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>seniority      home      time       age   marital   records       job  expenses 
+        0         0         0         0         0         0         0         0 
+   income    assets      debt    amount     price    status 
+        0         0         0         0         0         0 </code></pre>
+</div>
+</div>
+</section>
+<section id="bin-với-woe" class="level3" data-number="31.3.4">
+<h3 data-number="31.3.4" class="anchored" data-anchor-id="bin-với-woe"><span class="header-section-number">31.3.4</span> Bin với WOE</h3>
+<p>Sử dụng hàm <code>woebin</code> để nhóm tất cả các biến theo WOE</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bins</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>bins_var <span class="ot">&lt;-</span> <span class="fu">woebin</span>(train_df, <span class="at">y =</span> <span class="st">"status"</span>, <span class="at">no_cores =</span> <span class="dv">1</span>, <span class="at">positive =</span> <span class="st">"bad|1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>✔ Binning on 3340 rows and 14 columns in 00:00:07</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Đánh giá iv các biến</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>woe_value <span class="ot">&lt;-</span> bins_var <span class="sc">%&gt;%</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(<span class="sc">~</span> <span class="fu">slice</span>(.x, <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>            <span class="fu">select</span>(total_iv)) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">var_name =</span> <span class="fu">names</span>(bins_var))</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>woe_value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      total_iv  var_name
+ 1: 0.50645224 seniority
+ 2: 0.28316535      home
+ 3: 0.07064229      time
+ 4: 0.07914844       age
+ 5: 0.03303875   marital
+ 6: 0.32816575   records
+ 7: 0.30771215       job
+ 8: 0.06021468  expenses
+ 9: 0.29983220    income
+10: 0.24664247    assets
+11: 0.01385609      debt
+12: 0.13006752    amount
+13: 0.06418546     price</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vizualize kết quả</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>woe_value <span class="sc">%&gt;%</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="fu">fct_reorder</span>(var_name, total_iv), total_iv)) <span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"darkblue"</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">round</span>(total_iv, <span class="dv">2</span>)), <span class="at">nudge_y =</span> <span class="fl">0.02</span>) <span class="sc">+</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Information Value by variables"</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Feature"</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Information value"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Lưu ý
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>Scorecard</code> được xây dựng theo hướng điểm càng cao thì khách hàng càng tốt. Trong package <code>scorecard</code>, WOE được tính đảo ngược lại, nghĩa là <span class="math inline">\(WOE = ln(\frac{Distr\:Bad}{Distr\:Good})\)</span>.</li>
+<li>Do đó, với bucket nào có hệ số dương, nhóm đó có xu hướng tăng nợ xấu. Điều này khiến cho điểm <code>scorecard</code> tỷ lệ nghịch với điểm xác suất dự báo xảy ra sự kiện vỡ nợ.</li>
+</ul>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set theme</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>theme_score <span class="ot">&lt;-</span> <span class="cf">function</span>() {</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>(),</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>),</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set1"</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>bins_var<span class="sc">$</span>seniority <span class="sc">%&gt;%</span> </span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  woebin_plot <span class="sc">%&gt;%</span> </span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pluck</span>(<span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_score</span>() <span class="sc">+</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"WOE of Seniority"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="xây-dựng-mô-hình-logistic" class="level3" data-number="31.3.5">
+<h3 data-number="31.3.5" class="anchored" data-anchor-id="xây-dựng-mô-hình-logistic"><span class="header-section-number">31.3.5</span> Xây dựng mô hình logistic</h3>
+<p>Để xây dựng mô hình logistics, ta cần làm 2 bước:</p>
+<ul>
+<li>Biến đổi sang woe (nhóm biến)</li>
+<li>Xây dựng mô hình</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Biến đổi sang woe</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>train_woe <span class="ot">&lt;-</span> <span class="fu">woebin_ply</span>(train_df, bins_var)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>✔ Woe transformating on 3340 rows and 13 columns in 00:00:00</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>test_woe <span class="ot">&lt;-</span> <span class="fu">woebin_ply</span>(test_df, bins_var)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>✔ Woe transformating on 1114 rows and 13 columns in 00:00:00</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>train_woe <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   status seniority_woe   home_woe    time_woe     age_woe marital_woe
+1:    bad     0.8893389  0.6009302  0.13213105  0.19368198   0.2928007
+2:    bad    -0.5815039  0.7931946 -0.93079876  0.02035184  -0.1131482
+3:   good     0.3882060 -0.0101478 -0.46056911  0.49753266   0.2928007
+4:   good    -1.3582428 -0.5649494  0.13213105 -0.40211922  -0.1131482
+5:   good    -0.5815039 -0.5649494 -0.01864539  0.19368198  -0.1131482
+6:    bad     0.8893389 -0.0101478  0.13213105  0.19368198  -0.1131482
+   records_woe    job_woe expenses_woe income_woe assets_woe    debt_woe
+1:   1.1197101 -0.3940776    0.1329176  0.6601977  0.5589859  0.02486336
+2:  -0.3011832  0.2417366    0.5485860  0.6195801  0.5589859  0.02486336
+3:  -0.3011832  1.3060048    0.1329176  0.6195801 -0.5238383  0.02486336
+4:  -0.3011832 -0.3940776   -0.2261826 -0.3432183 -0.5238383  0.02486336
+5:  -0.3011832 -0.3940776   -0.2261826 -0.6315449 -0.5238383 -0.49408111
+6:   1.1197101 -0.3940776    0.5485860 -0.6315449  0.5589859  0.02486336
+    amount_woe   price_woe
+1:  0.73819163  0.44329832
+2: -0.30751006  0.46860802
+3: -0.30751006  0.19284328
+4:  0.04628808 -0.03386972
+5: -0.30751006  0.19284328
+6:  0.37850111 -0.03386972</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Xây dựng mô hình</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>log_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(status <span class="sc">~</span> ., <span class="at">family =</span> binomial, <span class="at">data =</span> train_woe)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Kết quả</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>log_model <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = status ~ ., family = binomial, data = train_woe)
+
+Coefficients:
+               Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)    0.943989   0.047510  19.869  &lt; 2e-16 ***
+seniority_woe -0.748749   0.074176 -10.094  &lt; 2e-16 ***
+home_woe      -0.686997   0.115432  -5.952 2.66e-09 ***
+time_woe      -1.151450   0.207609  -5.546 2.92e-08 ***
+age_woe       -0.121794   0.180343  -0.675 0.499456    
+marital_woe    0.361103   0.276235   1.307 0.191134    
+records_woe   -1.222635   0.081285 -15.041  &lt; 2e-16 ***
+job_woe       -0.745368   0.085671  -8.700  &lt; 2e-16 ***
+expenses_woe  -0.683878   0.193906  -3.527 0.000421 ***
+income_woe    -0.974402   0.086879 -11.216  &lt; 2e-16 ***
+assets_woe    -0.411371   0.126878  -3.242 0.001186 ** 
+debt_woe       0.004736   0.408928   0.012 0.990759    
+amount_woe    -1.151344   0.137564  -8.369  &lt; 2e-16 ***
+price_woe     -0.734577   0.190307  -3.860 0.000113 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 3979.3  on 3339  degrees of freedom
+Residual deviance: 2888.1  on 3326  degrees of freedom
+AIC: 2916.1
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+</div>
+</section>
+<section id="xây-dựng-scorecard-1" class="level3" data-number="31.3.6">
+<h3 data-number="31.3.6" class="anchored" data-anchor-id="xây-dựng-scorecard-1"><span class="header-section-number">31.3.6</span> Xây dựng scorecard</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>scoring_card <span class="ot">&lt;-</span> <span class="fu">scorecard</span>(bins_var,         <span class="co"># WOE model</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>                          log_model,        <span class="co"># Mô hình logistics</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">points0 =</span> <span class="dv">600</span>,    <span class="co"># Base line 600</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">odds0 =</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">20</span>,     <span class="co"># Odd tại base line - 20 </span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">pdo =</span> <span class="dv">50</span>)         <span class="co"># PDO - 50 </span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>scoring_card<span class="sc">$</span>seniority</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    variable       bin count count_distr neg pos    posprob         woe
+1: seniority  [-Inf,2)   788  0.23592814 402 386 0.48984772  0.88933886
+2: seniority     [2,3)   329  0.09850299 208 121 0.36778116  0.38820605
+3: seniority     [3,8)   861  0.25778443 622 239 0.27758420 -0.02652296
+4: seniority    [8,16)   830  0.24850299 680 150 0.18072289 -0.58150392
+5: seniority [16, Inf)   532  0.15928144 483  49 0.09210526 -1.35824277
+         bin_iv  total_iv breaks is_special_values points
+1: 0.2139890902 0.5064522      2             FALSE     48
+2: 0.0159920429 0.5064522      3             FALSE     21
+3: 0.0001802944 0.5064522      8             FALSE     -1
+4: 0.0728012001 0.5064522     16             FALSE    -31
+5: 0.2034896155 0.5064522    Inf             FALSE    -73</code></pre>
+</div>
+</div>
+</section>
+<section id="dự-báo-với-tập-dữ-liệu-mới" class="level3" data-number="31.3.7">
+<h3 data-number="31.3.7" class="anchored" data-anchor-id="dự-báo-với-tập-dữ-liệu-mới"><span class="header-section-number">31.3.7</span> Dự báo với tập dữ liệu mới</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Dự báo xác suất</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>test_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(log_model, test_woe, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Score card mới</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>score_result <span class="ot">&lt;-</span> <span class="fu">scorecard_ply</span>(credit_test, scoring_card, <span class="at">only_total_score =</span> F)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>truth_label <span class="ot">&lt;-</span> test_woe<span class="sc">$</span>status <span class="sc">%&gt;%</span> fct_rev <span class="sc">%&gt;%</span> as.numeric</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>truth_label <span class="ot">&lt;-</span> truth_label <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co"># AUC</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>yardstick<span class="sc">::</span><span class="fu">roc_auc_vec</span>(truth_label <span class="sc">%&gt;%</span> as.factor, test_pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.8129952</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perf eva</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">#perf_eva(test_pred, truth_label)</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">perf_psi</span>(test_pred, truth_label)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$psi
+Null data.table (0 rows and 0 cols)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Đánh giá điểm score</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>score_result <span class="sc">%&gt;%</span> </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(score) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">prob =</span> test_pred) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">odd =</span> (<span class="dv">1</span> <span class="sc">-</span> prob)<span class="sc">/</span>prob) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(score <span class="sc">&gt;=</span> <span class="dv">600</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   score       prob      odd
+1:   614 0.04009095 23.94329
+2:   600 0.04746132 20.06979
+3:   649 0.02455098 39.73157
+4:   604 0.04498615 21.22906</code></pre>
+</div>
+</div>
+</section>
+<section id="độ-ổn-định-mô-hình" class="level3" data-number="31.3.8">
+<h3 data-number="31.3.8" class="anchored" data-anchor-id="độ-ổn-định-mô-hình"><span class="header-section-number">31.3.8</span> Độ ổn định mô hình</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>train_score <span class="ot">&lt;-</span> <span class="fu">scorecard_ply</span>(credit_train, scoring_card)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>test_score <span class="ot">&lt;-</span> <span class="fu">scorecard_ply</span>(credit_test, scoring_card)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>train_score</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      score
+   1:    NA
+   2:   323
+   3:   356
+   4:   128
+   5:   125
+  ---      
+3336:   373
+3337:   219
+3338:   330
+3339:    NA
+3340:   272</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>psi <span class="ot">&lt;-</span> <span class="fu">perf_psi</span>(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">score =</span> <span class="fu">list</span>(<span class="at">train =</span> train_score, <span class="at">test =</span> test_score),</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> <span class="fu">list</span>(<span class="at">train =</span> <span class="fu">as.numeric</span>(<span class="fu">fct_rev</span>(credit_train<span class="sc">$</span>status)) <span class="sc">-</span> <span class="dv">1</span>, </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">test =</span> <span class="fu">as.numeric</span>(<span class="fu">fct_rev</span>(credit_test<span class="sc">$</span>status)) <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Giá trị PSI</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>psi<span class="sc">$</span>psi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   variable    dataset         psi
+1:    score train_test 0.005166308</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vizulize PSI</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>psi<span class="sc">$</span>pic<span class="sc">$</span>score <span class="sc">+</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_score</span>() <span class="sc">+</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"PSI"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-30-credit-scoring_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="31.4">
+<h2 data-number="31.4" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">31.4</span> Tài liệu tham khảo</h2>
 <ul>
 <li><a href="">http://ucanalytics.com/blogs/information-value-and-weight-of-evidencebanking-case</a></li>
-<li>IFRS 9 and CECL Credit Risk Modelling and ValidationA Practical Guide with Examples Worked in R and SAS</li>
+<li>IFRS 9 and CECL Credit Risk Modelling and Validation - A Practical Guide with Examples Worked in R and SAS</li>
 <li><a href="">https://rstudio-pubs-static.s3.amazonaws.com/376828_032c59adbc984b0ab892ce0026370352.html</a></li>
 <li><a href="">https://multithreaded.stitchfix.com/blog/2015/08/13/weight-of-evidence/</a></li>
 </ul>
