@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Khoa học dữ liệu với R - 19&nbsp; Giới thiệu về học máy</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./p03-02-mo-hinh-ols.html" rel="next">
+<link href="./p02-99-meo-trong-r.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/quarto-contrib/bookup_fonts_embed-0.0/fonts-download.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar docked">
+
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./p03-01-gioi-thieu-hoc-may.html">Supervised Learning</a></li><li class="breadcrumb-item"><a href="./p03-01-gioi-thieu-hoc-may.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Giới thiệu về học máy</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Khoa học dữ liệu với R</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Khoa học dữ liệu và nghề phân tích dữ liệu</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Phân tích khám phá dữ liệu</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-01-gioi-thieu-co-ban-ve-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Giới thiệu cơ bản về R</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-03-xay-dung-bao-cao-voi-rmarkdown-quarto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Xây dựng báo cáo với Rmarkdown &amp; Quarto</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-03-import-du-lieu.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Import dữ liệu</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-02-bien-doi-du-lieu-dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Ngữ pháp của biến đổi dữ liệu với DPLYR</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-03-phan-ra-va-xoay-chieu-du-lieu.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Làm sạch và biến đổi dữ liệu nâng cao</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-04-ngu-phap-bieu-do-ggplot2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Ngữ pháp của biểu đồ với <code>ggplot2</code></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-05-cac-chi-so-thong-ke.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Các chỉ số thống kê mô tả cơ bản</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-06-lap-trinh-ham.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Lập trình hàm</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-07-lap-trinh-ham-voi-purrr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Lập trình chức năng hàm với purrr</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-08-bien-doi-du-lieu-text.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu text</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-09-bien-doi-du-lieu-thoi-gian.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu thời gian</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-11-quan-ly-nhieu-mo-hinh.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Quản lý kết quả phân tích từ nhiều mô hình</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-16-power-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Power analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-20-sampling-methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Phương pháp ước lượng tham số thông qua lấy mẫu</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-50-datatable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Biến đổi dữ liệu với <code>data.table</code></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-60-thu-thap-du-lieu-tu-website.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Thu thập dữ liệu từ website</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-99-meo-trong-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Các mẹo trong R</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Supervised Learning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-01-gioi-thieu-hoc-may.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Giới thiệu về học máy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-02-mo-hinh-ols.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Mô hình hồi quy tuyến tính</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-03-logistic-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Mô hình hồi quy logistic</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-04-decision-tree.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Cây quyết định</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-05-bagging-boosting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Bagging, RandomForest và Boosting</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-07-xay-dung-mo-hinh-voi-h2o.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Xây dựng mô hình với H2O</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-08-xgboost.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">XGBoost &amp; LightGBM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-10-knn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">K nearest neighbors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-11-svm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Support Vector Machine</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-15-nonlinear.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Mô hình phi tuyến tính</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-17-regularization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Lựa chọn biến &amp; regularization</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-20-feature-engineering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Feature Engineering</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-70-tidymodels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Tidymodels</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-40-interpretable-ml.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Giải thích mô hình học máy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-30-credit-scoring.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Credit Scoring</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-50-chat-luong-mo-hinh.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Chất lượng mô hình</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p03-75-mlops-vetiver.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Deployment &amp; MLOPS</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Unsupervised Learning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-01-unsupervised-learning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Unsupervised learning</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-02-hierarchical-clustering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">Hierachical clustering</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-03-kmeans.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">k-means</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-04-basket-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">Phân tích giỏ hàng</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-05-pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">40</span>&nbsp; <span class="chapter-title">Principal component analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p04-06-factor-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">41</span>&nbsp; <span class="chapter-title">Phân tích nhân tố ẩn (factor analysis)</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Chuỗi thời gian</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-01-chuoi-thoi-gian.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">42</span>&nbsp; <span class="chapter-title">Giới thiệu về chuỗi thời gian</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-02-arima.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">43</span>&nbsp; <span class="chapter-title">Mô hình ARIMA</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-07-du-bao-ts-voi-timetk.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">44</span>&nbsp; <span class="chapter-title">Dự báo chuỗi thời gian với học máy</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p05-08-abnomaly-detection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">45</span>&nbsp; <span class="chapter-title">Abnomaly detection trong times series</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Xử lý ngôn ngữ tự nhiên</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-01-nlp-co-ban.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">46</span>&nbsp; <span class="chapter-title">Xử lý ngôn ngữ tự nhiên</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-04-text-classification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">47</span>&nbsp; <span class="chapter-title">Phân loại text</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-07-nlp-api.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">48</span>&nbsp; <span class="chapter-title">Sử dụng API từ các dịch vụ đám mây</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p06-10-ocr-tesseract.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">49</span>&nbsp; <span class="chapter-title">OCR với <code>tesseract</code></span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true">
+ <span class="menu-text">Các phương pháp phân tích khác</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-03-collaborative-filtering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">50</span>&nbsp; <span class="chapter-title">Collaborative Filtering</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-04-survival-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">51</span>&nbsp; <span class="chapter-title">Survival Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-05-vintage-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">52</span>&nbsp; <span class="chapter-title">Vintage analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-06-rfm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Mô hình RFM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-07-spatial-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">54</span>&nbsp; <span class="chapter-title">Spatial data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-08-anomaly-detection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">55</span>&nbsp; <span class="chapter-title">Abnomaly detection</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-15-quantile-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">56</span>&nbsp; <span class="chapter-title">Hồi quy phân vị</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-16-retention-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">57</span>&nbsp; <span class="chapter-title">Retention analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-20-network-analysis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">58</span>&nbsp; <span class="chapter-title">Network analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-21-bupar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">59</span>&nbsp; <span class="chapter-title">Business Process Analytics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true">
+ <span class="menu-text">Cloud Computing</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-01-cai-dat-rstudio-server-tren-amazon.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">60</span>&nbsp; <span class="chapter-title">Cài đặt server RStudio trên Amazon</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-03-web-service-azure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">61</span>&nbsp; <span class="chapter-title">Xây dựng web service với Azure</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-09-apis-voi-plumber.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">62</span>&nbsp; <span class="chapter-title">API với Plumber</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-10-shiny.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">63</span>&nbsp; <span class="chapter-title">Shiny apps</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p10-02-deploy-shiny-app-aws.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">64</span>&nbsp; <span class="chapter-title">Deploy Shiny Apps lên AWS</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p07-30-python-voi-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">65</span>&nbsp; <span class="chapter-title">Sử dụng Python với R</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true">
+ <span class="menu-text">Kiến thức bổ trợ</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-01-git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">66</span>&nbsp; <span class="chapter-title">Sử dụng GIT</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-02-cmd.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">67</span>&nbsp; <span class="chapter-title">CMD và Bash</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-03-docker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">68</span>&nbsp; <span class="chapter-title">Sử dụng docker</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-04-apis.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">69</span>&nbsp; <span class="chapter-title">API</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p11-90-other.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">70</span>&nbsp; <span class="chapter-title">Các tricks khác</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true">
+ <span class="menu-text">Phân tích thực tế</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p13-01-phan-tich-thuc-te.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">71</span>&nbsp; <span class="chapter-title">Các lưu ý phân tích thực tế</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p13-02-to-chuc-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">72</span>&nbsp; <span class="chapter-title">Tổ chức R project</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Mục lục</h2>
+   
+  <ul>
+  <li><a href="#giới-thiệu" id="toc-giới-thiệu" class="nav-link active" data-scroll-target="#giới-thiệu"><span class="header-section-number">19.1</span> Giới thiệu</a></li>
+  <li><a href="#các-nhánh-trong-học-máy" id="toc-các-nhánh-trong-học-máy" class="nav-link" data-scroll-target="#các-nhánh-trong-học-máy"><span class="header-section-number">19.2</span> Các nhánh trong học máy</a></li>
+  <li><a href="#cách-bước-xây-dựng-mô-hình" id="toc-cách-bước-xây-dựng-mô-hình" class="nav-link" data-scroll-target="#cách-bước-xây-dựng-mô-hình"><span class="header-section-number">19.3</span> Cách bước xây dựng mô hình</a>
+  <ul>
+  <li><a href="#thu-thập-dữ-liệu-phân-chia-train-test" id="toc-thu-thập-dữ-liệu-phân-chia-train-test" class="nav-link" data-scroll-target="#thu-thập-dữ-liệu-phân-chia-train-test"><span class="header-section-number">19.3.1</span> Thu thập dữ liệu &amp; phân chia train test</a></li>
+  <li><a href="#feature-engineering" id="toc-feature-engineering" class="nav-link" data-scroll-target="#feature-engineering"><span class="header-section-number">19.3.2</span> Feature Engineering</a></li>
+  <li><a href="#huấn-luyện-mô-hình" id="toc-huấn-luyện-mô-hình" class="nav-link" data-scroll-target="#huấn-luyện-mô-hình"><span class="header-section-number">19.3.3</span> Huấn luyện mô hình</a></li>
+  <li><a href="#đánh-giá-mô-hình" id="toc-đánh-giá-mô-hình" class="nav-link" data-scroll-target="#đánh-giá-mô-hình"><span class="header-section-number">19.3.4</span> Đánh giá mô hình</a>
+  <ul class="collapse">
+  <li><a href="#mô-hình-hồi-quy" id="toc-mô-hình-hồi-quy" class="nav-link" data-scroll-target="#mô-hình-hồi-quy"><span class="header-section-number">19.3.4.1</span> Mô hình hồi quy</a></li>
+  <li><a href="#mô-hình-phân-loại" id="toc-mô-hình-phân-loại" class="nav-link" data-scroll-target="#mô-hình-phân-loại"><span class="header-section-number">19.3.4.2</span> Mô hình phân loại</a></li>
+  </ul></li>
+  <li><a href="#tuning" id="toc-tuning" class="nav-link" data-scroll-target="#tuning"><span class="header-section-number">19.3.5</span> Tuning</a></li>
+  <li><a href="#deployment" id="toc-deployment" class="nav-link" data-scroll-target="#deployment"><span class="header-section-number">19.3.6</span> Deployment</a></li>
+  </ul></li>
+  <li><a href="#các-nguyên-lý-trong-dự-báo" id="toc-các-nguyên-lý-trong-dự-báo" class="nav-link" data-scroll-target="#các-nguyên-lý-trong-dự-báo"><span class="header-section-number">19.4</span> Các nguyên lý trong dự báo</a>
+  <ul>
+  <li><a href="#reducible-irreducible-error" id="toc-reducible-irreducible-error" class="nav-link" data-scroll-target="#reducible-irreducible-error"><span class="header-section-number">19.4.1</span> Reducible &amp; irreducible error</a></li>
+  <li><a href="#đánh-đổi-giữa-bias-variance" id="toc-đánh-đổi-giữa-bias-variance" class="nav-link" data-scroll-target="#đánh-đổi-giữa-bias-variance"><span class="header-section-number">19.4.2</span> Đánh đổi giữa <code>bias</code> &amp; <code>variance</code></a></li>
+  <li><a href="#khả-năng-giải-thích-và-khả-năng-dự-báo" id="toc-khả-năng-giải-thích-và-khả-năng-dự-báo" class="nav-link" data-scroll-target="#khả-năng-giải-thích-và-khả-năng-dự-báo"><span class="header-section-number">19.4.3</span> Khả năng giải thích và khả năng dự báo</a></li>
+  <li><a href="#độ-phức-tạp-mô-hinh-vs-sai-số-trên-tập-train" id="toc-độ-phức-tạp-mô-hinh-vs-sai-số-trên-tập-train" class="nav-link" data-scroll-target="#độ-phức-tạp-mô-hinh-vs-sai-số-trên-tập-train"><span class="header-section-number">19.4.4</span> Độ phức tạp mô hinh vs sai số trên tập train</a></li>
+  </ul></li>
+  <li><a href="#nhược-điểm-của-máy-học" id="toc-nhược-điểm-của-máy-học" class="nav-link" data-scroll-target="#nhược-điểm-của-máy-học"><span class="header-section-number">19.5</span> Nhược điểm của máy học</a></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">19.6</span> Tài liệu tham khảo</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Giới thiệu về học máy</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="giới-thiệu" class="level2" data-number="19.1">
+<h2 data-number="19.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">19.1</span> Giới thiệu</h2>
+<p>Học máy (<code>machine learning</code>) là lĩnh vực tập trung vào việc phát triển các thuật toán và mô hình giúp máy tính tự học từ dữ liệu và thực hiện dự đoán hoặc quyết định dựa trên dữ liệu đó. Mục tiêu chính của học máy là xây dựng các hệ thống có thể tự động học và cải thiện từ kinh nghiệm mà không cần lập trình tường minh.</p>
+<p>Với việc lập trình thông thường, ta cần phải đưa ra các logic để máy tính đưa ra kết quả đầu ra - đây gọi là quá trình lập trình tường minh.</p>
+<p>Với học máy, ta chỉ hướng dẫn máy tính học về cấu trúc dữ liệu thông qua đưa ra các input đầu vào và kết quả đầu ra mong muốn. Máy tính sẽ tự học và đưa kết quả đầu ra làm một mô hình (<code>model</code>). Với các dữ liệu đầu vào mới, máy tính sẽ dựa trên mô hình vừa học để trả ra kết quả dự báo đầu ra.</p>
+<p><img src="Images/p03-01-ml-program.png" class="img-fluid"></p>
+<p>Trong chương này, chúng ta sẽ tìm hiểu những khái niệm và nguyên lý cơ bản nhất của học máy (<code>machine learning</code>). Các nguyên lý này sẽ giúp ta nắm vững để có thể phát triển nhanh chóng trong lĩnh vực dự báo. Khi đã nắm vững các nguyên lý này, việc xây dựng mô hình với các thuật toán khác nhau sẽ không còn quan trọng nữa bởi tất cả sẽ đều phải đi qua các nguyên lý giống nhau.</p>
+</section>
+<section id="các-nhánh-trong-học-máy" class="level2" data-number="19.2">
+<h2 data-number="19.2" class="anchored" data-anchor-id="các-nhánh-trong-học-máy"><span class="header-section-number">19.2</span> Các nhánh trong học máy</h2>
+<p>Học máy có thể được chia thành 2 nhóm lớn - <strong>học máy có giám sát</strong> và <strong>học máy không giám sát</strong></p>
+<center>
+<font size="4">§</font>
+</center>
+<p><strong>Học máy có giám sát</strong> (<code>Supervised learning</code>) là kỹ thuật xây dựng mô hình tìm mối liên hệ giữa biến phụ thuộc với một hoặc nhiều biến độc lập. Biến cần dự báo được gọi là biến phụ thuộc (<code>target</code>), các biến đầu vào được gọi là biến độc lập (<code>input</code>, <code>feature</code>). Các đối tượng (<code>instances</code>) được sử dụng trong việc xây dựng mô hình còn được gọi là quan sát (<code>observation</code>). Ví dụ:</p>
+<ul>
+<li>Dự báo khách hàng vỡ nợ dựa vào các đặc trưng về nhân khẩu học và hành vi giao dịch của khách hàng.</li>
+<li>Dự báo giá bán nhà phụ thuộc vào các tham số của ngôi nhà.</li>
+</ul>
+<p>Các thuật toán như cây quyết định, logistics, mô hình hồi quy tuyến tính đều thuộc loại này. Tuy nhiên, tùy thuộc vào đặc điểm của biến cần dự báo, ta lại có hai nhóm nhỏ sau:</p>
+<ul>
+<li><strong>Bài toán phân loại</strong> (<code>classification</code>): Khi biến phụ thuộc là các biến định dạng nhóm (category). Kết quả đầu ra của các mô hình dạng này là <strong>điểm xác suất</strong> xảy ra một sự kiện hoặc nhóm dự báo. Ví dụ:
+<ul>
+<li>Dự báo khách hàng tốt hay xấu, khách hàng mua hay không mua sản phẩm,…</li>
+<li>Dự báo phân khúc khách hàng<br>
+</li>
+</ul></li>
+<li><strong>Bài toán hồi quy</strong> (<code>regression</code>): Khi biến phụ thuộc biến định dạng số liên tục. Ví dụ:
+<ul>
+<li>Dự báo giá trị của tổng các giao dịch một khách hàng có trong 1 tháng</li>
+<li>Dự báo/Ước lượng thu nhập của khách hàng hàng tháng</li>
+</ul></li>
+</ul>
+<hr>
+<p><strong>Học máy không giám sát</strong> (Unsupervised learning) là kỹ thuật tìm ra các mối qua hệ ẩn trong dữ liệu mà không có biến mục tiêu. Các bài toán loại này có thể chia làm 2 nhóm lớn như sau:</p>
+<ul>
+<li><strong>Bài toán phân nhóm hoặc phân cụm</strong> (<code>clustering</code>): Bài toán loại này giúp ta chia tập dữ liệu sẵn có thành nhiều nhóm khác nhau để sao cho đặc trưng của mỗi nhóm là gần nhau nhất. Ví dụ:
+<ul>
+<li>Phân nhóm khách hàng của một ngân hàng thành các nhóm khác nhau để mỗi nhóm có hành vi giao dịch &amp; nhân khẩu học là tương đồng trong các nhóm nhiều nhất</li>
+</ul></li>
+<li><strong>Bài toán giảm chiều, tìm thành phần chính</strong> : Bài toán này giúp ta giảm số lượng các biến có sẵn trong dữ liệu gốc nhưng vẫn đảm bảo thể hiện được cấu trúc của toàn bộ dữ liệu hoặc tìm ra các cấu trúc ẩn trong dữ liệu. Ví dụ:
+<ul>
+<li>Phân tích các nhân tố ẩn (<code>latent variable</code>) trong khi làm khảo sát 500 khách hàng</li>
+<li>Phân tích quan hệ giao dịch của khách hàng khi mua các sản phẩm khác nhau trong siêu thị</li>
+</ul></li>
+</ul>
+<table class="table">
+<caption>Các thuật toán thường dùng trong học máy</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Supervised Learning</th>
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Unsupervised Learning</th>
+<th style="text-align: left;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Hồi quy</strong> (<code>regression</code>)</td>
+<td style="text-align: left;"><strong>Phân loại</strong> (<code>classification</code>)</td>
+<td style="text-align: left;"><strong>Phân cụm</strong> (<code>clustering</code>)</td>
+<td style="text-align: left;"><strong>Các vấn đề khác</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hồi quy đơn giản (<code>linear regression</code>)</td>
+<td style="text-align: left;">Hồi quy logistics (<code>ols</code>)</td>
+<td style="text-align: left;">Hierarchy cluster</td>
+<td style="text-align: left;">Principal Component Analysi</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">K-nearest neighbors</td>
+<td style="text-align: left;">Support Vector Machine (<code>svm</code>)</td>
+<td style="text-align: left;"><code>k-means</code></td>
+<td style="text-align: left;">Factor Analysis</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Generative additive models (<code>gam</code>)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">Basket Analysis (<code>apriori</code>)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cây quyết định (<code>decision tree</code>)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bagging &amp; Boosting (<code>random forest</code>, <code>gbm</code>, <code>xgboost</code>, <code>lightgbm</code>)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">^</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="cách-bước-xây-dựng-mô-hình" class="level2" data-number="19.3">
+<h2 data-number="19.3" class="anchored" data-anchor-id="cách-bước-xây-dựng-mô-hình"><span class="header-section-number">19.3</span> Cách bước xây dựng mô hình</h2>
+<p>Mục tiêu của việc xây dựng mô hình là giải quyết một vấn đề kinh doanh thông qua học máy. Framework <code>CRISP-DM</code> (The CRoss Industry Standard Process for Data Mining) là quy trình được sử dụng rộng rãi trong việc xây dựng mô hình.</p>
+<p>Các bước của mô hình này bao gồm:</p>
+<ul>
+<li><strong>Bước 1</strong>: Hiểu chính xác vấn đề kinh doanh cần giải quyết. Đây là quá trình trao đổi, tương tác &amp; tìm hiểu về vấn đề thực sự của kinh doanh cần giải quyết. Bước này rất quan trọng do không phải bài toán nào cũng cần học máy giải quyết</li>
+<li><strong>Bước 2</strong>: Tìm hiểu dữ liệu - hiểu rõ về đặc thù của các dữ liệu có liên quan, thường sẽ đi cùng với sản phẩm &amp; quy trình có liên quan đến vấn đề cần giải quyết</li>
+<li><strong>Bước 3</strong>: Chuẩn bị dữ liệu - thu thập &amp; chuẩn hóa dữ liệu</li>
+<li><strong>Bước 4</strong>: Xây dựng mô hình - áp dụng và thử nghiệm các thuật toán khác nhau, tối ưu hóa các bộ tham số để mô hình đạt hiệu quả cao nhât.</li>
+<li><strong>Bước 5</strong>: Đánh giá mô hình</li>
+<li><strong>Bước 6</strong>: Đưa mô hình vào sử dụng</li>
+</ul>
+<p><img src="Images/p03-01-crisdm.png" class="img-fluid"></p>
+<center>
+<font size="4">§</font>
+</center>
+<p>Sau khi đã xác định được vấn đề kinh doanh cần giải quyết, cơ bản ta có 6 bước lớn để xây dựng và đưa vào ứng dụng mô hình, bao gồm:</p>
+<ul>
+<li><strong>Bước 1</strong> - Thu thập dữ liệu &amp; phân chia thành các nhóm train/test (<code>data spit</code>)</li>
+<li><strong>Bước 2</strong> - Xử lý dữ liệu - tạo thêm các biến mới, loại bỏ hoặc biến đổi dữ - u đầu** vào (**<code>feature engineer</code>)</li>
+<li><strong>Bước 3</strong> - Huấn luyện mô hình (<code>train</code>)</li>
+<li><strong>Bước 4</strong> - Đánh giá chất lượng mô hình (<code>evaluate</code>)</li>
+<li><strong>Bước 5</strong> - Tối ưu hóa &amp; tinh chỉnh mô hình (<code>tuning</code>)</li>
+<li><strong>Bước 6</strong> - Đưa mô hình vào sử dụng thực tế (<code>deployment</code>)</li>
+</ul>
+<p><img src="Images/p03-01-ml-flow.png" class="img-fluid"></p>
+<section id="thu-thập-dữ-liệu-phân-chia-train-test" class="level3" data-number="19.3.1">
+<h3 data-number="19.3.1" class="anchored" data-anchor-id="thu-thập-dữ-liệu-phân-chia-train-test"><span class="header-section-number">19.3.1</span> Thu thập dữ liệu &amp; phân chia train test</h3>
+<p>Khi xây dựng mô hình, ta thường có hai tập dữ liệu</p>
+<ul>
+<li><strong>Train</strong>: Tập dữ liệu được sử dụng khi xây dựng (huấn luyện) mô hình</li>
+<li><strong>Test</strong>: Tập dữ liệu dùng để đánh giá chất lượng mô hình được xây trên tập train, cập nhật lại các hyper-parameters mô hình để đưa ra mô hình cuối cùng</li>
+</ul>
+<p>Trong 1 số trường hợp - ta có thể xây dựng thêm tập dữ liệu <strong>validation</strong> dùng để đánh giá chất lượng mô hình cuối cùng</p>
+<p>Trong thực tế, cách chia dữ liệu đầu vào thành 2 tập <code>train</code> &amp; <code>test</code> là phổ biến nhất. Tỷ lệ <code>train</code> và <code>test</code> trong thực tế thường được chia thành 70-30, 80-20 hoặc 75-25. Khi chia tập dữ liệu phục vụ xây dựng mô hình, có hai cách chia chính.</p>
+<ul>
+<li>Phân chia quan sát ngẫu nhiên thông thường (<code>simple random sampling</code>)</li>
+<li>Phân chia quan sát sao cho phân phối của biến cần dự báo trên hai tập <code>train</code> và <code>test</code> giống nhau (<code>stratified sampling</code>)</li>
+</ul>
+<center>
+<font size="4">§</font>
+</center>
+<p>Khi xây dựng mô hình, ta có thể gặp trường hợp dữ liệu có tỷ lệ cần dự báo quá ít so với các nhóm còn lại (2% vs 98%) - ví dụ - dự báo khách hàng fraud. Hiện tượng này gọi là bất cân bằng giữa các nhóm (<code>imbalanced data</code>). Khi gặp phải trường hợp bất cân bằng giữa các nhóm, ta cần phải thực hiện kỹ thuật lấy mẫu để giảm tỷ lệ bất cân xứng giữa các nhóm. Có hai phương pháp phổ biến nhất như sau.</p>
+<ul>
+<li><code>Down sampling</code>: Loại bỏ các quan sát thuộc nhóm chiếm đa số</li>
+<li><code>Up sampling</code>: Lặp lại &amp; lấy ngẫu nhiên thêm các quan sát của nhóm thiểu số</li>
+</ul>
+<div class="quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="Images/p03-01-down-sampling.png" class="img-fluid"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="Images/p03-01-up-sampling.png" class="img-fluid"></p>
+</div>
+</div>
+</div>
+<center>
+<font size="4">§</font>
+</center>
+</section>
+<section id="feature-engineering" class="level3" data-number="19.3.2">
+<h3 data-number="19.3.2" class="anchored" data-anchor-id="feature-engineering"><span class="header-section-number">19.3.2</span> Feature Engineering</h3>
+<p>Đây là bước xử lý dữ liệu đầu vào trước khi xây dựng mô hình. Trong thực tế, dữ liệu sẽ không bao giờ đầy đủ mà sẽ phát sinh các vấn đề sau:</p>
+<ul>
+<li>Dữ liệu bị thiếu (<code>missing value</code>)</li>
+<li>Dữ liệu category có trên tập train nhưng không có trên tập test và ngược lại. Ví dụ - tại tập train, với biến <code>education_level</code> có giá trị <em>high school</em> và <em>bachelor</em> nhưng tập test lại có thêm <code>doctor</code> và <code>master</code></li>
+<li>Dữ liệu bị sai hoặc có các quan sát bất thường (<code>outlier</code>). Ví dụ, biến <code>marital status</code> do hệ thống để mặc định và nhân viên bán hàng không nhập vào CRM nên 99% có giá trị là <code>divorced</code></li>
+<li>Dữ liệu có ý nghĩa lớn nhưng không dùng trực tiếp được mà phải biến đổi sang dạng khác. Ví dụ, địa chỉ khách hàng so với địa chỉ siêu thị - sẽ không dùng trực tiếp được mà cần phải tính toán khoảng cách và thành một biến đầu vào mới.</li>
+<li>Dữ liệu không phù hợp với thuật toán, cần phải biến đổi để có thể sử dụng hiệu quả. Ví dụ - mạng neural cần scale về giá trị trong khoảng 0-1 để thuật toán hoạt động tối ưu</li>
+</ul>
+<p>Tất cả các bước xử lý, biến đổi với dữ liệu ở trên được gọi là <code>feature engineer</code>. Việc lưu trữ các biến đã được xử lý và biến đổi để xây dựng mô hình dễ dàng hơn gọi là xây dựng <code>feature store</code></p>
+</section>
+<section id="huấn-luyện-mô-hình" class="level3" data-number="19.3.3">
+<h3 data-number="19.3.3" class="anchored" data-anchor-id="huấn-luyện-mô-hình"><span class="header-section-number">19.3.3</span> Huấn luyện mô hình</h3>
+<p>Mô hình là một mối quan hệ giữa dữ liệu đầu vào X và kết quả đầu ra Y cho trước. Mối quan hệ này được thể hiện như sau</p>
+<p><span class="math display">\[h_{\theta} = \theta_0 + \theta_1 \times X\]</span></p>
+<p>Trong đó:</p>
+<ul>
+<li><span class="math inline">\(h_{\theta}\)</span> được gọi là giả thuyết hay mô hình, <code>learner</code></li>
+<li><span class="math inline">\(\theta\)</span> là tham số của mô hình - tham số này phụ thuộc &amp; thảy đổi theo từng thuật toán khác nhau</li>
+<li>X được gọi là biến độc lập (<code>independent variables</code>) hoặc biến dự báo (<code>predictors</code>), <code>features</code>, <code>predictor variable</code>, <code>independent variable</code>, <code>attributes</code>, <code>input</code></li>
+<li>Y được gọi là biến phụ thuộc (<code>dependent variables</code>), biến mục tiêu (<code>target variable</code>), <code>response</code>, <code>response variable</code>, <code>output</code></li>
+</ul>
+<center>
+<font size="4">§</font>
+</center>
+<p>Với các bài toán khác nhau, phương trình trên sẽ được thay đổi để phù hợp với bài toán thực tế. Sự khác biệt giữa kết quả dự báo &amp; thực tế gọi là sai số. Ví dụ</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>ID</th>
+<th>Dự báo</th>
+<th>Thực tế</th>
+<th>Sai số</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>5</td>
+<td>3</td>
+<td>-2</td>
+</tr>
+</tbody>
+</table>
+<p>Khi xây dựng mô hình, thuật toán sẽ tính toán <em>hàm mất mát</em> (<code>loss function</code>) và sẽ điều chỉnh tối ưu hóa hàm này (tối thiểu hóa)</p>
+<hr>
+<p>Khi xây dựng mô hình, tất cả các thuật toán của ML đều trải qua ba bước cơ bản theo sơ đồ sau.</p>
+<p><img src="Images/40-build-measure-learn.png" class="img-fluid"></p>
+<ul>
+<li><strong>Bước 1</strong>: Xây dựng mô hình với tham số bất kỳ. Với mỗi mô hình, sẽ có các tham số khác nhau. Ví dụ, mô hình OLS, tham số là hệ số <span class="math inline">\(\beta\)</span> trong mô hình <span class="math inline">\(y = \beta*X\)</span>.</li>
+<li><strong>Bước 2</strong>: Đo lường sai số mô hình so với thực tế - tính toán hàm mất mát (<code>loss function</code>). Hàm mất mát đơn giản nhất là <span class="math inline">\(\sum{\epsilon^2}\)</span></li>
+<li><strong>Bước 3</strong>: Tinh chỉnh lại tham số của mô hình để giảm thiểu sai số giữa mô hình và thực tế.</li>
+</ul>
+<p>Thuật toán sẽ tiếp tục diễn ra cho đến khi sai số của mô hình nhỏ hơn 1 mức sai số định trước.</p>
+<center>
+<font size="4">§</font>
+</center>
+<p>Huấn luyện mô hình là quá trình đưa ra các chỉ dẫn về thuật toán cũng như các siêu tham số (<code>hyperparameter</code>) cho trước để máy tính có thể đưa ra mô hình tối ưu nhất.</p>
+<p><strong>Hyperparameters</strong>: Mỗi mô hình có các tham số cho phép thay đổi độ phức tạp của mô hình. <code>Hyperparameters</code> là tổ hợp các tham số để xây dựng thuật toán. <code>Tuning hyperparameters</code> là cách thức tinh chỉnh độ phức tạp của các tham số trong mô hình. Một thuật toán được gọi là có <em>hyperparameter</em> nếu mỗi lần thay đổi, ta sẽ có các mô hình khác nhau. <code>Hyperparameter</code> phải được khai báo trước khi xây dựng mô hình</p>
+<p><code>Parameter</code> (tham số) là các tham số đầu vào của mô hình được máy học và tối ưu hóa qua quá trình <code>training</code>.</p>
+<p><img src="Images/p03-01-hyperparameter.png" class="img-fluid"></p>
+<p>Ví dụ: Mô hình cây quyết định - <code>hyperparameter</code> là tổ hợp các tham số được cho trước khi xây dựng mô hình gồm:</p>
+<ul>
+<li>Số lần rẽ nhánh tối đa.</li>
+<li>Số quan sát tối thiểu tại mỗi lá</li>
+</ul>
+<p>Nếu điều chỉnh các chỉ số này, mỗi lần xây dựng mô hình sẽ ra các kết quả khác nhau.</p>
+<hr>
+<p>Khi xây Đây là hai loại hai trường phái được sử dụng khi xây dựng các mô hình thống kê.</p>
+<ul>
+<li><strong>Parametric</strong>: Đưa ra mô hình biểu diễn mối quan hệ trước rồi sau đó ước lượng mô hình đưa ra. VD: OLS, Logistic Regression</li>
+<li><strong>Nonparametric</strong>: Không đưa ra mô hình, chỉ đưa ra phương pháp và để thuật toán tự động tìm kết quả. VD: Association rule, decision tree…</li>
+</ul>
+</section>
+<section id="đánh-giá-mô-hình" class="level3" data-number="19.3.4">
+<h3 data-number="19.3.4" class="anchored" data-anchor-id="đánh-giá-mô-hình"><span class="header-section-number">19.3.4</span> Đánh giá mô hình</h3>
+<p>Với mỗi bài toán khác nhau, có các chỉ số khác nhau để đánh giá hiệu quả của mô hình.</p>
+<section id="mô-hình-hồi-quy" class="level4" data-number="19.3.4.1">
+<h4 data-number="19.3.4.1" class="anchored" data-anchor-id="mô-hình-hồi-quy"><span class="header-section-number">19.3.4.1</span> Mô hình hồi quy</h4>
+<p>Với nhóm bài toán hồi quy, các chỉ số sau thường được dùng để đánh giá chất lượng mô hình.</p>
+<ul>
+<li><strong>MSE</strong>: Giá trị trung bình của bình phương sai số (<code>Mean squared error</code>) <span class="math inline">\(MSE = \frac{1}{n} \sum^n_{i=1}(y_i - \hat y_i)^2\)</span>. Mục tiêu: Tối thiểu hóa</li>
+<li><strong>RMSE</strong>: <span class="math inline">\(RMSE = \sqrt{\frac{1}{n} \sum^n_{i=1}(y_i - \hat y_i)^2}\)</span>. Mục tiêu: Tối thiểu hóa</li>
+<li><strong>MAE</strong>: Mean absolute error. <span class="math inline">\(MAE = \frac{1}{n} \sum^n_{i=1}(\vert y_i - \hat y_i \vert)\)</span>. Mục tiêu: Tối thiểu hóa</li>
+<li><strong>RMSLE</strong>: <code>Root Mean Squared Log Error</code> <span class="math display">\[RMSLE = \sqrt{\frac{1}{n} \sum^n_{i=1}(log(y_i + 1) - log(\hat y_i + 1))^2}\]</span>. Với <code>MSE</code>/<code>RMSE</code>, 1 quan sát có sai số lớn sẽ ảnh hưởng rất lớn đến chất lượng mô hình. Khi sử dụng <code>RMSLE</code>, sai số của mỗi quan sát sẽ có trọng số tương đồng hơn và phù hợp khi xây dựng mô hình có các giá trị biến thiên rộng. Mục tiêu: Tối thiểu hóa</li>
+<li><span class="math inline">\(R^2\)</span>: Chỉ số R-bình phương, cho biết tỷ lệ biến thiên của biến dự báo được thể hiện qua mô hình. Mục tiêu: Tối đa hóa</li>
+</ul>
+<p>Trong các chỉ số trên, <span class="math inline">\(R^2\)</span> và <span class="math inline">\(MSE\)</span> là quan trọng nhất. Để nắm vững đánh giá chất lượng mô hình hồi quy, xem kỹ việc đánh giá và diễn giải chỉ số của mô hình OLS.</p>
+</section>
+<section id="mô-hình-phân-loại" class="level4" data-number="19.3.4.2">
+<h4 data-number="19.3.4.2" class="anchored" data-anchor-id="mô-hình-phân-loại"><span class="header-section-number">19.3.4.2</span> Mô hình phân loại</h4>
+<p>Đối với bài toán phân loại, các chỉ số sau là quan trọng nhát:</p>
+<ul>
+<li><strong>Misclassification</strong>: Tỷ lệ phân loại sai. Ví dụ: Có 2 nhóm <code>Good</code> vs.&nbsp;<code>Bad</code>. Tỷ lệ sai số mỗi nhóm là 10% và 20%. Tỷ lệ phân loại sai trên toàn bộ tập hợp là 30%. Mục tiêu: Tối thiểu hóa</li>
+<li><strong>Mean per class error</strong>: Tỷ lệ sai số trung bình trong mỗi nhóm. Trong ví dụ trên, tỷ lệ sai số trung bình mỗi nhóm là 15%. Mục tiêu: Tối thiểu hóa</li>
+<li><strong>Mean Square ErrorE</strong>: Bình phương sai số từ xác suất dự báo đến 1 với class <code>positive</code>. Ví dụ, với <code>positive</code> class, điểm xác suất từ mô hình là 0.95, <span class="math inline">\(MSE = (1-0.95)^2\)</span>. Mục tiêu: Tối thiểu hóa</li>
+<li><strong>AUC - Area Under Curve</strong>: Được sử dụng để đo lường việc phân loại giữa 2 class trong mô hình phân loại 2 lớp (<code>binary classification</code>). Chỉ số này có giá trị trong khoảng 0-1. Mục tiêu: Tối đa hóa</li>
+<li><strong>Recall (Sensitivity)</strong>: Trong 100 trường hợp thực tế là positive, mô hình dự báo được bao nhiêu trường hợp. Mục tiêu: Tối đa hóa</li>
+<li><strong>Precision</strong>: Trong 100 trường hợp dự báo là positive, bao nhiều trường hợp thực sự là positive.</li>
+</ul>
+<p>Với các chỉ số trên, cần nắm vững chỉ số AUC, Recall và Precision. Để nắm vững đánh giá chất lượng mô hình phân loại, xem kỹ phần mô hình logistic.</p>
+</section>
+</section>
+<section id="tuning" class="level3" data-number="19.3.5">
+<h3 data-number="19.3.5" class="anchored" data-anchor-id="tuning"><span class="header-section-number">19.3.5</span> Tuning</h3>
+<p>Tuning là quá trình tìm ra giá trị của các bộ siêu tham số phù hợp nhất với dữ liệu. Mỗi bộ parameter khác nhau sẽ cho ra một mô hình với các chỉ số về hiệu quả khác nhau. Để tìm kiếm tổ hợp tham số tốt nhất cho 1 mô hình, thường có 2 cách:</p>
+<ul>
+<li><code>Grid search</code>: Tổ hợp tất cả các trường hợp có thể có của tham số</li>
+<li><code>Random search</code>: Tổ hợp ngẫu nhiên các trường hợp khả dĩ</li>
+</ul>
+<p>Với một mô hình chỉ có bộ 3 siêu tham số, mỗi siêu tham số ta muốn thử 10 giá trị. Nếu dùng <code>grid search</code>, ta sẽ phải xây dựng <span class="math inline">\(10^3 = 1000\)</span> mô hình. Cách dùng <code>random search</code> sẽ giảm thiểu được một phần số lượng mô hình cần tính toán. Khi tuning, ta có thể sử dụng kỹ thuật <code>early stopping</code> để dừng việc <code>tuning</code> khi sai số mô hình đạt đến mức độ sai số cho phép (được xác định trước).</p>
+<p><img src="Images/p03-01-tune.png" class="img-fluid"></p>
+<p><strong>Lưu ý</strong>: Không phải thuật toán nào cũng có <code>hyperparameters</code> (ví dụ, OLS - mô hình hồi quy không có hyperparameters) nhưng phần lớn các thuật toán đều có tối thiểu 1 tham số.</p>
+</section>
+<section id="deployment" class="level3" data-number="19.3.6">
+<h3 data-number="19.3.6" class="anchored" data-anchor-id="deployment"><span class="header-section-number">19.3.6</span> Deployment</h3>
+<p><strong>Deployment</strong> là quá trình đưa mô hình vào ứng dụng thực tế, có 3 cách thông thường đưa mô hình vào dự bao thực tế.</p>
+<ul>
+<li><strong>Batch Scoring</strong>: Đưa mô hình dự báo theo <code>batch</code>, thường áp dụng với nhóm dữ liệu ít thay đổi liên tục &amp; chỉ cần dự báo định kỳ hàng tuần hoặc hàng tháng. Ví dụ - dự báo nhu cầu khách hàng mua sản phẩm tiếp theo của ngân hàng hàng tháng &amp; lưu trữ tại CRM. Phương thức này còn được gọi là <code>offline prediction</code></li>
+<li><strong>Real time API</strong>: Đưa mô hình dự báo theo dạng API, và có thể trả kết quả theo thời gian thực - thường áp dụng với quy mô vừa, và nhu cầu thay đổi thường xuyên. Ví dụ - dự báo &amp; trả ra kết quả các item khách hàng có thể sẽ quan tâm trên app thương mại điện tử dựa trên hành vi sử dụng app/website. Phương thức này còn gọi là <code>online prediction</code></li>
+<li><strong>Nhúng mô hình vào các thiết bị</strong>: Đưa cả mô hình dự báo vào trong 1 thiết bị - thường dùng trong các thiết bị thông minh. Mô hình dạng này sẽ cần chuyển đổi thành ngôn ngữ khác (như Java) trước khi nhúng vào thiết bị. Ví dụ - mô hình nhận diện chuyển động và cảnh báo trong camera giám sát gia đình.</li>
+</ul>
+<p>Hai loại deployment được dùng nhiều nhất là batch scoring &amp; real time API.</p>
+<p><img src="Images/p03-01-ml-deployment.webp" class="img-fluid"></p>
+<hr>
+<p>Với việc phát triển về cơ sở hạ tầng trên Cloud, việc deploy mô hình ngày càng trở nên dễ dàng hơn nhưng vẫn là mảng phức tạp khi triển khai quy mô lớn, đặc biệt khi quản lý về vấn đề chi phí, độ trễ của kết quả dự báo của mô hình</p>
+</section>
+</section>
+<section id="các-nguyên-lý-trong-dự-báo" class="level2" data-number="19.4">
+<h2 data-number="19.4" class="anchored" data-anchor-id="các-nguyên-lý-trong-dự-báo"><span class="header-section-number">19.4</span> Các nguyên lý trong dự báo</h2>
+<section id="reducible-irreducible-error" class="level3" data-number="19.4.1">
+<h3 data-number="19.4.1" class="anchored" data-anchor-id="reducible-irreducible-error"><span class="header-section-number">19.4.1</span> Reducible &amp; irreducible error</h3>
+<p>Trong thực tế, mối quan hệ giữa X &amp; Y được biểu diễn qua hàm sau: <span class="math display">\[Y = f(X) + \epsilon \]</span> Khi phân tích dữ liệu, ta tìm hàm <span class="math inline">\(\hat(Y)=\hat{f}(X)\)</span> gần nhất với <span class="math inline">\(f(X)\)</span>. Sai số giữa thực tế và mô hình sẽ là:</p>
+<p><span class="math display">\[
+\begin{align}
+E(Y-\hat{Y})^2
+&amp; = E[f(X) - \hat{f}(X) - \epsilon]^2\\
+&amp; =E[(f(x) - \hat{f}(X))^2 - 2\times\epsilon\times(f(x) - \hat{f}(X)) + \epsilon^2)]\\
+&amp; =E[(f(x) - \hat{f}(X))^2] - \underbrace{2\times E(\epsilon)}_{= 0}\times E(f(x) - \hat{f}(X))) + E(\epsilon^2) \\
+&amp; =E[(f(x) - \hat{f}(X))^2] + [E(\epsilon^2) - \underbrace{E(\epsilon)^2}_{=0}]\\
+&amp; = E\underbrace{[f(X) - \hat{f}(X)]^2}_{\text{reducible}} +
+\underbrace{Var(\epsilon)}_{\text{irreducible}}
+\end{align}\]</span></p>
+<p><strong>Lưu ý</strong>: <span class="math inline">\(Var(\epsilon) = E(\epsilon^2) - E(\epsilon)^2\)</span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Không thể xây dựng mô hình có độ chính xác 100%
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Khi xây dựng mô hình, ta chỉ có thể giảm bớt phần <em>reducible error</em> mà không thể giảm được phần <code>variance</code> của sai số. Do đó, mô hình sẽ không thể đạt được độ chính xác 100% mà luôn tồn tại một mức sai số nhất định.</p>
+</div>
+</div>
+</section>
+<section id="đánh-đổi-giữa-bias-variance" class="level3" data-number="19.4.2">
+<h3 data-number="19.4.2" class="anchored" data-anchor-id="đánh-đổi-giữa-bias-variance"><span class="header-section-number">19.4.2</span> Đánh đổi giữa <code>bias</code> &amp; <code>variance</code></h3>
+<p>Mở rộng cấu phần của sai số có thể giảm thiểu, ta có thể phân tách tiếp như sau:</p>
+<p><span class="math display">\[
+\begin{align}
+\text{Error} &amp; = E(y - \hat{f}(x))^2 \\
+&amp; = \text{Var}(\hat{f}(x)) + [\text{Bias}(\hat{f}(x))]^2 + \text{Var}(\epsilon)
+\end{align}
+\]</span></p>
+<p>Trong đó:</p>
+<ul>
+<li><code>Bias</code> là sai số giữa quan sát thực tế và <em>kết quả dự báo kỳ vọng</em> (kết quả dự báo trung bình) của mô hình.</li>
+<li><code>Variance</code>: là độ biến động của kết quả dự báo từ mô hình đã xây dựng với <code>các tập dữ liệu khác nhau</code>.</li>
+</ul>
+<p>Những mô hình đơn giản là mô hình có <code>bias</code> cao nhưng <code>variance</code> thấp. Trong khi đó, các mô hình có độ phức tạp cao hơn lại có <code>bias</code> thấp và <code>variance</code> cao. <code>Bias</code> đại diện cho độ chính xác của mô hình trong khi <code>variance</code> đại diện cho độ khái quát hóa của mô hình. Mô hình có độ khái quát cao (<code>generalization</code>) sẽ có <code>bias</code> cao, <code>variance</code> thấp và ngược lại</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Variance vs Bias
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Variance của mô hình tăng thì Bias sẽ giảm và ngược lại.</p>
+</div>
+</div>
+<p><img src="Images/p03-01-bias-variance.png" class="img-fluid"></p>
+<p><strong>Ví dụ</strong>:</p>
+<ul>
+<li>Model 1 sử dụng <code>median</code> là mô hình dự báo có <code>bias</code> cao (sai số giữa thực tế và kỳ vọng) và <code>variance</code> thấp (tất cả các quan sát đều có chung 1 giá trị dự báo)</li>
+<li>Mô hình 2 sử dụng <code>sin(x)</code> là mô hình dự báo có <code>bias</code> thấp (mô hình sát với thực tế) nhưng <code>variance</code> cao (mỗi quan sát sẽ có 1 giá trị dự báo khác nhau)</li>
+</ul>
+<p>Mô hình quá đơn giản, khiến <code>bias</code> cao còn được gọi là hiện tượng <code>undefit</code>. Mô hình quá phức tạp, khiến <code>bias</code> rất thấp nhưng dự báo không tốt trên tập test, gọi là hiện tượng <code>overfiting</code>.</p>
+<center>
+<font size="4">§</font>
+</center>
+<p>Khi xây dựng mô hình dự báo, có thể xảy ra 3 trường hợp:</p>
+<ul>
+<li><strong>Underfiting</strong>: Hiện tượng mô hình quá đơn giản, tính khái quát hóa cao nhưng dự báo không tốt, dẫn đến sai số cả ở tập train &amp; test đều cao. Mô hình underfitting thường đi kèm với <em>bias</em> cao</li>
+<li><strong>Overfitting</strong>: Hiện tượng xảy ra khi mô hình hoạt động tốt trên tập train nhưng dự báo rất kém trên tập test. Mô hình loại này sẽ khiến sai số trên các tập dữ liệu khác nhau thường rất khác nhau. Do đó, overfitting còn đi kèm với <code>variance</code> lớn</li>
+<li><strong>Mô hình được xây dựng tốt</strong>: Là loại mô hình hoạt động tốt trên cả tập train &amp; test.</li>
+</ul>
+<p>3 trường hợp xây dựng mô hình được thể hiện ở hình dưới đây.</p>
+<p><img src="Images/p03-01-overfit-underfit.png" class="img-fluid"></p>
+<hr>
+<p>Để giải quyết vấn đề overfiting, ta có thể làm như sau:</p>
+<ul>
+<li>Chủ động giảm biến bằng cách chọn biến thủ công hoặc áp dụng các kỹ thuật lựa chọn mô hình</li>
+<li><strong>Regularization</strong>: Kỹ thuật cho phép giữ nguyên số lượng biến đầu vào nhưng giảm giá trị của các tham số <span class="math inline">\(\theta\)</span> trong mô hình</li>
+</ul>
+<p><strong>Regularization</strong>: Regularization cho phép tính toán giá trị của các tham số <span class="math inline">\(\theta\)</span> trong mô hình, sao cho các giá trị của <span class="math inline">\(\theta\)</span> càng nhỏ càng tốt. Hàm tối ưu hóa được thay đổi lại như sau.</p>
+<p><span class="math display">\[J(\theta_0. \theta_1) = \underset{\theta_0, \theta_1}{\text{minimize}}\frac{1}{2m}\sum_{i=1}^m(h_\theta(x^{(i)}) - y^{(i)})^2 + \lambda\sum_{i=1}^n\theta_j^2\]</span></p>
+<p>Trong đó, <span class="math inline">\(\lambda\sum_{i=1}^n\theta_j^2\)</span> được gọi là tham số <code>regularization</code>. Hệ số, <span class="math inline">\(\lambda\)</span> sẽ quyết định vị độ mạnh của <code>regularization</code>. Nếu <span class="math inline">\(\lambda\)</span> càng lớn, yếu tố làm giảm thiểu overfitting càng mạnh. Tuy nhiên, nếu <span class="math inline">\(\lambda\)</span> quá lớn (ví dụ, <span class="math inline">\(10^{10}\)</span>) sẽ khiến cho toàn bộ các tham số <span class="math inline">\(\theta\)</span> trở về 0, và mô hình sẽ thay đổi từ <code>overfitting</code> sang <code>underfitting</code>.</p>
+<center>
+<font size="4">§</font>
+</center>
+<p><strong>Phương pháp tính toán sai số trong bài toán phân loại - The Classification Setting</strong></p>
+<p><span class="math display">\[\text{Training error rate} = \frac{1}{n}\sum_{i=1}^n I(y_i \neq \hat {y_i})\]</span></p>
+<p>Trong đó <span class="math inline">\(I(y_i \neq \hat{y_i}\)</span> là “indicator variable”, có giá trị bằng 1 nếu <span class="math inline">\(y_i \neq \hat{y_i}\)</span>, có giá trị bằng 0 nếu <span class="math inline">\(y_i= \hat{y_i}\)</span></p>
+</section>
+<section id="khả-năng-giải-thích-và-khả-năng-dự-báo" class="level3" data-number="19.4.3">
+<h3 data-number="19.4.3" class="anchored" data-anchor-id="khả-năng-giải-thích-và-khả-năng-dự-báo"><span class="header-section-number">19.4.3</span> Khả năng giải thích và khả năng dự báo</h3>
+<p>Khi xây dựng mô hình, có hai khía cạnh cần phải xử lý:</p>
+<ul>
+<li>Khả năng giải thích</li>
+<li>Khả năng dự báo</li>
+</ul>
+<center>
+<font size="4">§</font>
+</center>
+<p>Khả năng giải thích hay khả năng rút ra kết luận từ mô hình (<code>inference</code>): Nhấn mạnh đến khả năng diễn đạt ý nghĩa các biến trong mô hình. Các câu hỏi thường dùng là:</p>
+<ul>
+<li>Biến đầu vào nào có quan hệ chặt chẽ với biến cần dự báo?</li>
+<li>Mối quan hệ giữa biến độc lập và biến dự báo là gì?</li>
+<li>Mối quan hệ này có thể biểu diễn một cách đơn giản dạng mô hình tuyến tính hay phải mô tả dưới dạng phức tạp hơn?</li>
+</ul>
+<p>Ví dụ về khả năng giải thích của mô hình:</p>
+<ul>
+<li>Khách hàng trả nợ trễ hạn 3 lần sẽ làm tăng khả năng trốn nợ lên 20%</li>
+<li>Giá giảm 10% sẽ khiên doanh thu tăng thêm khoảng 6%.</li>
+</ul>
+<p>Các thuật toán như <code>OLS</code>, <code>apriori</code>, <code>logistics</code> thuộc nhóm này.</p>
+<p><strong>Khả năng dự báo của mô hình</strong>: Ưu tiên hơn đến tính chính xác của mô hình dự báo, không quan tâm đến việc mô tả quan hệ giữa các biến. Ví dụ: <code>randomforest</code>, <code>neural network</code>, <code>xgboost</code></p>
+<center>
+<font size="4">§</font>
+</center>
+<p>:::{.callout-note} ## Đánh đổi giữa độ chính xác và khả năng giải thích</p>
+<p>Khi xây dựng mô hình, ta buộc phải dánh đổi giữa độ chính xác của mô hình vs.&nbsp;khả năng diễn giải mô hình và không tồn tại một mô hình tốt nhất cho mọi trường hợp. Do đó, ta cần phải lựa chọn mô hình theo từng đối tượng.</p>
+</section>
+<section id="độ-phức-tạp-mô-hinh-vs-sai-số-trên-tập-train" class="level3" data-number="19.4.4">
+<h3 data-number="19.4.4" class="anchored" data-anchor-id="độ-phức-tạp-mô-hinh-vs-sai-số-trên-tập-train"><span class="header-section-number">19.4.4</span> Độ phức tạp mô hinh vs sai số trên tập train</h3>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Nguyên lý chữ U
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Khi mô hình có độ phức tạp càng cao thì sai số của tập train sẽ ngày càng giảm trong khi sai số của tập test sẽ có dạng chữ U*</p>
+</div>
+</div>
+<p><img src="Images/p03-01-model-complexity.png" class="img-fluid"></p>
+<hr>
+<p>Khi xây dựng mô hình, để đánh giá chất lượng, ta sẽ đo lường sai số trên tập train và tập test. Sai số của mô hình được tính như sau (với trường hợp <code>regression</code>)</p>
+<p><span class="math display">\[MSE = \frac{1}{n} \sum^n_{i=1}(y_i - \hat{f}(x_i))^2\]</span></p>
+<p>Khi đánh giá chất lượng mô hình, ta cần đánh giá trên cả tập train và tập test. Thông thường, mô hình sẽ được xây trên tập train và được đánh giá trên tập test. Các tham số trên tập train sẽ được thay đổi để sai số mô hình được tối ưu. Số lượng tham số cần tối ưu càng nhiều, mô hình càng phức tạp.</p>
+<hr>
+<p>Ví dụ: Ta cần dự báo <span class="math inline">\(income\)</span>, ta có hai mô hình sau.</p>
+<table class="table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 77%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>STT</th>
+<th><pre><code>                Mô hình</code></pre></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><span class="math inline">\(income = \beta_0 + \beta_1*age\)</span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><span class="math inline">\(income = \beta_0 + \beta_1*age + \beta_2*experience\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Trong hai mô hình trên, mô hình 2 được gọi là phức tạp hơn mô hình 1 (<code>compexity level</code>).</p>
+<hr>
+<p><strong>Lưu ý</strong>:</p>
+<ul>
+<li>Nguyên lý chữ U cho ta thấy, việc tăng thêm biến vào mô hình (số lượng biến) không phải lúc nào cũng làm tăng chất lượng mô hình</li>
+<li>Khi xây dựng mô hình, cần phải tìm được điểm cân bằng giữa độ phức tạp mô hình và độ chính xác. Điểm này chính là điểm thấp nhất trên đường chữ U của sai số trên tập test</li>
+</ul>
+</section>
+</section>
+<section id="nhược-điểm-của-máy-học" class="level2" data-number="19.5">
+<h2 data-number="19.5" class="anchored" data-anchor-id="nhược-điểm-của-máy-học"><span class="header-section-number">19.5</span> Nhược điểm của máy học</h2>
+<p>Mặc dù máy học (<code>machine learning</code>) có thể giải quyết được rất nhiều vấn đề khác nhau trong cuộc sống. Tuy nhiên, ta không nên coi <code>machine learning</code> là chìa khóa vạn năng có thể giải quyết mọi vấn đề. Ngược lại, <code>machine learning</code> gặp nhiều hạn chế như sau.</p>
+<ul>
+<li><strong>Không áp dụng được với tập dữ liệu hoàn toàn mới</strong>: Do các thuật toán của máy học được xây dựng dựa trên dữ liệu của quá khứ, các thuật toán này sẽ không dự báo được chính xác với tập dữ liệu hoàn toàn mới. Ví dụ: Mô hình dự báo khách hàng churn tại Mỹ sẽ không thể áp dụng được tại Việt Nam và ngược lại. Chính vì lý do này, trong các ứng dụng của học máy, các bài toán nhận diện hình ảnh, âm thanh lại là nhóm được tái sử dụng nhiều nhất do dữ liệu hình ảnh, âm thanh được chuẩn hóa và khá tương đồng với các thị trường khác nhau.</li>
+<li><strong>Khó giải thích</strong>: Phần lớn các thuật toán (vi trừ <code>linear model</code>) đều thực hiện nhiều phép biến đổi toán học phức tạp và là tổ hợp của nhiều mô hình con (bagging, boosting). Vì vậy, kết quả dự báo của từng quan sát rất khó giải thích và gây ra nhiều khó khăn khi thuyết phục các đơn vị kinh doanh chấp nhận sử dụng kết quả từ mô hình. Để khắc phục nhược điểm này, hiện tại <code>machine learning</code> đang phát triển ngành <code>học máy có giải thích</code>, giúp tập trung giải thích cả <code>global prediction</code> và <code>local prediction</code>.</li>
+<li><strong>Đòi hỏi chất lượng và khối lượng dữ liệu tốt</strong>: Các mô hình ML chỉ có thể giải quyết tốt khi chất lượng cũng như khối lượng dữ liệu (số quan sát, số biến) đầu vào đạt ở mức độ nhất đinh. Trong nhiều trường hợp, ta không thể áp dụng các bài toán <code>machine learning</code> mà phải thay thế bằng các kỹ thuật phân tích khám phá dữ liệu. Các phân khúc và lĩnh vực đòi hỏi nhiều sự can thiệp của con người như khách hàng lớn, khách hàng doanh nghiệp - sẽ có rất nhiều khó khăn và trở ngại trong việc xây dựng mô hình cũng như ứng dụng.</li>
+</ul>
+</section>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="19.6">
+<h2 data-number="19.6" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">19.6</span> Tài liệu tham khảo</h2>
+<ul>
+<li>Introduction to Statistical Learning</li>
+<li><a href="https://bradleyboehmke.github.io/HOML/process.html">Hands on Machine Learning with R</a></li>
+<li>Practical data science with R</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./p02-99-meo-trong-r.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Các mẹo trong R</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./p03-02-mo-hinh-ols.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Mô hình hồi quy tuyến tính</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
