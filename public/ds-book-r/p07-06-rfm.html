@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -60,8 +94,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-submit-button-title": "Submit"
   }
 }</script>
 
@@ -81,7 +114,7 @@ ul.task-list li input[type="checkbox"] {
       <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./p07-03-collaborative-filtering.html">Các phương pháp phân tích khác</a></li><li class="breadcrumb-item"><a href="./p07-06-rfm.html"><span class="chapter-number">53</span>&nbsp; <span class="chapter-title">Mô hình RFM</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -648,7 +681,16 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Mục lục</h2>
+   
+  <ul>
+  <li><a href="#giới-thiệu" id="toc-giới-thiệu" class="nav-link active" data-scroll-target="#giới-thiệu"><span class="header-section-number">53.1</span> Giới thiệu</a></li>
+  <li><a href="#thực-hành" id="toc-thực-hành" class="nav-link" data-scroll-target="#thực-hành"><span class="header-section-number">53.2</span> Thực hành</a></li>
+  <li><a href="#lưu-ý" id="toc-lưu-ý" class="nav-link" data-scroll-target="#lưu-ý"><span class="header-section-number">53.3</span> Lưu ý</a></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">53.4</span> Tài liệu tham khảo</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -670,8 +712,357 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<section id="giới-thiệu" class="level2" data-number="53.1">
+<h2 data-number="53.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">53.1</span> Giới thiệu</h2>
+<p><code>RFM</code> - Recency Frequency Monetary là kỹ thuật phân tích và chia nhóm khách hàng dựa trên hành vi giao dịch trong một khoảng thời gian nhất định, đánh giá khách hàng trên 3 yếu tố:</p>
+<ul>
+<li><strong>Recency</strong>: Thời gian giao dịch gần nhất tính từ mốc phân tích</li>
+<li><strong>Frequency</strong>: Tần suất giao dịch trong một khoảng thời gian</li>
+<li><strong>Monetary</strong>: Tổng giá trị giao dịch</li>
+</ul>
+<p>Phân nhóm khách hàng theo RFM là kỹ thuật đơn giản, có thể áp dụng rộng rãi cho các lĩnh vực khác nhau với việc phân tích dữ liệu giao dịch.</p>
+<center>
+<font size="4">§</font>
+</center>
+<p>Dữ liệu theo giao dịch và dữ liệu theo từng khách hàng.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" aria-current="page">Dữ liệu theo giao dịch</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Dữ liệu theo đầu khách hàng</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(rfm)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>rfm<span class="sc">::</span>rfm_data_orders <span class="sc">%&gt;%</span> </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(customer_id <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Josef Lemke"</span>, <span class="st">'Hosteen Jacobi'</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">customer_id</th>
+<th style="text-align: left;">order_date</th>
+<th style="text-align: right;">revenue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Hosteen Jacobi</td>
+<td style="text-align: left;">2004-03-06</td>
+<td style="text-align: right;">116</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Josef Lemke</td>
+<td style="text-align: left;">2006-08-14</td>
+<td style="text-align: right;">76</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Josef Lemke</td>
+<td style="text-align: left;">2006-11-13</td>
+<td style="text-align: right;">52</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hosteen Jacobi</td>
+<td style="text-align: left;">2005-07-04</td>
+<td style="text-align: right;">137</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hosteen Jacobi</td>
+<td style="text-align: left;">2004-12-30</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Josef Lemke</td>
+<td style="text-align: left;">2005-06-28</td>
+<td style="text-align: right;">48</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Josef Lemke</td>
+<td style="text-align: left;">2004-09-04</td>
+<td style="text-align: right;">182</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hosteen Jacobi</td>
+<td style="text-align: left;">2005-01-15</td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Josef Lemke</td>
+<td style="text-align: left;">2005-01-30</td>
+<td style="text-align: right;">33</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Tính toán số lượng, giá trị, và thời gian giao dịch gần nhất kể từ ngày 1/1/2007</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">customer_id</th>
+<th style="text-align: left;">last_order</th>
+<th style="text-align: left;">recency</th>
+<th style="text-align: right;">frequency</th>
+<th style="text-align: right;">monetary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Hosteen Jacobi</td>
+<td style="text-align: left;">2005-07-04</td>
+<td style="text-align: left;">546 days</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">300</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Josef Lemke</td>
+<td style="text-align: left;">2006-11-13</td>
+<td style="text-align: left;">49 days</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">391</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Dữ liệu tổng hợp theo đầu khác hàng sẽ là thông tin đầu vào để xây dựng segment khách hàng. RFM sẽ chia nhỏ mỗi khía cạnh giao dịch của khách hàng thành các nhóm khác nhau (4-5 nhóm theo <code>quartile</code> hoặc <code>quintile</code>). Tổ hợp các nhóm này sẽ tạo thành các <code>segment</code> khác nhau.</p>
+<p>Các phân khúc khách hàng sẽ được đặt tên và chia như sau</p>
+<table class="table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Segment</strong></th>
+<th><strong>Description</strong></th>
+<th><strong>R</strong></th>
+<th><strong>F</strong></th>
+<th><strong>M</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Champions</td>
+<td>Bought recently, buy often and spend the most</td>
+<td>4 - 5</td>
+<td>4 - 5</td>
+<td>4 - 5</td>
+</tr>
+<tr class="even">
+<td>Loyal Customers</td>
+<td>Spend good money. Responsive to promotions</td>
+<td>2 - 5</td>
+<td>3 - 5</td>
+<td>3 - 5</td>
+</tr>
+<tr class="odd">
+<td>Potential Loyalist</td>
+<td>Recent customers, spent good amount, bought more than once</td>
+<td>3 - 5</td>
+<td>1 - 3</td>
+<td>1 - 3</td>
+</tr>
+<tr class="even">
+<td>New Customers</td>
+<td>Bought more recently, but not often</td>
+<td>4 - 5</td>
+<td>&lt;= 1</td>
+<td>&lt;= 1</td>
+</tr>
+<tr class="odd">
+<td>Promising</td>
+<td>Recent shoppers, but haven’t spent much</td>
+<td>3 - 4</td>
+<td>&lt;= 1</td>
+<td>&lt;= 1</td>
+</tr>
+<tr class="even">
+<td>Need Attention</td>
+<td>Above average recency, frequency &amp; monetary values</td>
+<td>2 - 3</td>
+<td>2 - 3</td>
+<td>2 - 3</td>
+</tr>
+<tr class="odd">
+<td>About To Sleep</td>
+<td>Below average recency, frequency &amp; monetary values</td>
+<td>2 - 3</td>
+<td>&lt;= 2</td>
+<td>&lt;= 2</td>
+</tr>
+<tr class="even">
+<td>At Risk</td>
+<td>Spent big money, purchased often but long time ago</td>
+<td>&lt;= 2</td>
+<td>2 - 5</td>
+<td>2 - 5</td>
+</tr>
+<tr class="odd">
+<td>Can’t Lose Them</td>
+<td>Made big purchases and often, but long time ago</td>
+<td>&lt;= 1</td>
+<td>4 - 5</td>
+<td>4 - 5</td>
+</tr>
+<tr class="even">
+<td>Hibernating</td>
+<td>Low spenders, low frequency, purchased long time ago</td>
+<td>1 - 2</td>
+<td>1 - 2</td>
+<td>1 - 2</td>
+</tr>
+<tr class="odd">
+<td>Lost</td>
+<td>Lowest recency, frequency &amp; monetary scores</td>
+<td>&lt;= 2</td>
+<td>&lt;= 2</td>
+<td>&lt;= 2</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="thực-hành" class="level2" data-number="53.2">
+<h2 data-number="53.2" class="anchored" data-anchor-id="thực-hành"><span class="header-section-number">53.2</span> Thực hành</h2>
+<p>Package <code>rfm</code> cho phép ứng dụng RFM nhanh chóng.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>rfm<span class="sc">::</span>rfm_data_customer <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  customer_id revenue most_recent_visit number_of_orders recency_days
+        &lt;dbl&gt;   &lt;dbl&gt; &lt;date&gt;                       &lt;dbl&gt;        &lt;dbl&gt;
+1       22086     777 2006-05-14                       9          232
+2        2290    1555 2006-09-08                      16          115
+3       26377     336 2006-11-19                       5           43
+4       24650    1189 2006-10-29                      12           64
+5       12883    1229 2006-12-09                      12           23
+6        2119     929 2006-10-21                      11           72</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Phân tích RFM</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>analysis_date <span class="ot">&lt;-</span> lubridate<span class="sc">::</span><span class="fu">as_date</span>(<span class="st">'2007-01-01'</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>rfm_result <span class="ot">&lt;-</span> <span class="fu">rfm_table_customer</span>(rfm_data_customer, customer_id, number_of_orders,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  recency_days, revenue, analysis_date)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>rfm_result<span class="sc">$</span>rfm <span class="sc">%&gt;%</span> <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  customer_id recency_days transaction_count amount recency_score
+1       22086          232                 9    777             2
+2        2290          115                16   1555             4
+3       26377           43                 5    336             5
+4       24650           64                12   1189             5
+5       12883           23                12   1229             5
+6        2119           72                11    929             5
+  frequency_score monetary_score rfm_score
+1               2              2       222
+2               5              5       455
+3               1              1       511
+4               4              4       544
+5               4              5       545
+6               4              3       543</code></pre>
+</div>
+</div>
+<p>Chia nhóm phân khúc các khách hàng</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>rfm_result<span class="sc">$</span>se</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>NULL</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Đặt tên các segment</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>segment_names <span class="ot">&lt;-</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Champions"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Loyal Customers"</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Potential Loyalist"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"New Customers"</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Promising"</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Need Attention"</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"About To Sleep"</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"At Risk"</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Can't Lose Them"</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Lost"</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Đặt các mốc cho RFM score</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>recency_lower <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>recency_upper <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>frequency_lower <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">1</span>)</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>frequency_upper <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">2</span>)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>monetary_lower <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">1</span>)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>monetary_upper <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">2</span>)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>segment_result <span class="ot">&lt;-</span> <span class="fu">rfm_segment</span>(</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  rfm_result,</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  segment_names,</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  recency_lower,</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  recency_upper,</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>  frequency_lower,</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  frequency_upper,</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  monetary_lower,</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>  monetary_upper</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Kết quả</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>segment_result <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 9
+  customer_id segment            rfm_score transaction_count recency_days amount
+        &lt;dbl&gt; &lt;chr&gt;                  &lt;dbl&gt;             &lt;dbl&gt;        &lt;dbl&gt;  &lt;dbl&gt;
+1       22086 Need Attention           222                 9          232    777
+2        2290 Champions                455                16          115   1555
+3       26377 Potential Loyalist       511                 5           43    336
+4       24650 Champions                544                12           64   1189
+5       12883 Champions                545                12           23   1229
+6        2119 Loyal Customers          543                11           72    929
+# ℹ 3 more variables: recency_score &lt;int&gt;, frequency_score &lt;int&gt;,
+#   monetary_score &lt;int&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vẽ biểu đồ</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>segment_result <span class="sc">%&gt;%</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(segment) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">no =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="fu">fct_reorder</span>(segment, no), no)) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"darkblue"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"RFM segment"</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Segment"</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"# customers"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p07-06-rfm_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="lưu-ý" class="level2" data-number="53.3">
+<h2 data-number="53.3" class="anchored" data-anchor-id="lưu-ý"><span class="header-section-number">53.3</span> Lưu ý</h2>
+<ul>
+<li><code>RFM</code> là một kỹ thuật rất dễ áp dụng và đơn giản khi phân tích về giao dịch. Tuy nhiên, cần lưu ý khi sử dụng và tách riêng nhóm <strong>không</strong> giao dịch trong khoảng thời gian phân tích để loại bỏ khỏi kỹ thuật RFM.</li>
+</ul>
+<p><strong>Ví dụ</strong>: Cửa hàng có 10000 khách hàng, nhưng trong khoảng thời gian phân tích chỉ có 2000 khách hàng giao dịch. Kỹ thuật RFM chỉ tính và phân nhóm 2000 khách hàng có giao dịch mà mặc định loại không tính đến nhớm 8000 không giao dịch còn lại.</p>
+<ul>
+<li>Việc phân chia các mốc điểm scoring RFM, đặc biệt là phần <code>Recency</code>, thuần túy chỉ dựa vào thống kê đơn giản mà chưa phản ánh các yêu cầu thực tiễn về thị trường, sản phẩm. Khi triển khai thực tế cần lưu ý yếu tố này</li>
+</ul>
+</section>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="53.4">
+<h2 data-number="53.4" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">53.4</span> Tài liệu tham khảo</h2>
+<ul>
+<li><a href="https://cran.r-project.org/web/packages/rfm/vignettes/rfm-customer-level-data.html">RFM R package</a></li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
