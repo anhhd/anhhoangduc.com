@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -94,8 +94,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-submit-button-title": "Submit"
   }
 }</script>
 
@@ -117,7 +116,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./p03-01-gioi-thieu-hoc-may.html">Supervised Learning</a></li><li class="breadcrumb-item"><a href="./p03-50-chat-luong-mo-hinh.html"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Chất lượng mô hình</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -692,7 +691,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#confusion-matrix" id="toc-confusion-matrix" class="nav-link" data-scroll-target="#confusion-matrix"><span class="header-section-number">34.2</span> Confusion Matrix</a></li>
   <li><a href="#lựa-chọn-cut-off" id="toc-lựa-chọn-cut-off" class="nav-link" data-scroll-target="#lựa-chọn-cut-off"><span class="header-section-number">34.3</span> Lựa chọn cut-off</a>
   <ul>
-  <li><a href="#kolmogorovsmirnov-statistics" id="toc-kolmogorovsmirnov-statistics" class="nav-link" data-scroll-target="#kolmogorovsmirnov-statistics"><span class="header-section-number">34.3.1</span> Kolmogorov–Smirnov statistics</a></li>
+  <li><a href="#dữ-liệu-imbalance" id="toc-dữ-liệu-imbalance" class="nav-link" data-scroll-target="#dữ-liệu-imbalance"><span class="header-section-number">34.3.1</span> Dữ liệu imbalance</a></li>
+  <li><a href="#kolmogorovsmirnov-statistics" id="toc-kolmogorovsmirnov-statistics" class="nav-link" data-scroll-target="#kolmogorovsmirnov-statistics"><span class="header-section-number">34.3.2</span> Kolmogorov–Smirnov statistics</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -787,6 +787,537 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="34.3" class="anchored" data-anchor-id="lựa-chọn-cut-off"><span class="header-section-number">34.3</span> Lựa chọn cut-off</h2>
 <p>Như vậy, khi nắm được rằng giá trị tuyệt đối của điểm score không ảnh hưởng nhiều đến chất lượng mô hình, ta có thể tập trung vào việc lựa chọn điểm cut-off để dự báo <code>positive class</code>.</p>
 <p>Việc lựa chọn cut-off tỏng thực tế hoàn toàn phụ thuộc vào khẩu vị rủi ro và năng lực triển khai của đơn vị. Khi giải thích cho đơn vị kinh doanh, ứng dụng quan trọng nhất là <code>decile table</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modeldata)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(two_class_example) </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>two_class_example</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     truth       Class1       Class2 predicted
+1   Class2 3.589243e-03 9.964108e-01    Class2
+2   Class1 6.786211e-01 3.213789e-01    Class1
+3   Class2 1.108935e-01 8.891065e-01    Class2
+4   Class1 7.351617e-01 2.648383e-01    Class1
+5   Class2 1.623996e-02 9.837600e-01    Class2
+6   Class1 9.992751e-01 7.249286e-04    Class1
+7   Class1 9.992011e-01 7.988510e-04    Class1
+8   Class1 8.123520e-01 1.876480e-01    Class1
+9   Class2 4.570373e-01 5.429627e-01    Class2
+10  Class2 9.763773e-02 9.023623e-01    Class2
+11  Class2 9.046455e-01 9.535452e-02    Class1
+12  Class1 2.979792e-01 7.020208e-01    Class2
+13  Class1 9.945820e-01 5.418045e-03    Class1
+14  Class2 8.511498e-01 1.488502e-01    Class1
+15  Class1 9.999965e-01 3.492550e-06    Class1
+16  Class1 9.919163e-01 8.083723e-03    Class1
+17  Class2 4.250834e-04 9.995749e-01    Class2
+18  Class2 1.149549e-01 8.850451e-01    Class2
+19  Class1 8.259703e-01 1.740297e-01    Class1
+20  Class2 6.836781e-02 9.316322e-01    Class2
+21  Class1 9.350963e-01 6.490371e-02    Class1
+22  Class1 9.999720e-01 2.798780e-05    Class1
+23  Class2 2.220960e-01 7.779040e-01    Class2
+24  Class2 2.076886e-01 7.923114e-01    Class2
+25  Class2 2.395558e-02 9.760444e-01    Class2
+26  Class1 9.998816e-01 1.184037e-04    Class1
+27  Class1 9.811623e-01 1.883772e-02    Class1
+28  Class1 9.835188e-01 1.648122e-02    Class1
+29  Class2 5.225484e-03 9.947745e-01    Class2
+30  Class2 4.214534e-02 9.578547e-01    Class2
+31  Class2 2.905598e-03 9.970944e-01    Class2
+32  Class1 9.978972e-01 2.102816e-03    Class1
+33  Class2 8.299198e-01 1.700802e-01    Class1
+34  Class1 8.055859e-01 1.944141e-01    Class1
+35  Class2 3.295137e-05 9.999670e-01    Class2
+36  Class2 1.612067e-04 9.998388e-01    Class2
+37  Class2 1.199105e-01 8.800895e-01    Class2
+38  Class1 8.222818e-02 9.177718e-01    Class2
+39  Class1 9.234837e-01 7.651630e-02    Class1
+40  Class2 9.966767e-03 9.900332e-01    Class2
+41  Class1 9.439622e-01 5.603781e-02    Class1
+42  Class2 1.592083e-02 9.840792e-01    Class2
+43  Class1 9.223776e-03 9.907762e-01    Class2
+44  Class2 2.360050e-03 9.976399e-01    Class2
+45  Class2 7.474391e-03 9.925256e-01    Class2
+46  Class2 6.738986e-01 3.261014e-01    Class1
+47  Class2 6.333998e-02 9.366600e-01    Class2
+48  Class2 5.023866e-03 9.949761e-01    Class2
+49  Class2 1.810806e-02 9.818919e-01    Class2
+50  Class1 9.912743e-01 8.725662e-03    Class1
+51  Class1 8.945705e-01 1.054295e-01    Class1
+52  Class1 9.961046e-01 3.895397e-03    Class1
+53  Class1 8.429632e-01 1.570368e-01    Class1
+54  Class1 9.973947e-01 2.605314e-03    Class1
+55  Class2 5.019505e-01 4.980495e-01    Class1
+56  Class1 9.838037e-01 1.619629e-02    Class1
+57  Class2 1.221231e-02 9.877877e-01    Class2
+58  Class2 1.328124e-03 9.986719e-01    Class2
+59  Class2 9.365285e-03 9.906347e-01    Class2
+60  Class2 1.296095e-02 9.870390e-01    Class2
+61  Class2 3.884927e-02 9.611507e-01    Class2
+62  Class1 9.992216e-01 7.783687e-04    Class1
+63  Class1 9.623572e-01 3.764278e-02    Class1
+64  Class1 9.840572e-01 1.594280e-02    Class1
+65  Class1 9.981712e-01 1.828799e-03    Class1
+66  Class1 9.986848e-01 1.315244e-03    Class1
+67  Class1 9.963867e-01 3.613335e-03    Class1
+68  Class2 5.825569e-02 9.417443e-01    Class2
+69  Class2 1.173739e-03 9.988263e-01    Class2
+70  Class2 7.943867e-01 2.056133e-01    Class1
+71  Class1 9.988568e-01 1.143212e-03    Class1
+72  Class2 5.815015e-01 4.184985e-01    Class1
+73  Class1 9.979431e-01 2.056906e-03    Class1
+74  Class2 5.522745e-01 4.477255e-01    Class1
+75  Class1 9.847017e-01 1.529833e-02    Class1
+76  Class2 1.429375e-05 9.999857e-01    Class2
+77  Class1 1.009436e-01 8.990564e-01    Class2
+78  Class2 8.561391e-01 1.438609e-01    Class1
+79  Class2 4.074602e-01 5.925398e-01    Class2
+80  Class1 3.139248e-01 6.860752e-01    Class2
+81  Class1 6.019319e-01 3.980681e-01    Class1
+82  Class2 3.630955e-02 9.636904e-01    Class2
+83  Class2 3.096082e-01 6.903918e-01    Class2
+84  Class1 9.482744e-01 5.172563e-02    Class1
+85  Class1 9.844007e-01 1.559931e-02    Class1
+86  Class1 9.794736e-01 2.052643e-02    Class1
+87  Class2 2.375451e-05 9.999762e-01    Class2
+88  Class1 7.990447e-01 2.009553e-01    Class1
+89  Class2 8.035155e-05 9.999196e-01    Class2
+90  Class1 8.534425e-01 1.465575e-01    Class1
+91  Class1 9.964761e-01 3.523859e-03    Class1
+92  Class2 5.757130e-02 9.424287e-01    Class2
+93  Class2 1.033265e-04 9.998967e-01    Class2
+94  Class1 1.367068e-01 8.632932e-01    Class2
+95  Class1 9.995170e-01 4.829604e-04    Class1
+96  Class1 9.863939e-01 1.360610e-02    Class1
+97  Class1 9.674599e-01 3.254012e-02    Class1
+98  Class1 1.474711e-01 8.525289e-01    Class2
+99  Class2 5.895584e-05 9.999410e-01    Class2
+100 Class1 9.920976e-01 7.902404e-03    Class1
+101 Class2 1.353716e-01 8.646284e-01    Class2
+102 Class1 9.773557e-01 2.264430e-02    Class1
+103 Class2 2.371418e-02 9.762858e-01    Class2
+104 Class1 9.781376e-01 2.186243e-02    Class1
+105 Class2 3.977469e-01 6.022531e-01    Class2
+106 Class2 1.900919e-01 8.099081e-01    Class2
+107 Class2 8.920351e-02 9.107965e-01    Class2
+108 Class2 4.141195e-04 9.995859e-01    Class2
+109 Class1 9.983074e-01 1.692559e-03    Class1
+110 Class1 9.998535e-01 1.465234e-04    Class1
+111 Class2 8.463544e-01 1.536456e-01    Class1
+112 Class2 9.039022e-01 9.609781e-02    Class1
+113 Class2 1.157239e-01 8.842761e-01    Class2
+114 Class1 9.840912e-01 1.590885e-02    Class1
+115 Class2 1.367840e-03 9.986322e-01    Class2
+116 Class1 9.919245e-01 8.075476e-03    Class1
+117 Class2 2.294874e-02 9.770513e-01    Class2
+118 Class2 2.612947e-01 7.387053e-01    Class2
+119 Class2 1.707507e-01 8.292493e-01    Class2
+120 Class2 8.376660e-03 9.916233e-01    Class2
+121 Class1 9.377396e-01 6.226035e-02    Class1
+122 Class2 5.776096e-01 4.223904e-01    Class1
+123 Class1 9.333508e-01 6.664924e-02    Class1
+124 Class1 6.935601e-01 3.064399e-01    Class1
+125 Class1 8.108011e-01 1.891989e-01    Class1
+126 Class2 6.861017e-03 9.931390e-01    Class2
+127 Class2 1.445695e-01 8.554305e-01    Class2
+128 Class1 6.100306e-01 3.899694e-01    Class1
+129 Class2 6.564836e-04 9.993435e-01    Class2
+130 Class1 8.818895e-01 1.181105e-01    Class1
+131 Class2 5.760855e-04 9.994239e-01    Class2
+132 Class2 1.121137e-01 8.878863e-01    Class2
+133 Class2 2.772588e-03 9.972274e-01    Class2
+134 Class1 9.743441e-01 2.565593e-02    Class1
+135 Class1 9.830390e-01 1.696097e-02    Class1
+136 Class2 5.050952e-01 4.949048e-01    Class1
+137 Class1 9.993264e-01 6.735776e-04    Class1
+138 Class2 5.902088e-01 4.097912e-01    Class1
+139 Class2 1.627430e-01 8.372570e-01    Class2
+140 Class1 9.934170e-01 6.582991e-03    Class1
+141 Class1 9.998906e-01 1.094164e-04    Class1
+142 Class2 7.041413e-04 9.992959e-01    Class2
+143 Class1 9.999103e-01 8.974970e-05    Class1
+144 Class2 8.005191e-01 1.994809e-01    Class1
+145 Class1 9.928700e-01 7.129975e-03    Class1
+146 Class1 9.647968e-01 3.520322e-02    Class1
+147 Class1 9.978288e-01 2.171183e-03    Class1
+148 Class2 5.203140e-01 4.796860e-01    Class1
+149 Class1 9.927599e-01 7.240124e-03    Class1
+150 Class1 9.985040e-01 1.496046e-03    Class1
+151 Class1 9.801404e-01 1.985961e-02    Class1
+152 Class1 6.551637e-01 3.448363e-01    Class1
+153 Class1 9.461352e-01 5.386485e-02    Class1
+154 Class2 5.777406e-01 4.222594e-01    Class1
+155 Class2 4.255912e-03 9.957441e-01    Class2
+156 Class1 7.266243e-01 2.733757e-01    Class1
+157 Class2 1.285994e-04 9.998714e-01    Class2
+158 Class2 1.890781e-01 8.109219e-01    Class2
+159 Class2 8.020915e-01 1.979085e-01    Class1
+160 Class2 4.666482e-04 9.995334e-01    Class2
+161 Class2 1.149106e-01 8.850894e-01    Class2
+162 Class1 9.955102e-01 4.489843e-03    Class1
+163 Class2 3.256008e-02 9.674399e-01    Class2
+164 Class1 9.152757e-01 8.472428e-02    Class1
+165 Class2 6.483872e-02 9.351613e-01    Class2
+166 Class1 1.062401e-01 8.937599e-01    Class2
+167 Class1 9.995734e-01 4.265779e-04    Class1
+168 Class2 1.403864e-02 9.859614e-01    Class2
+169 Class2 8.565222e-02 9.143478e-01    Class2
+170 Class2 5.180212e-01 4.819788e-01    Class1
+171 Class1 9.623505e-01 3.764947e-02    Class1
+172 Class1 8.374863e-01 1.625137e-01    Class1
+173 Class2 5.594949e-01 4.405051e-01    Class1
+174 Class1 9.798853e-01 2.011465e-02    Class1
+175 Class1 9.673368e-01 3.266319e-02    Class1
+176 Class2 3.467400e-04 9.996533e-01    Class2
+177 Class1 8.713566e-01 1.286434e-01    Class1
+178 Class2 8.193828e-01 1.806172e-01    Class1
+179 Class2 1.241546e-03 9.987585e-01    Class2
+180 Class2 4.798626e-01 5.201374e-01    Class2
+181 Class2 9.283173e-01 7.168272e-02    Class1
+182 Class2 5.813991e-06 9.999942e-01    Class2
+183 Class1 9.993158e-01 6.841886e-04    Class1
+184 Class2 3.257151e-01 6.742849e-01    Class2
+185 Class2 1.281438e-01 8.718562e-01    Class2
+186 Class1 3.344800e-01 6.655200e-01    Class2
+187 Class2 1.431378e-01 8.568622e-01    Class2
+188 Class1 8.727913e-01 1.272087e-01    Class1
+189 Class2 6.966261e-03 9.930337e-01    Class2
+190 Class1 9.115189e-01 8.848105e-02    Class1
+191 Class1 8.930295e-01 1.069705e-01    Class1
+192 Class1 9.982940e-01 1.706036e-03    Class1
+193 Class2 1.519918e-03 9.984801e-01    Class2
+194 Class1 9.790722e-01 2.092778e-02    Class1
+195 Class1 9.659130e-01 3.408703e-02    Class1
+196 Class1 8.909204e-01 1.090796e-01    Class1
+197 Class2 7.053912e-02 9.294609e-01    Class2
+198 Class1 9.925175e-01 7.482477e-03    Class1
+199 Class2 2.337041e-01 7.662959e-01    Class2
+200 Class1 9.996544e-01 3.455961e-04    Class1
+201 Class1 9.373531e-01 6.264694e-02    Class1
+202 Class1 3.269821e-01 6.730179e-01    Class2
+203 Class1 3.293320e-01 6.706680e-01    Class2
+204 Class2 8.699437e-05 9.999130e-01    Class2
+205 Class1 9.987389e-01 1.261139e-03    Class1
+206 Class2 5.532678e-01 4.467322e-01    Class1
+207 Class1 9.705903e-01 2.940971e-02    Class1
+208 Class2 6.497331e-02 9.350267e-01    Class2
+209 Class1 9.992902e-01 7.098346e-04    Class1
+210 Class2 4.244222e-02 9.575578e-01    Class2
+211 Class2 1.963028e-03 9.980370e-01    Class2
+212 Class1 9.887467e-01 1.125332e-02    Class1
+213 Class2 7.845351e-01 2.154649e-01    Class1
+214 Class1 9.771202e-01 2.287982e-02    Class1
+215 Class2 1.141131e-02 9.885887e-01    Class2
+216 Class2 4.818014e-01 5.181986e-01    Class2
+217 Class1 9.932526e-01 6.747379e-03    Class1
+218 Class1 9.991848e-01 8.152166e-04    Class1
+219 Class1 9.985262e-01 1.473830e-03    Class1
+220 Class2 2.810221e-03 9.971898e-01    Class2
+221 Class1 7.943030e-01 2.056970e-01    Class1
+222 Class1 9.886239e-01 1.137606e-02    Class1
+223 Class1 9.785505e-01 2.144949e-02    Class1
+224 Class2 5.274166e-01 4.725834e-01    Class1
+225 Class2 9.364702e-01 6.352982e-02    Class1
+226 Class2 1.404483e-01 8.595517e-01    Class2
+227 Class2 1.080119e-01 8.919881e-01    Class2
+228 Class2 2.237141e-03 9.977629e-01    Class2
+229 Class1 9.370266e-01 6.297345e-02    Class1
+230 Class2 7.478977e-01 2.521023e-01    Class1
+231 Class2 5.833827e-01 4.166173e-01    Class1
+232 Class2 7.101063e-03 9.928989e-01    Class2
+233 Class1 9.656067e-01 3.439335e-02    Class1
+234 Class2 3.437327e-01 6.562673e-01    Class2
+235 Class1 9.988154e-01 1.184578e-03    Class1
+236 Class1 6.656975e-01 3.343025e-01    Class1
+237 Class2 8.782881e-03 9.912171e-01    Class2
+238 Class2 2.836697e-01 7.163303e-01    Class2
+239 Class2 1.216854e-05 9.999878e-01    Class2
+240 Class2 6.745976e-01 3.254024e-01    Class1
+241 Class2 9.729242e-01 2.707584e-02    Class1
+242 Class2 2.341568e-01 7.658432e-01    Class2
+243 Class1 3.511709e-01 6.488291e-01    Class2
+244 Class2 6.642630e-01 3.357370e-01    Class1
+245 Class2 7.544818e-01 2.455182e-01    Class1
+246 Class2 3.832547e-02 9.616745e-01    Class2
+247 Class1 9.980666e-01 1.933422e-03    Class1
+248 Class1 9.972076e-01 2.792442e-03    Class1
+249 Class1 9.517809e-01 4.821908e-02    Class1
+250 Class1 9.994148e-01 5.851958e-04    Class1
+251 Class1 9.838027e-01 1.619732e-02    Class1
+252 Class1 9.871789e-01 1.282109e-02    Class1
+253 Class1 4.528194e-01 5.471806e-01    Class2
+254 Class1 9.999054e-01 9.462044e-05    Class1
+255 Class2 3.054508e-01 6.945492e-01    Class2
+256 Class2 9.934345e-01 6.565525e-03    Class1
+257 Class2 6.658272e-02 9.334173e-01    Class2
+258 Class1 9.961782e-01 3.821759e-03    Class1
+259 Class2 5.970668e-05 9.999403e-01    Class2
+260 Class2 7.291951e-03 9.927080e-01    Class2
+261 Class2 5.922113e-06 9.999941e-01    Class2
+262 Class1 7.082959e-01 2.917041e-01    Class1
+263 Class2 1.138276e-02 9.886172e-01    Class2
+264 Class1 2.218838e-01 7.781162e-01    Class2
+265 Class2 9.625496e-05 9.999037e-01    Class2
+266 Class1 9.449979e-01 5.500206e-02    Class1
+267 Class1 8.972511e-01 1.027489e-01    Class1
+268 Class1 8.951949e-01 1.048051e-01    Class1
+269 Class2 6.493605e-01 3.506395e-01    Class1
+270 Class2 8.924836e-01 1.075164e-01    Class1
+271 Class2 2.104593e-01 7.895407e-01    Class2
+272 Class2 3.196424e-02 9.680358e-01    Class2
+273 Class2 3.803456e-03 9.961965e-01    Class2
+274 Class1 8.838073e-01 1.161927e-01    Class1
+275 Class1 7.627046e-01 2.372954e-01    Class1
+276 Class1 9.199385e-01 8.006150e-02    Class1
+277 Class1 6.177250e-01 3.822750e-01    Class1
+278 Class1 3.139262e-01 6.860738e-01    Class2
+279 Class1 7.867773e-01 2.132227e-01    Class1
+280 Class1 9.998949e-01 1.050660e-04    Class1
+281 Class1 5.775524e-01 4.224476e-01    Class1
+282 Class1 9.973104e-01 2.689642e-03    Class1
+283 Class2 2.724634e-01 7.275366e-01    Class2
+284 Class2 4.527164e-03 9.954728e-01    Class2
+285 Class2 1.051525e-01 8.948475e-01    Class2
+286 Class1 9.277335e-01 7.226653e-02    Class1
+287 Class1 2.549027e-01 7.450973e-01    Class2
+288 Class1 9.810585e-01 1.894149e-02    Class1
+289 Class1 9.858894e-01 1.411064e-02    Class1
+290 Class1 9.984481e-01 1.551861e-03    Class1
+291 Class2 9.923249e-02 9.007675e-01    Class2
+292 Class2 1.714900e-03 9.982851e-01    Class2
+293 Class1 9.555918e-01 4.440817e-02    Class1
+294 Class2 6.594889e-02 9.340511e-01    Class2
+295 Class1 9.948170e-01 5.183043e-03    Class1
+296 Class1 7.923354e-01 2.076646e-01    Class1
+297 Class1 9.834037e-01 1.659627e-02    Class1
+298 Class2 1.345976e-04 9.998654e-01    Class2
+299 Class2 6.970622e-01 3.029378e-01    Class1
+300 Class2 1.688861e-04 9.998311e-01    Class2
+301 Class2 1.748054e-01 8.251946e-01    Class2
+302 Class2 6.708014e-02 9.329199e-01    Class2
+303 Class1 9.996746e-01 3.254426e-04    Class1
+304 Class1 9.768781e-01 2.312192e-02    Class1
+305 Class2 8.311658e-03 9.916883e-01    Class2
+306 Class1 5.808967e-01 4.191033e-01    Class1
+307 Class2 1.220275e-01 8.779725e-01    Class2
+308 Class2 1.245746e-01 8.754254e-01    Class2
+309 Class1 9.894124e-01 1.058759e-02    Class1
+310 Class1 9.939475e-01 6.052468e-03    Class1
+311 Class2 1.583306e-01 8.416694e-01    Class2
+312 Class2 1.704562e-02 9.829544e-01    Class2
+313 Class1 9.351591e-01 6.484087e-02    Class1
+314 Class2 3.670582e-02 9.632942e-01    Class2
+315 Class1 8.776227e-01 1.223773e-01    Class1
+316 Class2 4.906213e-01 5.093787e-01    Class2
+317 Class2 4.375222e-01 5.624778e-01    Class2
+318 Class1 2.564605e-01 7.435395e-01    Class2
+319 Class2 8.071665e-03 9.919283e-01    Class2
+320 Class1 6.917256e-01 3.082744e-01    Class1
+321 Class1 8.287357e-01 1.712643e-01    Class1
+322 Class2 5.768219e-05 9.999423e-01    Class2
+323 Class1 9.971476e-01 2.852433e-03    Class1
+324 Class1 1.225460e-01 8.774540e-01    Class2
+325 Class2 9.908362e-01 9.163805e-03    Class1
+326 Class2 1.200283e-01 8.799717e-01    Class2
+327 Class1 4.807882e-01 5.192118e-01    Class2
+328 Class1 9.852943e-01 1.470570e-02    Class1
+329 Class1 8.613978e-01 1.386022e-01    Class1
+330 Class2 6.680358e-01 3.319642e-01    Class1
+331 Class1 9.997196e-01 2.804330e-04    Class1
+332 Class2 2.403744e-01 7.596256e-01    Class2
+333 Class1 9.993721e-01 6.279376e-04    Class1
+334 Class1 9.987801e-01 1.219866e-03    Class1
+335 Class2 5.358960e-02 9.464104e-01    Class2
+336 Class2 5.350975e-03 9.946490e-01    Class2
+337 Class1 3.710924e-01 6.289076e-01    Class2
+338 Class2 6.812940e-01 3.187060e-01    Class1
+339 Class1 8.230679e-01 1.769321e-01    Class1
+340 Class2 4.503065e-06 9.999955e-01    Class2
+341 Class2 4.047803e-02 9.595220e-01    Class2
+342 Class2 2.224813e-02 9.777519e-01    Class2
+343 Class2 7.546886e-04 9.992453e-01    Class2
+344 Class1 9.875471e-01 1.245293e-02    Class1
+345 Class1 9.995590e-01 4.410121e-04    Class1
+346 Class2 2.110135e-01 7.889865e-01    Class2
+347 Class1 9.979229e-01 2.077054e-03    Class1
+348 Class2 1.861068e-01 8.138932e-01    Class2
+349 Class2 7.203792e-01 2.796208e-01    Class1
+350 Class1 9.998946e-01 1.054150e-04    Class1
+351 Class1 9.760498e-01 2.395018e-02    Class1
+352 Class2 6.705924e-02 9.329408e-01    Class2
+353 Class1 9.997610e-01 2.390348e-04    Class1
+354 Class1 9.366396e-02 9.063360e-01    Class2
+355 Class2 9.319175e-03 9.906808e-01    Class2
+356 Class1 9.967087e-01 3.291322e-03    Class1
+357 Class2 4.388100e-03 9.956119e-01    Class2
+358 Class1 9.888784e-01 1.112161e-02    Class1
+359 Class1 6.212697e-01 3.787303e-01    Class1
+360 Class2 3.660464e-04 9.996340e-01    Class2
+361 Class1 9.994841e-01 5.159239e-04    Class1
+362 Class1 9.589573e-01 4.104268e-02    Class1
+363 Class2 2.696058e-01 7.303942e-01    Class2
+364 Class2 6.525141e-02 9.347486e-01    Class2
+365 Class1 9.711997e-01 2.880030e-02    Class1
+366 Class1 9.999104e-01 8.963980e-05    Class1
+367 Class1 8.572212e-01 1.427788e-01    Class1
+368 Class2 1.401020e-05 9.999860e-01    Class2
+369 Class1 9.876044e-01 1.239563e-02    Class1
+370 Class2 5.391074e-01 4.608926e-01    Class1
+371 Class1 7.680658e-01 2.319342e-01    Class1
+372 Class1 9.956330e-01 4.366955e-03    Class1
+373 Class2 4.699016e-01 5.300984e-01    Class2
+374 Class1 9.273910e-01 7.260897e-02    Class1
+375 Class1 9.966243e-01 3.375711e-03    Class1
+376 Class1 9.976469e-01 2.353108e-03    Class1
+377 Class2 3.465621e-01 6.534379e-01    Class2
+378 Class2 8.551751e-04 9.991448e-01    Class2
+379 Class1 9.992609e-01 7.390657e-04    Class1
+380 Class1 8.981958e-01 1.018042e-01    Class1
+381 Class2 3.045435e-01 6.954565e-01    Class2
+382 Class1 9.967702e-01 3.229761e-03    Class1
+383 Class2 3.858411e-04 9.996142e-01    Class2
+384 Class2 9.960875e-02 9.003913e-01    Class2
+385 Class2 7.448033e-02 9.255197e-01    Class2
+386 Class1 9.967863e-01 3.213667e-03    Class1
+387 Class1 9.538964e-01 4.610359e-02    Class1
+388 Class1 2.754466e-01 7.245534e-01    Class2
+389 Class2 1.842538e-01 8.157462e-01    Class2
+390 Class1 9.957369e-01 4.263105e-03    Class1
+391 Class2 5.925702e-02 9.407430e-01    Class2
+392 Class1 9.995413e-01 4.587143e-04    Class1
+393 Class1 9.850931e-01 1.490691e-02    Class1
+394 Class2 3.054019e-04 9.996946e-01    Class2
+395 Class2 6.576574e-04 9.993423e-01    Class2
+396 Class2 3.619922e-01 6.380078e-01    Class2
+397 Class2 1.799232e-01 8.200768e-01    Class2
+398 Class1 9.976688e-01 2.331175e-03    Class1
+399 Class2 7.233310e-04 9.992767e-01    Class2
+400 Class1 9.993188e-01 6.812173e-04    Class1
+401 Class1 9.986897e-01 1.310336e-03    Class1
+402 Class1 9.855755e-01 1.442446e-02    Class1
+403 Class1 9.978379e-01 2.162137e-03    Class1
+404 Class1 8.816057e-01 1.183943e-01    Class1
+405 Class1 9.953082e-01 4.691808e-03    Class1
+406 Class1 9.470567e-01 5.294331e-02    Class1
+407 Class2 3.247223e-03 9.967528e-01    Class2
+408 Class2 1.348578e-01 8.651422e-01    Class2
+409 Class1 9.999209e-01 7.906366e-05    Class1
+410 Class2 8.533897e-01 1.466103e-01    Class1
+411 Class2 3.410674e-01 6.589326e-01    Class2
+412 Class2 8.610228e-01 1.389772e-01    Class1
+413 Class1 9.869813e-01 1.301868e-02    Class1
+414 Class2 3.607902e-01 6.392098e-01    Class2
+415 Class1 8.076639e-01 1.923361e-01    Class1
+416 Class2 1.073360e-03 9.989266e-01    Class2
+417 Class2 6.441835e-03 9.935582e-01    Class2
+418 Class1 9.238690e-01 7.613105e-02    Class1
+419 Class1 9.417450e-01 5.825501e-02    Class1
+420 Class1 9.899618e-01 1.003817e-02    Class1
+421 Class2 7.334798e-02 9.266520e-01    Class2
+422 Class2 7.371977e-02 9.262802e-01    Class2
+423 Class1 9.664979e-01 3.350207e-02    Class1
+424 Class2 5.704475e-02 9.429552e-01    Class2
+425 Class2 3.439244e-03 9.965608e-01    Class2
+426 Class2 8.484827e-02 9.151517e-01    Class2
+427 Class1 6.703457e-01 3.296543e-01    Class1
+428 Class2 6.914664e-01 3.085336e-01    Class1
+429 Class2 3.096499e-03 9.969035e-01    Class2
+430 Class1 9.945145e-01 5.485533e-03    Class1
+431 Class2 2.518548e-02 9.748145e-01    Class2
+432 Class1 9.971522e-01 2.847764e-03    Class1
+433 Class2 4.278915e-02 9.572109e-01    Class2
+434 Class1 9.896614e-01 1.033858e-02    Class1
+435 Class1 8.740457e-01 1.259543e-01    Class1
+436 Class1 9.993288e-01 6.711733e-04    Class1
+437 Class2 6.007991e-01 3.992009e-01    Class1
+438 Class1 8.819697e-01 1.180303e-01    Class1
+439 Class2 6.367078e-04 9.993633e-01    Class2
+440 Class1 9.828755e-01 1.712448e-02    Class1
+441 Class1 9.786333e-01 2.136674e-02    Class1
+442 Class2 6.797108e-01 3.202892e-01    Class1
+443 Class1 9.825185e-01 1.748150e-02    Class1
+444 Class1 4.449014e-01 5.550986e-01    Class2
+445 Class1 7.242637e-01 2.757363e-01    Class1
+446 Class1 9.968111e-01 3.188885e-03    Class1
+447 Class1 9.695749e-01 3.042514e-02    Class1
+448 Class2 3.345763e-02 9.665424e-01    Class2
+449 Class2 1.321441e-04 9.998679e-01    Class2
+450 Class1 9.928480e-01 7.151964e-03    Class1
+451 Class1 8.991757e-02 9.100824e-01    Class2
+452 Class2 1.039585e-02 9.896042e-01    Class2
+453 Class1 9.919739e-01 8.026119e-03    Class1
+454 Class1 6.176158e-01 3.823842e-01    Class1
+455 Class1 6.587248e-01 3.412752e-01    Class1
+456 Class1 2.332712e-01 7.667288e-01    Class2
+457 Class1 5.571984e-01 4.428016e-01    Class1
+458 Class1 8.159535e-01 1.840465e-01    Class1
+459 Class1 9.436255e-01 5.637448e-02    Class1
+460 Class2 1.353971e-03 9.986460e-01    Class2
+461 Class2 2.475278e-04 9.997525e-01    Class2
+462 Class1 9.876524e-01 1.234763e-02    Class1
+463 Class1 8.822350e-01 1.177650e-01    Class1
+464 Class2 6.505457e-01 3.494543e-01    Class1
+465 Class1 8.486386e-01 1.513614e-01    Class1
+466 Class2 1.303776e-01 8.696224e-01    Class2
+467 Class1 3.761876e-01 6.238124e-01    Class2
+468 Class1 9.833771e-01 1.662292e-02    Class1
+469 Class1 2.904065e-01 7.095935e-01    Class2
+470 Class1 9.998974e-01 1.026120e-04    Class1
+471 Class1 9.748350e-01 2.516500e-02    Class1
+472 Class1 9.794218e-01 2.057816e-02    Class1
+473 Class1 9.707829e-01 2.921708e-02    Class1
+474 Class2 1.802205e-01 8.197795e-01    Class2
+475 Class1 4.537479e-02 9.546252e-01    Class2
+476 Class2 2.413827e-01 7.586173e-01    Class2
+477 Class1 2.194477e-01 7.805523e-01    Class2
+478 Class2 7.363009e-03 9.926370e-01    Class2
+479 Class1 9.988227e-01 1.177294e-03    Class1
+480 Class2 7.479419e-01 2.520581e-01    Class1
+481 Class2 2.181312e-01 7.818688e-01    Class2
+482 Class1 9.484841e-01 5.151590e-02    Class1
+483 Class1 9.738766e-01 2.612340e-02    Class1
+484 Class2 1.277567e-02 9.872243e-01    Class2
+485 Class2 1.316514e-01 8.683486e-01    Class2
+486 Class2 1.307568e-03 9.986924e-01    Class2
+487 Class2 1.794262e-07 9.999998e-01    Class2
+488 Class1 9.904621e-01 9.537923e-03    Class1
+489 Class2 6.036590e-03 9.939634e-01    Class2
+490 Class2 7.528744e-01 2.471256e-01    Class1
+491 Class2 2.724616e-02 9.727538e-01    Class2
+492 Class1 9.998638e-01 1.362299e-04    Class1
+493 Class1 9.854221e-01 1.457794e-02    Class1
+494 Class1 3.752641e-01 6.247359e-01    Class2
+495 Class1 7.153528e-02 9.284647e-01    Class2
+496 Class2 6.451378e-01 3.548622e-01    Class1
+497 Class2 5.866325e-02 9.413367e-01    Class2
+498 Class2 2.014645e-01 7.985355e-01    Class2
+499 Class2 8.261814e-02 9.173819e-01    Class2
+500 Class1 9.425177e-01 5.748227e-02    Class1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">gain_curve</span>(two_class_example, truth, Class1)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">lift_curve</span>(two_class_example, truth, Class1) </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df1 <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(df2, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">".n"</span>, <span class="st">".n_events"</span>, <span class="st">".percent_tested"</span>))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>decile_index <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>) <span class="sc">*</span> <span class="fu">nrow</span>(df))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">slice</span>(decile_index)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 5
+      .n .n_events .percent_tested .percent_found .lift
+   &lt;dbl&gt;     &lt;dbl&gt;           &lt;dbl&gt;          &lt;dbl&gt; &lt;dbl&gt;
+ 1    49        49             9.8           19.0  1.94
+ 2    99        97            19.8           37.6  1.90
+ 3   149       146            29.8           56.6  1.90
+ 4   199       190            39.8           73.6  1.85
+ 5   249       217            49.8           84.1  1.69
+ 6   299       236            59.8           91.5  1.53
+ 7   349       249            69.8           96.5  1.38
+ 8   399       257            79.8           99.6  1.25
+ 9   449       258            89.8          100    1.11
+10   500       258           100            100    1   </code></pre>
+</div>
+</div>
 <p><strong>Giải thích</strong>:</p>
 <ul>
 <li>Toàn bộ dữ liệu có 200 quan sát (tổng cột <code>total</code>), trong đó có 93 trường hợp positive, ứng với tỷ lệ positive toàn tập là 43.5%</li>
@@ -806,23 +1337,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Với mô hình chấm điểm tín dụng</strong>, lựa chọn điểm cut-off cần phải được sử dụng khéo léo do chi phí ròng nếu dự báo sai cao hơn 2 ứng dụng trên rất nhiều (do không thu hồi được nợ).</li>
 </ul>
 <p>Để đánh giá được chính xác hiệu quả do việc sử dụng mô hình dự báo đem lại, ta phải hết sức lưu ý và nắm rõ quy trình áp dụng kết quả dự báo vào các hoạt động ứng dụng trong kinh doanh.</p>
-<section id="kolmogorovsmirnov-statistics" class="level3" data-number="34.3.1">
-<h3 data-number="34.3.1" class="anchored" data-anchor-id="kolmogorovsmirnov-statistics"><span class="header-section-number">34.3.1</span> Kolmogorov–Smirnov statistics</h3>
+<section id="dữ-liệu-imbalance" class="level3" data-number="34.3.1">
+<h3 data-number="34.3.1" class="anchored" data-anchor-id="dữ-liệu-imbalance"><span class="header-section-number">34.3.1</span> Dữ liệu imbalance</h3>
+<p>Với các bài toán có dữ liệu bất cân xứng cao, ta cần lưu ý thực hiện <code>down sampling</code> trước khi xây dựng mô hình.</p>
+</section>
+<section id="kolmogorovsmirnov-statistics" class="level3" data-number="34.3.2">
+<h3 data-number="34.3.2" class="anchored" data-anchor-id="kolmogorovsmirnov-statistics"><span class="header-section-number">34.3.2</span> Kolmogorov–Smirnov statistics</h3>
 <p>Chỉ số thống kê Kolmogorov-Smirnov là chỉ số khác để đo lường chất lượng mô hình. Chỉ số này cho ta biết được liệu phân phối của của nhóm <em>positive</em> có thực sự khác nhóm <em>negative</em> hay không.</p>
 <p>Chỉ số KS được đo lường bằng khoảng cách lớn nhất giữa hai đường phân phối lũy kế xác suất trên hai class. Khi xây dựng mô hình, KS có thể được tính theo công thức sau.</p>
-<p><span class="math display">\[KS = max(abs(tpr - fpr))\tag{9}\]</span></p>
+<p><span class="math display">\[\text{KS} = \text{max(abs(tpr - fpr))}\tag{9}\]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pos_class <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.8</span>, <span class="fl">0.75</span>, <span class="fl">0.7</span>, <span class="fl">0.55</span>, <span class="fl">0.4</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>pos_class</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pos_class <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.8</span>, <span class="fl">0.75</span>, <span class="fl">0.7</span>, <span class="fl">0.55</span>, <span class="fl">0.4</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>pos_class</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.80 0.75 0.70 0.55 0.40</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>neg_class <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.4</span>, <span class="fl">0.3</span>, <span class="fl">0.2</span>, <span class="fl">0.15</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>neg_class</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>neg_class <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.4</span>, <span class="fl">0.3</span>, <span class="fl">0.2</span>, <span class="fl">0.15</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>neg_class</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.70 0.40 0.30 0.20 0.15</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ks.test</span>(pos_class, neg_class, <span class="at">alternative =</span> <span class="st">"greater"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ks.test</span>(pos_class, neg_class, <span class="at">alternative =</span> <span class="st">"greater"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Exact two-sample Kolmogorov-Smirnov test
