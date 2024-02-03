@@ -691,10 +691,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#các-bước-thực-hiện" id="toc-các-bước-thực-hiện" class="nav-link" data-scroll-target="#các-bước-thực-hiện"><span class="header-section-number">41.2</span> Các bước thực hiện</a>
   <ul>
   <li><a href="#thực-hiện-factor-analysis" id="toc-thực-hiện-factor-analysis" class="nav-link" data-scroll-target="#thực-hiện-factor-analysis"><span class="header-section-number">41.2.1</span> Thực hiện factor analysis</a></li>
-  <li><a href="#đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình" id="toc-đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình" class="nav-link" data-scroll-target="#đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình"><span class="header-section-number">41.2.2</span> Đánh giá độ tin cậy và độ chính xác của mô hình</a></li>
-  <li><a href="#đặt-tên-cho-các-factor" id="toc-đặt-tên-cho-các-factor" class="nav-link" data-scroll-target="#đặt-tên-cho-các-factor"><span class="header-section-number">41.2.3</span> Đặt tên cho các factor</a></li>
+  <li><a href="#đặt-tên-cho-các-factor" id="toc-đặt-tên-cho-các-factor" class="nav-link" data-scroll-target="#đặt-tên-cho-các-factor"><span class="header-section-number">41.2.2</span> Đặt tên cho các factor</a></li>
   </ul></li>
-  <li><a href="#thực-hành-trong-r" id="toc-thực-hành-trong-r" class="nav-link" data-scroll-target="#thực-hành-trong-r"><span class="header-section-number">41.3</span> Thực hành trong R</a></li>
+  <li><a href="#thực-hành-trong-r" id="toc-thực-hành-trong-r" class="nav-link" data-scroll-target="#thực-hành-trong-r"><span class="header-section-number">41.3</span> Thực hành trong R</a>
+  <ul>
+  <li><a href="#đánh-giá-dữ-liệu" id="toc-đánh-giá-dữ-liệu" class="nav-link" data-scroll-target="#đánh-giá-dữ-liệu"><span class="header-section-number">41.3.1</span> Đánh giá dữ liệu</a></li>
+  <li><a href="#lựa-chọn-số-factor" id="toc-lựa-chọn-số-factor" class="nav-link" data-scroll-target="#lựa-chọn-số-factor"><span class="header-section-number">41.3.2</span> Lựa chọn số factor</a></li>
+  <li><a href="#thực-hiện-factor-analysis-1" id="toc-thực-hiện-factor-analysis-1" class="nav-link" data-scroll-target="#thực-hiện-factor-analysis-1"><span class="header-section-number">41.3.3</span> Thực hiện factor analysis</a></li>
+  <li><a href="#đặt-tên-cho-các-biến-ẩn" id="toc-đặt-tên-cho-các-biến-ẩn" class="nav-link" data-scroll-target="#đặt-tên-cho-các-biến-ẩn"><span class="header-section-number">41.3.4</span> Đặt tên cho các biến ẩn</a></li>
+  </ul></li>
   <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">41.4</span> Tài liệu tham khảo</a></li>
   </ul>
 </nav>
@@ -721,8 +726,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="giới-thiệu" class="level2" data-number="41.1">
 <h2 data-number="41.1" class="anchored" data-anchor-id="giới-thiệu"><span class="header-section-number">41.1</span> Giới thiệu</h2>
-<p>Phân tích nhân tố ẩn (<code>factor analysis</code>) là kỹ thuật giúp tìm ra các biến ẩn (<code>factor</code>) đằng sau các nhóm biến ban đầu.</p>
-<p>Cả <code>Principal Component Analysis</code> (phân tích nhân tố chính) và <code>Factor Analysis</code> (phân tích nhân tố ẩn) đều là các kỹ thuật làm giảm dữ liệu, bằng cách sử dụng sự tương quan giữa các biến ban đầu để gộp thành các biến mới. Với k biến ban đầu, k biến mới sẽ được tạo ra.</p>
+<p>Phân tích nhân tố ẩn (<code>factor analysis</code>) là kỹ thuật giúp tìm ra các biến ẩn (<code>factor</code>) đằng sau các nhóm biến ban đầu. Đây là kỹ thuật được ứng dụng rộng rãi trong việc phân tích khảo sát, đặc biệt trong các phân tích có liên quan đến nhu cầu hoặc ý kiến cá nhân.</p>
+<p>Tương tự như <code>Principal Component Analysis</code> (phân tích nhân tố chính), <code>Factor Analysis</code> (phân tích nhân tố ẩn) đều là các kỹ thuật làm giảm dữ liệu, bằng cách sử dụng sự tương quan giữa các biến ban đầu để gộp thành các biến mới.</p>
 <p>Tuy nhiên, 2 phương pháp này có sự khác biệt về thuật toán cũng như ứng dụng.</p>
 <p><strong>Thuật toán</strong></p>
 <ul>
@@ -737,7 +742,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <img src="Images/57-fa-pcamodel.png" class="img-fluid">
 </center>
 <ul>
-<li>EFA được sử dụng để tìm ra biến ẩn (latent variable, factor, concept) đằng sau các biến đo được có tương quan với nhau (correlated observed variables, group of items). Nói cách khác, nhóm biến ban đầu phản ánh các khía cạnh của 1 khái niệm chung. Do đó các biến ẩn/ khái niệm chung này phải có ý nghĩa và gọi tên được</li>
+<li>EFA được sử dụng để tìm ra biến ẩn (latent variable, factor, concept) đằng sau các biến đo được có tương quan với nhau (correlated observed variables, group of items). Nói cách khác, nhóm biến ban đầu phản ánh các khía cạnh của 1 khái niệm chung. Do đó các biến ẩn/ khái niệm chung này phải có ý nghĩa và gọi tên được. Đây là điểm quan trọng khi áp dụng phương pháp này.</li>
 </ul>
 <center>
 <img src="Images/57-fa-efa-model.png" class="img-fluid">
@@ -754,11 +759,67 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="các-bước-thực-hiện" class="level2" data-number="41.2">
 <h2 data-number="41.2" class="anchored" data-anchor-id="các-bước-thực-hiện"><span class="header-section-number">41.2</span> Các bước thực hiện</h2>
 <ul>
-<li><p><strong>Bước 1</strong>: Kiểm định xem tập dữ liệu có đủ điều kiện cho factor analysis không</p></li>
-<li><p>Số quan sát <strong>tối thiểu là 50</strong></p></li>
-<li><p>KMO test (0-&gt;1) kiểm tra mức độ tương quan của các biến ban đầu. <strong>KMO result &gt; 0.5</strong> là chấp nhận được</p></li>
+<li><strong>Bước 1</strong>: Kiểm định xem tập dữ liệu có đủ điều kiện cho factor analysis không
+<ul>
+<li>Số quan sát <strong>tối thiểu là 50</strong></li>
+<li>Thực hiện kiểm định Kaiser-Meyer-Olkin - <code>KMO test</code>. Chỉ số này có giá trị trong khoảng từ 0-1 để đánh giá mối quan hệ tuyến tính chung giữa các biến trong toàn tập dữ liệu. Với <span class="math inline">\(\text{KMO} \geq 0.5\)</span>, ta có thể áp dụng</li>
+</ul></li>
 </ul>
-<p><img src="Images/57-fa-kmo.jpg" class="img-fluid"></p>
+<p><span class="math display">\[KMO = \frac{\sum (r_{ij}^2)}{\sum (r_{ij}^2 + \sum \tau_{ij}^2)}\]</span></p>
+<p>Trong đó:</p>
+<ul>
+<li><span class="math inline">\(r_{ij}\)</span> là tương quan giữa biến i &amp; j</li>
+<li><span class="math inline">\(\tau_{ij}\)</span> là tương quan 1 phần giữa biến i &amp; j, loại bỏ ảnh hưởng của các biến khác</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"A"</span> <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"B"</span> <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"C"</span> <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"D"</span> <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"E"</span> <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              A             B           C           D          E
+A  1.0000000000 -0.0009943199  0.01838219 -0.05043706 0.14705120
+B -0.0009943199  1.0000000000 -0.04953621 -0.05842247 0.13519013
+C  0.0183821868 -0.0495362135  1.00000000  0.11078034 0.02969842
+D -0.0504370615 -0.0584224680  0.11078034  1.00000000 0.02388991
+E  0.1470511959  0.1351901264  0.02969842  0.02388991 1.00000000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">KMO</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Kaiser-Meyer-Olkin factor adequacy
+Call: KMO(r = df)
+Overall MSA =  0.49
+MSA for each item = 
+   A    B    C    D    E 
+0.48 0.48 0.51 0.49 0.48 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Trường hợp có tương quan cao hơn</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">5</span>, <span class="dv">1</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">y =</span> <span class="dv">2</span><span class="sc">*</span>x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">1</span>, <span class="fl">0.1</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">z =</span> x <span class="sc">+</span> <span class="dv">7</span> <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">1</span>, <span class="fl">0.1</span>))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          x         y         z
+x 1.0000000 0.9984408 0.9935407
+y 0.9984408 1.0000000 0.9926336
+z 0.9935407 0.9926336 1.0000000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">KMO</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Kaiser-Meyer-Olkin factor adequacy
+Call: KMO(r = df)
+Overall MSA =  0.76
+MSA for each item = 
+   x    y    z 
+0.68 0.71 0.93 </code></pre>
+</div>
+</div>
 <ul>
 <li><strong>Bước 2</strong>: Chọn số factor (nhóm các biến ẩn) trong tập dữ liệu. Đây là bước khó nhất vì cần phải đảm bảo yếu tố giải thích được trong thực tiễn. Khi thực hiện, cần lưu ý các điểm sau.
 <ul>
@@ -771,59 +832,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="41.2.1" class="anchored" data-anchor-id="thực-hiện-factor-analysis"><span class="header-section-number">41.2.1</span> Thực hiện factor analysis</h3>
 <p>Trong đó chọn 1 trong 2 phương pháp xoay vector sau:</p>
 <ul>
-<li>Chọn Orthogonal (rotate = “varimax”) khi ta cho rằng các factors không có tương quan với nhau</li>
-<li>Chọn Oblique (rotate = “oblimin”) khi ta cho rằng các factors có tương quan với nhau (chủ yếu chọn phương pháp này)</li>
+<li>Chọn <code>Orthogonal (rotate = "varimax")</code> khi ta cho rằng các factors không có tương quan với nhau</li>
+<li>Chọn <code>Oblique (rotate = "oblimin")</code> khi ta cho rằng các factors có tương quan với nhau (chủ yếu chọn phương pháp này)</li>
 </ul>
 <center>
 <img src="Images/57-fa-rotation.jpg" class="img-fluid">
 </center>
-<p>=&gt; Xem loadings (correlation value) xem có hiện tượng 1 biến ban đầu tương quan mạnh với nhiều hơn 1 factor không (high multi-loadings)</p>
 </section>
-<section id="đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình" class="level3" data-number="41.2.2">
-<h3 data-number="41.2.2" class="anchored" data-anchor-id="đánh-giá-độ-tin-cậy-và-độ-chính-xác-của-mô-hình"><span class="header-section-number">41.2.2</span> Đánh giá độ tin cậy và độ chính xác của mô hình</h3>
-<p>Ta mong đợi các biến đo được phải tương quan với nhau theo từng nhóm, đồng nghĩa chúng đo cùng 1 khái niệm (độ tin cậy, reliability) và phải đo đúng khái niệm ta cần (độ chính xác, validity)</p>
-<p>Độ tin cậy được đo bằng chỉ số Cronbach’s alpha. <strong>() &gt;= 0.3</strong> là pass. Ta có thể cân nhắc loại bỏ 1 vài biến ban đầu không có tương quan với các biến khác, tuy nhiên phải đánh đổi bằng thông tin bị mất đi</p>
-<p>Độ chính xác được đo theo 2 tiêu chí:</p>
-<ul>
-<li>Convergent validity: Chỉ số AVE (Average Variance Extracted) của các factor phải &gt; 0.5 đồng nghĩa với việc các items giải thích được ít nhất 50% độ biến thiên của factor đó</li>
-</ul>
-<p><span class="math display">\[AVE=\frac{\sum Factor.loadings^2}{No.of.items}\]</span></p>
-<ul>
-<li>Discriminant validity: Chỉ số AVE của từng factor phải &gt; Shared variance giữa các factor, đồng nghĩa với việc các factor phải tương quan mạnh hơn với các items đo chính factor đó chứ không tương quan nhiều với các items đo các factor khác</li>
-</ul>
-<p><span class="math display">\[Shared.variance=Correlation.between.factors^2\]</span></p>
-<p><strong>Ví dụ</strong>:</p>
-<center>
-<img src="Images/57-fa-validity.jpg" class="img-fluid">
-</center>
-<ul>
-<li><p>Reliability test: Với cả 2 factor, AVE đều &gt; 0.5 =&gt; nhóm các item (x1,x2,x3) và (x4,x5,x6) đều giải thích được trên 50% độ biến thiên của 2 factor tương ứng =&gt; good</p></li>
-<li><p>Validity test: Xét 3 trường hợp của Shared Variance</p>
-<ul>
-<li><p>Shared Variance = 0.49 (&lt; 0.72 và &lt; 0.66) =&gt; good</p></li>
-<li><p>Shared Variance = 0.64 (&lt; 0.72 và &lt; 0.66) =&gt; pass</p></li>
-<li><p>Shared Variance = 0.90 (&gt; 0.72 và &gt; 0.66) =&gt; fail</p></li>
-</ul></li>
-</ul>
-</section>
-<section id="đặt-tên-cho-các-factor" class="level3" data-number="41.2.3">
-<h3 data-number="41.2.3" class="anchored" data-anchor-id="đặt-tên-cho-các-factor"><span class="header-section-number">41.2.3</span> Đặt tên cho các factor</h3>
-<p>Tùy theo kết quả loadings các nhóm biến để đặt tên cho biến ẩn (khái niệm) sao cho biến ẩn có ý nghĩa tổng hợp nhất</p>
-<p><strong>Lưu ý</strong>: Các bước 2 -&gt; 4 có thể phải thực hiện nhiều lần để có kết quả ưng ý</p>
+<section id="đặt-tên-cho-các-factor" class="level3" data-number="41.2.2">
+<h3 data-number="41.2.2" class="anchored" data-anchor-id="đặt-tên-cho-các-factor"><span class="header-section-number">41.2.2</span> Đặt tên cho các factor</h3>
+<p>Tùy theo kết quả loadings các nhóm biến để đặt tên cho biến ẩn (khái niệm) sao cho biến ẩn có ý nghĩa thực tiễn và mang tính khái quát nhất.</p>
 </section>
 </section>
 <section id="thực-hành-trong-r" class="level2" data-number="41.3">
 <h2 data-number="41.3" class="anchored" data-anchor-id="thực-hành-trong-r"><span class="header-section-number">41.3</span> Thực hành trong R</h2>
 <p>Sử dụng tập dữ liệu là kết quả phản hồi survey của 90 KH cho 14 tiêu chí họ ưu tiên khi chọn mua ô tô (bao gồm giá, tính an toàn, tiết kiệm nhiên liệu, dịch vụ hậu mãi…). Survey được thiết kế dưới dạng thang đo Likert với 5 lựa chọn (5-point Likert scale) từ “Very low” (tương ứng với 1) đến “Very high” (tương ứng với 5)</p>
+<section id="đánh-giá-dữ-liệu" class="level3" data-number="41.3.1">
+<h3 data-number="41.3.1" class="anchored" data-anchor-id="đánh-giá-dữ-liệu"><span class="header-section-number">41.3.1</span> Đánh giá dữ liệu</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GPArotation)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/efa-df.Rda"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> efa.df</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(efa.df)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(GPArotation, tidyverse)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/efa-df.Rda"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> efa.df</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(efa.df)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Price Safety Exterior_Looks Space_comfort Technology After_Sales_Service
 1     4      4              5             4          3                   4
@@ -848,11 +880,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 6               2            3</code></pre>
 </div>
 </div>
-<ul>
-<li>Bước 1: Tập dữ liệu có 90 quan sát, đủ lớn cho phân tích. Kiểm tra KMO test = 0.61 chỉ ở mức dưới trung bình nhưng đủ cho phân tích</li>
-</ul>
+<p>Tập dữ liệu có 90 quan sát, đủ lớn cho phân tích. Kiểm tra KMO test = 0.61 chỉ ở mức dưới trung bình nhưng đủ cho phân tích</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">KMO</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">KMO</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Kaiser-Meyer-Olkin factor adequacy
 Call: KMO(r = df)
@@ -868,25 +898,47 @@ MSA for each item =
                0.69                0.50 </code></pre>
 </div>
 </div>
-<ul>
-<li>Bước 2: Lựa chọn số factor bằng cách visualise <strong>eigen value</strong> trong <strong>scree plot</strong></li>
-</ul>
+</section>
+<section id="lựa-chọn-số-factor" class="level3" data-number="41.3.2">
+<h3 data-number="41.3.2" class="anchored" data-anchor-id="lựa-chọn-số-factor"><span class="header-section-number">41.3.2</span> Lựa chọn số factor</h3>
+<p>Lựa chọn số factor bằng cách trực quan hóa <strong>eigen value</strong> và chọn số lượng factor bằng số lượng điểm uốn.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>parallel <span class="ot">&lt;-</span> <span class="fu">fa.parallel</span>(df, <span class="at">fm =</span> <span class="st">'minres'</span>, <span class="at">fa =</span> <span class="st">'fa'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="p04-06-factor-analysis_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
-</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>cor_matrix <span class="ot">&lt;-</span> <span class="fu">cor</span>(df)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Tìm eigen value</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>eigen_value <span class="ot">&lt;-</span> <span class="fu">eigen</span>(cor_matrix)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>eigen_value<span class="sc">$</span>values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Parallel analysis suggests that the number of factors =  2  and the number of components =  NA </code></pre>
+<pre><code> [1] 2.7550607 2.1640701 1.4645469 1.3299030 1.0402907 0.9919870 0.8063453
+ [8] 0.6810294 0.6013657 0.5536899 0.5136469 0.4665307 0.3566072 0.2749266</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Vẽ scree plot</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">dim</span>(cor_matrix)[<span class="dv">1</span>]</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>scree_tb <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span>n, </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">y =</span> <span class="fu">sort</span>(eigen_value<span class="sc">$</span>value, <span class="at">decreasing =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>scree_tb <span class="sc">%&gt;%</span> </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">1</span><span class="sc">:</span>n) <span class="sc">+</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Scree plot"</span>) <span class="sc">+</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p04-06-factor-analysis_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>=&gt; Như vậy ta có thể chọn từ 2 hoặc 3 factor được giữ lại</p>
-<ul>
-<li>Bước 3: Thực hiện factor analysis với 3 factors</li>
-</ul>
+<p>Điểm uốn của đồ thị ở khu vực 3 hoặc 4 factor.</p>
+</section>
+<section id="thực-hiện-factor-analysis-1" class="level3" data-number="41.3.3">
+<h3 data-number="41.3.3" class="anchored" data-anchor-id="thực-hiện-factor-analysis-1"><span class="header-section-number">41.3.3</span> Thực hiện factor analysis</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>three.fa <span class="ot">&lt;-</span> <span class="fu">fa</span>(df,<span class="at">nfactors =</span> <span class="dv">3</span>, <span class="at">rotate =</span> <span class="st">"oblimin"</span>, <span class="at">fm=</span><span class="st">"minres"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(three.fa<span class="sc">$</span>loadings, <span class="at">cutoff =</span> <span class="fl">0.3</span>) <span class="co"># chỉ hiển thị các giá trị loading &gt; 0.3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>three.fa <span class="ot">&lt;-</span> <span class="fu">fa</span>(df,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">nfactors =</span> <span class="dv">3</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">rotate =</span> <span class="st">"oblimin"</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">fm =</span> <span class="st">"minres"</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(three.fa<span class="sc">$</span>loadings, <span class="at">cutoff =</span> <span class="fl">0.3</span>) <span class="co"># chỉ hiển thị các giá trị loading &gt; 0.3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Loadings:
@@ -915,8 +967,8 @@ Cumulative Var 0.144 0.259 0.328</code></pre>
 <p>Từ kết quả loadings của 3 factors mới, ta có thể thấy 1 số biến có tương quan cùng lúc với cả 2 factor mới (double loading)</p>
 <p>Thực hiện lại factor analysis với 4 factors =&gt; Ta thấy không còn hiện tượng double loading nữa. Như vậy ta sử dụng model với 4 factor</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>four.fa <span class="ot">&lt;-</span> <span class="fu">fa</span>(df,<span class="at">nfactors =</span> <span class="dv">4</span>, <span class="at">rotate =</span> <span class="st">"oblimin"</span>, <span class="at">fm=</span><span class="st">"minres"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(four.fa<span class="sc">$</span>loadings, <span class="at">cutoff =</span> <span class="fl">0.3</span>) <span class="co"># chỉ hiện thị các giá trị loading &gt; 0.3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>four.fa <span class="ot">&lt;-</span> <span class="fu">fa</span>(df,<span class="at">nfactors =</span> <span class="dv">4</span>, <span class="at">rotate =</span> <span class="st">"oblimin"</span>, <span class="at">fm=</span><span class="st">"minres"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(four.fa<span class="sc">$</span>loadings, <span class="at">cutoff =</span> <span class="fl">0.3</span>) <span class="co"># chỉ hiện thị các giá trị loading &gt; 0.3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Loadings:
@@ -941,29 +993,29 @@ SS loadings    1.639 1.637 1.053 0.968
 Proportion Var 0.117 0.117 0.075 0.069
 Cumulative Var 0.117 0.234 0.309 0.378</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fa.diagram</span>(four.fa, <span class="at">simple =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p04-06-factor-analysis_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
-<ul>
-<li>Bước 4: Đánh giá độ tin cậy và chính xác của mô hình</li>
-</ul>
-<p>() = 0.61 cho thấy mô hình đáng tin cậy. Xem thêm bảng Reliability if an item is dropped ta thấy nếu loại bỏ các biến Safety, Exterior_Looks, Testimonials có thể cải thiện () tuy nhiên rất ít =&gt; Ta chọn giữ lại tất cả các biến này để không bị mất thông tin</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">alpha</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Có thể tính toán thêm AVE và Shared Variance cho validity test</p>
+</section>
+<section id="đặt-tên-cho-các-biến-ẩn" class="level3" data-number="41.3.4">
+<h3 data-number="41.3.4" class="anchored" data-anchor-id="đặt-tên-cho-các-biến-ẩn"><span class="header-section-number">41.3.4</span> Đặt tên cho các biến ẩn</h3>
+<p>Với các nhóm factor trên, ta có thể thấy chia thành 4 nhóm đặt tên như sau:</p>
 <ul>
-<li>Bước 5: Đặt tên cho các biến ẩn</li>
+<li><strong>Thẩm mỹ</strong>: Exterior Look, Color</li>
+<li><strong>Chức năng &amp; công nghệ</strong>: Safety, Space Comfort, Technology, After Sale Service, Fuel Type</li>
+<li><strong>Giá trị kinh tế</strong>: Price, Resale value, Fuel Efficiency, Maintainance</li>
+<li><strong>Độ tin cậy</strong>: Product Reviews, Test Drive, Testimonials</li>
 </ul>
-<center>
-<img src="Images/57-fa-naming.jpg" class="img-fluid">
-</center>
+</section>
 </section>
 <section id="tài-liệu-tham-khảo" class="level2" data-number="41.4">
 <h2 data-number="41.4" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">41.4</span> Tài liệu tham khảo</h2>
-<ol type="1">
+<ul>
 <li><a href="">http://www.theanalysisfactor.com/the-fundamental-difference-between-principal-component-analysis-and-factor-analysis</a></li>
 <li><a href="">https://www.promptcloud.com/blog/exploratory-factor-analysis-in-r</a></li>
-<li><a href="">http://minato.sip21c.org/swtips/factor-in-R.pdf</a></li>
-</ol>
+</ul>
 
 
 </section>

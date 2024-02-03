@@ -692,7 +692,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#ưu-nhược-điểm-của-k-means" id="toc-ưu-nhược-điểm-của-k-means" class="nav-link" data-scroll-target="#ưu-nhược-điểm-của-k-means"><span class="header-section-number">38.3</span> Ưu nhược điểm của K-means</a></li>
   <li><a href="#thực-hành-trên-r" id="toc-thực-hành-trên-r" class="nav-link" data-scroll-target="#thực-hành-trên-r"><span class="header-section-number">38.4</span> Thực hành trên R</a></li>
   <li><a href="#lưu-ý" id="toc-lưu-ý" class="nav-link" data-scroll-target="#lưu-ý"><span class="header-section-number">38.5</span> Lưu ý</a></li>
-  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">38.6</span> Tài liệu tham khảo</a></li>
+  <li><a href="#kmeans-với-h2o" id="toc-kmeans-với-h2o" class="nav-link" data-scroll-target="#kmeans-với-h2o"><span class="header-section-number">38.6</span> kmeans với h2o</a></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">38.7</span> Tài liệu tham khảo</a></li>
   </ul>
 </nav>
     </div>
@@ -918,8 +919,114 @@ Lưu ý
 <p><strong>Trọng số khi dự báo quan sát mới</strong></p>
 <p>Trong nhiều trường hợp, việc dự báo 1 quan sát thuộc nhóm nào sẽ chịu ảnh hưởng bởi 1 vài biến quan trọng nào đấy theo nhu cầu kinh doanh. Ví dụ, phân nhóm khách hàng nhưng trọng số quan trọng là hành vi giao dịch. Trong trường hợp này, ta cũng có thể tính toán khoảng cách giữa quan sát mới với các <code>centroid</code> mới tạo nhưng đánh trọng số cao hơn với 1 số biến nhất định.</p>
 </section>
-<section id="tài-liệu-tham-khảo" class="level2" data-number="38.6">
-<h2 data-number="38.6" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">38.6</span> Tài liệu tham khảo</h2>
+<section id="kmeans-với-h2o" class="level2" data-number="38.6">
+<h2 data-number="38.6" class="anchored" data-anchor-id="kmeans-với-h2o"><span class="header-section-number">38.6</span> kmeans với h2o</h2>
+<p>Bên cạnh cách thức tính toán kmeans như trên, ta có thể sử dụng <code>h2o</code> trong việc việc xây dựng mô hình <code>k-means</code>. Ưu điểm của việc sử dụng <code>h2o</code> như sau:</p>
+<ul>
+<li>Giải quyết vấn đề RAM</li>
+<li>Tự động chọn số lượng k &amp; đưa ra mô hình tối ưu</li>
+<li>Cho phép dự báo các centroid dễ dàng trên tập dữ liệu mới</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(h2o)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.init</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Connection successful!
+
+R is connected to the H2O cluster: 
+    H2O cluster uptime:         12 minutes 38 seconds 
+    H2O cluster timezone:       Etc/UTC 
+    H2O data parsing timezone:  UTC 
+    H2O cluster version:        3.42.0.2 
+    H2O cluster version age:    6 months and 4 days 
+    H2O cluster name:           H2O_started_from_R_jovyan_ydg016 
+    H2O cluster total nodes:    1 
+    H2O cluster total memory:   0.82 GB 
+    H2O cluster total cores:    2 
+    H2O cluster allowed cores:  2 
+    H2O cluster healthy:        TRUE 
+    H2O Connection ip:          localhost 
+    H2O Connection port:        54321 
+    H2O Connection proxy:       NA 
+    H2O Internal Security:      FALSE 
+    R Version:                  R version 4.3.0 (2023-04-21) </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Đặt tên các biến</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>predictors <span class="ot">&lt;-</span> <span class="fu">names</span>(iris)[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>iris <span class="ot">&lt;-</span> iris <span class="sc">%&gt;%</span> as.h2o</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Chia dữ liệu thành 2 tập train &amp; test</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>iris_split <span class="ot">&lt;-</span> <span class="fu">h2o.splitFrame</span>(<span class="at">data =</span> iris, <span class="at">ratios =</span> <span class="fl">0.8</span>, <span class="at">seed =</span> <span class="dv">1234</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> iris_split[[<span class="dv">1</span>]]</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>valid <span class="ot">&lt;-</span> iris_split[[<span class="dv">2</span>]]</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Xây dựng mô hình</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>iris_kmeans <span class="ot">&lt;-</span> <span class="fu">h2o.kmeans</span>(<span class="at">k =</span> <span class="dv">10</span>,                <span class="co"># Đặt số k tối đa</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">estimate_k =</span> <span class="cn">TRUE</span>,     <span class="co"># Tìm k tối ưu</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">standardize =</span> <span class="cn">FALSE</span>,   <span class="co"># Chuẩn hóa dữ liệu</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">seed =</span> <span class="dv">1234</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">x =</span> predictors,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">training_frame =</span> train,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>                          <span class="at">validation_frame =</span> valid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Eval performance:</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>perf <span class="ot">&lt;-</span> <span class="fu">h2o.performance</span>(iris_kmeans)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>perf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>H2OClusteringMetrics: kmeans
+** Reported on training data. **
+
+
+Total Within SS:  63.04461
+Between SS:  484.6845
+Total SS:  547.7291 
+Centroid Statistics: 
+  centroid     size within_cluster_sum_of_squares
+1        1 36.00000                      11.03694
+2        2 51.00000                      30.78627
+3        3 36.00000                      21.22139</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate predictions on a validation set (if necessary):</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">h2o.predict</span>(iris_kmeans, <span class="at">newdata =</span> valid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |======================================================================| 100%</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>pred <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> predict         
+ Min.   :0.0000  
+ 1st Qu.:0.0000  
+ Median :0.0000  
+ Mean   :0.5556  
+ 3rd Qu.:1.0000  
+ Max.   :2.0000  </code></pre>
+</div>
+</div>
+<p>Mô hình h2o có thể lưu lại để sử dụng về sau.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.saveModel</span>(model, <span class="at">path =</span> <span class="st">"path"</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.loadModel</span>(<span class="at">path =</span> <span class="st">"path"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="38.7">
+<h2 data-number="38.7" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">38.7</span> Tài liệu tham khảo</h2>
 <ul>
 <li>Tài liệu cần đọc: “Data Mining Techniques in CRM - inside customer segmentation”</li>
 <li>Chapter 15 - Cluster Analysis - Data Mining for Business Analytics with R</li>
