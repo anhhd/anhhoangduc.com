@@ -705,7 +705,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#sử-dụng-text-như-câu-lệnh" id="toc-sử-dụng-text-như-câu-lệnh" class="nav-link" data-scroll-target="#sử-dụng-text-như-câu-lệnh"><span class="header-section-number">9.6.1</span> Sử dụng text như câu lệnh</a></li>
   <li><a href="#xử-lý-lỗi-trong-hàm" id="toc-xử-lý-lỗi-trong-hàm" class="nav-link" data-scroll-target="#xử-lý-lỗi-trong-hàm"><span class="header-section-number">9.6.2</span> Xử lý lỗi trong hàm</a></li>
   </ul></li>
-  <li><a href="#đơn-giản-hóa-hàm-với" id="toc-đơn-giản-hóa-hàm-với" class="nav-link" data-scroll-target="#đơn-giản-hóa-hàm-với"><span class="header-section-number">9.7</span> Đơn giản hóa hàm với <code>{{}}</code></a></li>
+  <li><a href="#đơn-giản-hóa-hàm-với" id="toc-đơn-giản-hóa-hàm-với" class="nav-link" data-scroll-target="#đơn-giản-hóa-hàm-với"><span class="header-section-number">9.7</span> Đơn giản hóa hàm với <code>{{}}</code></a>
+  <ul>
+  <li><a href="#sử-dụng-với-dplyr" id="toc-sử-dụng-với-dplyr" class="nav-link" data-scroll-target="#sử-dụng-với-dplyr"><span class="header-section-number">9.7.1</span> Sử dụng với dplyr</a></li>
+  <li><a href="#sử-dụng-với-ggplot2" id="toc-sử-dụng-với-ggplot2" class="nav-link" data-scroll-target="#sử-dụng-với-ggplot2"><span class="header-section-number">9.7.2</span> Sử dụng với ggplot2</a></li>
+  </ul></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">9.8</span> Tài liệu tham khảo</a></li>
   </ul>
 </nav>
     </div>
@@ -935,7 +940,7 @@ env:  global</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;quosure&gt;
 expr: ^group_var
-env:  0x56319b5c52a8</code></pre>
+env:  0x55c95c4a5b98</code></pre>
 </div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in `group_by()`:
@@ -1298,6 +1303,8 @@ Valiant           18.1   6</code></pre>
 </section>
 <section id="đơn-giản-hóa-hàm-với" class="level2" data-number="9.7">
 <h2 data-number="9.7" class="anchored" data-anchor-id="đơn-giản-hóa-hàm-với"><span class="header-section-number">9.7</span> Đơn giản hóa hàm với <code>{{}}</code></h2>
+<section id="sử-dụng-với-dplyr" class="level3" data-number="9.7.1">
+<h3 data-number="9.7.1" class="anchored" data-anchor-id="sử-dụng-với-dplyr"><span class="header-section-number">9.7.1</span> Sử dụng với dplyr</h3>
 <p>Với <code>tidyverse</code> ở các phiên bản mới (sau 2020) đã cho phép đơn giản hóa quá trình viết hàm bằng cách sử dụng <code>{{}}</code> thay thế cho <code>enquo</code> và <code>!!</code>.</p>
 <p>Xem ví dụ sau</p>
 <div class="cell">
@@ -1363,6 +1370,74 @@ Hornet Sportabout 18.7    18.7
 Valiant           18.1    18.1</code></pre>
 </div>
 </div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Lưu ý
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Ta có thể sử dụng gán biến giá trị string và dùng kết hợp với <code>{{}}</code>. Xem ví dụ sau:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a>var <span class="ot">&lt;-</span> <span class="st">"mpg"</span></span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span> <span class="fu">select</span>({{var}}) <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   mpg
+Mazda RX4         21.0
+Mazda RX4 Wag     21.0
+Datsun 710        22.8
+Hornet 4 Drive    21.4
+Hornet Sportabout 18.7
+Valiant           18.1</code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sử-dụng-với-ggplot2" class="level3" data-number="9.7.2">
+<h3 data-number="9.7.2" class="anchored" data-anchor-id="sử-dụng-với-ggplot2"><span class="header-section-number">9.7.2</span> Sử dụng với ggplot2</h3>
+<p>Tương tự như dplyr, ta có thể sử dụng <code>{{}}</code> khi lập trình hàm với ggplot2 ở tất cả các biến trong ggplot2. Xem ví dụ sau</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>my_plot <span class="ot">&lt;-</span> <span class="cf">function</span>(data, x, y, facet1, facet2){</span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">%&gt;%</span> </span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>({{x}}, {{y}})) <span class="sc">+</span></span>
+<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">col =</span> <span class="st">"darkblue"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb107-5"><a href="#cb107-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Cách sử dụng đặc biệt với facet</span></span>
+<span id="cb107-6"><a href="#cb107-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="fu">vars</span>({{facet1}}, {{facet2}})) <span class="sc">+</span></span>
+<span id="cb107-7"><a href="#cb107-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb107-8"><a href="#cb107-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb107-9"><a href="#cb107-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Với trường hợp không có facet</span></span>
+<span id="cb107-10"><a href="#cb107-10" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span> </span>
+<span id="cb107-11"><a href="#cb107-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_plot</span>(mpg, disp) <span class="sc">+</span></span>
+<span id="cb107-12"><a href="#cb107-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Không có facet"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p02-06-lap-trinh-ham_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Với trường hợp có 1 facet</span></span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span> </span>
+<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_plot</span>(mpg, disp, <span class="at">facet1 =</span> am) <span class="sc">+</span></span>
+<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Một facet trên biểu đồ"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p02-06-lap-trinh-ham_files/figure-html/unnamed-chunk-32-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Với trường hợp 2 facet</span></span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">%&gt;%</span> </span>
+<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">my_plot</span>(mpg, disp, <span class="at">facet1 =</span> am, <span class="at">facet2 =</span> vs) <span class="sc">+</span></span>
+<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Một facet trên biểu đồ"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p02-06-lap-trinh-ham_files/figure-html/unnamed-chunk-32-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="9.8">
+<h2 data-number="9.8" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">9.8</span> Tài liệu tham khảo</h2>
+<ul>
+<li><a href="">https://rlang.r-lib.org/</a></li>
+</ul>
 
 
 </section>
