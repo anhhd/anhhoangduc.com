@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="vn" >
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>12. Polars &mdash; Phân tích dữ liệu với Python 2019 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/nbsphinx-code-cells.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=1ea3fed6"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="_static/copybutton.js?v=f281be69"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="13. Các mẹo trong Python" href="p01-99-tricks-python.html" />
+    <link rel="prev" title="11. So sánh R với Python cơ bản" href="p01-19-so-sanh-python-r.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Phân tích dữ liệu với Python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Python cơ bản</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="p01-01-gioi-thieu-python.html">1. Giới thiệu về Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-02-python-ide.html">2. Python IDE - Jupyter lab &amp; Visual Studio</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-03-cau-truc-du-lieu-python.html">3. Các cấu trúc cơ bản trong Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-04-pandas.html">4. Pandas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-05-ngu-phap-bieu-do.html">5. Ngữ pháp của biểu đồ với <code class="docutils literal notranslate"><span class="pre">plotnine</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-06-datetime.html">6. Dữ liệu thời gian trong Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-07-lam-viec-voi-text.html">7. Biến đổi dữ liệu text trong python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-08-numpy.html">8. Numpy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-09-seaborn.html">9. Trực quan hóa với Seaborn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-10-matplotlib.html">10. Trực quan hóa với Matplotlib</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p01-19-so-sanh-python-r.html">11. So sánh R với Python cơ bản</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">12. Polars</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Giới-thiệu">12.1. Giới thiệu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Polars-cơ-bản">12.2. Polars cơ bản</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Series">12.2.1. Series</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Data-Frame">12.3. Data Frame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Nhóm-câu-lệnh-truy-vấn-dữ-liệu">12.4. Nhóm câu lệnh truy vấn dữ liệu</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Chọn-biến">12.4.1. Chọn biến</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Lọc-dữ-liệu-theo-dòng">12.4.2. Lọc dữ liệu theo dòng</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Lọc-dữ-liệu-theo-điều-kiện">12.4.3. Lọc dữ liệu theo điều kiện</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Sắp-xếp-lại-dữ-liệu">12.4.4. Sắp xếp lại dữ liệu</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Nhóm-câu-lệnh-biến-đổi-dữ-liệu">12.5. Nhóm câu lệnh biến đổi dữ liệu</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Đổi-tên-biến">12.5.1. Đổi tên biến</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Tạo-&amp;-xóa-biến-mới">12.5.2. Tạo &amp; xóa biến mới</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Tạo-biến-mới-theo-nhóm">12.5.3. Tạo biến mới theo nhóm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Join">12.5.4. Join</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Ghép-dữ-liệu">12.5.5. Ghép dữ liệu</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Ghép-dòng">12.5.5.1. Ghép dòng</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Ghép-theo-cột">12.5.5.2. Ghép theo cột</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Tổng-hợp-dữ-liệu">12.6. Tổng hợp dữ liệu</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#groupby-&amp;-aggregate">12.6.1. groupby &amp; aggregate</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Các-hàm-nâng-cao">12.7. Các hàm nâng cao</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#select_dtype">12.7.1. select_dtype</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Xoay-chiều-dữ-liệu">12.7.2. Xoay chiều dữ liệu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Các-hàm-khác">12.7.3. Các hàm khác</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Lag">12.7.3.1. Lag</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Rank">12.7.3.2. Rank</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Lazy-evaluation">12.8. Lazy evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Đọc-&amp;-ghi-dữ-liệu">12.9. Đọc &amp; ghi dữ liệu</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Import-dữ-liệu">12.9.1. Import dữ liệu</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Kết-nối-với-database">12.9.1.1. Kết nối với database</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Import-từ-file">12.9.1.2. Import từ file</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Lưu-dữ-liệu">12.9.2. Lưu dữ liệu</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Tài-liệu-tham-khảo">12.10. Tài liệu tham khảo</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="p01-99-tricks-python.html">13. Các mẹo trong Python</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Machine learning với sklearn</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p02-01-sklearn.html">1. Giới thiệu cơ bản về Scikit learn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-02-sklearn-advanced.html">2. sklearn nâng cao</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-03-xgboost.html">3. Xgboost với sklearn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-07-machine-learning-h2o.html">4. Machine learning với <code class="docutils literal notranslate"><span class="pre">H2O</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="p02-20-api-flask.html">5. Xây dựng API dự báo với Flask</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Lập trình trong Python</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p06-01-lap-trinh-doi-tuong-python.html">1. Lập trình hướng - đối tượng với Python</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Xây dựng Python package</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p07-01-functions-in-python.html">1. Viết hàm trong Python</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Case studies</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="p09-01-data-exploration-case-study.html">1. Ví dụ phân tích với pandas và matplotlib</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Phân tích dữ liệu với Python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">12. </span>Polars</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/p01-20-polars.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Polars">
+<h1><span class="section-number">12. </span>Polars<a class="headerlink" href="#Polars" title="Link to this heading"></a></h1>
+<section id="Giới-thiệu">
+<h2><span class="section-number">12.1. </span>Giới thiệu<a class="headerlink" href="#Giới-thiệu" title="Link to this heading"></a></h2>
+<p>Polars là một thư viện mới của Python, viết trên Rust và có thể hỗ trợ và tính toán dữ liệu nhanh chóng, kể cả với trường hợp dữ liệu vượt quá dung lượng bộ nhớ. Bên cạnh đó, <code class="docutils literal notranslate"><span class="pre">polars</span></code> còn có các ưu điểm vượt trội sau:</p>
+<ul class="simple">
+<li><p>Cú pháp tương đồng với <code class="docutils literal notranslate"><span class="pre">pandas</span></code></p></li>
+<li><p>Hỗ trợ tốt hơn với các cú pháp xử lý và biến đổi dữ liệu đơn giản, hỗ trợ <code class="docutils literal notranslate"><span class="pre">pipe</span></code> hiệu quả</p></li>
+<li><p>Hỗ trợ <code class="docutils literal notranslate"><span class="pre">lazy</span> <span class="pre">evaluation</span></code> để tăng tốc độ tính toán và xử lý</p></li>
+</ul>
+<p>Bên cạnh đó, cấu trúc dữ liệu của <code class="docutils literal notranslate"><span class="pre">polars</span></code> hoàn toàn tương thích với <code class="docutils literal notranslate"><span class="pre">plotnine</span></code> để xây dựng biểu đồ theo phong cách của ngữ pháp biểu đồ</p>
+<hr class="docutils" />
+<p>Tài liệu đầy đủ của <code class="docutils literal notranslate"><span class="pre">polars</span></code> có thể tham khảo chi tiết tại <a href="#id1"><span class="problematic" id="id2">`https://docs.pola.rs/ &lt;&gt;`__</span></a></p>
+<p>Ta có thể cài đặt polars như sau:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cơ bản</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="n">polars</span>
+<span class="c1"># polars với đầy đủ tính năng</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="s2">&quot;polars[all]&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="Polars-cơ-bản">
+<h2><span class="section-number">12.2. </span>Polars cơ bản<a class="headerlink" href="#Polars-cơ-bản" title="Link to this heading"></a></h2>
+<section id="Series">
+<h3><span class="section-number">12.2.1. </span>Series<a class="headerlink" href="#Series" title="Link to this heading"></a></h3>
+<p>Tương tự như <code class="docutils literal notranslate"><span class="pre">pd.Series</span></code>, cấu trúc <code class="docutils literal notranslate"><span class="pre">Series</span></code> của polars cũng có cấu trúc tương tự</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[65]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">polars</span> <span class="k">as</span> <span class="nn">pl</span>
+<span class="c1"># Series 1</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">2.4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[65]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (4,)</small><table border="1" class="dataframe"><thead><tr><th></th></tr><tr><td>f64</td></tr></thead><tbody><tr><td>1.0</td></tr><tr><td>2.4</td></tr><tr><td>5.0</td></tr><tr><td>6.0</td></tr></tbody></table></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[66]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Series 2</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Categorical</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[66]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (3,)</small><table border="1" class="dataframe"><thead><tr><th></th></tr><tr><td>cat</td></tr></thead><tbody><tr><td>&quot;a&quot;</td></tr><tr><td>&quot;b&quot;</td></tr><tr><td>&quot;c&quot;</td></tr></tbody></table></div></div>
+</div>
+</section>
+</section>
+<section id="Data-Frame">
+<h2><span class="section-number">12.3. </span>Data Frame<a class="headerlink" href="#Data-Frame" title="Link to this heading"></a></h2>
+<p>DataFrame trong polars cũng có thể thực hiện với cấu trúc dictionary, list</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[67]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+        <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+<span class="n">df</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[67]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 2)</small><table border="1" class="dataframe"><thead><tr><th>x</th><th>y</th></tr><tr><td>i32</td><td>str</td></tr></thead><tbody><tr><td>0</td><td>&quot;a&quot;</td></tr><tr><td>1</td><td>&quot;a&quot;</td></tr><tr><td>2</td><td>&quot;b&quot;</td></tr><tr><td>3</td><td>&quot;b&quot;</td></tr><tr><td>4</td><td>&quot;c&quot;</td></tr></tbody></table></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[68]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cấu trúc dữ liệu</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[68]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+polars.dataframe.frame.DataFrame
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[69]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Summary dữ liệu</span>
+<span class="n">df</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[69]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (9, 3)</small><table border="1" class="dataframe"><thead><tr><th>statistic</th><th>x</th><th>y</th></tr><tr><td>str</td><td>f64</td><td>str</td></tr></thead><tbody><tr><td>&quot;count&quot;</td><td>5.0</td><td>&quot;5&quot;</td></tr><tr><td>&quot;null_count&quot;</td><td>0.0</td><td>&quot;0&quot;</td></tr><tr><td>&quot;mean&quot;</td><td>2.0</td><td>null</td></tr><tr><td>&quot;std&quot;</td><td>1.581139</td><td>null</td></tr><tr><td>&quot;min&quot;</td><td>0.0</td><td>&quot;a&quot;</td></tr><tr><td>&quot;25%&quot;</td><td>1.0</td><td>null</td></tr><tr><td>&quot;50%&quot;</td><td>2.0</td><td>null</td></tr><tr><td>&quot;75%&quot;</td><td>3.0</td><td>null</td></tr><tr><td>&quot;max&quot;</td><td>4.0</td><td>&quot;c&quot;</td></tr></tbody></table></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[70]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cấu trúc dữ liệu</span>
+<span class="n">df</span><span class="o">.</span><span class="n">dtypes</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[70]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[Int32, String]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[71]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert sang Categorical</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">Categorical</span><span class="p">)</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[71]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (2, 2)</small><table border="1" class="dataframe"><thead><tr><th>statistic</th><th>value</th></tr><tr><td>str</td><td>str</td></tr></thead><tbody><tr><td>&quot;count&quot;</td><td>&quot;5&quot;</td></tr><tr><td>&quot;null_count&quot;</td><td>&quot;0&quot;</td></tr></tbody></table></div></div>
+</div>
+<p>Bên cạnh đó, ta cũng có thể convert từ <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> sang <code class="docutils literal notranslate"><span class="pre">polars.DataFrame</span></code></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[72]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">plotnine.data</span> <span class="kn">import</span> <span class="n">mtcars</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">mtcars</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[72]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+pandas.core.frame.DataFrame
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[73]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert sang polars</span>
+<span class="n">mtcars_pl</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">from_pandas</span><span class="p">(</span><span class="n">mtcars</span><span class="p">)</span>
+<span class="nb">type</span><span class="p">(</span><span class="n">mtcars_pl</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[73]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+polars.dataframe.frame.DataFrame
+</pre></div></div>
+</div>
+<p><strong>Lưu ý</strong>: Để thuận tiện trong quá trình sử dụng <code class="docutils literal notranslate"><span class="pre">polars</span></code>, các phần hướng dẫn biến đổi dữ liệu tiếp theo sẽ sử dụng tập dữ liệu <code class="docutils literal notranslate"><span class="pre">mtcars</span></code></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[74]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mtcars_pl</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[74]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 12)</small><table border="1" class="dataframe"><thead><tr><th>name</th><th>mpg</th><th>cyl</th><th>disp</th><th>hp</th><th>drat</th><th>wt</th><th>qsec</th><th>vs</th><th>am</th><th>gear</th><th>carb</th></tr><tr><td>str</td><td>f64</td><td>i64</td><td>f64</td><td>i64</td><td>f64</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Mazda RX4&quot;</td><td>21.0</td><td>6</td><td>160.0</td><td>110</td><td>3.9</td><td>2.62</td><td>16.46</td><td>0</td><td>1</td><td>4</td><td>4</td></tr><tr><td>&quot;Mazda RX4 Wag&quot;</td><td>21.0</td><td>6</td><td>160.0</td><td>110</td><td>3.9</td><td>2.875</td><td>17.02</td><td>0</td><td>1</td><td>4</td><td>4</td></tr><tr><td>&quot;Datsun 710&quot;</td><td>22.8</td><td>4</td><td>108.0</td><td>93</td><td>3.85</td><td>2.32</td><td>18.61</td><td>1</td><td>1</td><td>4</td><td>1</td></tr><tr><td>&quot;Hornet 4 Drive&quot;</td><td>21.4</td><td>6</td><td>258.0</td><td>110</td><td>3.08</td><td>3.215</td><td>19.44</td><td>1</td><td>0</td><td>3</td><td>1</td></tr><tr><td>&quot;Hornet Sportabout&quot;</td><td>18.7</td><td>8</td><td>360.0</td><td>175</td><td>3.15</td><td>3.44</td><td>17.02</td><td>0</td><td>0</td><td>3</td><td>2</td></tr></tbody></table></div></div>
+</div>
+</section>
+<section id="Nhóm-câu-lệnh-truy-vấn-dữ-liệu">
+<h2><span class="section-number">12.4. </span>Nhóm câu lệnh truy vấn dữ liệu<a class="headerlink" href="#Nhóm-câu-lệnh-truy-vấn-dữ-liệu" title="Link to this heading"></a></h2>
+<section id="Chọn-biến">
+<h3><span class="section-number">12.4.1. </span>Chọn biến<a class="headerlink" href="#Chọn-biến" title="Link to this heading"></a></h3>
+<p>Với polars, ta có thể chọn biến theo 2 cách</p>
+<ul class="simple">
+<li><p><strong>Cách 1</strong>: Sử dụng các biến dưới dạng list</p></li>
+<li><p><strong>Cách 2</strong>: Sử dụng hàm select</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[75]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Chọn biến theo dạng list</span>
+<span class="n">mtcars_pl</span><span class="p">[</span><span class="s1">&#39;mpg&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[75]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (4,)</small><table border="1" class="dataframe"><thead><tr><th>mpg</th></tr><tr><td>f64</td></tr></thead><tbody><tr><td>21.0</td></tr><tr><td>21.0</td></tr><tr><td>22.8</td></tr><tr><td>21.4</td></tr></tbody></table></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[76]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mtcars_pl</span><span class="p">[[</span><span class="s1">&#39;mpg&#39;</span><span class="p">,</span> <span class="s1">&#39;cyl&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[76]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (4, 2)</small><table border="1" class="dataframe"><thead><tr><th>mpg</th><th>cyl</th></tr><tr><td>f64</td><td>i64</td></tr></thead><tbody><tr><td>21.0</td><td>6</td></tr><tr><td>21.0</td><td>6</td></tr><tr><td>22.8</td><td>4</td></tr><tr><td>21.4</td><td>6</td></tr></tbody></table></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[77]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">var</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mpg&#39;</span><span class="p">,</span> <span class="s1">&#39;cyl&#39;</span><span class="p">,</span> <span class="s1">&#39;vs&#39;</span><span class="p">]</span>
+<span class="n">mtcars_pl</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[77]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (32, 3)</small><table border="1" class="dataframe"><thead><tr><th>mpg</th><th>cyl</th><th>vs</th></tr><tr><td>f64</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>21.0</td><td>6</td><td>0</td></tr><tr><td>21.0</td><td>6</td><td>0</td></tr><tr><td>22.8</td><td>4</td><td>1</td></tr><tr><td>21.4</td><td>6</td><td>1</td></tr><tr><td>18.7</td><td>8</td><td>0</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>30.4</td><td>4</td><td>1</td></tr><tr><td>15.8</td><td>8</td><td>0</td></tr><tr><td>19.7</td><td>6</td><td>0</td></tr><tr><td>15.0</td><td>8</td><td>0</td></tr><tr><td>21.4</td><td>4</td><td>1</td></tr></tbody></table></div></div>
+</div>
+<p>Ngoài cách trên, ta có thể sử dụng method <code class="docutils literal notranslate"><span class="pre">filter</span></code> như sau</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[78]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mtcars_pl</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="s1">&#39;mpg&#39;</span><span class="p">,</span> <span class="s1">&#39;cyl&#39;</span><span class="p">,</span> <span class="s1">&#39;am&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[78]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 3)</small><table border="1" class="dataframe"><thead><tr><th>mpg</th><th>cyl</th><th>am</th></tr><tr><td>f64</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>21.0</td><td>6</td><td>1</td></tr><tr><td>21.0</td><td>6</td><td>1</td></tr><tr><td>22.8</td><td>4</td><td>1</td></tr><tr><td>21.4</td><td>6</td><td>0</td></tr><tr><td>18.7</td><td>8</td><td>0</td></tr></tbody></table></div></div>
+</div>
+</section>
+<section id="Lọc-dữ-liệu-theo-dòng">
+<h3><span class="section-number">12.4.2. </span>Lọc dữ liệu theo dòng<a class="headerlink" href="#Lọc-dữ-liệu-theo-dòng" title="Link to this heading"></a></h3>
+<p>Với <code class="docutils literal notranslate"><span class="pre">polars</span></code>, ta có thể lọc các dòng đơn giản với list</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[79]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lấy các dòng từ 1 đến 4</span>
+<span class="n">mtcars_pl</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[79]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (4, 12)</small><table border="1" class="dataframe"><thead><tr><th>name</th><th>mpg</th><th>cyl</th><th>disp</th><th>hp</th><th>drat</th><th>wt</th><th>qsec</th><th>vs</th><th>am</th><th>gear</th><th>carb</th></tr><tr><td>str</td><td>f64</td><td>i64</td><td>f64</td><td>i64</td><td>f64</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Mazda RX4&quot;</td><td>21.0</td><td>6</td><td>160.0</td><td>110</td><td>3.9</td><td>2.62</td><td>16.46</td><td>0</td><td>1</td><td>4</td><td>4</td></tr><tr><td>&quot;Mazda RX4 Wag&quot;</td><td>21.0</td><td>6</td><td>160.0</td><td>110</td><td>3.9</td><td>2.875</td><td>17.02</td><td>0</td><td>1</td><td>4</td><td>4</td></tr><tr><td>&quot;Datsun 710&quot;</td><td>22.8</td><td>4</td><td>108.0</td><td>93</td><td>3.85</td><td>2.32</td><td>18.61</td><td>1</td><td>1</td><td>4</td><td>1</td></tr><tr><td>&quot;Hornet 4 Drive&quot;</td><td>21.4</td><td>6</td><td>258.0</td><td>110</td><td>3.08</td><td>3.215</td><td>19.44</td><td>1</td><td>0</td><td>3</td><td>1</td></tr></tbody></table></div></div>
+</div>
+<hr class="docutils" />
+</section>
+<section id="Lọc-dữ-liệu-theo-điều-kiện">
+<h3><span class="section-number">12.4.3. </span>Lọc dữ liệu theo điều kiện<a class="headerlink" href="#Lọc-dữ-liệu-theo-điều-kiện" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">polars</span></code> sử dụng method <code class="docutils literal notranslate"><span class="pre">filter</span></code> để lọc điều kiện nhanh chóng</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[80]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lọc mpg &gt;= 20</span>
+<span class="n">mtcars_pl</span><span class="o">.</span>\
+    <span class="nb">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">)</span><span class="o">.</span>\
+    <span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[80]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 12)</small><table border="1" class="dataframe"><thead><tr><th>name</th><th>mpg</th><th>cyl</th><th>disp</th><th>hp</th><th>drat</th><th>wt</th><th>qsec</th><th>vs</th><th>am</th><th>gear</th><th>carb</th></tr><tr><td>str</td><td>f64</td><td>i64</td><td>f64</td><td>i64</td><td>f64</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Mazda RX4&quot;</td><td>21.0</td><td>6</td><td>160.0</td><td>110</td><td>3.9</td><td>2.62</td><td>16.46</td><td>0</td><td>1</td><td>4</td><td>4</td></tr><tr><td>&quot;Mazda RX4 Wag&quot;</td><td>21.0</td><td>6</td><td>160.0</td><td>110</td><td>3.9</td><td>2.875</td><td>17.02</td><td>0</td><td>1</td><td>4</td><td>4</td></tr><tr><td>&quot;Datsun 710&quot;</td><td>22.8</td><td>4</td><td>108.0</td><td>93</td><td>3.85</td><td>2.32</td><td>18.61</td><td>1</td><td>1</td><td>4</td><td>1</td></tr><tr><td>&quot;Hornet 4 Drive&quot;</td><td>21.4</td><td>6</td><td>258.0</td><td>110</td><td>3.08</td><td>3.215</td><td>19.44</td><td>1</td><td>0</td><td>3</td><td>1</td></tr><tr><td>&quot;Merc 240D&quot;</td><td>24.4</td><td>4</td><td>146.7</td><td>62</td><td>3.69</td><td>3.19</td><td>20.0</td><td>1</td><td>0</td><td>4</td><td>2</td></tr></tbody></table></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[81]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># mpg &gt;= 20 &amp; cyl = 4</span>
+<span class="n">mtcars_pl</span><span class="o">.</span>\
+    <span class="nb">filter</span><span class="p">((</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;cyl&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">))</span><span class="o">.</span>\
+    <span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[81]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 12)</small><table border="1" class="dataframe"><thead><tr><th>name</th><th>mpg</th><th>cyl</th><th>disp</th><th>hp</th><th>drat</th><th>wt</th><th>qsec</th><th>vs</th><th>am</th><th>gear</th><th>carb</th></tr><tr><td>str</td><td>f64</td><td>i64</td><td>f64</td><td>i64</td><td>f64</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Datsun 710&quot;</td><td>22.8</td><td>4</td><td>108.0</td><td>93</td><td>3.85</td><td>2.32</td><td>18.61</td><td>1</td><td>1</td><td>4</td><td>1</td></tr><tr><td>&quot;Merc 240D&quot;</td><td>24.4</td><td>4</td><td>146.7</td><td>62</td><td>3.69</td><td>3.19</td><td>20.0</td><td>1</td><td>0</td><td>4</td><td>2</td></tr><tr><td>&quot;Merc 230&quot;</td><td>22.8</td><td>4</td><td>140.8</td><td>95</td><td>3.92</td><td>3.15</td><td>22.9</td><td>1</td><td>0</td><td>4</td><td>2</td></tr><tr><td>&quot;Fiat 128&quot;</td><td>32.4</td><td>4</td><td>78.7</td><td>66</td><td>4.08</td><td>2.2</td><td>19.47</td><td>1</td><td>1</td><td>4</td><td>1</td></tr><tr><td>&quot;Honda Civic&quot;</td><td>30.4</td><td>4</td><td>75.7</td><td>52</td><td>4.93</td><td>1.615</td><td>18.52</td><td>1</td><td>1</td><td>4</td><td>2</td></tr></tbody></table></div></div>
+</div>
+<p>Ta cũng có thể viết theo pipe operator với nhiều điều kiện liên tiếp như sau</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[82]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lấy thêm điều kiện cyl == 4</span>
+<span class="n">mtcars_pl</span><span class="o">.</span>\
+    <span class="nb">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">)</span><span class="o">.</span>\
+    <span class="nb">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;cyl&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span>\
+    <span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">([</span><span class="s2">&quot;mpg&quot;</span><span class="p">,</span> <span class="s2">&quot;cyl&quot;</span><span class="p">]))</span><span class="o">.</span>\
+    <span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[82]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 2)</small><table border="1" class="dataframe"><thead><tr><th>mpg</th><th>cyl</th></tr><tr><td>f64</td><td>i64</td></tr></thead><tbody><tr><td>22.8</td><td>4</td></tr><tr><td>24.4</td><td>4</td></tr><tr><td>22.8</td><td>4</td></tr><tr><td>32.4</td><td>4</td></tr><tr><td>30.4</td><td>4</td></tr></tbody></table></div></div>
+</div>
+<hr class="docutils" />
+</section>
+<section id="Sắp-xếp-lại-dữ-liệu">
+<h3><span class="section-number">12.4.4. </span>Sắp xếp lại dữ liệu<a class="headerlink" href="#Sắp-xếp-lại-dữ-liệu" title="Link to this heading"></a></h3>
+<p>Ta có thể sort lại dữ liệu với method <code class="docutils literal notranslate"><span class="pre">sort</span></code></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[83]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lọc từ thấp đến cao</span>
+<span class="n">mtcars_pl</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s1">&#39;mpg&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[83]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 12)</small><table border="1" class="dataframe"><thead><tr><th>name</th><th>mpg</th><th>cyl</th><th>disp</th><th>hp</th><th>drat</th><th>wt</th><th>qsec</th><th>vs</th><th>am</th><th>gear</th><th>carb</th></tr><tr><td>str</td><td>f64</td><td>i64</td><td>f64</td><td>i64</td><td>f64</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Cadillac Fleetwood&quot;</td><td>10.4</td><td>8</td><td>472.0</td><td>205</td><td>2.93</td><td>5.25</td><td>17.98</td><td>0</td><td>0</td><td>3</td><td>4</td></tr><tr><td>&quot;Lincoln Continental&quot;</td><td>10.4</td><td>8</td><td>460.0</td><td>215</td><td>3.0</td><td>5.424</td><td>17.82</td><td>0</td><td>0</td><td>3</td><td>4</td></tr><tr><td>&quot;Camaro Z28&quot;</td><td>13.3</td><td>8</td><td>350.0</td><td>245</td><td>3.73</td><td>3.84</td><td>15.41</td><td>0</td><td>0</td><td>3</td><td>4</td></tr><tr><td>&quot;Duster 360&quot;</td><td>14.3</td><td>8</td><td>360.0</td><td>245</td><td>3.21</td><td>3.57</td><td>15.84</td><td>0</td><td>0</td><td>3</td><td>4</td></tr><tr><td>&quot;Chrysler Imperial&quot;</td><td>14.7</td><td>8</td><td>440.0</td><td>230</td><td>3.23</td><td>5.345</td><td>17.42</td><td>0</td><td>0</td><td>3</td><td>4</td></tr></tbody></table></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[84]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lọc từ cao đến thấp</span>
+<span class="n">mtcars_pl</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s1">&#39;mpg&#39;</span><span class="p">,</span> <span class="n">descending</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[84]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 12)</small><table border="1" class="dataframe"><thead><tr><th>name</th><th>mpg</th><th>cyl</th><th>disp</th><th>hp</th><th>drat</th><th>wt</th><th>qsec</th><th>vs</th><th>am</th><th>gear</th><th>carb</th></tr><tr><td>str</td><td>f64</td><td>i64</td><td>f64</td><td>i64</td><td>f64</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Toyota Corolla&quot;</td><td>33.9</td><td>4</td><td>71.1</td><td>65</td><td>4.22</td><td>1.835</td><td>19.9</td><td>1</td><td>1</td><td>4</td><td>1</td></tr><tr><td>&quot;Fiat 128&quot;</td><td>32.4</td><td>4</td><td>78.7</td><td>66</td><td>4.08</td><td>2.2</td><td>19.47</td><td>1</td><td>1</td><td>4</td><td>1</td></tr><tr><td>&quot;Honda Civic&quot;</td><td>30.4</td><td>4</td><td>75.7</td><td>52</td><td>4.93</td><td>1.615</td><td>18.52</td><td>1</td><td>1</td><td>4</td><td>2</td></tr><tr><td>&quot;Lotus Europa&quot;</td><td>30.4</td><td>4</td><td>95.1</td><td>113</td><td>3.77</td><td>1.513</td><td>16.9</td><td>1</td><td>1</td><td>5</td><td>2</td></tr><tr><td>&quot;Fiat X1-9&quot;</td><td>27.3</td><td>4</td><td>79.0</td><td>66</td><td>4.08</td><td>1.935</td><td>18.9</td><td>1</td><td>1</td><td>4</td><td>1</td></tr></tbody></table></div></div>
+</div>
+</section>
+</section>
+<section id="Nhóm-câu-lệnh-biến-đổi-dữ-liệu">
+<h2><span class="section-number">12.5. </span>Nhóm câu lệnh biến đổi dữ liệu<a class="headerlink" href="#Nhóm-câu-lệnh-biến-đổi-dữ-liệu" title="Link to this heading"></a></h2>
+<section id="Đổi-tên-biến">
+<h3><span class="section-number">12.5.1. </span>Đổi tên biến<a class="headerlink" href="#Đổi-tên-biến" title="Link to this heading"></a></h3>
+<p><strong>Cấu trúc</strong>: <code class="docutils literal notranslate"><span class="pre">df.rename(columns</span> <span class="pre">=</span> <span class="pre">{old_var</span> <span class="pre">:</span> <span class="pre">new_var})</span></code></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[85]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mtcars_pl</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s1">&#39;mpg&#39;</span> <span class="p">:</span> <span class="s1">&#39;mpg_new&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;cyl&#39;</span> <span class="p">:</span> <span class="s1">&#39;cyl_new&#39;</span>
+    <span class="p">})</span><span class="o">.</span>\
+    <span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[85]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 12)</small><table border="1" class="dataframe"><thead><tr><th>name</th><th>mpg_new</th><th>cyl_new</th><th>disp</th><th>hp</th><th>drat</th><th>wt</th><th>qsec</th><th>vs</th><th>am</th><th>gear</th><th>carb</th></tr><tr><td>str</td><td>f64</td><td>i64</td><td>f64</td><td>i64</td><td>f64</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Mazda RX4&quot;</td><td>21.0</td><td>6</td><td>160.0</td><td>110</td><td>3.9</td><td>2.62</td><td>16.46</td><td>0</td><td>1</td><td>4</td><td>4</td></tr><tr><td>&quot;Mazda RX4 Wag&quot;</td><td>21.0</td><td>6</td><td>160.0</td><td>110</td><td>3.9</td><td>2.875</td><td>17.02</td><td>0</td><td>1</td><td>4</td><td>4</td></tr><tr><td>&quot;Datsun 710&quot;</td><td>22.8</td><td>4</td><td>108.0</td><td>93</td><td>3.85</td><td>2.32</td><td>18.61</td><td>1</td><td>1</td><td>4</td><td>1</td></tr><tr><td>&quot;Hornet 4 Drive&quot;</td><td>21.4</td><td>6</td><td>258.0</td><td>110</td><td>3.08</td><td>3.215</td><td>19.44</td><td>1</td><td>0</td><td>3</td><td>1</td></tr><tr><td>&quot;Hornet Sportabout&quot;</td><td>18.7</td><td>8</td><td>360.0</td><td>175</td><td>3.15</td><td>3.44</td><td>17.02</td><td>0</td><td>0</td><td>3</td><td>2</td></tr></tbody></table></div></div>
+</div>
+</section>
+<section id="Tạo-&amp;-xóa-biến-mới">
+<h3><span class="section-number">12.5.2. </span>Tạo &amp; xóa biến mới<a class="headerlink" href="#Tạo-&-xóa-biến-mới" title="Link to this heading"></a></h3>
+<p>Với <code class="docutils literal notranslate"><span class="pre">polars</span></code>, cách thuận tiện nhất để biến đổi dữ liệu các biến trong dataframe là dùng <code class="docutils literal notranslate"><span class="pre">with_columns</span></code> method.</p>
+<p>Với <code class="docutils literal notranslate"><span class="pre">with_columns</span></code>, ta có thể tạo và biến đổi dữ liệu. Tên của biến mới được khai báo thông qua <code class="docutils literal notranslate"><span class="pre">alias</span></code> method hoặc có thể tạo trực tiếp biến</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[86]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cách 1: Tạo biến mới với alias</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">mtcars_pl</span><span class="o">.</span>\
+    <span class="n">select</span><span class="p">([</span><span class="s1">&#39;mpg&#39;</span><span class="p">,</span> <span class="s1">&#39;cyl&#39;</span><span class="p">])</span><span class="o">.</span>\
+    <span class="n">with_columns</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s1">&#39;new_var&#39;</span><span class="p">)</span>
+    <span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[86]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 3)</small><table border="1" class="dataframe"><thead><tr><th>mpg</th><th>cyl</th><th>new_var</th></tr><tr><td>f64</td><td>i64</td><td>f64</td></tr></thead><tbody><tr><td>21.0</td><td>6</td><td>42.0</td></tr><tr><td>21.0</td><td>6</td><td>42.0</td></tr><tr><td>22.8</td><td>4</td><td>45.6</td></tr><tr><td>21.4</td><td>6</td><td>42.8</td></tr><tr><td>18.7</td><td>8</td><td>37.4</td></tr></tbody></table></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[87]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cách 2: Không dùng alias</span>
+<span class="n">mtcars_pl</span><span class="o">.</span>\
+    <span class="n">select</span><span class="p">([</span><span class="s1">&#39;mpg&#39;</span><span class="p">,</span> <span class="s1">&#39;cyl&#39;</span><span class="p">])</span><span class="o">.</span>\
+    <span class="n">with_columns</span><span class="p">(</span>
+        <span class="n">new_var</span> <span class="o">=</span> <span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">)</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+    <span class="p">)</span><span class="o">.</span>\
+    <span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[87]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 3)</small><table border="1" class="dataframe"><thead><tr><th>mpg</th><th>cyl</th><th>new_var</th></tr><tr><td>f64</td><td>i64</td><td>f64</td></tr></thead><tbody><tr><td>21.0</td><td>6</td><td>42.0</td></tr><tr><td>21.0</td><td>6</td><td>42.0</td></tr><tr><td>22.8</td><td>4</td><td>45.6</td></tr><tr><td>21.4</td><td>6</td><td>42.8</td></tr><tr><td>18.7</td><td>8</td><td>37.4</td></tr></tbody></table></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[88]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Drop biến new_var</span>
+<span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;new_var&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[88]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 2)</small><table border="1" class="dataframe"><thead><tr><th>mpg</th><th>cyl</th></tr><tr><td>f64</td><td>i64</td></tr></thead><tbody><tr><td>21.0</td><td>6</td></tr><tr><td>21.0</td><td>6</td></tr><tr><td>22.8</td><td>4</td></tr><tr><td>21.4</td><td>6</td></tr><tr><td>18.7</td><td>8</td></tr></tbody></table></div></div>
+</div>
+</section>
+<section id="Tạo-biến-mới-theo-nhóm">
+<h3><span class="section-number">12.5.3. </span>Tạo biến mới theo nhóm<a class="headerlink" href="#Tạo-biến-mới-theo-nhóm" title="Link to this heading"></a></h3>
+<p><strong>Lưu ý</strong>: <code class="docutils literal notranslate"><span class="pre">polars</span></code> có sẵn rất nhiều methods cho phép tính toán &amp; tổng hợp dữ liệu có sẵn mà không cần phải chuyển qua các thư viện khác như numpy hay pandas.</p>
+<p>Ta có thể tạo biến mới theo nhóm bằng cách kết hợp giữa <code class="docutils literal notranslate"><span class="pre">with_columns</span></code> và <code class="docutils literal notranslate"><span class="pre">over</span></code> như sau</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[89]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mtcars_pl</span><span class="o">.</span>\
+    <span class="n">with_columns</span><span class="p">(</span>
+         <span class="c1"># Tổng mpg</span>
+         <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;cyl&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;sum_mpg&quot;</span><span class="p">),</span>
+         <span class="c1"># Quantile 0.75 của mpg</span>
+         <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span><span class="o">.</span><span class="n">over</span><span class="p">(</span><span class="s2">&quot;cyl&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;q75&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[89]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (32, 14)</small><table border="1" class="dataframe"><thead><tr><th>name</th><th>mpg</th><th>cyl</th><th>disp</th><th>hp</th><th>drat</th><th>wt</th><th>qsec</th><th>vs</th><th>am</th><th>gear</th><th>carb</th><th>sum_mpg</th><th>q75</th></tr><tr><td>str</td><td>f64</td><td>i64</td><td>f64</td><td>i64</td><td>f64</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>&quot;Mazda RX4&quot;</td><td>21.0</td><td>6</td><td>160.0</td><td>110</td><td>3.9</td><td>2.62</td><td>16.46</td><td>0</td><td>1</td><td>4</td><td>4</td><td>138.2</td><td>21.0</td></tr><tr><td>&quot;Mazda RX4 Wag&quot;</td><td>21.0</td><td>6</td><td>160.0</td><td>110</td><td>3.9</td><td>2.875</td><td>17.02</td><td>0</td><td>1</td><td>4</td><td>4</td><td>138.2</td><td>21.0</td></tr><tr><td>&quot;Datsun 710&quot;</td><td>22.8</td><td>4</td><td>108.0</td><td>93</td><td>3.85</td><td>2.32</td><td>18.61</td><td>1</td><td>1</td><td>4</td><td>1</td><td>293.3</td><td>30.4</td></tr><tr><td>&quot;Hornet 4 Drive&quot;</td><td>21.4</td><td>6</td><td>258.0</td><td>110</td><td>3.08</td><td>3.215</td><td>19.44</td><td>1</td><td>0</td><td>3</td><td>1</td><td>138.2</td><td>21.0</td></tr><tr><td>&quot;Hornet Sportabout&quot;</td><td>18.7</td><td>8</td><td>360.0</td><td>175</td><td>3.15</td><td>3.44</td><td>17.02</td><td>0</td><td>0</td><td>3</td><td>2</td><td>211.4</td><td>16.4</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>&quot;Lotus Europa&quot;</td><td>30.4</td><td>4</td><td>95.1</td><td>113</td><td>3.77</td><td>1.513</td><td>16.9</td><td>1</td><td>1</td><td>5</td><td>2</td><td>293.3</td><td>30.4</td></tr><tr><td>&quot;Ford Pantera L&quot;</td><td>15.8</td><td>8</td><td>351.0</td><td>264</td><td>4.22</td><td>3.17</td><td>14.5</td><td>0</td><td>1</td><td>5</td><td>4</td><td>211.4</td><td>16.4</td></tr><tr><td>&quot;Ferrari Dino&quot;</td><td>19.7</td><td>6</td><td>145.0</td><td>175</td><td>3.62</td><td>2.77</td><td>15.5</td><td>0</td><td>1</td><td>5</td><td>6</td><td>138.2</td><td>21.0</td></tr><tr><td>&quot;Maserati Bora&quot;</td><td>15.0</td><td>8</td><td>301.0</td><td>335</td><td>3.54</td><td>3.57</td><td>14.6</td><td>0</td><td>1</td><td>5</td><td>8</td><td>211.4</td><td>16.4</td></tr><tr><td>&quot;Volvo 142E&quot;</td><td>21.4</td><td>4</td><td>121.0</td><td>109</td><td>4.11</td><td>2.78</td><td>18.6</td><td>1</td><td>1</td><td>4</td><td>2</td><td>293.3</td><td>30.4</td></tr></tbody></table></div></div>
+</div>
+</section>
+<section id="Join">
+<h3><span class="section-number">12.5.4. </span>Join<a class="headerlink" href="#Join" title="Link to this heading"></a></h3>
+<p>Tương tự như pandas, join trong polars có thể dùng hàm <code class="docutils literal notranslate"><span class="pre">join</span></code></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[90]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;employee&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="s1">&#39;Jake&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Sue&#39;</span><span class="p">],</span>
+                    <span class="s1">&#39;group&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Accounting&#39;</span><span class="p">,</span> <span class="s1">&#39;Engineering&#39;</span><span class="p">,</span> <span class="s1">&#39;Engineering&#39;</span><span class="p">,</span> <span class="s1">&#39;HR&#39;</span><span class="p">]})</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;employee&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="s1">&#39;Jake&#39;</span><span class="p">],</span>
+                    <span class="s1">&#39;hire_date&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2004</span><span class="p">,</span> <span class="mi">2008</span><span class="p">,</span> <span class="mi">2012</span><span class="p">]})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df1</span><span class="p">);</span> <span class="nb">print</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+shape: (4, 2)
+┌──────────┬─────────────┐
+│ employee ┆ group       │
+│ ---      ┆ ---         │
+│ str      ┆ str         │
+╞══════════╪═════════════╡
+│ Bob      ┆ Accounting  │
+│ Jake     ┆ Engineering │
+│ Lisa     ┆ Engineering │
+│ Sue      ┆ HR          │
+└──────────┴─────────────┘
+shape: (3, 2)
+┌──────────┬───────────┐
+│ employee ┆ hire_date │
+│ ---      ┆ ---       │
+│ str      ┆ i64       │
+╞══════════╪═══════════╡
+│ Lisa     ┆ 2004      │
+│ Bob      ┆ 2008      │
+│ Jake     ┆ 2012      │
+└──────────┴───────────┘
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[91]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s2">&quot;employee&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[91]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (3, 3)</small><table border="1" class="dataframe"><thead><tr><th>employee</th><th>group</th><th>hire_date</th></tr><tr><td>str</td><td>str</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Bob&quot;</td><td>&quot;Accounting&quot;</td><td>2008</td></tr><tr><td>&quot;Jake&quot;</td><td>&quot;Engineering&quot;</td><td>2012</td></tr><tr><td>&quot;Lisa&quot;</td><td>&quot;Engineering&quot;</td><td>2004</td></tr></tbody></table></div></div>
+</div>
+<p><strong>Lưu ý</strong>: Khi dùng <code class="docutils literal notranslate"><span class="pre">join</span></code>, <code class="docutils literal notranslate"><span class="pre">polars</span></code>sẽ tự động bỏ các trường không chứa trong cả 2 bảng. Nếu muốn chuyển thành <code class="docutils literal notranslate"><span class="pre">left_join</span></code>, cần thêm option <code class="docutils literal notranslate"><span class="pre">how</span></code></p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[92]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s2">&quot;employee&quot;</span><span class="p">,</span> <span class="n">how</span> <span class="o">=</span> <span class="s2">&quot;left&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[92]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (4, 3)</small><table border="1" class="dataframe"><thead><tr><th>employee</th><th>group</th><th>hire_date</th></tr><tr><td>str</td><td>str</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Bob&quot;</td><td>&quot;Accounting&quot;</td><td>2008</td></tr><tr><td>&quot;Jake&quot;</td><td>&quot;Engineering&quot;</td><td>2012</td></tr><tr><td>&quot;Lisa&quot;</td><td>&quot;Engineering&quot;</td><td>2004</td></tr><tr><td>&quot;Sue&quot;</td><td>&quot;HR&quot;</td><td>null</td></tr></tbody></table></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[93]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lấy các trưởng không ở cả 2 bảng</span>
+<span class="n">df1</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s2">&quot;employee&quot;</span><span class="p">,</span> <span class="n">how</span> <span class="o">=</span> <span class="s1">&#39;anti&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[93]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (1, 2)</small><table border="1" class="dataframe"><thead><tr><th>employee</th><th>group</th></tr><tr><td>str</td><td>str</td></tr></thead><tbody><tr><td>&quot;Sue&quot;</td><td>&quot;HR&quot;</td></tr></tbody></table></div></div>
+</div>
+<hr class="docutils" />
+<p>Với trường hợp bảng dữ liệu khác key, ta cần lựa chọn các biến ở bảng</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[94]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df3</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="s1">&#39;Jake&#39;</span><span class="p">,</span> <span class="s1">&#39;Lisa&#39;</span><span class="p">,</span> <span class="s1">&#39;Sue&#39;</span><span class="p">],</span>
+                    <span class="s1">&#39;salary&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">70000</span><span class="p">,</span> <span class="mi">80000</span><span class="p">,</span> <span class="mi">120000</span><span class="p">,</span> <span class="mi">90000</span><span class="p">]})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df1</span><span class="p">);</span> <span class="nb">print</span><span class="p">(</span><span class="n">df3</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+shape: (4, 2)
+┌──────────┬─────────────┐
+│ employee ┆ group       │
+│ ---      ┆ ---         │
+│ str      ┆ str         │
+╞══════════╪═════════════╡
+│ Bob      ┆ Accounting  │
+│ Jake     ┆ Engineering │
+│ Lisa     ┆ Engineering │
+│ Sue      ┆ HR          │
+└──────────┴─────────────┘
+shape: (4, 2)
+┌──────┬────────┐
+│ name ┆ salary │
+│ ---  ┆ ---    │
+│ str  ┆ i64    │
+╞══════╪════════╡
+│ Bob  ┆ 70000  │
+│ Jake ┆ 80000  │
+│ Lisa ┆ 120000 │
+│ Sue  ┆ 90000  │
+└──────┴────────┘
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[95]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">df3</span><span class="p">,</span> <span class="n">left_on</span> <span class="o">=</span> <span class="s1">&#39;employee&#39;</span><span class="p">,</span> <span class="n">right_on</span> <span class="o">=</span> <span class="s1">&#39;name&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[95]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (4, 3)</small><table border="1" class="dataframe"><thead><tr><th>employee</th><th>group</th><th>salary</th></tr><tr><td>str</td><td>str</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Bob&quot;</td><td>&quot;Accounting&quot;</td><td>70000</td></tr><tr><td>&quot;Jake&quot;</td><td>&quot;Engineering&quot;</td><td>80000</td></tr><tr><td>&quot;Lisa&quot;</td><td>&quot;Engineering&quot;</td><td>120000</td></tr><tr><td>&quot;Sue&quot;</td><td>&quot;HR&quot;</td><td>90000</td></tr></tbody></table></div></div>
+</div>
+</section>
+<section id="Ghép-dữ-liệu">
+<h3><span class="section-number">12.5.5. </span>Ghép dữ liệu<a class="headerlink" href="#Ghép-dữ-liệu" title="Link to this heading"></a></h3>
+<p>Với pandas, cấu trúc của DataFrame được chia thành hàng và cột. Do đó, cả 2 trường hợp ghép dòng và ghép cột, ta có thể dùng hàm <code class="docutils literal notranslate"><span class="pre">concat</span></code> tương tự như <code class="docutils literal notranslate"><span class="pre">pandas</span></code></p>
+<section id="Ghép-dòng">
+<h4><span class="section-number">12.5.5.1. </span>Ghép dòng<a class="headerlink" href="#Ghép-dòng" title="Link to this heading"></a></h4>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[96]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;a&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">4</span> <span class="p">,</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span>
+        <span class="s2">&quot;b&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">df2</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;a&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
+    <span class="s2">&quot;b&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df1</span><span class="p">);</span> <span class="nb">print</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+shape: (3, 2)
+┌─────┬─────┐
+│ a   ┆ b   │
+│ --- ┆ --- │
+│ i64 ┆ i64 │
+╞═════╪═════╡
+│ 4   ┆ 7   │
+│ 5   ┆ 8   │
+│ 6   ┆ 9   │
+└─────┴─────┘
+shape: (2, 2)
+┌─────┬─────┐
+│ a   ┆ b   │
+│ --- ┆ --- │
+│ i64 ┆ i64 │
+╞═════╪═════╡
+│ 1   ┆ 8   │
+│ 2   ┆ 9   │
+└─────┴─────┘
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[97]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ghép theo dòng</span>
+<span class="n">pl</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">],</span> <span class="n">how</span> <span class="o">=</span> <span class="s2">&quot;vertical&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[97]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 2)</small><table border="1" class="dataframe"><thead><tr><th>a</th><th>b</th></tr><tr><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>4</td><td>7</td></tr><tr><td>5</td><td>8</td></tr><tr><td>6</td><td>9</td></tr><tr><td>1</td><td>8</td></tr><tr><td>2</td><td>9</td></tr></tbody></table></div></div>
+</div>
+</section>
+<section id="Ghép-theo-cột">
+<h4><span class="section-number">12.5.5.2. </span>Ghép theo cột<a class="headerlink" href="#Ghép-theo-cột" title="Link to this heading"></a></h4>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[98]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dữ liệu mới</span>
+<span class="n">df3</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;c&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]})</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[99]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df1</span><span class="p">,</span> <span class="n">df3</span><span class="p">],</span> <span class="n">how</span> <span class="o">=</span> <span class="s2">&quot;horizontal&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[99]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (3, 3)</small><table border="1" class="dataframe"><thead><tr><th>a</th><th>b</th><th>c</th></tr><tr><td>i64</td><td>i64</td><td>str</td></tr></thead><tbody><tr><td>4</td><td>7</td><td>&quot;x&quot;</td></tr><tr><td>5</td><td>8</td><td>&quot;y&quot;</td></tr><tr><td>6</td><td>9</td><td>&quot;z&quot;</td></tr></tbody></table></div></div>
+</div>
+</section>
+</section>
+</section>
+<section id="Tổng-hợp-dữ-liệu">
+<h2><span class="section-number">12.6. </span>Tổng hợp dữ liệu<a class="headerlink" href="#Tổng-hợp-dữ-liệu" title="Link to this heading"></a></h2>
+<section id="groupby-&amp;-aggregate">
+<h3><span class="section-number">12.6.1. </span>groupby &amp; aggregate<a class="headerlink" href="#groupby-&-aggregate" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">polars</span></code> cho phép sử dụng nhiều cách linh hoạt để tổng hợp dữ liệu nhanh chóng với <code class="docutils literal notranslate"><span class="pre">agg</span></code> method kết hợp với <code class="docutils literal notranslate"><span class="pre">groupby</span></code> method.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[100]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Summary toàn bộ data.frame</span>
+<span class="n">mtcars_pl</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[100]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (9, 13)</small><table border="1" class="dataframe"><thead><tr><th>statistic</th><th>name</th><th>mpg</th><th>cyl</th><th>disp</th><th>hp</th><th>drat</th><th>wt</th><th>qsec</th><th>vs</th><th>am</th><th>gear</th><th>carb</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>&quot;count&quot;</td><td>&quot;32&quot;</td><td>32.0</td><td>32.0</td><td>32.0</td><td>32.0</td><td>32.0</td><td>32.0</td><td>32.0</td><td>32.0</td><td>32.0</td><td>32.0</td><td>32.0</td></tr><tr><td>&quot;null_count&quot;</td><td>&quot;0&quot;</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td><td>0.0</td></tr><tr><td>&quot;mean&quot;</td><td>null</td><td>20.090625</td><td>6.1875</td><td>230.721875</td><td>146.6875</td><td>3.5965625</td><td>3.21725</td><td>17.84875</td><td>0.4375</td><td>0.40625</td><td>3.6875</td><td>2.8125</td></tr><tr><td>&quot;std&quot;</td><td>null</td><td>6.026948</td><td>1.785922</td><td>123.938694</td><td>68.562868</td><td>0.534679</td><td>0.978457</td><td>1.786943</td><td>0.504016</td><td>0.498991</td><td>0.737804</td><td>1.6152</td></tr><tr><td>&quot;min&quot;</td><td>&quot;AMC Javelin&quot;</td><td>10.4</td><td>4.0</td><td>71.1</td><td>52.0</td><td>2.76</td><td>1.513</td><td>14.5</td><td>0.0</td><td>0.0</td><td>3.0</td><td>1.0</td></tr><tr><td>&quot;25%&quot;</td><td>null</td><td>15.5</td><td>4.0</td><td>121.0</td><td>97.0</td><td>3.08</td><td>2.62</td><td>16.9</td><td>0.0</td><td>0.0</td><td>3.0</td><td>2.0</td></tr><tr><td>&quot;50%&quot;</td><td>null</td><td>19.2</td><td>6.0</td><td>225.0</td><td>123.0</td><td>3.7</td><td>3.435</td><td>17.82</td><td>0.0</td><td>0.0</td><td>4.0</td><td>2.0</td></tr><tr><td>&quot;75%&quot;</td><td>null</td><td>22.8</td><td>8.0</td><td>318.0</td><td>180.0</td><td>3.92</td><td>3.57</td><td>18.9</td><td>1.0</td><td>1.0</td><td>4.0</td><td>4.0</td></tr><tr><td>&quot;max&quot;</td><td>&quot;Volvo 142E&quot;</td><td>33.9</td><td>8.0</td><td>472.0</td><td>335.0</td><td>4.93</td><td>5.424</td><td>22.9</td><td>1.0</td><td>1.0</td><td>5.0</td><td>8.0</td></tr></tbody></table></div></div>
+</div>
+<hr class="docutils" />
+<p>Khác với pandas cho phép rất linh hoạt, cách thức <code class="docutils literal notranslate"><span class="pre">polars</span></code>, tổng hợp dữ liệu rất nhất quán và đơn giản. Có 2 điểm khác biệt chính như sau:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">polars</span></code> sử dụng <code class="docutils literal notranslate"><span class="pre">alias</span></code> để tạo biến mới</p></li>
+<li><p>Các hàm tính toán tổng hợp thông thường như <code class="docutils literal notranslate"><span class="pre">min</span></code>, <code class="docutils literal notranslate"><span class="pre">max</span></code>, <code class="docutils literal notranslate"><span class="pre">count</span></code>, <code class="docutils literal notranslate"><span class="pre">sum</span></code>, <code class="docutils literal notranslate"><span class="pre">mean</span></code>, <code class="docutils literal notranslate"><span class="pre">quantile</span></code>,… đều có thể sử dụng trực tiếp methods trong <code class="docutils literal notranslate"><span class="pre">polars</span></code></p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[101]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Summary theo nhóm với biến mpg</span>
+<span class="n">mtcars_pl</span><span class="o">.</span>\
+    <span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;am&#39;</span><span class="p">,</span> <span class="s1">&#39;vs&#39;</span><span class="p">])</span><span class="o">.</span>\
+    <span class="n">agg</span><span class="p">(</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;mean_mpg&quot;</span><span class="p">),</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;wt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;sum_wt&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+C:\Users\Hoang Duc Anh\AppData\Local\Temp\ipykernel_15632\312397274.py:3: DeprecationWarning: `groupby` is deprecated. It has been renamed to `group_by`.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[101]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (4, 4)</small><table border="1" class="dataframe"><thead><tr><th>am</th><th>vs</th><th>mean_mpg</th><th>sum_wt</th></tr><tr><td>i64</td><td>i64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>1</td><td>1</td><td>28.371429</td><td>14.198</td></tr><tr><td>1</td><td>0</td><td>19.75</td><td>17.145</td></tr><tr><td>0</td><td>1</td><td>20.742857</td><td>22.36</td></tr><tr><td>0</td><td>0</td><td>15.05</td><td>49.249</td></tr></tbody></table></div></div>
+</div>
+<p>Bên cạnh đó, <code class="docutils literal notranslate"><span class="pre">polars</span></code> còn cho phép tổng hợp rất linh hoạt theo điều kiện. Quay trở lại ví dụ trên, ta có thể đặt ra yêu cầu như sau:</p>
+<ul class="simple">
+<li><p>Nhóm biến theo <code class="docutils literal notranslate"><span class="pre">am</span></code> và <code class="docutils literal notranslate"><span class="pre">vs</span></code></p></li>
+<li><p>Tính tổng <code class="docutils literal notranslate"><span class="pre">mpg</span></code> với <code class="docutils literal notranslate"><span class="pre">cyl</span> <span class="pre">=</span> <span class="pre">4</span></code></p></li>
+<li><p>Tính giá trị trung bình <code class="docutils literal notranslate"><span class="pre">mpg</span></code> với <code class="docutils literal notranslate"><span class="pre">cyl</span> <span class="pre">=</span> <span class="pre">6</span></code></p></li>
+</ul>
+<p>Ta có thể thực hiện như sau</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[102]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mtcars_pl</span><span class="o">.</span>\
+    <span class="n">group_by</span><span class="p">([</span><span class="s1">&#39;am&#39;</span><span class="p">,</span> <span class="s1">&#39;vs&#39;</span><span class="p">])</span><span class="o">.</span>\
+    <span class="n">agg</span><span class="p">(</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;cyl&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;sum_mpg&quot;</span><span class="p">),</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;wt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;cyl&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;mean_wt&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[102]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (4, 4)</small><table border="1" class="dataframe"><thead><tr><th>am</th><th>vs</th><th>sum_mpg</th><th>mean_wt</th></tr><tr><td>i64</td><td>i64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>0</td><td>0</td><td>0.0</td><td>null</td></tr><tr><td>1</td><td>0</td><td>26.0</td><td>2.755</td></tr><tr><td>1</td><td>1</td><td>198.6</td><td>null</td></tr><tr><td>0</td><td>1</td><td>68.7</td><td>3.38875</td></tr></tbody></table></div></div>
+</div>
+</section>
+</section>
+<section id="Các-hàm-nâng-cao">
+<h2><span class="section-number">12.7. </span>Các hàm nâng cao<a class="headerlink" href="#Các-hàm-nâng-cao" title="Link to this heading"></a></h2>
+<section id="select_dtype">
+<h3><span class="section-number">12.7.1. </span>select_dtype<a class="headerlink" href="#select_dtype" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">polars</span></code> cho phép select cùng lúc các biến cùng thuộc một kiểu dữ liệu. Xem ví dụ dưới đây:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[103]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="s1">&#39;y&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;z&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span>
+    <span class="s1">&#39;t&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">6.2</span><span class="p">,</span> <span class="mf">7.8</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="n">df</span><span class="o">.</span><span class="n">dtypes</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[103]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[Int64, String, Int64, Float64]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[104]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Chọn các biến là biến số dạng integer</span>
+<span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">Int64</span><span class="p">,</span> <span class="n">pl</span><span class="o">.</span><span class="n">Float64</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[104]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (3, 3)</small><table border="1" class="dataframe"><thead><tr><th>x</th><th>z</th><th>t</th></tr><tr><td>i64</td><td>i64</td><td>f64</td></tr></thead><tbody><tr><td>1</td><td>4</td><td>0.5</td></tr><tr><td>2</td><td>5</td><td>6.2</td></tr><tr><td>3</td><td>6</td><td>7.8</td></tr></tbody></table></div></div>
+</div>
+<p>Ta có thể sử dụng <code class="docutils literal notranslate"><span class="pre">selectors</span></code> để có thể sử dụng linh hoạt hơn như sau</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[105]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">polars.selectors</span> <span class="k">as</span> <span class="nn">cs</span>
+<span class="c1"># Chọn tất cả biến số</span>
+<span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">numeric</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[105]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (3, 3)</small><table border="1" class="dataframe"><thead><tr><th>x</th><th>z</th><th>t</th></tr><tr><td>i64</td><td>i64</td><td>f64</td></tr></thead><tbody><tr><td>1</td><td>4</td><td>0.5</td></tr><tr><td>2</td><td>5</td><td>6.2</td></tr><tr><td>3</td><td>6</td><td>7.8</td></tr></tbody></table></div></div>
+</div>
+</section>
+<section id="Xoay-chiều-dữ-liệu">
+<h3><span class="section-number">12.7.2. </span>Xoay chiều dữ liệu<a class="headerlink" href="#Xoay-chiều-dữ-liệu" title="Link to this heading"></a></h3>
+<p>Tương tự pandas, <code class="docutils literal notranslate"><span class="pre">polars</span></code> cho phép xoay chiều dữ liệu từ ngang sang dọc và dọc sang ngang với 2 hàm:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">melt</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">long_to_wide</span></code></p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[106]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;id&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+    <span class="s1">&#39;var1&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span>
+    <span class="s1">&#39;var2&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;var3&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[107]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_df</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[107]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (3, 4)</small><table border="1" class="dataframe"><thead><tr><th>id</th><th>var1</th><th>var2</th><th>var3</th></tr><tr><td>i64</td><td>i64</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>1</td><td>3</td><td>&quot;a&quot;</td><td>&quot;x&quot;</td></tr><tr><td>2</td><td>4</td><td>&quot;a&quot;</td><td>&quot;y&quot;</td></tr><tr><td>3</td><td>5</td><td>&quot;b&quot;</td><td>&quot;z&quot;</td></tr></tbody></table></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[108]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_df</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[108]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (9, 3)</small><table border="1" class="dataframe"><thead><tr><th>id</th><th>variable</th><th>value</th></tr><tr><td>i64</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>1</td><td>&quot;var1&quot;</td><td>&quot;3&quot;</td></tr><tr><td>2</td><td>&quot;var1&quot;</td><td>&quot;4&quot;</td></tr><tr><td>3</td><td>&quot;var1&quot;</td><td>&quot;5&quot;</td></tr><tr><td>1</td><td>&quot;var2&quot;</td><td>&quot;a&quot;</td></tr><tr><td>2</td><td>&quot;var2&quot;</td><td>&quot;a&quot;</td></tr><tr><td>3</td><td>&quot;var2&quot;</td><td>&quot;b&quot;</td></tr><tr><td>1</td><td>&quot;var3&quot;</td><td>&quot;x&quot;</td></tr><tr><td>2</td><td>&quot;var3&quot;</td><td>&quot;y&quot;</td></tr><tr><td>3</td><td>&quot;var3&quot;</td><td>&quot;z&quot;</td></tr></tbody></table></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[109]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># melt nhiều biến</span>
+<span class="n">my_df</span><span class="o">.</span><span class="n">melt</span><span class="p">([</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;var1&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[109]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (6, 4)</small><table border="1" class="dataframe"><thead><tr><th>id</th><th>var1</th><th>variable</th><th>value</th></tr><tr><td>i64</td><td>i64</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>1</td><td>3</td><td>&quot;var2&quot;</td><td>&quot;a&quot;</td></tr><tr><td>2</td><td>4</td><td>&quot;var2&quot;</td><td>&quot;a&quot;</td></tr><tr><td>3</td><td>5</td><td>&quot;var2&quot;</td><td>&quot;b&quot;</td></tr><tr><td>1</td><td>3</td><td>&quot;var3&quot;</td><td>&quot;x&quot;</td></tr><tr><td>2</td><td>4</td><td>&quot;var3&quot;</td><td>&quot;y&quot;</td></tr><tr><td>3</td><td>5</td><td>&quot;var3&quot;</td><td>&quot;z&quot;</td></tr></tbody></table></div></div>
+</div>
+<hr class="docutils" />
+<p>Xoay chiều từ dọc sang ngang</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[110]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df2</span> <span class="o">=</span> <span class="n">my_df</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="n">df2</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[110]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (9, 3)</small><table border="1" class="dataframe"><thead><tr><th>id</th><th>variable</th><th>value</th></tr><tr><td>i64</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>1</td><td>&quot;var1&quot;</td><td>&quot;3&quot;</td></tr><tr><td>2</td><td>&quot;var1&quot;</td><td>&quot;4&quot;</td></tr><tr><td>3</td><td>&quot;var1&quot;</td><td>&quot;5&quot;</td></tr><tr><td>1</td><td>&quot;var2&quot;</td><td>&quot;a&quot;</td></tr><tr><td>2</td><td>&quot;var2&quot;</td><td>&quot;a&quot;</td></tr><tr><td>3</td><td>&quot;var2&quot;</td><td>&quot;b&quot;</td></tr><tr><td>1</td><td>&quot;var3&quot;</td><td>&quot;x&quot;</td></tr><tr><td>2</td><td>&quot;var3&quot;</td><td>&quot;y&quot;</td></tr><tr><td>3</td><td>&quot;var3&quot;</td><td>&quot;z&quot;</td></tr></tbody></table></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[111]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df2</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="s1">&#39;variable&#39;</span><span class="p">,</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">aggregate_function</span> <span class="o">=</span> <span class="s1">&#39;first&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[111]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (3, 4)</small><table border="1" class="dataframe"><thead><tr><th>id</th><th>var1</th><th>var2</th><th>var3</th></tr><tr><td>i64</td><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>1</td><td>&quot;3&quot;</td><td>&quot;a&quot;</td><td>&quot;x&quot;</td></tr><tr><td>2</td><td>&quot;4&quot;</td><td>&quot;a&quot;</td><td>&quot;y&quot;</td></tr><tr><td>3</td><td>&quot;5&quot;</td><td>&quot;b&quot;</td><td>&quot;z&quot;</td></tr></tbody></table></div></div>
+</div>
+</section>
+<section id="Các-hàm-khác">
+<h3><span class="section-number">12.7.3. </span>Các hàm khác<a class="headerlink" href="#Các-hàm-khác" title="Link to this heading"></a></h3>
+<section id="Lag">
+<h4><span class="section-number">12.7.3.1. </span>Lag<a class="headerlink" href="#Lag" title="Link to this heading"></a></h4>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[112]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;date&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+    <span class="s1">&#39;value&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span>
+<span class="p">})</span>
+<span class="n">df</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[112]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (3, 2)</small><table border="1" class="dataframe"><thead><tr><th>date</th><th>value</th></tr><tr><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>1</td><td>6</td></tr><tr><td>2</td><td>7</td></tr><tr><td>3</td><td>8</td></tr></tbody></table></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[113]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tạo biến lead &amp; lag</span>
+<span class="n">df</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
+    <span class="n">lag_1</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">lead_1</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[113]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (3, 4)</small><table border="1" class="dataframe"><thead><tr><th>date</th><th>value</th><th>lag_1</th><th>lead_1</th></tr><tr><td>i64</td><td>i64</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>1</td><td>6</td><td>null</td><td>7</td></tr><tr><td>2</td><td>7</td><td>6</td><td>8</td></tr><tr><td>3</td><td>8</td><td>7</td><td>null</td></tr></tbody></table></div></div>
+</div>
+</section>
+<section id="Rank">
+<h4><span class="section-number">12.7.3.2. </span>Rank<a class="headerlink" href="#Rank" title="Link to this heading"></a></h4>
+<p>Các biến cũng có thể được <code class="docutils literal notranslate"><span class="pre">rank</span></code> đơn giản với method rank như sau</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[114]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;id&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="s1">&#39;var1&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span>
+    <span class="s1">&#39;var2&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;var3&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[115]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_df</span><span class="o">.</span>\
+    <span class="n">with_columns</span><span class="p">(</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;var1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rank</span><span class="p">(</span><span class="s2">&quot;ordinal&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;ordinal_rank&quot;</span><span class="p">),</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;var1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rank</span><span class="p">(</span><span class="s2">&quot;min&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;min_rank&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[115]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (4, 6)</small><table border="1" class="dataframe"><thead><tr><th>id</th><th>var1</th><th>var2</th><th>var3</th><th>ordinal_rank</th><th>min_rank</th></tr><tr><td>i64</td><td>i64</td><td>str</td><td>str</td><td>u32</td><td>u32</td></tr></thead><tbody><tr><td>1</td><td>5</td><td>&quot;a&quot;</td><td>&quot;x&quot;</td><td>3</td><td>3</td></tr><tr><td>2</td><td>4</td><td>&quot;a&quot;</td><td>&quot;y&quot;</td><td>2</td><td>2</td></tr><tr><td>3</td><td>2</td><td>&quot;b&quot;</td><td>&quot;z&quot;</td><td>1</td><td>1</td></tr><tr><td>3</td><td>6</td><td>&quot;c&quot;</td><td>&quot;y&quot;</td><td>4</td><td>4</td></tr></tbody></table></div></div>
+</div>
+</section>
+</section>
+</section>
+<section id="Lazy-evaluation">
+<h2><span class="section-number">12.8. </span>Lazy evaluation<a class="headerlink" href="#Lazy-evaluation" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Polars</span></code> cho phép sử dụng lazy evaluation để tính toán và tổng hợp dữ liệu. Khác với các câu lệnh thông thường chỉ tính toán theo từng câu lệnh. <code class="docutils literal notranslate"><span class="pre">Lazy</span> <span class="pre">evaluation</span></code> cho phép optimize toàn bộ câu lệnh trước khi thực sự thực hiện.</p>
+<p>Có 2 cách để sử dụng <code class="docutils literal notranslate"><span class="pre">lazy</span> <span class="pre">evaluation</span></code>:</p>
+<ul class="simple">
+<li><p>Biến đổi polars dataframe sang lazy</p></li>
+<li><p>Scan file</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[122]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cách 1: Tạo lazy object</span>
+<span class="n">mtcars_pl2</span> <span class="o">=</span> <span class="n">mtcars_pl</span><span class="o">.</span><span class="n">lazy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[137]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Hiển thị plan</span>
+<span class="n">q1</span> <span class="o">=</span> <span class="n">mtcars_pl2</span><span class="o">.</span>\
+    <span class="nb">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;vs&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span>\
+    <span class="n">group_by</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;am&quot;</span><span class="p">))</span><span class="o">.</span>\
+    <span class="n">agg</span><span class="p">(</span>
+        <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;mean_mpg&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+<span class="n">q1</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[137]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<i>naive plan: (run <b>LazyFrame.explain(optimized=True)</b> to see the optimized plan)</i>
+    <p></p>
+    <div>AGGREGATE<p></p>   [col("mpg").mean().alias("mean_mpg")] BY [col("am")] FROM<p></p>  FILTER [(col("vs")) == (1)] FROM<p></p>    DF ["name", "mpg", "cyl", "disp"]; PROJECT */12 COLUMNS; SELECTION: None</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[141]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Thực hiện với collect</span>
+<span class="n">q1</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[141]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (2, 2)</small><table border="1" class="dataframe"><thead><tr><th>am</th><th>mean_mpg</th></tr><tr><td>i64</td><td>f64</td></tr></thead><tbody><tr><td>1</td><td>28.371429</td></tr><tr><td>0</td><td>20.742857</td></tr></tbody></table></div></div>
+</div>
+<hr class="docutils" />
+<p><strong>Cách 2</strong>: Scan file</p>
+<p>Bên cạnh việc tối ưu hóa, polars và lazy evaluation cho phép sử dụng option <code class="docutils literal notranslate"><span class="pre">streaming</span></code> để tính toán từng phần với dữ liệu lớn</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pl</span><span class="o">.</span><span class="n">scan_parquet</span><span class="p">(</span><span class="s2">&quot;file_parquet&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">30</span><span class="p">)</span><span class="o">.</span>
+    <span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">streaming</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="Đọc-&amp;-ghi-dữ-liệu">
+<h2><span class="section-number">12.9. </span>Đọc &amp; ghi dữ liệu<a class="headerlink" href="#Đọc-&-ghi-dữ-liệu" title="Link to this heading"></a></h2>
+<section id="Import-dữ-liệu">
+<h3><span class="section-number">12.9.1. </span>Import dữ liệu<a class="headerlink" href="#Import-dữ-liệu" title="Link to this heading"></a></h3>
+<section id="Kết-nối-với-database">
+<h4><span class="section-number">12.9.1.1. </span>Kết nối với database<a class="headerlink" href="#Kết-nối-với-database" title="Link to this heading"></a></h4>
+<p>Ta có thể đọc dữ liệu từ SQL Server thông qua odbc</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyodbc</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">pyodbc</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+    <span class="sa">r</span><span class="s1">&#39;DRIVER={ODBC Driver 13 for SQL Server};&#39;</span>
+    <span class="sa">r</span><span class="s1">&#39;SERVER=ADMINMI-JTBJEPG;&#39;</span> <span class="c1"># Name of server</span>
+    <span class="sa">r</span><span class="s1">&#39;DATABASE=learningsql;&#39;</span>   <span class="c1"># Data base</span>
+    <span class="sa">r</span><span class="s1">&#39;UID=user_name;&#39;</span>                 <span class="c1"># User</span>
+    <span class="sa">r</span><span class="s1">&#39;PWD=pwd&#39;</span>              <span class="c1"># Password</span>
+    <span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_database</span><span class="p">(</span><span class="s1">&#39;SELECT * FROM ACCOUNT&#39;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span>
+</pre></div>
+</div>
+<p><strong>Ghi dữ liệu vào database</strong>: Khi có một dataframe tên df, ta có thể sử dụng method <code class="docutils literal notranslate"><span class="pre">write_database</span></code> để ghi vào server như sau</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pyodbc_uri</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;mssql+pyodbc://user:pass@server:1433/test?&quot;</span>
+    <span class="s2">&quot;driver=ODBC+Driver+17+for+SQL+Server&quot;</span>
+<span class="p">)</span>
+<span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="n">pyodbc_uri</span><span class="p">,</span> <span class="n">fast_executemany</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">write_database</span><span class="p">(</span>
+    <span class="n">table_name</span><span class="o">=</span><span class="s2">&quot;target_table&quot;</span><span class="p">,</span>
+    <span class="n">connection</span><span class="o">=</span><span class="n">engine</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="Import-từ-file">
+<h4><span class="section-number">12.9.1.2. </span>Import từ file<a class="headerlink" href="#Import-từ-file" title="Link to this heading"></a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;file.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Kiểm tra các kiểu dữ liệu có thể đọc</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[117]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">?</span>pl.read_*
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+pl.read_avro
+pl.read_clipboard
+pl.read_csv
+pl.read_csv_batched
+pl.read_database
+pl.read_database_uri
+pl.read_delta
+pl.read_excel
+pl.read_ipc
+pl.read_ipc_schema
+pl.read_ipc_stream
+pl.read_json
+pl.read_ndjson
+pl.read_ods
+pl.read_parquet
+pl.read_parquet_schema
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Lưu-dữ-liệu">
+<h3><span class="section-number">12.9.2. </span>Lưu dữ liệu<a class="headerlink" href="#Lưu-dữ-liệu" title="Link to this heading"></a></h3>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[118]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;x&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+    <span class="s1">&#39;y&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span>
+    <span class="s1">&#39;group&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<p>Dữ liệu polars có thể lưu trữ dưới nhiều định dạng khác nhau với nhóm methods <code class="docutils literal notranslate"><span class="pre">write_*</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">my_df</span><span class="o">.</span><span class="n">write_excel</span><span class="p">(</span><span class="s1">&#39;test_excel_pdf.xlsx&#39;</span><span class="p">)</span>
+<span class="n">my_df</span><span class="o">.</span><span class="n">write_parquet</span><span class="p">(</span><span class="s1">&#39;test_pq.parquet&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[119]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kiêm tra các cách lưu trữ từ polars</span>
+<span class="o">?</span>my_df.write_*
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+my_df.write_avro
+my_df.write_clipboard
+my_df.write_csv
+my_df.write_database
+my_df.write_delta
+my_df.write_excel
+my_df.write_ipc
+my_df.write_ipc_stream
+my_df.write_json
+my_df.write_ndjson
+my_df.write_parquet
+</pre></div></div>
+</div>
+</section>
+</section>
+<section id="Tài-liệu-tham-khảo">
+<h2><span class="section-number">12.10. </span>Tài liệu tham khảo<a class="headerlink" href="#Tài-liệu-tham-khảo" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a href="#id1"><span class="problematic" id="id3">`https://docs.pola.rs/ &lt;&gt;`__</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="p01-19-so-sanh-python-r.html" class="btn btn-neutral float-left" title="11. So sánh R với Python cơ bản" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="p01-99-tricks-python.html" class="btn btn-neutral float-right" title="13. Các mẹo trong Python" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Anh Hoang Duc.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
