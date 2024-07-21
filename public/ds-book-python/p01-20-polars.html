@@ -98,13 +98,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#Xoay-chiều-dữ-liệu">12.6.2. Xoay chiều dữ liệu</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Ghép-nhiều-cột-với-nhau">12.6.3. Ghép nhiều cột với nhau</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Tách-1-cột-thành-nhiều-cột">12.6.4. Tách 1 cột thành nhiều cột</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Các-hàm-khác">12.6.5. Các hàm khác</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Lag">12.6.5.1. Lag</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#Rank">12.6.5.2. Rank</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#Lazy-evaluation">12.6.6. Lazy evaluation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Map">12.6.7. Map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Biến-lead,-lag-với-shift">12.6.5. Biến lead, lag với <code class="docutils literal notranslate"><span class="pre">shift</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Rank">12.6.6. Rank</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Lazy-evaluation">12.6.7. Lazy evaluation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Map">12.6.8. Map</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#Đọc-&amp;-ghi-dữ-liệu">12.7. Đọc &amp; ghi dữ liệu</a><ul>
@@ -1284,7 +1281,7 @@ shape: (2, 2)
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-C:\Users\Hoang Duc Anh\AppData\Local\Temp\ipykernel_1664\312397274.py:3: DeprecationWarning: `groupby` is deprecated. It has been renamed to `group_by`.
+C:\Users\Hoang Duc Anh\AppData\Local\Temp\ipykernel_16084\312397274.py:3: DeprecationWarning: `groupby` is deprecated. It has been renamed to `group_by`.
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1299,7 +1296,7 @@ C:\Users\Hoang Duc Anh\AppData\Local\Temp\ipykernel_1664\312397274.py:3: Depreca
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (4, 4)</small><table border="1" class="dataframe"><thead><tr><th>am</th><th>vs</th><th>mean_mpg</th><th>sum_wt</th></tr><tr><td>i64</td><td>i64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>0</td><td>0</td><td>15.05</td><td>49.249</td></tr><tr><td>1</td><td>1</td><td>28.371429</td><td>14.198</td></tr><tr><td>1</td><td>0</td><td>19.75</td><td>17.145</td></tr><tr><td>0</td><td>1</td><td>20.742857</td><td>22.36</td></tr></tbody></table></div></div>
+<small>shape: (4, 4)</small><table border="1" class="dataframe"><thead><tr><th>am</th><th>vs</th><th>mean_mpg</th><th>sum_wt</th></tr><tr><td>i64</td><td>i64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>1</td><td>1</td><td>28.371429</td><td>14.198</td></tr><tr><td>0</td><td>0</td><td>15.05</td><td>49.249</td></tr><tr><td>0</td><td>1</td><td>20.742857</td><td>22.36</td></tr><tr><td>1</td><td>0</td><td>19.75</td><td>17.145</td></tr></tbody></table></div></div>
 </div>
 <p>Bên cạnh đó, <code class="docutils literal notranslate"><span class="pre">polars</span></code> còn cho phép tổng hợp rất linh hoạt theo điều kiện. Quay trở lại ví dụ trên, ta có thể đặt ra yêu cầu như sau:</p>
 <ul class="simple">
@@ -1333,7 +1330,7 @@ C:\Users\Hoang Duc Anh\AppData\Local\Temp\ipykernel_1664\312397274.py:3: Depreca
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (4, 4)</small><table border="1" class="dataframe"><thead><tr><th>am</th><th>vs</th><th>sum_mpg</th><th>mean_wt</th></tr><tr><td>i64</td><td>i64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>1</td><td>0</td><td>26.0</td><td>2.755</td></tr><tr><td>0</td><td>1</td><td>68.7</td><td>3.38875</td></tr><tr><td>1</td><td>1</td><td>198.6</td><td>null</td></tr><tr><td>0</td><td>0</td><td>0.0</td><td>null</td></tr></tbody></table></div></div>
+<small>shape: (4, 4)</small><table border="1" class="dataframe"><thead><tr><th>am</th><th>vs</th><th>sum_mpg</th><th>mean_wt</th></tr><tr><td>i64</td><td>i64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>1</td><td>0</td><td>26.0</td><td>2.755</td></tr><tr><td>0</td><td>1</td><td>68.7</td><td>3.38875</td></tr><tr><td>0</td><td>0</td><td>0.0</td><td>null</td></tr><tr><td>1</td><td>1</td><td>198.6</td><td>null</td></tr></tbody></table></div></div>
 </div>
 </section>
 </section>
@@ -1731,10 +1728,8 @@ shape: (3, 2)
 <small>shape: (3, 2)</small><table border="1" class="dataframe"><thead><tr><th>date</th><th>value</th></tr><tr><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>1</td><td>6</td></tr><tr><td>2</td><td>7</td></tr><tr><td>3</td><td>8</td></tr></tbody></table></div></div>
 </div>
 </section>
-<section id="Các-hàm-khác">
-<h3><span class="section-number">12.6.5. </span>Các hàm khác<a class="headerlink" href="#Các-hàm-khác" title="Link to this heading"></a></h3>
-<section id="Lag">
-<h4><span class="section-number">12.6.5.1. </span>Lag<a class="headerlink" href="#Lag" title="Link to this heading"></a></h4>
+<section id="Biến-lead,-lag-với-shift">
+<h3><span class="section-number">12.6.5. </span>Biến lead, lag với <code class="docutils literal notranslate"><span class="pre">shift</span></code><a class="headerlink" href="#Biến-lead,-lag-với-shift" title="Link to this heading"></a></h3>
 <p>Ta có thể tạo các nhóm dữ liệu tịnh tiến n quan sát bằng hàm <code class="docutils literal notranslate"><span class="pre">shift</span></code></p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
@@ -1799,7 +1794,7 @@ shape: (3, 2)
 </div>
 </section>
 <section id="Rank">
-<h4><span class="section-number">12.6.5.2. </span>Rank<a class="headerlink" href="#Rank" title="Link to this heading"></a></h4>
+<h3><span class="section-number">12.6.6. </span>Rank<a class="headerlink" href="#Rank" title="Link to this heading"></a></h3>
 <p>Các biến cũng có thể được <code class="docutils literal notranslate"><span class="pre">rank</span></code> đơn giản với method rank như sau</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[58]:
@@ -1841,9 +1836,8 @@ shape: (3, 2)
 <small>shape: (4, 6)</small><table border="1" class="dataframe"><thead><tr><th>id</th><th>var1</th><th>var2</th><th>var3</th><th>ordinal_rank</th><th>min_rank</th></tr><tr><td>i64</td><td>i64</td><td>str</td><td>str</td><td>u32</td><td>u32</td></tr></thead><tbody><tr><td>1</td><td>5</td><td>&quot;a&quot;</td><td>&quot;x&quot;</td><td>3</td><td>3</td></tr><tr><td>2</td><td>4</td><td>&quot;a&quot;</td><td>&quot;y&quot;</td><td>2</td><td>2</td></tr><tr><td>3</td><td>2</td><td>&quot;b&quot;</td><td>&quot;z&quot;</td><td>1</td><td>1</td></tr><tr><td>3</td><td>6</td><td>&quot;c&quot;</td><td>&quot;y&quot;</td><td>4</td><td>4</td></tr></tbody></table></div></div>
 </div>
 </section>
-</section>
 <section id="Lazy-evaluation">
-<h3><span class="section-number">12.6.6. </span>Lazy evaluation<a class="headerlink" href="#Lazy-evaluation" title="Link to this heading"></a></h3>
+<h3><span class="section-number">12.6.7. </span>Lazy evaluation<a class="headerlink" href="#Lazy-evaluation" title="Link to this heading"></a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">Polars</span></code> cho phép sử dụng lazy evaluation để tính toán và tổng hợp dữ liệu. Khác với các câu lệnh thông thường chỉ tính toán theo từng câu lệnh. <code class="docutils literal notranslate"><span class="pre">Lazy</span> <span class="pre">evaluation</span></code> cho phép optimize toàn bộ câu lệnh trước khi thực sự thực hiện.</p>
 <p>Có 2 cách để sử dụng <code class="docutils literal notranslate"><span class="pre">lazy</span> <span class="pre">evaluation</span></code>:</p>
 <ul class="simple">
@@ -1870,18 +1864,22 @@ shape: (3, 2)
     <span class="n">agg</span><span class="p">(</span>
         <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;mean_mpg&quot;</span><span class="p">)</span>
     <span class="p">)</span>
-<span class="n">q1</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">q1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[61]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
-<div class="output_area rendered_html docutils container">
-<i>naive plan: (run <b>LazyFrame.explain(optimized=True)</b> to see the optimized plan)</i>
-    <p></p>
-    <div>AGGREGATE<p></p>   [col("mpg").mean().alias("mean_mpg")] BY [col("am")] FROM<p></p>  FILTER [(col("vs")) == (1)] FROM<p></p>    DF ["name", "mpg", "cyl", "disp"]; PROJECT */12 COLUMNS; SELECTION: None</div></div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
+
+AGGREGATE
+        [col(&#34;mpg&#34;).mean().alias(&#34;mean_mpg&#34;)] BY [col(&#34;am&#34;)] FROM
+  FILTER [(col(&#34;vs&#34;)) == (1)] FROM
+    DF [&#34;name&#34;, &#34;mpg&#34;, &#34;cyl&#34;, &#34;disp&#34;]; PROJECT */12 COLUMNS; SELECTION: None
+</pre></div></div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[62]:
@@ -1916,7 +1914,7 @@ shape: (3, 2)
 </div>
 </section>
 <section id="Map">
-<h3><span class="section-number">12.6.7. </span>Map<a class="headerlink" href="#Map" title="Link to this heading"></a></h3>
+<h3><span class="section-number">12.6.8. </span>Map<a class="headerlink" href="#Map" title="Link to this heading"></a></h3>
 <p>Polars có thể áp dụng các nhóm hàm map như sau</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[63]:
@@ -1981,7 +1979,7 @@ shape: (3, 2)
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-C:\Users\Hoang Duc Anh\AppData\Local\Temp\ipykernel_1664\3498082010.py:3: PolarsInefficientMapWarning:
+C:\Users\Hoang Duc Anh\AppData\Local\Temp\ipykernel_16084\3498082010.py:3: PolarsInefficientMapWarning:
 Expr.map_elements is significantly slower than the native expressions API.
 Only use if you absolutely CANNOT implement your logic otherwise.
 Replace this expression...
@@ -2626,11 +2624,11 @@ if (window.Jupyter !== undefined) {
 </div>
 <div class="output_area rendered_html docutils container">
 <div id='p1002'>
-  <div id="fd7da40f-b106-4c39-92cb-86a2af0326e0" data-root-id="p1002" style="display: contents;"></div>
+  <div id="c026542d-3485-45e2-8111-8543e8749d2f" data-root-id="p1002" style="display: contents;"></div>
 </div>
 <script type="application/javascript">(function(root) {
-  var docs_json = {"22784a91-0d87-4ea5-9c37-0d738fc8cd6b":{"version":"3.4.1","title":"Bokeh Application","roots":[{"type":"object","name":"panel.models.browser.BrowserInfo","id":"p1002"},{"type":"object","name":"panel.models.comm_manager.CommManager","id":"p1003","attributes":{"plot_id":"p1002","comm_id":"ab49c235e3c141a18168690ae66cfafc","client_comm_id":"deec9e7612454f7d803c2bf1332803b0"}}],"defs":[{"type":"model","name":"ReactiveHTML1"},{"type":"model","name":"FlexBox1","properties":[{"name":"align_content","kind":"Any","default":"flex-start"},{"name":"align_items","kind":"Any","default":"flex-start"},{"name":"flex_direction","kind":"Any","default":"row"},{"name":"flex_wrap","kind":"Any","default":"wrap"},{"name":"gap","kind":"Any","default":""},{"name":"justify_content","kind":"Any","default":"flex-start"}]},{"type":"model","name":"FloatPanel1","properties":[{"name":"config","kind":"Any","default":{"type":"map"}},{"name":"contained","kind":"Any","default":true},{"name":"position","kind":"Any","default":"right-top"},{"name":"offsetx","kind":"Any","default":null},{"name":"offsety","kind":"Any","default":null},{"name":"theme","kind":"Any","default":"primary"},{"name":"status","kind":"Any","default":"normalized"}]},{"type":"model","name":"GridStack1","properties":[{"name":"mode","kind":"Any","default":"warn"},{"name":"ncols","kind":"Any","default":null},{"name":"nrows","kind":"Any","default":null},{"name":"allow_resize","kind":"Any","default":true},{"name":"allow_drag","kind":"Any","default":true},{"name":"state","kind":"Any","default":[]}]},{"type":"model","name":"drag1","properties":[{"name":"slider_width","kind":"Any","default":5},{"name":"slider_color","kind":"Any","default":"black"},{"name":"value","kind":"Any","default":50}]},{"type":"model","name":"click1","properties":[{"name":"terminal_output","kind":"Any","default":""},{"name":"debug_name","kind":"Any","default":""},{"name":"clears","kind":"Any","default":0}]},{"type":"model","name":"FastWrapper1","properties":[{"name":"object","kind":"Any","default":null},{"name":"style","kind":"Any","default":null}]},{"type":"model","name":"NotificationAreaBase1","properties":[{"name":"js_events","kind":"Any","default":{"type":"map"}},{"name":"position","kind":"Any","default":"bottom-right"},{"name":"_clear","kind":"Any","default":0}]},{"type":"model","name":"NotificationArea1","properties":[{"name":"js_events","kind":"Any","default":{"type":"map"}},{"name":"notifications","kind":"Any","default":[]},{"name":"position","kind":"Any","default":"bottom-right"},{"name":"_clear","kind":"Any","default":0},{"name":"types","kind":"Any","default":[{"type":"map","entries":[["type","warning"],["background","#ffc107"],["icon",{"type":"map","entries":[["className","fas fa-exclamation-triangle"],["tagName","i"],["color","white"]]}]]},{"type":"map","entries":[["type","info"],["background","#007bff"],["icon",{"type":"map","entries":[["className","fas fa-info-circle"],["tagName","i"],["color","white"]]}]]}]}]},{"type":"model","name":"Notification","properties":[{"name":"background","kind":"Any","default":null},{"name":"duration","kind":"Any","default":3000},{"name":"icon","kind":"Any","default":null},{"name":"message","kind":"Any","default":""},{"name":"notification_type","kind":"Any","default":null},{"name":"_destroyed","kind":"Any","default":false}]},{"type":"model","name":"TemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"BootstrapTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"TemplateEditor1","properties":[{"name":"layout","kind":"Any","default":[]}]},{"type":"model","name":"MaterialTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"copy_to_clipboard1","properties":[{"name":"fill","kind":"Any","default":"none"},{"name":"value","kind":"Any","default":null}]}]}};
-  var render_items = [{"docid":"22784a91-0d87-4ea5-9c37-0d738fc8cd6b","roots":{"p1002":"fd7da40f-b106-4c39-92cb-86a2af0326e0"},"root_ids":["p1002"]}];
+  var docs_json = {"daa06983-4a38-4918-a4c8-33cecbc318ba":{"version":"3.4.1","title":"Bokeh Application","roots":[{"type":"object","name":"panel.models.browser.BrowserInfo","id":"p1002"},{"type":"object","name":"panel.models.comm_manager.CommManager","id":"p1003","attributes":{"plot_id":"p1002","comm_id":"315102f26fdc46859ee760259f36b602","client_comm_id":"42a526c115b14eefbb262b62033378eb"}}],"defs":[{"type":"model","name":"ReactiveHTML1"},{"type":"model","name":"FlexBox1","properties":[{"name":"align_content","kind":"Any","default":"flex-start"},{"name":"align_items","kind":"Any","default":"flex-start"},{"name":"flex_direction","kind":"Any","default":"row"},{"name":"flex_wrap","kind":"Any","default":"wrap"},{"name":"gap","kind":"Any","default":""},{"name":"justify_content","kind":"Any","default":"flex-start"}]},{"type":"model","name":"FloatPanel1","properties":[{"name":"config","kind":"Any","default":{"type":"map"}},{"name":"contained","kind":"Any","default":true},{"name":"position","kind":"Any","default":"right-top"},{"name":"offsetx","kind":"Any","default":null},{"name":"offsety","kind":"Any","default":null},{"name":"theme","kind":"Any","default":"primary"},{"name":"status","kind":"Any","default":"normalized"}]},{"type":"model","name":"GridStack1","properties":[{"name":"mode","kind":"Any","default":"warn"},{"name":"ncols","kind":"Any","default":null},{"name":"nrows","kind":"Any","default":null},{"name":"allow_resize","kind":"Any","default":true},{"name":"allow_drag","kind":"Any","default":true},{"name":"state","kind":"Any","default":[]}]},{"type":"model","name":"drag1","properties":[{"name":"slider_width","kind":"Any","default":5},{"name":"slider_color","kind":"Any","default":"black"},{"name":"value","kind":"Any","default":50}]},{"type":"model","name":"click1","properties":[{"name":"terminal_output","kind":"Any","default":""},{"name":"debug_name","kind":"Any","default":""},{"name":"clears","kind":"Any","default":0}]},{"type":"model","name":"FastWrapper1","properties":[{"name":"object","kind":"Any","default":null},{"name":"style","kind":"Any","default":null}]},{"type":"model","name":"NotificationAreaBase1","properties":[{"name":"js_events","kind":"Any","default":{"type":"map"}},{"name":"position","kind":"Any","default":"bottom-right"},{"name":"_clear","kind":"Any","default":0}]},{"type":"model","name":"NotificationArea1","properties":[{"name":"js_events","kind":"Any","default":{"type":"map"}},{"name":"notifications","kind":"Any","default":[]},{"name":"position","kind":"Any","default":"bottom-right"},{"name":"_clear","kind":"Any","default":0},{"name":"types","kind":"Any","default":[{"type":"map","entries":[["type","warning"],["background","#ffc107"],["icon",{"type":"map","entries":[["className","fas fa-exclamation-triangle"],["tagName","i"],["color","white"]]}]]},{"type":"map","entries":[["type","info"],["background","#007bff"],["icon",{"type":"map","entries":[["className","fas fa-info-circle"],["tagName","i"],["color","white"]]}]]}]}]},{"type":"model","name":"Notification","properties":[{"name":"background","kind":"Any","default":null},{"name":"duration","kind":"Any","default":3000},{"name":"icon","kind":"Any","default":null},{"name":"message","kind":"Any","default":""},{"name":"notification_type","kind":"Any","default":null},{"name":"_destroyed","kind":"Any","default":false}]},{"type":"model","name":"TemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"BootstrapTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"TemplateEditor1","properties":[{"name":"layout","kind":"Any","default":[]}]},{"type":"model","name":"MaterialTemplateActions1","properties":[{"name":"open_modal","kind":"Any","default":0},{"name":"close_modal","kind":"Any","default":0}]},{"type":"model","name":"copy_to_clipboard1","properties":[{"name":"fill","kind":"Any","default":"none"},{"name":"value","kind":"Any","default":null}]}]}};
+  var render_items = [{"docid":"daa06983-4a38-4918-a4c8-33cecbc318ba","roots":{"p1002":"c026542d-3485-45e2-8111-8543e8749d2f"},"root_ids":["p1002"]}];
   var docs = Object.values(docs_json)
   if (!docs) {
     return

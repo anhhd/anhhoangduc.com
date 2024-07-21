@@ -695,10 +695,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#auc" id="toc-auc" class="nav-link active" data-scroll-target="#auc"><span class="header-section-number">35.1</span> AUC</a></li>
   <li><a href="#confusion-matrix" id="toc-confusion-matrix" class="nav-link" data-scroll-target="#confusion-matrix"><span class="header-section-number">35.2</span> Confusion Matrix</a></li>
-  <li><a href="#lựa-chọn-cut-off" id="toc-lựa-chọn-cut-off" class="nav-link" data-scroll-target="#lựa-chọn-cut-off"><span class="header-section-number">35.3</span> Lựa chọn cut-off</a>
+  <li><a href="#sâu-hơn-về-gain-lift" id="toc-sâu-hơn-về-gain-lift" class="nav-link" data-scroll-target="#sâu-hơn-về-gain-lift"><span class="header-section-number">35.3</span> Sâu hơn về gain &amp; lift</a></li>
+  <li><a href="#lựa-chọn-cut-off" id="toc-lựa-chọn-cut-off" class="nav-link" data-scroll-target="#lựa-chọn-cut-off"><span class="header-section-number">35.4</span> Lựa chọn cut-off</a>
   <ul>
-  <li><a href="#dữ-liệu-imbalance" id="toc-dữ-liệu-imbalance" class="nav-link" data-scroll-target="#dữ-liệu-imbalance"><span class="header-section-number">35.3.1</span> Dữ liệu imbalance</a></li>
-  <li><a href="#kolmogorovsmirnov-statistics" id="toc-kolmogorovsmirnov-statistics" class="nav-link" data-scroll-target="#kolmogorovsmirnov-statistics"><span class="header-section-number">35.3.2</span> Kolmogorov–Smirnov statistics</a></li>
+  <li><a href="#dữ-liệu-imbalance" id="toc-dữ-liệu-imbalance" class="nav-link" data-scroll-target="#dữ-liệu-imbalance"><span class="header-section-number">35.4.1</span> Dữ liệu imbalance</a></li>
+  <li><a href="#kolmogorovsmirnov-statistics" id="toc-kolmogorovsmirnov-statistics" class="nav-link" data-scroll-target="#kolmogorovsmirnov-statistics"><span class="header-section-number">35.4.2</span> Kolmogorov–Smirnov statistics</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -789,14 +790,244 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"prob1"</span>, <span class="st">"class"</span>, <span class="st">"prob2"</span>, <span class="st">"class"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="lựa-chọn-cut-off" class="level2" data-number="35.3">
-<h2 data-number="35.3" class="anchored" data-anchor-id="lựa-chọn-cut-off"><span class="header-section-number">35.3</span> Lựa chọn cut-off</h2>
+<section id="sâu-hơn-về-gain-lift" class="level2" data-number="35.3">
+<h2 data-number="35.3" class="anchored" data-anchor-id="sâu-hơn-về-gain-lift"><span class="header-section-number">35.3</span> Sâu hơn về gain &amp; lift</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model_performance <span class="ot">&lt;-</span> <span class="cf">function</span>(data, </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                              truth, </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                              pred,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                              predict_value){</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Set levels ----</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>({{truth}} <span class="sc">:</span><span class="er">=</span> <span class="fu">as.factor</span>({{truth}}))</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Check event level ----</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  level <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">pull</span>({{truth}}) <span class="sc">%&gt;%</span> levels</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span>predict_value <span class="sc">%in%</span> level){</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="st">"Check your prediction value - it is not in the actual value"</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (level[<span class="dv">1</span>] <span class="sc">==</span> predict_value){</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    event <span class="ot">=</span> <span class="st">"first"</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    level[<span class="dv">2</span>] <span class="sc">==</span> predict_value</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  ) {</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    event <span class="ot">=</span> <span class="st">"second"</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ROC curve ----</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  auc_captured <span class="ot">&lt;-</span> <span class="fu">roc_auc</span>(data, {{truth}}, {{pred}}, <span class="at">event_level =</span> event) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pull</span>(.estimate)</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>  roc_plot <span class="ot">&lt;-</span> <span class="fu">roc_curve</span>(data, {{truth}}, {{pred}}, <span class="at">event_level =</span> event) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">autoplot</span>() <span class="sc">+</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"ROC chart"</span>,</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="fu">paste0</span>(<span class="st">"AUC: "</span>, <span class="fu">round</span>(auc_captured, <span class="dv">3</span>)))</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Lift curve ----</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>  lift_plot <span class="ot">&lt;-</span> <span class="fu">lift_curve</span>(data, {{truth}}, {{pred}}, <span class="at">event_level =</span> event) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">autoplot</span>() <span class="sc">+</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Lift chart"</span>) <span class="sc">+</span></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Gain curve ----</span></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>  gain_captured <span class="ot">&lt;-</span> <span class="fu">gain_capture</span>(data, {{truth}}, {{pred}}, <span class="at">event_level =</span> event) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pull</span>(.estimate)</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">gain_curve</span>(data, {{truth}}, {{pred}}, <span class="at">event_level =</span> event) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">lift =</span> .percent_found<span class="sc">/</span>.percent_tested)</span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>  gain_plot <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">autoplot</span>() <span class="sc">+</span></span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Gain chart"</span>,</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="fu">paste0</span>(<span class="st">"Gain captured: "</span>, <span class="fu">round</span>(gain_captured, <span class="dv">3</span>))) <span class="sc">+</span></span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Gain table ----</span></span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>  <span class="co"># step_obs &lt;- floor(100/gain_step * 0.01 * 500)</span></span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>  gain_tbl <span class="ot">&lt;-</span> df </span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>    <span class="co"># slice(seq(0, 501, by = step_obs)) %&gt;% </span></span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>    <span class="co"># mutate_at(vars(.percent_tested, .percent_found), round)  </span></span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>    <span class="co"># filter(.n &gt;0)</span></span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(gain_tbl) <span class="ot">&lt;-</span> <span class="fu">names</span>(gain_tbl) <span class="sc">%&gt;%</span> <span class="fu">str_replace_all</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">."</span>, <span class="st">""</span>) </span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Return result</span></span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">roc_plot =</span> roc_plot,</span>
+<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">gain_plot =</span> gain_plot,</span>
+<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">lift_plot =</span> lift_plot,</span>
+<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">gain_tbl =</span> gain_tbl</span>
+<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(result)</span>
+<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a>  <span class="at">prob1 =</span> <span class="fu">c</span>(<span class="fu">runif</span>(<span class="dv">200</span>, <span class="fl">0.8</span>, <span class="dv">1</span>), <span class="fu">runif</span>(<span class="dv">800</span>, <span class="fl">0.01</span>, <span class="fl">0.6</span>)),</span>
+<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a>  <span class="at">prob2 =</span> <span class="fu">c</span>(<span class="fu">runif</span>(<span class="dv">200</span>, <span class="fl">0.9</span>, <span class="dv">1</span>), <span class="fu">abs</span>(<span class="fu">rnorm</span>(<span class="dv">800</span>, <span class="fl">0.5</span>, <span class="fl">0.1</span>))),</span>
+<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a>  <span class="at">truth1 =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"convert"</span>, <span class="dv">200</span>), <span class="fu">rep</span>(<span class="st">"no"</span>, <span class="dv">800</span>)),</span>
+<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a>  <span class="at">truth2 =</span> </span>
+<span id="cb10-79"><a href="#cb10-79" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(</span>
+<span id="cb10-80"><a href="#cb10-80" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rep</span>(<span class="st">"convert"</span>, <span class="dv">50</span>),</span>
+<span id="cb10-81"><a href="#cb10-81" aria-hidden="true" tabindex="-1"></a>      <span class="fu">sample</span>(<span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"convert"</span>, <span class="dv">2</span>), <span class="fu">rep</span>(<span class="st">"no"</span>, <span class="dv">8</span>)), <span class="dv">950</span>, <span class="at">replace =</span> T)  </span>
+<span id="cb10-82"><a href="#cb10-82" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb10-83"><a href="#cb10-83" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-84"><a href="#cb10-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-85"><a href="#cb10-85" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     prob1             prob2           truth1             truth2         
+ Min.   :0.01084   Min.   :0.2193   Length:1000        Length:1000       
+ 1st Qu.:0.18608   1st Qu.:0.4504   Class :character   Class :character  
+ Median :0.38784   Median :0.5354   Mode  :character   Mode  :character  
+ Mean   :0.42621   Mean   :0.5903                                        
+ 3rd Qu.:0.56976   3rd Qu.:0.6459                                        
+ Max.   :0.99922   Max.   :0.9996                                        </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">model_performance</span>(df, truth1, prob1, <span class="at">predict_value =</span> <span class="st">"convert"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>result<span class="sc">$</span>lift_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-50-chat-luong-mo-hinh_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>result<span class="sc">$</span>gain_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-50-chat-luong-mo-hinh_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>result<span class="sc">$</span>gain_tbl <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">n_events</th>
+<th style="text-align: right;">percent_tested</th>
+<th style="text-align: right;">percent_found</th>
+<th style="text-align: right;">lift</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">NaN</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">2.0</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">2.5</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.7</td>
+<td style="text-align: right;">3.5</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.8</td>
+<td style="text-align: right;">4.0</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">4.5</td>
+<td style="text-align: right;">5</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>result<span class="sc">$</span>roc_plot <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Perfect model"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-50-chat-luong-mo-hinh_files/figure-html/unnamed-chunk-5-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Model 2</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">model_performance</span>(df, truth2, prob1, <span class="at">predict_value =</span> <span class="st">"convert"</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>result<span class="sc">$</span>lift_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-50-chat-luong-mo-hinh_files/figure-html/unnamed-chunk-5-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>result<span class="sc">$</span>gain_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-50-chat-luong-mo-hinh_files/figure-html/unnamed-chunk-5-5.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>result<span class="sc">$</span>gain_tbl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,001 × 5
+       n n_events percent_tested percent_found   lift
+   &lt;dbl&gt;    &lt;dbl&gt;          &lt;dbl&gt;         &lt;dbl&gt;  &lt;dbl&gt;
+ 1     0        0            0           0     NaN   
+ 2     1        1            0.1         0.417   4.17
+ 3     2        2            0.2         0.833   4.17
+ 4     3        2            0.3         0.833   2.78
+ 5     4        3            0.4         1.25    3.12
+ 6     5        3            0.5         1.25    2.5 
+ 7     6        4            0.6         1.67    2.78
+ 8     7        4            0.7         1.67    2.38
+ 9     8        4            0.8         1.67    2.08
+10     9        4            0.9         1.67    1.85
+# ℹ 991 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>result<span class="sc">$</span>roc_plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="p03-50-chat-luong-mo-hinh_files/figure-html/unnamed-chunk-5-6.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="lựa-chọn-cut-off" class="level2" data-number="35.4">
+<h2 data-number="35.4" class="anchored" data-anchor-id="lựa-chọn-cut-off"><span class="header-section-number">35.4</span> Lựa chọn cut-off</h2>
 <p>Như vậy, khi nắm được rằng giá trị tuyệt đối của điểm score không ảnh hưởng nhiều đến chất lượng mô hình, ta có thể tập trung vào việc lựa chọn điểm cut-off để dự báo <code>positive class</code>.</p>
 <p>Việc lựa chọn cut-off tỏng thực tế hoàn toàn phụ thuộc vào khẩu vị rủi ro và năng lực triển khai của đơn vị. Khi giải thích cho đơn vị kinh doanh, ứng dụng quan trọng nhất là <code>decile table</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modeldata)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(two_class_example) </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>two_class_example</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modeldata)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(two_class_example) </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>two_class_example</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     truth       Class1       Class2 predicted
 1   Class2 3.589243e-03 9.964108e-01    Class2
@@ -1300,41 +1531,108 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 499 Class2 8.261814e-02 9.173819e-01    Class2
 500 Class1 9.425177e-01 5.748227e-02    Class1</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">gain_curve</span>(two_class_example, truth, Class1)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">lift_curve</span>(two_class_example, truth, Class1) </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df1 <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(df2, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">".n"</span>, <span class="st">".n_events"</span>, <span class="st">".percent_tested"</span>))</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>decile_index <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>) <span class="sc">*</span> <span class="fu">nrow</span>(df))</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">slice</span>(decile_index)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 10 × 5
-      .n .n_events .percent_tested .percent_found .lift
-   &lt;dbl&gt;     &lt;dbl&gt;           &lt;dbl&gt;          &lt;dbl&gt; &lt;dbl&gt;
- 1    49        49             9.8           19.0  1.94
- 2    99        97            19.8           37.6  1.90
- 3   149       146            29.8           56.6  1.90
- 4   199       190            39.8           73.6  1.85
- 5   249       217            49.8           84.1  1.69
- 6   299       236            59.8           91.5  1.53
- 7   349       249            69.8           96.5  1.38
- 8   399       257            79.8           99.6  1.25
- 9   449       258            89.8          100    1.11
-10   500       258           100            100    1   </code></pre>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>df1 <span class="ot">&lt;-</span> <span class="fu">gain_curve</span>(two_class_example, truth, Class1)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">lift_curve</span>(two_class_example, truth, Class1) </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df1 <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(df2, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">".n"</span>, <span class="st">".n_events"</span>, <span class="st">".percent_tested"</span>))</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">slice</span>(<span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>decile_index <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">1</span>, <span class="at">by =</span> <span class="fl">0.1</span>) <span class="sc">*</span> <span class="fu">nrow</span>(df))</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">slice</span>(decile_index) <span class="sc">%&gt;%</span> knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">.n</th>
+<th style="text-align: right;">.n_events</th>
+<th style="text-align: right;">.percent_tested</th>
+<th style="text-align: right;">.percent_found</th>
+<th style="text-align: right;">.lift</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">19.37984</td>
+<td style="text-align: right;">1.937984</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">98</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">37.98450</td>
+<td style="text-align: right;">1.899225</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">150</td>
+<td style="text-align: right;">147</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">56.97674</td>
+<td style="text-align: right;">1.899225</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">190</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">73.64341</td>
+<td style="text-align: right;">1.841085</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">250</td>
+<td style="text-align: right;">218</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">84.49612</td>
+<td style="text-align: right;">1.689922</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">237</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">91.86047</td>
+<td style="text-align: right;">1.531008</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">350</td>
+<td style="text-align: right;">250</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">96.89922</td>
+<td style="text-align: right;">1.384275</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">400</td>
+<td style="text-align: right;">257</td>
+<td style="text-align: right;">80</td>
+<td style="text-align: right;">99.61240</td>
+<td style="text-align: right;">1.245155</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">450</td>
+<td style="text-align: right;">258</td>
+<td style="text-align: right;">90</td>
+<td style="text-align: right;">100.00000</td>
+<td style="text-align: right;">1.111111</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">500</td>
+<td style="text-align: right;">258</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">100.00000</td>
+<td style="text-align: right;">1.000000</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <p><strong>Giải thích</strong>:</p>
 <ul>
-<li>Toàn bộ dữ liệu có 200 quan sát (tổng cột <code>total</code>), trong đó có 93 trường hợp positive, ứng với tỷ lệ positive toàn tập là 43.5%</li>
-<li>Trong top 10% đầu tiên, có 16/20 trường hợp dự báo đúng, ứng với tỷ lệ posittive lũy kế là 0.8. Việc sử dụng top 10% dự báo sẽ có tỷ lệ chuyển đổi 80% (cột `response rate``), cao hơn 1.72 lần so với sử dụng ngẫu nhiên khách hàng trong marketing (<span class="math inline">\(liift = \frac{0.8}{0.465} = 1.72\)</span>)</li>
-<li>Trong top 10% tiếp theo (decile 2), có 17/20 trường hợp dự báo đúng, ứng với <code>response_rate</code> của nhóm là 0.85. Việc sử dụng top 20% khách hàng sẽ có tỷ lệ chuyển đổi lũy kế là 0.825 và lift là 1.77 (<span class="math inline">\(1.77=\frac{0.825}{0.465}\)</span>)</li>
+<li>Toàn bộ dữ liệu có 500 quan sát (<code>.n</code>), trong đó có 258 trường hợp xảy ra sự kiện, ứng với tỷ lệ positive toàn tập là 51.6%</li>
+<li>Trong top 10% đầu tiên, có 50/50 trường hợp dự báo đúng, ứng với tỷ lệ posittive lũy kế là 19.37% Việc sử dụng top 10% dự báo sẽ có tỷ lệ chuyển đổi 100%, cao hơn 1.793 lần so với sử dụng ngẫu nhiên khách hàng trong marketing (<span class="math inline">\(liift = \frac{100}{51.6} = 1.937\)</span>)</li>
+<li>Trong top 10% tiếp theo (decile 2), có 98/100 lũy kế dự báo đúng, ứng với <code>response_rate</code> của nhóm là 0.98. Việc sử dụng top 20% khách hàng sẽ có tỷ lệ chuyển đổi lũy kế là 98% và lift là 1.899 (<span class="math inline">\(1.899=\frac{0.98}{0.516}\)</span>)</li>
 </ul>
 <p>Tương ứng như vậy, chỉ số <code>lift</code> sẽ giảm dần xuống đến 1.</p>
-<p>Với ví dụ trên, nếu như phía kinh doanh chỉ có khả năng khai thác 20K (10%) khách hàng điểm cao nhất, thì ta nên đề xuất điểm cut-off là top 10%. Tương tự, nếu triển khai digital markeking với số lượng đông hơn, có thể đẩy 30-50% dữ liệu toàn tập (ứng với 30%-50% khách hàng tiềm năng nhất).</p>
-<blockquote class="blockquote">
-<p><strong>Lưu ý</strong>: Mô hình trong ví dụ trên chưa phải là mô hình tốt nhất có thể có do lift không giảm dần mà lại tăng ở decile 2 và 3. Khi xây dựng mô hình tốt, lift sẽ giảm dần.</p>
-</blockquote>
 <hr>
 <p><strong>Lưu ý</strong>: Việc ứng dụng dự báo cho bán chéo, giữ chân khách hàng và chấm điểm tín dụng sẽ có các khác biệt cơ bản sau:</p>
 <ul>
@@ -1343,27 +1641,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Với mô hình chấm điểm tín dụng</strong>, lựa chọn điểm cut-off cần phải được sử dụng khéo léo do chi phí ròng nếu dự báo sai cao hơn 2 ứng dụng trên rất nhiều (do không thu hồi được nợ).</li>
 </ul>
 <p>Để đánh giá được chính xác hiệu quả do việc sử dụng mô hình dự báo đem lại, ta phải hết sức lưu ý và nắm rõ quy trình áp dụng kết quả dự báo vào các hoạt động ứng dụng trong kinh doanh.</p>
-<section id="dữ-liệu-imbalance" class="level3" data-number="35.3.1">
-<h3 data-number="35.3.1" class="anchored" data-anchor-id="dữ-liệu-imbalance"><span class="header-section-number">35.3.1</span> Dữ liệu imbalance</h3>
+<section id="dữ-liệu-imbalance" class="level3" data-number="35.4.1">
+<h3 data-number="35.4.1" class="anchored" data-anchor-id="dữ-liệu-imbalance"><span class="header-section-number">35.4.1</span> Dữ liệu imbalance</h3>
 <p>Với các bài toán có dữ liệu bất cân xứng cao, ta cần lưu ý thực hiện <code>down sampling</code> trước khi xây dựng mô hình.</p>
 </section>
-<section id="kolmogorovsmirnov-statistics" class="level3" data-number="35.3.2">
-<h3 data-number="35.3.2" class="anchored" data-anchor-id="kolmogorovsmirnov-statistics"><span class="header-section-number">35.3.2</span> Kolmogorov–Smirnov statistics</h3>
+<section id="kolmogorovsmirnov-statistics" class="level3" data-number="35.4.2">
+<h3 data-number="35.4.2" class="anchored" data-anchor-id="kolmogorovsmirnov-statistics"><span class="header-section-number">35.4.2</span> Kolmogorov–Smirnov statistics</h3>
 <p>Chỉ số thống kê Kolmogorov-Smirnov là chỉ số khác để đo lường chất lượng mô hình. Chỉ số này cho ta biết được liệu phân phối của của nhóm <em>positive</em> có thực sự khác nhóm <em>negative</em> hay không.</p>
 <p>Chỉ số KS được đo lường bằng khoảng cách lớn nhất giữa hai đường phân phối lũy kế xác suất trên hai class. Khi xây dựng mô hình, KS có thể được tính theo công thức sau.</p>
 <p><span class="math display">\[\text{KS} = \text{max(abs(tpr - fpr))}\tag{9}\]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pos_class <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.8</span>, <span class="fl">0.75</span>, <span class="fl">0.7</span>, <span class="fl">0.55</span>, <span class="fl">0.4</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>pos_class</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>pos_class <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.8</span>, <span class="fl">0.75</span>, <span class="fl">0.7</span>, <span class="fl">0.55</span>, <span class="fl">0.4</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>pos_class</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.80 0.75 0.70 0.55 0.40</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>neg_class <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.4</span>, <span class="fl">0.3</span>, <span class="fl">0.2</span>, <span class="fl">0.15</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>neg_class</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>neg_class <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">0.7</span>, <span class="fl">0.4</span>, <span class="fl">0.3</span>, <span class="fl">0.2</span>, <span class="fl">0.15</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>neg_class</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.70 0.40 0.30 0.20 0.15</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ks.test</span>(pos_class, neg_class, <span class="at">alternative =</span> <span class="st">"greater"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ks.test</span>(pos_class, neg_class, <span class="at">alternative =</span> <span class="st">"greater"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Exact two-sample Kolmogorov-Smirnov test

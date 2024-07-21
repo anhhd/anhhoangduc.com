@@ -707,7 +707,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#lưu-và-load-mô-hình" id="toc-lưu-và-load-mô-hình" class="nav-link" data-scroll-target="#lưu-và-load-mô-hình"><span class="header-section-number">25.3.10</span> Lưu và load mô hình</a></li>
   </ul></li>
   <li><a href="#tìm-kiếm-mô-hình-tự-động" id="toc-tìm-kiếm-mô-hình-tự-động" class="nav-link" data-scroll-target="#tìm-kiếm-mô-hình-tự-động"><span class="header-section-number">25.4</span> Tìm kiếm mô hình tự động</a></li>
-  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">25.5</span> Tài liệu tham khảo</a></li>
+  <li><a href="#h2o-flow" id="toc-h2o-flow" class="nav-link" data-scroll-target="#h2o-flow"><span class="header-section-number">25.5</span> H2o Flow</a></li>
+  <li><a href="#tài-liệu-tham-khảo" id="toc-tài-liệu-tham-khảo" class="nav-link" data-scroll-target="#tài-liệu-tham-khảo"><span class="header-section-number">25.6</span> Tài liệu tham khảo</a></li>
   </ul>
 </nav>
     </div>
@@ -750,7 +751,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <ul>
-<li>Download &amp; cài đặt Java <a href="">https://www.java.com/download/ie_manual.jsp</a></li>
+<li>Download &amp; cài đặt Java <a href="">https://www.oracle.com/java/technologies/downloads/</a></li>
 </ul>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
@@ -779,14 +780,14 @@ sudo apt install default-jdk</code></pre>
 <pre><code> Connection successful!
 
 R is connected to the H2O cluster: 
-    H2O cluster uptime:         21 minutes 19 seconds 
+    H2O cluster uptime:         1 hours 18 minutes 
     H2O cluster timezone:       Etc/UTC 
     H2O data parsing timezone:  UTC 
     H2O cluster version:        3.42.0.2 
-    H2O cluster version age:    6 months and 1 day 
-    H2O cluster name:           H2O_started_from_R_jovyan_jew525 
+    H2O cluster version age:    11 months and 25 days 
+    H2O cluster name:           H2O_started_from_R_jovyan_ydg016 
     H2O cluster total nodes:    1 
-    H2O cluster total memory:   3.97 GB 
+    H2O cluster total memory:   3.86 GB 
     H2O cluster total cores:    2 
     H2O cluster allowed cores:  2 
     H2O cluster healthy:        TRUE 
@@ -797,21 +798,21 @@ R is connected to the H2O cluster:
     R Version:                  R version 4.3.0 (2023-04-21) </code></pre>
 </div>
 </div>
-<p><strong>Lưu ý</strong>: Trong trường hợp chúng ta muốn tắt H2O trên R, chúng ta có thể sử dụng câu lệnh sau:</p>
+<p><strong>Lưu ý</strong>: Trong trường hợp chúng ta muốn tắt H2O cluster, chúng ta có thể sử dụng câu lệnh sau:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.shutdown</span>(<span class="at">prompt =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="thực-hành-với-r" class="level2" data-number="25.3">
 <h2 data-number="25.3" class="anchored" data-anchor-id="thực-hành-với-r"><span class="header-section-number">25.3</span> Thực hành với R</h2>
-<p>Để thực hành xây dựng mô hình dự báo với H2O, chúng ta sẽ sử dụng dữ liệu có sẵn trong <code>R</code> - <code>GermanCredit</code> trong package <strong>caret</strong>.</p>
+<p>Để thực hành xây dựng mô hình dự báo với H2O, chúng ta sẽ sử dụng dữ liệu có sẵn trong <code>R</code> - <code>credit_data</code> trong package <strong>modeldata</strong>.</p>
 <p>Đây là dữ liệu ghi nhận về lịch sử vay của khách hàng, với các 61 biến đầu vào cùng với biến đầu ra <code>Class</code> ghi nhận thực tế là các khoản vay đó có phải là khoản nợ xấu hay không. Chúng ta sẽ dự báo khoản vay nào không có nợ xấu.</p>
 <section id="lấy-dữ-liệu" class="level3" data-number="25.3.1">
 <h3 data-number="25.3.1" class="anchored" data-anchor-id="lấy-dữ-liệu"><span class="header-section-number">25.3.1</span> Lấy dữ liệu</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 1: Lấy dữ liệu</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"GermanCredit"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modeldata)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"credit_data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="kiểm-tra-dữ-liệu" class="level3" data-number="25.3.2">
@@ -820,86 +821,38 @@ R is connected to the H2O cluster:
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 2: Kiểm tra dữ liệu</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra định dạng các biến trong tập dữ liệu</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>GermanCredit <span class="sc">%&gt;%</span> str</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>credit_data <span class="sc">%&gt;%</span> str</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>'data.frame':   1000 obs. of  62 variables:
- $ Duration                              : int  6 48 12 42 24 36 24 36 12 30 ...
- $ Amount                                : int  1169 5951 2096 7882 4870 9055 2835 6948 3059 5234 ...
- $ InstallmentRatePercentage             : int  4 2 2 2 3 2 3 2 2 4 ...
- $ ResidenceDuration                     : int  4 2 3 4 4 4 4 2 4 2 ...
- $ Age                                   : int  67 22 49 45 53 35 53 35 61 28 ...
- $ NumberExistingCredits                 : int  2 1 1 1 2 1 1 1 1 2 ...
- $ NumberPeopleMaintenance               : int  1 1 2 2 2 2 1 1 1 1 ...
- $ Telephone                             : num  0 1 1 1 1 0 1 0 1 1 ...
- $ ForeignWorker                         : num  1 1 1 1 1 1 1 1 1 1 ...
- $ Class                                 : Factor w/ 2 levels "Bad","Good": 2 1 2 2 1 2 2 2 2 1 ...
- $ CheckingAccountStatus.lt.0            : num  1 0 0 1 1 0 0 0 0 0 ...
- $ CheckingAccountStatus.0.to.200        : num  0 1 0 0 0 0 0 1 0 1 ...
- $ CheckingAccountStatus.gt.200          : num  0 0 0 0 0 0 0 0 0 0 ...
- $ CheckingAccountStatus.none            : num  0 0 1 0 0 1 1 0 1 0 ...
- $ CreditHistory.NoCredit.AllPaid        : num  0 0 0 0 0 0 0 0 0 0 ...
- $ CreditHistory.ThisBank.AllPaid        : num  0 0 0 0 0 0 0 0 0 0 ...
- $ CreditHistory.PaidDuly                : num  0 1 0 1 0 1 1 1 1 0 ...
- $ CreditHistory.Delay                   : num  0 0 0 0 1 0 0 0 0 0 ...
- $ CreditHistory.Critical                : num  1 0 1 0 0 0 0 0 0 1 ...
- $ Purpose.NewCar                        : num  0 0 0 0 1 0 0 0 0 1 ...
- $ Purpose.UsedCar                       : num  0 0 0 0 0 0 0 1 0 0 ...
- $ Purpose.Furniture.Equipment           : num  0 0 0 1 0 0 1 0 0 0 ...
- $ Purpose.Radio.Television              : num  1 1 0 0 0 0 0 0 1 0 ...
- $ Purpose.DomesticAppliance             : num  0 0 0 0 0 0 0 0 0 0 ...
- $ Purpose.Repairs                       : num  0 0 0 0 0 0 0 0 0 0 ...
- $ Purpose.Education                     : num  0 0 1 0 0 1 0 0 0 0 ...
- $ Purpose.Vacation                      : num  0 0 0 0 0 0 0 0 0 0 ...
- $ Purpose.Retraining                    : num  0 0 0 0 0 0 0 0 0 0 ...
- $ Purpose.Business                      : num  0 0 0 0 0 0 0 0 0 0 ...
- $ Purpose.Other                         : num  0 0 0 0 0 0 0 0 0 0 ...
- $ SavingsAccountBonds.lt.100            : num  0 1 1 1 1 0 0 1 0 1 ...
- $ SavingsAccountBonds.100.to.500        : num  0 0 0 0 0 0 0 0 0 0 ...
- $ SavingsAccountBonds.500.to.1000       : num  0 0 0 0 0 0 1 0 0 0 ...
- $ SavingsAccountBonds.gt.1000           : num  0 0 0 0 0 0 0 0 1 0 ...
- $ SavingsAccountBonds.Unknown           : num  1 0 0 0 0 1 0 0 0 0 ...
- $ EmploymentDuration.lt.1               : num  0 0 0 0 0 0 0 0 0 0 ...
- $ EmploymentDuration.1.to.4             : num  0 1 0 0 1 1 0 1 0 0 ...
- $ EmploymentDuration.4.to.7             : num  0 0 1 1 0 0 0 0 1 0 ...
- $ EmploymentDuration.gt.7               : num  1 0 0 0 0 0 1 0 0 0 ...
- $ EmploymentDuration.Unemployed         : num  0 0 0 0 0 0 0 0 0 1 ...
- $ Personal.Male.Divorced.Seperated      : num  0 0 0 0 0 0 0 0 1 0 ...
- $ Personal.Female.NotSingle             : num  0 1 0 0 0 0 0 0 0 0 ...
- $ Personal.Male.Single                  : num  1 0 1 1 1 1 1 1 0 0 ...
- $ Personal.Male.Married.Widowed         : num  0 0 0 0 0 0 0 0 0 1 ...
- $ Personal.Female.Single                : num  0 0 0 0 0 0 0 0 0 0 ...
- $ OtherDebtorsGuarantors.None           : num  1 1 1 0 1 1 1 1 1 1 ...
- $ OtherDebtorsGuarantors.CoApplicant    : num  0 0 0 0 0 0 0 0 0 0 ...
- $ OtherDebtorsGuarantors.Guarantor      : num  0 0 0 1 0 0 0 0 0 0 ...
- $ Property.RealEstate                   : num  1 1 1 0 0 0 0 0 1 0 ...
- $ Property.Insurance                    : num  0 0 0 1 0 0 1 0 0 0 ...
- $ Property.CarOther                     : num  0 0 0 0 0 0 0 1 0 1 ...
- $ Property.Unknown                      : num  0 0 0 0 1 1 0 0 0 0 ...
- $ OtherInstallmentPlans.Bank            : num  0 0 0 0 0 0 0 0 0 0 ...
- $ OtherInstallmentPlans.Stores          : num  0 0 0 0 0 0 0 0 0 0 ...
- $ OtherInstallmentPlans.None            : num  1 1 1 1 1 1 1 1 1 1 ...
- $ Housing.Rent                          : num  0 0 0 0 0 0 0 1 0 0 ...
- $ Housing.Own                           : num  1 1 1 0 0 0 1 0 1 1 ...
- $ Housing.ForFree                       : num  0 0 0 1 1 1 0 0 0 0 ...
- $ Job.UnemployedUnskilled               : num  0 0 0 0 0 0 0 0 0 0 ...
- $ Job.UnskilledResident                 : num  0 0 1 0 0 1 0 0 1 0 ...
- $ Job.SkilledEmployee                   : num  1 1 0 1 1 0 1 0 0 0 ...
- $ Job.Management.SelfEmp.HighlyQualified: num  0 0 0 0 0 0 0 1 0 1 ...</code></pre>
+<pre><code>'data.frame':   4454 obs. of  14 variables:
+ $ Status   : Factor w/ 2 levels "bad","good": 2 2 1 2 2 2 2 2 2 1 ...
+ $ Seniority: int  9 17 10 0 0 1 29 9 0 0 ...
+ $ Home     : Factor w/ 6 levels "ignore","other",..: 6 6 3 6 6 3 3 4 3 4 ...
+ $ Time     : int  60 60 36 60 36 60 60 12 60 48 ...
+ $ Age      : int  30 58 46 24 26 36 44 27 32 41 ...
+ $ Marital  : Factor w/ 5 levels "divorced","married",..: 2 5 2 4 4 2 2 4 2 2 ...
+ $ Records  : Factor w/ 2 levels "no","yes": 1 1 2 1 1 1 1 1 1 1 ...
+ $ Job      : Factor w/ 4 levels "fixed","freelance",..: 2 1 2 1 1 1 1 1 2 4 ...
+ $ Expenses : int  73 48 90 63 46 75 75 35 90 90 ...
+ $ Income   : int  129 131 200 182 107 214 125 80 107 80 ...
+ $ Assets   : int  0 0 3000 2500 0 3500 10000 0 15000 0 ...
+ $ Debt     : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ Amount   : int  800 1000 2000 900 310 650 1600 200 1200 1200 ...
+ $ Price    : int  846 1658 2985 1325 910 1645 1800 1093 1957 1468 ...</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kiểm tra biến đầu ra (biến muốn dự báo)</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>GermanCredit<span class="sc">$</span>Class <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>credit_data<span class="sc">$</span>Status <span class="sc">%&gt;%</span> </span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  table <span class="sc">%&gt;%</span> </span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  prop.table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>.
- Bad Good 
- 0.3  0.7 </code></pre>
+      bad      good 
+0.2815447 0.7184553 </code></pre>
 </div>
 </div>
 <p>Như vậy, chúng ta thấy trong tập dữ liệu này:</p>
 <ul>
-<li>70% là các khoản vay không có nợ xấu</li>
-<li>30% là các khoản vay có nợ xấu</li>
+<li>72% là các khoản vay không có nợ xấu</li>
+<li>28% là các khoản vay có nợ xấu</li>
 </ul>
 </section>
 <section id="khởi-động-h2o" class="level3" data-number="25.3.3">
@@ -910,19 +863,19 @@ R is connected to the H2O cluster:
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.init</span>(<span class="at">ip =</span> <span class="st">"localhost"</span>, </span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">port =</span> <span class="dv">54321</span>, </span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">nthreads=</span> <span class="sc">-</span><span class="dv">1</span>,</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">max_mem_size =</span> <span class="st">"4g"</span>) <span class="co"># Đặt mức RAM tối đa</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">max_mem_size =</span> <span class="st">"3g"</span>) <span class="co"># Đặt mức RAM tối đa</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> Connection successful!
 
 R is connected to the H2O cluster: 
-    H2O cluster uptime:         21 minutes 20 seconds 
+    H2O cluster uptime:         1 hours 18 minutes 
     H2O cluster timezone:       Etc/UTC 
     H2O data parsing timezone:  UTC 
     H2O cluster version:        3.42.0.2 
-    H2O cluster version age:    6 months and 1 day 
-    H2O cluster name:           H2O_started_from_R_jovyan_jew525 
+    H2O cluster version age:    11 months and 25 days 
+    H2O cluster name:           H2O_started_from_R_jovyan_ydg016 
     H2O cluster total nodes:    1 
-    H2O cluster total memory:   3.97 GB 
+    H2O cluster total memory:   3.86 GB 
     H2O cluster total cores:    2 
     H2O cluster allowed cores:  2 
     H2O cluster healthy:        TRUE 
@@ -938,165 +891,27 @@ R is connected to the H2O cluster:
 <h3 data-number="25.3.4" class="anchored" data-anchor-id="đưa-dữ-liệu-vào-h2o"><span class="header-section-number">25.3.4</span> Đưa dữ liệu vào H2O</h3>
 <p>Để đưa dữ liệu vào H2O, chúng ta sử dụng câu lệnh: <code>as.h2o()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>GermanCredit <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>credit_data <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  Duration Amount InstallmentRatePercentage ResidenceDuration Age
-1        6   1169                         4                 4  67
-2       48   5951                         2                 2  22
-3       12   2096                         2                 3  49
-4       42   7882                         2                 4  45
-5       24   4870                         3                 4  53
-6       36   9055                         2                 4  35
-  NumberExistingCredits NumberPeopleMaintenance Telephone ForeignWorker Class
-1                     2                       1         0             1  Good
-2                     1                       1         1             1   Bad
-3                     1                       2         1             1  Good
-4                     1                       2         1             1  Good
-5                     2                       2         1             1   Bad
-6                     1                       2         0             1  Good
-  CheckingAccountStatus.lt.0 CheckingAccountStatus.0.to.200
-1                          1                              0
-2                          0                              1
-3                          0                              0
-4                          1                              0
-5                          1                              0
-6                          0                              0
-  CheckingAccountStatus.gt.200 CheckingAccountStatus.none
-1                            0                          0
-2                            0                          0
-3                            0                          1
-4                            0                          0
-5                            0                          0
-6                            0                          1
-  CreditHistory.NoCredit.AllPaid CreditHistory.ThisBank.AllPaid
-1                              0                              0
-2                              0                              0
-3                              0                              0
-4                              0                              0
-5                              0                              0
-6                              0                              0
-  CreditHistory.PaidDuly CreditHistory.Delay CreditHistory.Critical
-1                      0                   0                      1
-2                      1                   0                      0
-3                      0                   0                      1
-4                      1                   0                      0
-5                      0                   1                      0
-6                      1                   0                      0
-  Purpose.NewCar Purpose.UsedCar Purpose.Furniture.Equipment
-1              0               0                           0
-2              0               0                           0
-3              0               0                           0
-4              0               0                           1
-5              1               0                           0
-6              0               0                           0
-  Purpose.Radio.Television Purpose.DomesticAppliance Purpose.Repairs
-1                        1                         0               0
-2                        1                         0               0
-3                        0                         0               0
-4                        0                         0               0
-5                        0                         0               0
-6                        0                         0               0
-  Purpose.Education Purpose.Vacation Purpose.Retraining Purpose.Business
-1                 0                0                  0                0
-2                 0                0                  0                0
-3                 1                0                  0                0
-4                 0                0                  0                0
-5                 0                0                  0                0
-6                 1                0                  0                0
-  Purpose.Other SavingsAccountBonds.lt.100 SavingsAccountBonds.100.to.500
-1             0                          0                              0
-2             0                          1                              0
-3             0                          1                              0
-4             0                          1                              0
-5             0                          1                              0
-6             0                          0                              0
-  SavingsAccountBonds.500.to.1000 SavingsAccountBonds.gt.1000
-1                               0                           0
-2                               0                           0
-3                               0                           0
-4                               0                           0
-5                               0                           0
-6                               0                           0
-  SavingsAccountBonds.Unknown EmploymentDuration.lt.1 EmploymentDuration.1.to.4
-1                           1                       0                         0
-2                           0                       0                         1
-3                           0                       0                         0
-4                           0                       0                         0
-5                           0                       0                         1
-6                           1                       0                         1
-  EmploymentDuration.4.to.7 EmploymentDuration.gt.7
-1                         0                       1
-2                         0                       0
-3                         1                       0
-4                         1                       0
-5                         0                       0
-6                         0                       0
-  EmploymentDuration.Unemployed Personal.Male.Divorced.Seperated
-1                             0                                0
-2                             0                                0
-3                             0                                0
-4                             0                                0
-5                             0                                0
-6                             0                                0
-  Personal.Female.NotSingle Personal.Male.Single Personal.Male.Married.Widowed
-1                         0                    1                             0
-2                         1                    0                             0
-3                         0                    1                             0
-4                         0                    1                             0
-5                         0                    1                             0
-6                         0                    1                             0
-  Personal.Female.Single OtherDebtorsGuarantors.None
-1                      0                           1
-2                      0                           1
-3                      0                           1
-4                      0                           0
-5                      0                           1
-6                      0                           1
-  OtherDebtorsGuarantors.CoApplicant OtherDebtorsGuarantors.Guarantor
-1                                  0                                0
-2                                  0                                0
-3                                  0                                0
-4                                  0                                1
-5                                  0                                0
-6                                  0                                0
-  Property.RealEstate Property.Insurance Property.CarOther Property.Unknown
-1                   1                  0                 0                0
-2                   1                  0                 0                0
-3                   1                  0                 0                0
-4                   0                  1                 0                0
-5                   0                  0                 0                1
-6                   0                  0                 0                1
-  OtherInstallmentPlans.Bank OtherInstallmentPlans.Stores
-1                          0                            0
-2                          0                            0
-3                          0                            0
-4                          0                            0
-5                          0                            0
-6                          0                            0
-  OtherInstallmentPlans.None Housing.Rent Housing.Own Housing.ForFree
-1                          1            0           1               0
-2                          1            0           1               0
-3                          1            0           1               0
-4                          1            0           0               1
-5                          1            0           0               1
-6                          1            0           0               1
-  Job.UnemployedUnskilled Job.UnskilledResident Job.SkilledEmployee
-1                       0                     0                   1
-2                       0                     0                   1
-3                       0                     1                   0
-4                       0                     0                   1
-5                       0                     0                   1
-6                       0                     1                   0
-  Job.Management.SelfEmp.HighlyQualified
-1                                      0
-2                                      0
-3                                      0
-4                                      0
-5                                      0
-6                                      0</code></pre>
+<pre><code>  Status Seniority  Home Time Age Marital Records       Job Expenses Income
+1   good         9  rent   60  30 married      no freelance       73    129
+2   good        17  rent   60  58   widow      no     fixed       48    131
+3    bad        10 owner   36  46 married     yes freelance       90    200
+4   good         0  rent   60  24  single      no     fixed       63    182
+5   good         0  rent   36  26  single      no     fixed       46    107
+6   good         1 owner   60  36 married      no     fixed       75    214
+  Assets Debt Amount Price
+1      0    0    800   846
+2      0    0   1000  1658
+3   3000    0   2000  2985
+4   2500    0    900  1325
+5      0    0    310   910
+6   3500    0    650  1645</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 4: Đưa dữ liệu vào h2o</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>data_h2o <span class="ot">&lt;-</span> <span class="fu">as.h2o</span>(GermanCredit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lower name</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(credit_data) <span class="ot">&lt;-</span> <span class="fu">names</span>(credit_data) <span class="sc">%&gt;%</span> <span class="fu">tolower</span>()</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 4: Đưa dữ liệu vào h2o</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>data_h2o <span class="ot">&lt;-</span> <span class="fu">as.h2o</span>(credit_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   |                                                                            
@@ -1119,17 +934,19 @@ R is connected to the H2O cluster:
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Tập dữ liệu train (data frame)</span></span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>train_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(train)</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>train_df<span class="sc">$</span>Class <span class="sc">%&gt;%</span> table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>train_df<span class="sc">$</span>status <span class="sc">%&gt;%</span> table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>.
- Bad Good 
- 235  551 </code></pre>
+ bad good 
+ 997 2517 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tập dữ liệu test (data frame)</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>test_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(test)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>test_df<span class="sc">$</span>Status <span class="sc">%&gt;%</span> table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>test_df<span class="sc">$</span>status <span class="sc">%&gt;%</span> table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt; table of extent 0 &gt;</code></pre>
+<pre><code>.
+ bad good 
+ 257  683 </code></pre>
 </div>
 </div>
 </section>
@@ -1141,18 +958,21 @@ R is connected to the H2O cluster:
 <li><code>h2o.randomForest()</code> - Random Forests</li>
 <li><code>h2o.gbm()</code> - Boosting</li>
 </ul>
+<p>Ta sẽ sử dụng <code>h2o.gbm</code> trong toàn bộ quá trình hướng dẫn về train &amp; tune mô hình trên <code>H2O</code></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 6: Xây dựng mô hình trên train</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>start_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>gbm_model1 <span class="ot">&lt;-</span> <span class="fu">h2o.gbm</span>(<span class="at">training_frame =</span> train, <span class="co"># Tập dữ liệu train</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(GermanCredit), <span class="st">"Class"</span>),  <span class="co"># Các biến đầu vào</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="st">"Class"</span> <span class="co"># Biến đầu ra (biến muốn dự báo)</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(credit_data), <span class="st">"status"</span>),  <span class="co"># Các biến đầu vào</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="st">"status"</span> <span class="co"># Biến đầu ra (biến muốn dự báo)</span></span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>                      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   |                                                                            
   |                                                                      |   0%
+  |                                                                            
+  |===========================================                           |  62%
   |                                                                            
   |======================================================================| 100%</code></pre>
 </div>
@@ -1160,10 +980,10 @@ R is connected to the H2O cluster:
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>time <span class="ot">&lt;-</span> end_time <span class="sc">-</span> start_time</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>time</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 1.127262 secs</code></pre>
+<pre><code>Time difference of 2.366523 secs</code></pre>
 </div>
 </div>
-<p>Chúng ta thấy việc xây dựng mô hình với H2O có tốc độ rất nhanh, xây dựng mô hình với các tham số cơ bản với dữ liệu này chỉ mất khoảng 1.13 giây. Đương nhiên trong trường hợp này dữ liệu nhỏ nên chúng ta chưa nhìn thấy rõ ưu điểm vượt trội của H2O về tốc độ, nhưng trong trường hơp dữ liệu lớn, việc sử dụng H2O sẽ rút ngắn thời gian xây dựng mô hình dự báo của chúng ta đi rất nhiều.</p>
+<p>Chúng ta thấy việc xây dựng mô hình với H2O có tốc độ rất nhanh, xây dựng mô hình với các tham số cơ bản với dữ liệu này chỉ mất khoảng 2.37 giây. Đương nhiên trong trường hợp này dữ liệu nhỏ nên chúng ta chưa nhìn thấy rõ ưu điểm vượt trội của H2O về tốc độ, nhưng trong trường hơp dữ liệu lớn, việc sử dụng H2O sẽ rút ngắn thời gian xây dựng mô hình dự báo của chúng ta đi rất nhiều.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary model</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>gbm_model1 <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1172,51 +992,51 @@ R is connected to the H2O cluster:
 ==============
 
 H2OBinomialModel: gbm
-Model Key:  GBM_model_R_1706352094610_5793 
+Model Key:  GBM_model_R_1721520775246_5409 
 Model Summary: 
   number_of_trees number_of_internal_trees model_size_in_bytes min_depth
-1              50                       50               13980         5
+1              50                       50               19226         5
   max_depth mean_depth min_leaves max_leaves mean_leaves
-1         5    5.00000          9         26    17.58000
+1         5    5.00000         17         32    25.94000
 
 H2OBinomialMetrics: gbm
 ** Reported on training data. **
 
-MSE:  0.07258735
-RMSE:  0.2694204
-LogLoss:  0.2676266
-Mean Per-Class Error:  0.07134031
-AUC:  0.9794455
-AUCPR:  0.990769
-Gini:  0.958891
-R^2:  0.6536728
+MSE:  0.09385543
+RMSE:  0.3063583
+LogLoss:  0.3147498
+Mean Per-Class Error:  0.161882
+AUC:  0.9357281
+AUCPR:  0.9714834
+Gini:  0.8714562
+R^2:  0.5381675
 
 Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:
-       Bad Good    Error     Rate
-Bad    210   25 0.106383  =25/235
-Good    20  531 0.036298  =20/551
-Totals 230  556 0.057252  =45/786
+       bad good    Error       Rate
+bad    736  261 0.261785   =261/997
+good   156 2361 0.061979  =156/2517
+Totals 892 2622 0.118668  =417/3514
 
 Maximum Metrics: Maximum metrics at their respective thresholds
-                        metric threshold      value idx
-1                       max f1  0.585928   0.959350 231
-2                       max f2  0.528659   0.973467 251
-3                 max f0point5  0.641146   0.964326 215
-4                 max accuracy  0.585928   0.942748 231
-5                max precision  0.985738   1.000000   0
-6                   max recall  0.301839   1.000000 324
-7              max specificity  0.985738   1.000000   0
-8             max absolute_mcc  0.585928   0.862683 231
-9   max min_per_class_accuracy  0.650274   0.932849 211
-10 max mean_per_class_accuracy  0.641146   0.936919 215
-11                     max tns  0.985738 235.000000   0
-12                     max fns  0.985738 550.000000   0
-13                     max fps  0.050169 235.000000 399
-14                     max tps  0.301839 551.000000 324
-15                     max tnr  0.985738   1.000000   0
-16                     max fnr  0.985738   0.998185   0
-17                     max fpr  0.050169   1.000000 399
-18                     max tpr  0.301839   1.000000 324
+                        metric threshold       value idx
+1                       max f1  0.563945    0.918856 222
+2                       max f2  0.396719    0.949796 278
+3                 max f0point5  0.693235    0.923835 175
+4                 max accuracy  0.582656    0.881616 216
+5                max precision  0.982744    1.000000   0
+6                   max recall  0.164248    1.000000 357
+7              max specificity  0.982744    1.000000   0
+8             max absolute_mcc  0.582656    0.703714 216
+9   max min_per_class_accuracy  0.703102    0.859579 171
+10 max mean_per_class_accuracy  0.693235    0.862920 175
+11                     max tns  0.982744  997.000000   0
+12                     max fns  0.982744 2513.000000   0
+13                     max fps  0.028254  997.000000 399
+14                     max tps  0.164248 2517.000000 357
+15                     max tnr  0.982744    1.000000   0
+16                     max fnr  0.982744    0.998411   0
+17                     max fpr  0.028254    1.000000 399
+18                     max tpr  0.164248    1.000000 357
 
 Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`
 
@@ -1224,67 +1044,59 @@ Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `
 
 Scoring History: 
             timestamp   duration number_of_trees training_rmse training_logloss
-1 2024-01-27 11:02:58  0.003 sec               0       0.45781          0.61000
-2 2024-01-27 11:02:58  0.025 sec               1       0.44489          0.58254
-3 2024-01-27 11:02:58  0.047 sec               2       0.43324          0.55877
-4 2024-01-27 11:02:58  0.066 sec               3       0.42313          0.53861
-5 2024-01-27 11:02:58  0.085 sec               4       0.41501          0.52240
+1 2024-07-21 01:31:27  0.022 sec               0       0.45080          0.59643
+2 2024-07-21 01:31:27  0.054 sec               1       0.43683          0.56675
+3 2024-07-21 01:31:28  0.104 sec               2       0.42488          0.54279
+4 2024-07-21 01:31:28  0.133 sec               3       0.41477          0.52310
+5 2024-07-21 01:31:28  0.174 sec               4       0.40619          0.50680
   training_auc training_pr_auc training_lift training_classification_error
-1      0.50000         0.70102       1.00000                       0.29898
-2      0.82314         0.91958       1.42650                       0.22774
-3      0.83729         0.92585       1.42650                       0.21374
-4      0.85373         0.93406       1.42650                       0.20738
-5      0.86354         0.93792       1.42650                       0.19338
+1      0.50000         0.71628       1.00000                       0.28372
+2      0.82756         0.91358       1.37025                       0.19550
+3      0.84619         0.92053       1.34660                       0.18640
+4      0.85325         0.92546       1.35631                       0.18412
+5      0.85400         0.92514       1.35631                       0.18412
 
 ---
              timestamp   duration number_of_trees training_rmse
-46 2024-01-27 11:02:59  0.721 sec              45       0.27706
-47 2024-01-27 11:02:59  0.733 sec              46       0.27555
-48 2024-01-27 11:02:59  0.745 sec              47       0.27383
-49 2024-01-27 11:02:59  0.786 sec              48       0.27225
-50 2024-01-27 11:02:59  0.805 sec              49       0.27105
-51 2024-01-27 11:02:59  0.830 sec              50       0.26942
+46 2024-07-21 01:31:29  1.532 sec              45       0.31040
+47 2024-07-21 01:31:29  1.580 sec              46       0.30989
+48 2024-07-21 01:31:29  1.608 sec              47       0.30903
+49 2024-07-21 01:31:29  1.648 sec              48       0.30808
+50 2024-07-21 01:31:29  1.673 sec              49       0.30722
+51 2024-07-21 01:31:29  1.700 sec              50       0.30636
    training_logloss training_auc training_pr_auc training_lift
-46          0.27988      0.97668         0.98933       1.42650
-47          0.27727      0.97715         0.98965       1.42650
-48          0.27464      0.97787         0.99002       1.42650
-49          0.27199      0.97879         0.99049       1.42650
-50          0.27012      0.97924         0.99069       1.42650
-51          0.26763      0.97945         0.99077       1.42650
+46          0.32226      0.93209         0.96943       1.39611
+47          0.32123      0.93246         0.96960       1.39611
+48          0.31969      0.93326         0.96997       1.39611
+49          0.31793      0.93426         0.97062       1.39611
+50          0.31639      0.93478         0.97082       1.39611
+51          0.31475      0.93573         0.97148       1.39611
    training_classification_error
-46                       0.06234
-47                       0.06107
-48                       0.05980
-49                       0.05980
-50                       0.05852
-51                       0.05725
+46                       0.12237
+47                       0.12294
+48                       0.12180
+49                       0.11981
+50                       0.12094
+51                       0.11867
 
 Variable Importances: (Extract with `h2o.varimp`) 
 =================================================
 
 Variable Importances: 
-                    variable relative_importance scaled_importance percentage
-1 CheckingAccountStatus.none           84.350624          1.000000   0.156410
-2                     Amount           82.419136          0.977102   0.152829
-3                   Duration           68.733696          0.814857   0.127452
-4                        Age           31.725632          0.376116   0.058828
-5             Purpose.NewCar           19.282278          0.228597   0.035755
-
----
-                           variable relative_importance scaled_importance
-54                  Housing.ForFree            0.132180          0.001567
-55        Purpose.DomesticAppliance            0.000000          0.000000
-56               Purpose.Retraining            0.000000          0.000000
-57                    Purpose.Other            0.000000          0.000000
-58 Personal.Male.Divorced.Seperated            0.000000          0.000000
-59          Job.UnemployedUnskilled            0.000000          0.000000
-   percentage
-54   0.000245
-55   0.000000
-56   0.000000
-57   0.000000
-58   0.000000
-59   0.000000</code></pre>
+    variable relative_importance scaled_importance percentage
+1  seniority          324.636536          1.000000   0.166827
+2     income          301.767517          0.929555   0.155075
+3    records          296.553772          0.913495   0.152395
+4     amount          233.128555          0.718122   0.119802
+5        job          163.762939          0.504450   0.084156
+6       home          132.941345          0.409508   0.068317
+7     assets          113.164719          0.348589   0.058154
+8      price          105.915077          0.326257   0.054428
+9   expenses           77.263611          0.238000   0.039705
+10       age           71.007111          0.218728   0.036490
+11      time           56.115288          0.172856   0.028837
+12      debt           36.218292          0.111566   0.018612
+13   marital           33.476219          0.103119   0.017203</code></pre>
 </div>
 </div>
 <p>Nhìn vào kết quả mô hình vừa được xây dựng trên tập train, chúng ta có thể thấy một số thông tin quan trọng sau:</p>
@@ -1294,28 +1106,27 @@ Variable Importances:
 <li><code>number_of_trees</code> = 50: Số lượng cây là 50</li>
 <li><code>max_depth</code> = 5: Mỗi cây có 5 tầng (mức độ phức tạp của mô hình)</li>
 </ul></li>
-<li>AUC trên tập train: 0.97</li>
-<li>Dựa vào mục <code>Confusion Matrix</code> (tối ưu hóa F1-score) có thể tính toán được:
+<li>AUC trên tập train: 0.935</li>
+<li>Dựa vào mục <code>Confusion Matrix</code> tại điểm tối ưu hóa chỉ số F1-score có thể tính toán được:
 <ul>
-<li><code>error rate</code> (tỷ lệ quan sát dự báo sai): 45/786 = 0.057 (5.7%)</li>
-<li><code>accuracy</code> (tỷ lệ quan sát dự báo đúng): 1 - 0.057 = 0.943 (94.3%)</li>
-<li><code>precision</code>: 531/551 = 0.96 (96%)</li>
-<li><code>recall</code>: 531/556 = 0.96 (96%)</li>
+<li><code>error rate</code> (tỷ lệ quan sát dự báo sai): 11.87%</li>
+<li><code>accuracy</code> (tỷ lệ quan sát dự báo đúng): 1 - 11.87%= 88.13%</li>
+<li><code>precision</code>: 736/997 = 74% - trong 100 khách hàng dự báo là <code>bad</code>, có 74 khách hàng hàng thực sự là <code>bad</code></li>
+<li><code>recall</code>: 736/892 = 82.5% - trong 100 khách hàng thực tế là <code>bad</code>, mô hình dự báo phủ được chính xác 82 khách hàng</li>
 </ul></li>
 <li>Dựa vào mục <code>Maximum Metrics</code>, chúng ta có thể biết được các ngưỡng cutoff xác suất để tối ưu hóa các chỉ số như accuracy, precision, recall, f1-score…
 <ul>
-<li><code>max f1</code>: Điểm cutoff xác suất là 0.585928</li>
-<li><code>max accuracy</code>: 0.585928</li>
-<li><code>max recall</code>: 0.301839</li>
-<li><code>max precision</code>: 0.985738</li>
+<li><code>max f1</code>: Điểm cutoff xác suất là 0.56</li>
+<li><code>max accuracy</code>: 0.582</li>
+<li><code>max recall</code>: 0.164</li>
+<li><code>max precision</code>: 0.982</li>
 </ul></li>
-<li>Dựa vào mục <code>Variable Importances</code>, chúng ta có thể biết được những biến nào có ảnh hưởng nhiều nhất đến biến đầu ra mà chúng ta muốn dự báo (có thể sử dụng câu lệnh <code>h2o.varimp()</code> để xem chi tiết). Trong trường hợp này, các biến có ảnh hưởng nhiều nhất tới biến <code>Class</code> theo thứ tự là:
+<li>Dựa vào mục <code>Variable Importances</code>, chúng ta có thể biết được những biến nào có ảnh hưởng nhiều nhất đến biến đầu ra mà chúng ta muốn dự báo (có thể sử dụng câu lệnh <code>h2o.varimp()</code> để xem chi tiết). Trong trường hợp này, 4 biến có ảnh hưởng nhiều nhất tới biến <code>status</code> theo thứ tự là:
 <ul>
-<li>CheckingAccountStatus.none</li>
-<li>Amount</li>
-<li>Duration</li>
-<li>Age</li>
-<li>Purpose.NewCar</li>
+<li>seniority</li>
+<li>income</li>
+<li>records</li>
+<li>amount</li>
 </ul></li>
 </ul>
 <div class="cell">
@@ -1326,12 +1137,6 @@ Variable Importances:
 <span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
-<colgroup>
-<col style="width: 44%">
-<col style="width: 22%">
-<col style="width: 20%">
-<col style="width: 12%">
-</colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: left;">variable</th>
@@ -1342,358 +1147,82 @@ Variable Importances:
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">CheckingAccountStatus.none</td>
-<td style="text-align: right;">84.3506241</td>
+<td style="text-align: left;">seniority</td>
+<td style="text-align: right;">324.63654</td>
 <td style="text-align: right;">1.0000000</td>
-<td style="text-align: right;">0.1564102</td>
+<td style="text-align: right;">0.1668267</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Amount</td>
-<td style="text-align: right;">82.4191360</td>
-<td style="text-align: right;">0.9771017</td>
-<td style="text-align: right;">0.1528287</td>
+<td style="text-align: left;">income</td>
+<td style="text-align: right;">301.76752</td>
+<td style="text-align: right;">0.9295550</td>
+<td style="text-align: right;">0.1550746</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Duration</td>
-<td style="text-align: right;">68.7336960</td>
-<td style="text-align: right;">0.8148570</td>
-<td style="text-align: right;">0.1274520</td>
+<td style="text-align: left;">records</td>
+<td style="text-align: right;">296.55377</td>
+<td style="text-align: right;">0.9134948</td>
+<td style="text-align: right;">0.1523953</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Age</td>
-<td style="text-align: right;">31.7256317</td>
-<td style="text-align: right;">0.3761161</td>
-<td style="text-align: right;">0.0588284</td>
+<td style="text-align: left;">amount</td>
+<td style="text-align: right;">233.12856</td>
+<td style="text-align: right;">0.7181217</td>
+<td style="text-align: right;">0.1198019</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Purpose.NewCar</td>
-<td style="text-align: right;">19.2822781</td>
-<td style="text-align: right;">0.2285967</td>
-<td style="text-align: right;">0.0357549</td>
+<td style="text-align: left;">job</td>
+<td style="text-align: right;">163.76294</td>
+<td style="text-align: right;">0.5044501</td>
+<td style="text-align: right;">0.0841557</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">InstallmentRatePercentage</td>
-<td style="text-align: right;">15.5161829</td>
-<td style="text-align: right;">0.1839486</td>
-<td style="text-align: right;">0.0287714</td>
+<td style="text-align: left;">home</td>
+<td style="text-align: right;">132.94135</td>
+<td style="text-align: right;">0.4095083</td>
+<td style="text-align: right;">0.0683169</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">OtherInstallmentPlans.None</td>
-<td style="text-align: right;">15.2438316</td>
-<td style="text-align: right;">0.1807198</td>
-<td style="text-align: right;">0.0282664</td>
+<td style="text-align: left;">assets</td>
+<td style="text-align: right;">113.16472</td>
+<td style="text-align: right;">0.3485890</td>
+<td style="text-align: right;">0.0581539</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">CreditHistory.Critical</td>
-<td style="text-align: right;">14.5524130</td>
-<td style="text-align: right;">0.1725229</td>
-<td style="text-align: right;">0.0269843</td>
+<td style="text-align: left;">price</td>
+<td style="text-align: right;">105.91508</td>
+<td style="text-align: right;">0.3262574</td>
+<td style="text-align: right;">0.0544284</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">CheckingAccountStatus.lt.0</td>
-<td style="text-align: right;">12.5769672</td>
-<td style="text-align: right;">0.1491034</td>
-<td style="text-align: right;">0.0233213</td>
+<td style="text-align: left;">expenses</td>
+<td style="text-align: right;">77.26361</td>
+<td style="text-align: right;">0.2380004</td>
+<td style="text-align: right;">0.0397048</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Property.RealEstate</td>
-<td style="text-align: right;">12.3567972</td>
-<td style="text-align: right;">0.1464933</td>
-<td style="text-align: right;">0.0229130</td>
+<td style="text-align: left;">age</td>
+<td style="text-align: right;">71.00711</td>
+<td style="text-align: right;">0.2187280</td>
+<td style="text-align: right;">0.0364897</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">SavingsAccountBonds.lt.100</td>
-<td style="text-align: right;">10.7499561</td>
-<td style="text-align: right;">0.1274437</td>
-<td style="text-align: right;">0.0199335</td>
+<td style="text-align: left;">time</td>
+<td style="text-align: right;">56.11529</td>
+<td style="text-align: right;">0.1728557</td>
+<td style="text-align: right;">0.0288369</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">OtherDebtorsGuarantors.Guarantor</td>
-<td style="text-align: right;">9.6545200</td>
-<td style="text-align: right;">0.1144570</td>
-<td style="text-align: right;">0.0179022</td>
+<td style="text-align: left;">debt</td>
+<td style="text-align: right;">36.21829</td>
+<td style="text-align: right;">0.1115657</td>
+<td style="text-align: right;">0.0186121</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Property.Insurance</td>
-<td style="text-align: right;">9.3979931</td>
-<td style="text-align: right;">0.1114158</td>
-<td style="text-align: right;">0.0174266</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Job.SkilledEmployee</td>
-<td style="text-align: right;">8.7692375</td>
-<td style="text-align: right;">0.1039617</td>
-<td style="text-align: right;">0.0162607</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">CheckingAccountStatus.gt.200</td>
-<td style="text-align: right;">8.7212677</td>
-<td style="text-align: right;">0.1033930</td>
-<td style="text-align: right;">0.0161717</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">ResidenceDuration</td>
-<td style="text-align: right;">8.4237700</td>
-<td style="text-align: right;">0.0998661</td>
-<td style="text-align: right;">0.0156201</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">OtherDebtorsGuarantors.None</td>
-<td style="text-align: right;">7.9725552</td>
-<td style="text-align: right;">0.0945168</td>
-<td style="text-align: right;">0.0147834</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">OtherInstallmentPlans.Bank</td>
-<td style="text-align: right;">7.7707009</td>
-<td style="text-align: right;">0.0921238</td>
-<td style="text-align: right;">0.0144091</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">CreditHistory.NoCredit.AllPaid</td>
-<td style="text-align: right;">7.2156229</td>
-<td style="text-align: right;">0.0855432</td>
-<td style="text-align: right;">0.0133798</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Personal.Male.Single</td>
-<td style="text-align: right;">7.0852146</td>
-<td style="text-align: right;">0.0839972</td>
-<td style="text-align: right;">0.0131380</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">NumberExistingCredits</td>
-<td style="text-align: right;">6.5925212</td>
-<td style="text-align: right;">0.0781562</td>
-<td style="text-align: right;">0.0122244</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Purpose.UsedCar</td>
-<td style="text-align: right;">6.2361321</td>
-<td style="text-align: right;">0.0739311</td>
-<td style="text-align: right;">0.0115636</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Personal.Female.NotSingle</td>
-<td style="text-align: right;">5.6832266</td>
-<td style="text-align: right;">0.0673762</td>
-<td style="text-align: right;">0.0105383</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">EmploymentDuration.lt.1</td>
-<td style="text-align: right;">5.2887440</td>
-<td style="text-align: right;">0.0626995</td>
-<td style="text-align: right;">0.0098068</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">EmploymentDuration.4.to.7</td>
-<td style="text-align: right;">5.2262311</td>
-<td style="text-align: right;">0.0619584</td>
-<td style="text-align: right;">0.0096909</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Telephone</td>
-<td style="text-align: right;">5.1227264</td>
-<td style="text-align: right;">0.0607313</td>
-<td style="text-align: right;">0.0094990</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Property.Unknown</td>
-<td style="text-align: right;">4.8568892</td>
-<td style="text-align: right;">0.0575798</td>
-<td style="text-align: right;">0.0090061</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Housing.Rent</td>
-<td style="text-align: right;">4.7812662</td>
-<td style="text-align: right;">0.0566832</td>
-<td style="text-align: right;">0.0088658</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">CreditHistory.Delay</td>
-<td style="text-align: right;">4.5384483</td>
-<td style="text-align: right;">0.0538046</td>
-<td style="text-align: right;">0.0084156</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">SavingsAccountBonds.Unknown</td>
-<td style="text-align: right;">3.7545331</td>
-<td style="text-align: right;">0.0445110</td>
-<td style="text-align: right;">0.0069620</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">EmploymentDuration.1.to.4</td>
-<td style="text-align: right;">3.6860566</td>
-<td style="text-align: right;">0.0436992</td>
-<td style="text-align: right;">0.0068350</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Job.Management.SelfEmp.HighlyQualified</td>
-<td style="text-align: right;">3.5472615</td>
-<td style="text-align: right;">0.0420538</td>
-<td style="text-align: right;">0.0065776</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Purpose.Education</td>
-<td style="text-align: right;">3.3089063</td>
-<td style="text-align: right;">0.0392280</td>
-<td style="text-align: right;">0.0061357</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">EmploymentDuration.gt.7</td>
-<td style="text-align: right;">3.2702508</td>
-<td style="text-align: right;">0.0387697</td>
-<td style="text-align: right;">0.0060640</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Housing.Own</td>
-<td style="text-align: right;">3.0387659</td>
-<td style="text-align: right;">0.0360254</td>
-<td style="text-align: right;">0.0056347</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">CreditHistory.PaidDuly</td>
-<td style="text-align: right;">2.8158870</td>
-<td style="text-align: right;">0.0333831</td>
-<td style="text-align: right;">0.0052215</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">OtherDebtorsGuarantors.CoApplicant</td>
-<td style="text-align: right;">2.5130854</td>
-<td style="text-align: right;">0.0297933</td>
-<td style="text-align: right;">0.0046600</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">NumberPeopleMaintenance</td>
-<td style="text-align: right;">2.4034374</td>
-<td style="text-align: right;">0.0284934</td>
-<td style="text-align: right;">0.0044567</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">CreditHistory.ThisBank.AllPaid</td>
-<td style="text-align: right;">2.3900807</td>
-<td style="text-align: right;">0.0283351</td>
-<td style="text-align: right;">0.0044319</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">CheckingAccountStatus.0.to.200</td>
-<td style="text-align: right;">2.0607431</td>
-<td style="text-align: right;">0.0244307</td>
-<td style="text-align: right;">0.0038212</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Purpose.Radio.Television</td>
-<td style="text-align: right;">2.0184691</td>
-<td style="text-align: right;">0.0239295</td>
-<td style="text-align: right;">0.0037428</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Property.CarOther</td>
-<td style="text-align: right;">1.9168139</td>
-<td style="text-align: right;">0.0227244</td>
-<td style="text-align: right;">0.0035543</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Purpose.Furniture.Equipment</td>
-<td style="text-align: right;">1.8031244</td>
-<td style="text-align: right;">0.0213765</td>
-<td style="text-align: right;">0.0033435</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Purpose.Business</td>
-<td style="text-align: right;">1.5692081</td>
-<td style="text-align: right;">0.0186034</td>
-<td style="text-align: right;">0.0029098</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">SavingsAccountBonds.gt.1000</td>
-<td style="text-align: right;">1.4338670</td>
-<td style="text-align: right;">0.0169989</td>
-<td style="text-align: right;">0.0026588</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">EmploymentDuration.Unemployed</td>
-<td style="text-align: right;">1.3670616</td>
-<td style="text-align: right;">0.0162069</td>
-<td style="text-align: right;">0.0025349</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Purpose.Repairs</td>
-<td style="text-align: right;">1.2434046</td>
-<td style="text-align: right;">0.0147409</td>
-<td style="text-align: right;">0.0023056</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">SavingsAccountBonds.100.to.500</td>
-<td style="text-align: right;">1.1172017</td>
-<td style="text-align: right;">0.0132447</td>
-<td style="text-align: right;">0.0020716</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">OtherInstallmentPlans.Stores</td>
-<td style="text-align: right;">1.0155718</td>
-<td style="text-align: right;">0.0120399</td>
-<td style="text-align: right;">0.0018832</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">SavingsAccountBonds.500.to.1000</td>
-<td style="text-align: right;">0.7910167</td>
-<td style="text-align: right;">0.0093777</td>
-<td style="text-align: right;">0.0014668</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">ForeignWorker</td>
-<td style="text-align: right;">0.5909842</td>
-<td style="text-align: right;">0.0070063</td>
-<td style="text-align: right;">0.0010959</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Job.UnskilledResident</td>
-<td style="text-align: right;">0.3838074</td>
-<td style="text-align: right;">0.0045501</td>
-<td style="text-align: right;">0.0007117</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Personal.Male.Married.Widowed</td>
-<td style="text-align: right;">0.2746936</td>
-<td style="text-align: right;">0.0032566</td>
-<td style="text-align: right;">0.0005094</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Housing.ForFree</td>
-<td style="text-align: right;">0.1321795</td>
-<td style="text-align: right;">0.0015670</td>
-<td style="text-align: right;">0.0002451</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Purpose.DomesticAppliance</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">0.0000000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Purpose.Retraining</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">0.0000000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Purpose.Other</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">0.0000000</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Personal.Male.Divorced.Seperated</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">0.0000000</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Job.UnemployedUnskilled</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">0.0000000</td>
-<td style="text-align: right;">0.0000000</td>
+<td style="text-align: left;">marital</td>
+<td style="text-align: right;">33.47622</td>
+<td style="text-align: right;">0.1031191</td>
+<td style="text-align: right;">0.0172030</td>
 </tr>
 </tbody>
 </table>
@@ -1715,24 +1244,24 @@ Variable Importances:
 </div>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>pred_test1 <span class="sc">%&gt;%</span> head</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  predict        Bad      Good
-1     Bad 0.71166405 0.2883359
-2     Bad 0.82454629 0.1754537
-3     Bad 0.49154935 0.5084507
-4     Bad 0.79388195 0.2061180
-5    Good 0.03446872 0.9655313
-6     Bad 0.76942563 0.2305744</code></pre>
+<pre><code>  predict        bad       good
+1    good 0.19107951 0.80892049
+2     bad 0.91849176 0.08150824
+3    good 0.07805707 0.92194293
+4     bad 0.63806808 0.36193192
+5    good 0.03455521 0.96544479
+6    good 0.01889339 0.98110661</code></pre>
 </div>
 </div>
 <p>Nhìn vào kết quả trên, ta có thể biết được những thông tin sau:</p>
 <ul>
-<li>Cột <code>predict</code>: Là <code>Class</code> của khoản vay được dự báo
+<li>Cột <code>predict</code>: Là <code>status</code> của khoản vay được dự báo
 <ul>
-<li>Good: Khoản vay không phải là khoản nợ xấu</li>
-<li>Bad: Khoản vay là khoản nợ xấu</li>
+<li><code>good</code>: Khoản vay không phải là khoản nợ xấu</li>
+<li><code>bad</code>: Khoản vay là khoản nợ xấu</li>
 </ul></li>
-<li><code>Bad</code>: Xác suất khoản vay là khoản nợ xấu</li>
-<li><code>Good</code>: Xác suất khoản vay là khoản không có nợ xấu</li>
+<li><code>bad</code>: Xác suất khoản vay là khoản nợ xấu</li>
+<li><code>good</code>: Xác suất khoản vay là khoản không có nợ xấu</li>
 </ul>
 </section>
 <section id="đánh-giá-chất-lượng-dự-báo-trên-test" class="level3" data-number="25.3.8">
@@ -1741,337 +1270,357 @@ Variable Importances:
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 8: Đánh giá chất lượng dự báo trên test</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Confusion matrix</span></span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">as.vector</span>(pred_test1<span class="sc">$</span>predict), </span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>      test_df<span class="sc">$</span>Class,</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>      test_df<span class="sc">$</span>status,</span>
 <span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">dnn =</span> <span class="fu">c</span>(<span class="st">"Predicted"</span>, <span class="st">"Actual"</span>)</span>
 <span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         Actual
-Predicted Bad Good
-     Bad   40   30
-     Good  25  119</code></pre>
+Predicted bad good
+     bad  147   82
+     good 110  601</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">## AUC</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>perf <span class="ot">&lt;-</span> <span class="fu">h2o.performance</span>(gbm_model1, test)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.auc</span>(perf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.8259852</code></pre>
 </div>
 </div>
-<p><strong>Note</strong>: Với H2O, chúng ta hoàn toàn có thể xây dựng mô hình trên tập train, rồi sau đó đánh giá chất lượng trên tập train và test đồng thời bằng một câu lệnh sau:</p>
+<p>Như vậy, AUC mô hình trên validation chỉ đạt khoảng 82%</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Lưu ý
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Với H2O, chúng ta hoàn toàn có thể xây dựng mô hình trên tập train, rồi sau đó đánh giá chất lượng trên tập train và test đồng thời</p>
+</div>
+</div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2</span>)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>gbm_model2 <span class="ot">&lt;-</span> <span class="fu">h2o.gbm</span>(<span class="at">training_frame =</span> train, <span class="co"># Xây dựng trên train</span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(GermanCredit), <span class="st">"Class"</span>),  <span class="co"># Các biến đầu vào</span></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="st">"Class"</span>, <span class="co"># Biến đầu ra (biến muốn dự báo)</span></span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">validation_frame =</span> test <span class="co"># Đánh giá trên test</span></span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>                      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>gbm_model2 <span class="ot">&lt;-</span> <span class="fu">h2o.gbm</span>(<span class="at">training_frame =</span> train, <span class="co"># Xây dựng trên train</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(credit_data), <span class="st">"status"</span>),  <span class="co"># Các biến đầu vào</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="st">"status"</span>, <span class="co"># Biến đầu ra (biến muốn dự báo)</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">validation_frame =</span> test <span class="co"># Đánh giá trên test</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>                      )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   |                                                                            
   |                                                                      |   0%
   |                                                                            
-  |==================================================================    |  94%
+  |==========================================                            |  60%
   |                                                                            
   |======================================================================| 100%</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>gbm_model2 <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>gbm_model2 <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Model Details:
 ==============
 
 H2OBinomialModel: gbm
-Model Key:  GBM_model_R_1706352094610_5845 
+Model Key:  GBM_model_R_1721520775246_5462 
 Model Summary: 
   number_of_trees number_of_internal_trees model_size_in_bytes min_depth
-1              50                       50               13978         5
+1              50                       50               19224         5
   max_depth mean_depth min_leaves max_leaves mean_leaves
-1         5    5.00000          9         26    17.58000
+1         5    5.00000         17         32    25.94000
 
 H2OBinomialMetrics: gbm
 ** Reported on training data. **
 
-MSE:  0.07258735
-RMSE:  0.2694204
-LogLoss:  0.2676266
-Mean Per-Class Error:  0.07134031
-AUC:  0.9794455
-AUCPR:  0.990769
-Gini:  0.958891
-R^2:  0.6536728
+MSE:  0.09385543
+RMSE:  0.3063583
+LogLoss:  0.3147498
+Mean Per-Class Error:  0.161882
+AUC:  0.9357281
+AUCPR:  0.9714834
+Gini:  0.8714562
+R^2:  0.5381675
 
 Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:
-       Bad Good    Error     Rate
-Bad    210   25 0.106383  =25/235
-Good    20  531 0.036298  =20/551
-Totals 230  556 0.057252  =45/786
+       bad good    Error       Rate
+bad    736  261 0.261785   =261/997
+good   156 2361 0.061979  =156/2517
+Totals 892 2622 0.118668  =417/3514
 
 Maximum Metrics: Maximum metrics at their respective thresholds
-                        metric threshold      value idx
-1                       max f1  0.585928   0.959350 231
-2                       max f2  0.528659   0.973467 251
-3                 max f0point5  0.641146   0.964326 215
-4                 max accuracy  0.585928   0.942748 231
-5                max precision  0.985738   1.000000   0
-6                   max recall  0.301839   1.000000 324
-7              max specificity  0.985738   1.000000   0
-8             max absolute_mcc  0.585928   0.862683 231
-9   max min_per_class_accuracy  0.650274   0.932849 211
-10 max mean_per_class_accuracy  0.641146   0.936919 215
-11                     max tns  0.985738 235.000000   0
-12                     max fns  0.985738 550.000000   0
-13                     max fps  0.050169 235.000000 399
-14                     max tps  0.301839 551.000000 324
-15                     max tnr  0.985738   1.000000   0
-16                     max fnr  0.985738   0.998185   0
-17                     max fpr  0.050169   1.000000 399
-18                     max tpr  0.301839   1.000000 324
+                        metric threshold       value idx
+1                       max f1  0.563945    0.918856 222
+2                       max f2  0.396719    0.949796 278
+3                 max f0point5  0.693235    0.923835 175
+4                 max accuracy  0.582656    0.881616 216
+5                max precision  0.982744    1.000000   0
+6                   max recall  0.164248    1.000000 357
+7              max specificity  0.982744    1.000000   0
+8             max absolute_mcc  0.582656    0.703714 216
+9   max min_per_class_accuracy  0.703102    0.859579 171
+10 max mean_per_class_accuracy  0.693235    0.862920 175
+11                     max tns  0.982744  997.000000   0
+12                     max fns  0.982744 2513.000000   0
+13                     max fps  0.028254  997.000000 399
+14                     max tps  0.164248 2517.000000 357
+15                     max tnr  0.982744    1.000000   0
+16                     max fnr  0.982744    0.998411   0
+17                     max fpr  0.028254    1.000000 399
+18                     max tpr  0.164248    1.000000 357
 
 Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`
 H2OBinomialMetrics: gbm
 ** Reported on validation data. **
 
-MSE:  0.1745567
-RMSE:  0.4177998
-LogLoss:  0.5180404
-Mean Per-Class Error:  0.4451729
-AUC:  0.7696438
-AUCPR:  0.8859651
-Gini:  0.5392876
-R^2:  0.1746002
+MSE:  0.1457177
+RMSE:  0.3817299
+LogLoss:  0.4481171
+Mean Per-Class Error:  0.2878665
+AUC:  0.8259852
+AUCPR:  0.923276
+Gini:  0.6519703
+R^2:  0.2664762
 
 Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:
-       Bad Good    Error     Rate
-Bad      8   57 0.876923   =57/65
-Good     2  147 0.013423   =2/149
-Totals  10  204 0.275701  =59/214
+       bad good    Error      Rate
+bad    135  122 0.474708  =122/257
+good    69  614 0.101025   =69/683
+Totals 204  736 0.203191  =191/940
 
 Maximum Metrics: Maximum metrics at their respective thresholds
                         metric threshold      value idx
-1                       max f1  0.230574   0.832861 203
-2                       max f2  0.175454   0.924318 209
-3                 max f0point5  0.643835   0.829662 132
-4                 max accuracy  0.579584   0.757009 148
-5                max precision  0.983556   1.000000   0
-6                   max recall  0.175454   1.000000 209
-7              max specificity  0.983556   1.000000   0
-8             max absolute_mcc  0.643835   0.427333 132
-9   max min_per_class_accuracy  0.705292   0.707692 124
-10 max mean_per_class_accuracy  0.643835   0.725348 132
-11                     max tns  0.983556  65.000000   0
-12                     max fns  0.983556 148.000000   0
-13                     max fps  0.082487  65.000000 213
-14                     max tps  0.175454 149.000000 209
-15                     max tnr  0.983556   1.000000   0
-16                     max fnr  0.983556   0.993289   0
-17                     max fpr  0.082487   1.000000 213
-18                     max tpr  0.175454   1.000000 209
+1                       max f1  0.509710   0.865398 269
+2                       max f2  0.090316   0.930931 392
+3                 max f0point5  0.691926   0.866645 197
+4                 max accuracy  0.567370   0.797872 250
+5                max precision  0.982366   1.000000   0
+6                   max recall  0.055538   1.000000 397
+7              max specificity  0.982366   1.000000   0
+8             max absolute_mcc  0.691926   0.490659 197
+9   max min_per_class_accuracy  0.734352   0.752562 176
+10 max mean_per_class_accuracy  0.691926   0.762538 197
+11                     max tns  0.982366 257.000000   0
+12                     max fns  0.982366 679.000000   0
+13                     max fps  0.039014 257.000000 399
+14                     max tps  0.055538 683.000000 397
+15                     max tnr  0.982366   1.000000   0
+16                     max fnr  0.982366   0.994143   0
+17                     max fpr  0.039014   1.000000 399
+18                     max tpr  0.055538   1.000000 397
 
 Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`
 
 
 Scoring History: 
             timestamp   duration number_of_trees training_rmse training_logloss
-1 2024-01-27 11:03:00  0.010 sec               0       0.45781          0.61000
-2 2024-01-27 11:03:00  0.047 sec               1       0.44489          0.58254
-3 2024-01-27 11:03:00  0.072 sec               2       0.43324          0.55877
-4 2024-01-27 11:03:00  0.104 sec               3       0.42313          0.53861
-5 2024-01-27 11:03:00  0.134 sec               4       0.41501          0.52240
+1 2024-07-21 01:31:30  0.008 sec               0       0.45080          0.59643
+2 2024-07-21 01:31:30  0.067 sec               1       0.43683          0.56675
+3 2024-07-21 01:31:30  0.110 sec               2       0.42488          0.54279
+4 2024-07-21 01:31:30  0.152 sec               3       0.41477          0.52310
+5 2024-07-21 01:31:30  0.174 sec               4       0.40619          0.50680
   training_auc training_pr_auc training_lift training_classification_error
-1      0.50000         0.70102       1.00000                       0.29898
-2      0.82314         0.91958       1.42650                       0.22774
-3      0.83729         0.92585       1.42650                       0.21374
-4      0.85373         0.93406       1.42650                       0.20738
-5      0.86354         0.93792       1.42650                       0.19338
+1      0.50000         0.71628       1.00000                       0.28372
+2      0.82756         0.91358       1.37025                       0.19550
+3      0.84619         0.92053       1.34660                       0.18640
+4      0.85325         0.92546       1.35631                       0.18412
+5      0.85400         0.92514       1.35631                       0.18412
   validation_rmse validation_logloss validation_auc validation_pr_auc
-1         0.45990            0.61405        0.50000           0.69626
-2         0.45392            0.60102        0.66598           0.80764
-3         0.45093            0.59421        0.66004           0.80140
-4         0.44796            0.58744        0.66324           0.80763
-5         0.44516            0.58122        0.67491           0.81993
+1         0.44583            0.58688        0.50000           0.72660
+2         0.43462            0.56312        0.78467           0.88779
+3         0.42670            0.54683        0.79756           0.90384
+4         0.41985            0.53290        0.80255           0.91345
+5         0.41464            0.52232        0.79920           0.91185
   validation_lift validation_classification_error
-1         1.00000                         0.30374
-2         1.10480                         0.30374
-3         1.07718                         0.29907
-4         1.07718                         0.28037
-5         0.95749                         0.26636
+1         1.00000                         0.27340
+2         1.13341                         0.22766
+3         1.32748                         0.22979
+4         1.36431                         0.22766
+5         1.36431                         0.22766
 
 ---
              timestamp   duration number_of_trees training_rmse
-46 2024-01-27 11:03:01  1.113 sec              45       0.27706
-47 2024-01-27 11:03:01  1.137 sec              46       0.27555
-48 2024-01-27 11:03:01  1.158 sec              47       0.27383
-49 2024-01-27 11:03:01  1.183 sec              48       0.27225
-50 2024-01-27 11:03:01  1.204 sec              49       0.27105
-51 2024-01-27 11:03:01  1.230 sec              50       0.26942
+46 2024-07-21 01:31:32  1.635 sec              45       0.31040
+47 2024-07-21 01:31:32  1.667 sec              46       0.30989
+48 2024-07-21 01:31:32  1.694 sec              47       0.30903
+49 2024-07-21 01:31:32  1.723 sec              48       0.30808
+50 2024-07-21 01:31:32  1.756 sec              49       0.30722
+51 2024-07-21 01:31:32  1.786 sec              50       0.30636
    training_logloss training_auc training_pr_auc training_lift
-46          0.27988      0.97668         0.98933       1.42650
-47          0.27727      0.97715         0.98965       1.42650
-48          0.27464      0.97787         0.99002       1.42650
-49          0.27199      0.97879         0.99049       1.42650
-50          0.27012      0.97924         0.99069       1.42650
-51          0.26763      0.97945         0.99077       1.42650
+46          0.32226      0.93209         0.96943       1.39611
+47          0.32123      0.93246         0.96960       1.39611
+48          0.31969      0.93326         0.96997       1.39611
+49          0.31793      0.93426         0.97062       1.39611
+50          0.31639      0.93478         0.97082       1.39611
+51          0.31475      0.93573         0.97148       1.39611
    training_classification_error validation_rmse validation_logloss
-46                       0.06234         0.41681            0.51647
-47                       0.06107         0.41697            0.51699
-48                       0.05980         0.41727            0.51749
-49                       0.05980         0.41718            0.51717
-50                       0.05852         0.41795            0.51830
-51                       0.05725         0.41780            0.51804
+46                       0.12237         0.38125            0.44727
+47                       0.12294         0.38123            0.44732
+48                       0.12180         0.38153            0.44779
+49                       0.11981         0.38154            0.44778
+50                       0.12094         0.38191            0.44834
+51                       0.11867         0.38173            0.44812
    validation_auc validation_pr_auc validation_lift
-46        0.76964           0.88500         1.43624
-47        0.76944           0.88436         1.43624
-48        0.76820           0.88405         1.43624
-49        0.76923           0.88526         1.43624
-50        0.76758           0.88486         1.43624
-51        0.76964           0.88597         1.43624
+46        0.82706           0.92364         1.37628
+47        0.82675           0.92316         1.37628
+48        0.82621           0.92293         1.37628
+49        0.82582           0.92294         1.37628
+50        0.82585           0.92319         1.37628
+51        0.82599           0.92328         1.37628
    validation_classification_error
-46                         0.28037
-47                         0.28037
-48                         0.28037
-49                         0.27570
-50                         0.27570
-51                         0.27570
+46                         0.20000
+47                         0.19894
+48                         0.20213
+49                         0.20106
+50                         0.20319
+51                         0.20319
 
 Variable Importances: (Extract with `h2o.varimp`) 
 =================================================
 
 Variable Importances: 
-                    variable relative_importance scaled_importance percentage
-1 CheckingAccountStatus.none           84.350624          1.000000   0.156410
-2                     Amount           82.419136          0.977102   0.152829
-3                   Duration           68.733696          0.814857   0.127452
-4                        Age           31.725632          0.376116   0.058828
-5             Purpose.NewCar           19.282278          0.228597   0.035755
-
----
-                           variable relative_importance scaled_importance
-54                  Housing.ForFree            0.132180          0.001567
-55        Purpose.DomesticAppliance            0.000000          0.000000
-56               Purpose.Retraining            0.000000          0.000000
-57                    Purpose.Other            0.000000          0.000000
-58 Personal.Male.Divorced.Seperated            0.000000          0.000000
-59          Job.UnemployedUnskilled            0.000000          0.000000
-   percentage
-54   0.000245
-55   0.000000
-56   0.000000
-57   0.000000
-58   0.000000
-59   0.000000</code></pre>
+    variable relative_importance scaled_importance percentage
+1  seniority          324.636536          1.000000   0.166827
+2     income          301.767517          0.929555   0.155075
+3    records          296.553772          0.913495   0.152395
+4     amount          233.128555          0.718122   0.119802
+5        job          163.762939          0.504450   0.084156
+6       home          132.941345          0.409508   0.068317
+7     assets          113.164719          0.348589   0.058154
+8      price          105.915077          0.326257   0.054428
+9   expenses           77.263611          0.238000   0.039705
+10       age           71.007111          0.218728   0.036490
+11      time           56.115288          0.172856   0.028837
+12      debt           36.218292          0.111566   0.018612
+13   marital           33.476219          0.103119   0.017203</code></pre>
 </div>
 </div>
 </section>
 <section id="tuning" class="level3" data-number="25.3.9">
 <h3 data-number="25.3.9" class="anchored" data-anchor-id="tuning"><span class="header-section-number">25.3.9</span> Tuning</h3>
-<p><strong>Tuning</strong> là quá trình tìm kiếm tổ hợp các tham số để tối ưu hóa mô hình (chất lượng dự báo tốt nhất có thể).</p>
+<p><strong>Tuning</strong> là quá trình tìm kiếm tổ hợp các bộ siêu tham số để tối ưu hóa mô hình theo một tiêu chí nhất định. Quá trình tuning sẽ diễn ra theo 2 bước lớn:</p>
+<ul>
+<li>Bước 1: Liệt kê các bộ tổ hợp tham số</li>
+<li>Bước 2: Xây dựng lần lượt từng mô hình với bộ tham số vừa chọn, có thể có 2 cách - chạy tuần tự (<em>grid search</em>) hoặc chạy ngẫu nhiên (<em>random search</em>)</li>
+</ul>
+<p>Để giới hạn thời gian training, ta có thể đặt ra các tiêu chí cho phép dừng việc xây dựng mô hình. Ví dụ:</p>
+<ul>
+<li>Thời gian tối đa training</li>
+<li>Số lượng mô hình tối đa</li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 9: Tuning</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.1. Set hyper parameters</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>hyper_params <span class="ot">=</span> <span class="fu">list</span>( </span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="do">## restrict the search to the range of max_depth established above</span></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_depth =</span> <span class="fu">c</span>(<span class="dv">5</span><span class="sc">:</span><span class="dv">9</span>),                                      </span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of row sampling rates per tree</span></span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_rate =</span> <span class="fu">seq</span>(<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="fl">0.05</span>),                                             </span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of column sampling rates per split</span></span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_sample_rate =</span> <span class="fu">seq</span>(<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="fl">0.05</span>),                                  </span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of the number of min rows in a terminal node</span></span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_rows =</span> <span class="dv">2</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="fu">log2</span>(<span class="fu">nrow</span>(train))<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>),                                 </span>
-<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of the number of bins for split-finding for continuous and integer columns</span></span>
-<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">nbins =</span> <span class="dv">2</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">4</span>,<span class="dv">10</span>,<span class="dv">1</span>),                                                     </span>
-<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of the number of bins for split-finding for categorical columns</span></span>
-<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">nbins_cats =</span> <span class="dv">2</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">4</span>,<span class="dv">12</span>,<span class="dv">1</span>),                                                </span>
-<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a few minimum required relative error improvement thresholds for a split to happen</span></span>
-<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_split_improvement =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">1e-8</span>,<span class="fl">1e-6</span>,<span class="fl">1e-4</span>),                               </span>
-<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>  <span class="do">## try all histogram types (QuantilesGlobal and RoundRobin are good for numeric columns with outliers)</span></span>
-<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">histogram_type =</span> <span class="fu">c</span>(<span class="st">"UniformAdaptive"</span>,<span class="st">"QuantilesGlobal"</span>,<span class="st">"RoundRobin"</span>)      </span>
-<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.2. Set search criteria</span></span>
-<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>search_criteria <span class="ot">=</span> <span class="fu">list</span>(</span>
-<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Random grid search</span></span>
-<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">strategy =</span> <span class="st">"RandomDiscrete"</span>,      </span>
-<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a>  <span class="do">## limit the runtime to xx minutes</span></span>
-<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_runtime_secs =</span> <span class="dv">10</span>,         </span>
-<span id="cb38-36"><a href="#cb38-36" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-37"><a href="#cb38-37" aria-hidden="true" tabindex="-1"></a>  <span class="do">## build no more than xx models</span></span>
-<span id="cb38-38"><a href="#cb38-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_models =</span> <span class="dv">5</span>,                  </span>
-<span id="cb38-39"><a href="#cb38-39" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-40"><a href="#cb38-40" aria-hidden="true" tabindex="-1"></a>  <span class="do">## random number generator seed to make sampling of parameter combinations reproducible</span></span>
-<span id="cb38-41"><a href="#cb38-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">1234</span>,                        </span>
-<span id="cb38-42"><a href="#cb38-42" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-43"><a href="#cb38-43" aria-hidden="true" tabindex="-1"></a>  <span class="do">## early stopping once the leaderboard of the top 5 models is converged to 0.1% relative difference</span></span>
-<span id="cb38-44"><a href="#cb38-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_rounds =</span> <span class="dv">5</span>,                </span>
-<span id="cb38-45"><a href="#cb38-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_metric =</span> <span class="st">"AUC"</span>,</span>
-<span id="cb38-46"><a href="#cb38-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_tolerance =</span> <span class="fl">1e-3</span></span>
-<span id="cb38-47"><a href="#cb38-47" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb38-48"><a href="#cb38-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-49"><a href="#cb38-49" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.3. Grid search</span></span>
-<span id="cb38-50"><a href="#cb38-50" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">h2o.grid</span>(</span>
-<span id="cb38-51"><a href="#cb38-51" aria-hidden="true" tabindex="-1"></a>  <span class="do">## hyper parameters</span></span>
-<span id="cb38-52"><a href="#cb38-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">hyper_params =</span> hyper_params,</span>
-<span id="cb38-53"><a href="#cb38-53" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-54"><a href="#cb38-54" aria-hidden="true" tabindex="-1"></a>  <span class="do">## hyper-parameter search configuration (see above)</span></span>
-<span id="cb38-55"><a href="#cb38-55" aria-hidden="true" tabindex="-1"></a>  <span class="at">search_criteria =</span> search_criteria,</span>
-<span id="cb38-56"><a href="#cb38-56" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-57"><a href="#cb38-57" aria-hidden="true" tabindex="-1"></a>  <span class="do">## which algorithm to run</span></span>
-<span id="cb38-58"><a href="#cb38-58" aria-hidden="true" tabindex="-1"></a>  <span class="at">algorithm =</span> <span class="st">"gbm"</span>,</span>
-<span id="cb38-59"><a href="#cb38-59" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-60"><a href="#cb38-60" aria-hidden="true" tabindex="-1"></a>  <span class="do">## identifier for the grid, to later retrieve it</span></span>
-<span id="cb38-61"><a href="#cb38-61" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid_id =</span> <span class="st">"model_id"</span>, </span>
-<span id="cb38-62"><a href="#cb38-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-63"><a href="#cb38-63" aria-hidden="true" tabindex="-1"></a>  <span class="do">## standard model parameters</span></span>
-<span id="cb38-64"><a href="#cb38-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(GermanCredit), <span class="st">"Class"</span>), </span>
-<span id="cb38-65"><a href="#cb38-65" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="st">"Class"</span>, </span>
-<span id="cb38-66"><a href="#cb38-66" aria-hidden="true" tabindex="-1"></a>  <span class="at">training_frame =</span> train, </span>
-<span id="cb38-67"><a href="#cb38-67" aria-hidden="true" tabindex="-1"></a>  <span class="at">validation_frame =</span> test,</span>
-<span id="cb38-68"><a href="#cb38-68" aria-hidden="true" tabindex="-1"></a>  <span class="co">#balance_classes = T, #Option to solve imbalanced classification</span></span>
-<span id="cb38-69"><a href="#cb38-69" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-70"><a href="#cb38-70" aria-hidden="true" tabindex="-1"></a>  <span class="do">## more trees is better if the learning rate is small enough</span></span>
-<span id="cb38-71"><a href="#cb38-71" aria-hidden="true" tabindex="-1"></a>  <span class="do">## use "more than enough" trees - we have early stopping</span></span>
-<span id="cb38-72"><a href="#cb38-72" aria-hidden="true" tabindex="-1"></a>  <span class="at">ntrees =</span> <span class="dv">200</span>,                                                            </span>
-<span id="cb38-73"><a href="#cb38-73" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-74"><a href="#cb38-74" aria-hidden="true" tabindex="-1"></a>  <span class="do">## smaller learning rate is better</span></span>
-<span id="cb38-75"><a href="#cb38-75" aria-hidden="true" tabindex="-1"></a>  <span class="do">## since we have learning_rate_annealing, we can afford to start with a bigger learning rate</span></span>
-<span id="cb38-76"><a href="#cb38-76" aria-hidden="true" tabindex="-1"></a>  <span class="at">learn_rate =</span> <span class="fl">0.05</span>,                                                         </span>
-<span id="cb38-77"><a href="#cb38-77" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-78"><a href="#cb38-78" aria-hidden="true" tabindex="-1"></a>  <span class="do">## learning rate annealing: learning_rate shrinks by 1% after every tree </span></span>
-<span id="cb38-79"><a href="#cb38-79" aria-hidden="true" tabindex="-1"></a>  <span class="do">## (use 1.00 to disable, but then lower the learning_rate)</span></span>
-<span id="cb38-80"><a href="#cb38-80" aria-hidden="true" tabindex="-1"></a>  <span class="at">learn_rate_annealing =</span> <span class="fl">0.99</span>,                                               </span>
-<span id="cb38-81"><a href="#cb38-81" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-82"><a href="#cb38-82" aria-hidden="true" tabindex="-1"></a>  <span class="do">## early stopping based on timeout (no model should take more than 1 hour - modify as needed)</span></span>
-<span id="cb38-83"><a href="#cb38-83" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_runtime_secs =</span> <span class="dv">30</span>,                                                 </span>
-<span id="cb38-84"><a href="#cb38-84" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-85"><a href="#cb38-85" aria-hidden="true" tabindex="-1"></a>  <span class="do">## early stopping once the validation AUC doesn't improve by at least 0.01% for 5 consecutive scoring events</span></span>
-<span id="cb38-86"><a href="#cb38-86" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_rounds =</span> <span class="dv">5</span>, <span class="at">stopping_tolerance =</span> <span class="fl">1e-3</span>, <span class="at">stopping_metric =</span> <span class="st">"AUC"</span>, </span>
-<span id="cb38-87"><a href="#cb38-87" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-88"><a href="#cb38-88" aria-hidden="true" tabindex="-1"></a>  <span class="do">## score every 10 trees to make early stopping reproducible (it depends on the scoring interval)</span></span>
-<span id="cb38-89"><a href="#cb38-89" aria-hidden="true" tabindex="-1"></a>  <span class="at">score_tree_interval =</span> <span class="dv">10</span>,                                                </span>
-<span id="cb38-90"><a href="#cb38-90" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-91"><a href="#cb38-91" aria-hidden="true" tabindex="-1"></a>  <span class="do">## base random number generator seed for each model (automatically gets incremented internally for each model)</span></span>
-<span id="cb38-92"><a href="#cb38-92" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">1234</span>                                                             </span>
-<span id="cb38-93"><a href="#cb38-93" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 9: Tuning</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.1. Set hyper parameters</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>hyper_params <span class="ot">=</span> <span class="fu">list</span>( </span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Số tầng tối đa trong cây - restrict the search to the range of max_depth established above</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_depth =</span> <span class="fu">c</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">7</span>),                                      </span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of row sampling rates per tree</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_rate =</span> <span class="fu">seq</span>(<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="fl">0.05</span>),                                             </span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of column sampling rates per split</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_sample_rate =</span> <span class="fu">seq</span>(<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="fl">0.05</span>),                                  </span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of the number of min rows in a terminal node</span></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_rows =</span> <span class="dv">2</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">0</span>,<span class="fu">log2</span>(<span class="fu">nrow</span>(train))<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>),                                 </span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of the number of bins for split-finding for continuous and integer columns</span></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">nbins =</span> <span class="dv">2</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">4</span>,<span class="dv">10</span>,<span class="dv">1</span>),                                                     </span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a large space of the number of bins for split-finding for categorical columns</span></span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">nbins_cats =</span> <span class="dv">2</span><span class="sc">^</span><span class="fu">seq</span>(<span class="dv">4</span>,<span class="dv">12</span>,<span class="dv">1</span>),                                                </span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>  <span class="do">## search a few minimum required relative error improvement thresholds for a split to happen</span></span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_split_improvement =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">1e-8</span>,<span class="fl">1e-6</span>,<span class="fl">1e-4</span>),                               </span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>  <span class="do">## try all histogram types (QuantilesGlobal and RoundRobin are good for numeric columns with outliers)</span></span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">histogram_type =</span> <span class="fu">c</span>(<span class="st">"UniformAdaptive"</span>,<span class="st">"QuantilesGlobal"</span>,<span class="st">"RoundRobin"</span>)      </span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.2. Set search criteria</span></span>
+<span id="cb40-30"><a href="#cb40-30" aria-hidden="true" tabindex="-1"></a>search_criteria <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb40-31"><a href="#cb40-31" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Random grid search</span></span>
+<span id="cb40-32"><a href="#cb40-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">strategy =</span> <span class="st">"RandomDiscrete"</span>,      </span>
+<span id="cb40-33"><a href="#cb40-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-34"><a href="#cb40-34" aria-hidden="true" tabindex="-1"></a>  <span class="do">## limit the runtime to xx minutes</span></span>
+<span id="cb40-35"><a href="#cb40-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_runtime_secs =</span> <span class="dv">10</span>,         </span>
+<span id="cb40-36"><a href="#cb40-36" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-37"><a href="#cb40-37" aria-hidden="true" tabindex="-1"></a>  <span class="do">## build no more than xx models</span></span>
+<span id="cb40-38"><a href="#cb40-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_models =</span> <span class="dv">20</span>,                  </span>
+<span id="cb40-39"><a href="#cb40-39" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-40"><a href="#cb40-40" aria-hidden="true" tabindex="-1"></a>  <span class="do">## random number generator seed to make sampling of parameter combinations reproducible</span></span>
+<span id="cb40-41"><a href="#cb40-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">1234</span>,                        </span>
+<span id="cb40-42"><a href="#cb40-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-43"><a href="#cb40-43" aria-hidden="true" tabindex="-1"></a>  <span class="do">## early stopping once the leaderboard of the top 5 models is converged to 0.1% relative difference</span></span>
+<span id="cb40-44"><a href="#cb40-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_rounds =</span> <span class="dv">5</span>,                </span>
+<span id="cb40-45"><a href="#cb40-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_metric =</span> <span class="st">"AUC"</span>,</span>
+<span id="cb40-46"><a href="#cb40-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_tolerance =</span> <span class="fl">1e-3</span></span>
+<span id="cb40-47"><a href="#cb40-47" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-48"><a href="#cb40-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-49"><a href="#cb40-49" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.3. Grid search</span></span>
+<span id="cb40-50"><a href="#cb40-50" aria-hidden="true" tabindex="-1"></a>grid <span class="ot">&lt;-</span> <span class="fu">h2o.grid</span>(</span>
+<span id="cb40-51"><a href="#cb40-51" aria-hidden="true" tabindex="-1"></a>  <span class="do">## hyper parameters</span></span>
+<span id="cb40-52"><a href="#cb40-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">hyper_params =</span> hyper_params,</span>
+<span id="cb40-53"><a href="#cb40-53" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-54"><a href="#cb40-54" aria-hidden="true" tabindex="-1"></a>  <span class="do">## hyper-parameter search configuration (see above)</span></span>
+<span id="cb40-55"><a href="#cb40-55" aria-hidden="true" tabindex="-1"></a>  <span class="at">search_criteria =</span> search_criteria,</span>
+<span id="cb40-56"><a href="#cb40-56" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-57"><a href="#cb40-57" aria-hidden="true" tabindex="-1"></a>  <span class="do">## which algorithm to run</span></span>
+<span id="cb40-58"><a href="#cb40-58" aria-hidden="true" tabindex="-1"></a>  <span class="at">algorithm =</span> <span class="st">"gbm"</span>,</span>
+<span id="cb40-59"><a href="#cb40-59" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-60"><a href="#cb40-60" aria-hidden="true" tabindex="-1"></a>  <span class="do">## identifier for the grid, to later retrieve it</span></span>
+<span id="cb40-61"><a href="#cb40-61" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid_id =</span> <span class="st">"model_id"</span>, </span>
+<span id="cb40-62"><a href="#cb40-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-63"><a href="#cb40-63" aria-hidden="true" tabindex="-1"></a>  <span class="do">## standard model parameters</span></span>
+<span id="cb40-64"><a href="#cb40-64" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(credit_data), <span class="st">"status"</span>), </span>
+<span id="cb40-65"><a href="#cb40-65" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="st">"status"</span>, </span>
+<span id="cb40-66"><a href="#cb40-66" aria-hidden="true" tabindex="-1"></a>  <span class="at">training_frame =</span> train, </span>
+<span id="cb40-67"><a href="#cb40-67" aria-hidden="true" tabindex="-1"></a>  <span class="at">validation_frame =</span> test,</span>
+<span id="cb40-68"><a href="#cb40-68" aria-hidden="true" tabindex="-1"></a>  <span class="co">#balance_classes = T, #Option to solve imbalanced classification</span></span>
+<span id="cb40-69"><a href="#cb40-69" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-70"><a href="#cb40-70" aria-hidden="true" tabindex="-1"></a>  <span class="do">## more trees is better if the learning rate is small enough</span></span>
+<span id="cb40-71"><a href="#cb40-71" aria-hidden="true" tabindex="-1"></a>  <span class="do">## use "more than enough" trees - we have early stopping</span></span>
+<span id="cb40-72"><a href="#cb40-72" aria-hidden="true" tabindex="-1"></a>  <span class="at">ntrees =</span> <span class="dv">200</span>,                                                            </span>
+<span id="cb40-73"><a href="#cb40-73" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-74"><a href="#cb40-74" aria-hidden="true" tabindex="-1"></a>  <span class="do">## smaller learning rate is better</span></span>
+<span id="cb40-75"><a href="#cb40-75" aria-hidden="true" tabindex="-1"></a>  <span class="do">## since we have learning_rate_annealing, we can afford to start with a bigger learning rate</span></span>
+<span id="cb40-76"><a href="#cb40-76" aria-hidden="true" tabindex="-1"></a>  <span class="at">learn_rate =</span> <span class="fl">0.05</span>,                                                         </span>
+<span id="cb40-77"><a href="#cb40-77" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-78"><a href="#cb40-78" aria-hidden="true" tabindex="-1"></a>  <span class="do">## learning rate annealing: learning_rate shrinks by 1% after every tree </span></span>
+<span id="cb40-79"><a href="#cb40-79" aria-hidden="true" tabindex="-1"></a>  <span class="do">## (use 1.00 to disable, but then lower the learning_rate)</span></span>
+<span id="cb40-80"><a href="#cb40-80" aria-hidden="true" tabindex="-1"></a>  <span class="at">learn_rate_annealing =</span> <span class="fl">0.99</span>,                                               </span>
+<span id="cb40-81"><a href="#cb40-81" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-82"><a href="#cb40-82" aria-hidden="true" tabindex="-1"></a>  <span class="do">## early stopping based on timeout (no model should take more than 1 hour - modify as needed)</span></span>
+<span id="cb40-83"><a href="#cb40-83" aria-hidden="true" tabindex="-1"></a>  <span class="at">max_runtime_secs =</span> <span class="dv">30</span>,                                                 </span>
+<span id="cb40-84"><a href="#cb40-84" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-85"><a href="#cb40-85" aria-hidden="true" tabindex="-1"></a>  <span class="do">## early stopping once the validation AUC doesn't improve by at least 0.01% for 5 consecutive scoring events</span></span>
+<span id="cb40-86"><a href="#cb40-86" aria-hidden="true" tabindex="-1"></a>  <span class="at">stopping_rounds =</span> <span class="dv">5</span>, <span class="at">stopping_tolerance =</span> <span class="fl">1e-3</span>, <span class="at">stopping_metric =</span> <span class="st">"AUC"</span>, </span>
+<span id="cb40-87"><a href="#cb40-87" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-88"><a href="#cb40-88" aria-hidden="true" tabindex="-1"></a>  <span class="do">## score every 10 trees to make early stopping reproducible (it depends on the scoring interval)</span></span>
+<span id="cb40-89"><a href="#cb40-89" aria-hidden="true" tabindex="-1"></a>  <span class="at">score_tree_interval =</span> <span class="dv">10</span>,                                                </span>
+<span id="cb40-90"><a href="#cb40-90" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb40-91"><a href="#cb40-91" aria-hidden="true" tabindex="-1"></a>  <span class="do">## base random number generator seed for each model (automatically gets incremented internally for each model)</span></span>
+<span id="cb40-92"><a href="#cb40-92" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">1234</span>                                                             </span>
+<span id="cb40-93"><a href="#cb40-93" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   |                                                                            
   |                                                                      |   0%
   |                                                                            
-  |========                                                              |  11%
+  |=======                                                               |  10%
   |                                                                            
-  |======================                                                |  31%
+  |=====================                                                 |  30%
   |                                                                            
-  |====================================                                  |  51%
+  |===================================                                   |  50%
   |                                                                            
-  |==================================================                    |  71%
+  |=================================================                     |  71%
   |                                                                            
   |================================================================      |  91%
   |                                                                            
   |======================================================================| 100%</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.4. Get models</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>sortedGrid <span class="ot">&lt;-</span> <span class="fu">h2o.getGrid</span>(<span class="st">"model_id"</span>, <span class="at">sort_by =</span> <span class="st">"auc"</span>, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)    </span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>sortedGrid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.4. Get models</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>sortedGrid <span class="ot">&lt;-</span> <span class="fu">h2o.getGrid</span>(<span class="st">"model_id"</span>, <span class="at">sort_by =</span> <span class="st">"auc"</span>, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)    </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>sortedGrid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>H2O Grid Details
 ================
@@ -2086,33 +1635,51 @@ Used hyper parameters:
   -  nbins 
   -  nbins_cats 
   -  sample_rate 
-Number of models: 3 
+Number of models: 15 
 Number of failed models: 0 
 
 Hyper-Parameter Search Summary: ordered by decreasing auc
-  col_sample_rate  histogram_type max_depth min_rows min_split_improvement
-1         0.80000 UniformAdaptive   7.00000  1.00000               0.00000
-2         0.75000 QuantilesGlobal   5.00000 32.00000               0.00000
-3         0.85000      RoundRobin   8.00000  1.00000               0.00010
-      nbins nbins_cats sample_rate        model_ids     auc
-1 512.00000 2048.00000     0.55000 model_id_model_3 0.77873
-2  64.00000  512.00000     0.50000 model_id_model_2 0.77233
-3  16.00000  256.00000     0.55000 model_id_model_1 0.76386</code></pre>
+   col_sample_rate  histogram_type max_depth min_rows min_split_improvement
+1          0.75000 QuantilesGlobal   5.00000  4.00000               0.00000
+2          0.80000 UniformAdaptive   5.00000  1.00000               0.00000
+3          0.80000 UniformAdaptive   5.00000  1.00000               0.00000
+4          0.85000      RoundRobin   8.00000 32.00000               0.00010
+5          0.80000 UniformAdaptive   5.00000  1.00000               0.00000
+6          0.85000      RoundRobin   6.00000 32.00000               0.00010
+7          0.85000      RoundRobin   6.00000 32.00000               0.00010
+8          0.85000      RoundRobin   6.00000 32.00000               0.00010
+9          0.70000 UniformAdaptive   3.00000 16.00000               0.00000
+10         0.75000 QuantilesGlobal   3.00000  4.00000               0.00000
+11         0.75000 QuantilesGlobal   3.00000  4.00000               0.00000
+12         0.75000 QuantilesGlobal   3.00000  4.00000               0.00000
+13         0.70000 UniformAdaptive   3.00000 16.00000               0.00000
+14         0.80000 UniformAdaptive   5.00000 32.00000               0.00010
+15         0.80000 UniformAdaptive   5.00000 32.00000               0.00010
+       nbins nbins_cats sample_rate         model_ids     auc
+1   64.00000  512.00000     0.50000  model_id_model_2 0.83925
+2  512.00000 2048.00000     0.55000 model_id_model_13 0.83607
+3  512.00000 2048.00000     0.55000 model_id_model_13 0.83607
+4   16.00000  256.00000     0.55000  model_id_model_1 0.83597
+5  512.00000 2048.00000     0.55000  model_id_model_5 0.83592
+6   16.00000  256.00000     0.55000 model_id_model_11 0.83588
+7   16.00000  256.00000     0.55000 model_id_model_11 0.83588
+8   16.00000  256.00000     0.55000  model_id_model_3 0.83588
+9   64.00000  128.00000     0.50000 model_id_model_10 0.83490
+10  64.00000  512.00000     0.50000 model_id_model_12 0.83436
+11  64.00000  512.00000     0.50000 model_id_model_12 0.83436
+12  64.00000  512.00000     0.50000  model_id_model_4 0.83436
+13  64.00000  128.00000     0.50000 model_id_model_15 0.83205
+14  16.00000   16.00000     1.00000 model_id_model_14 0.82979
+15  16.00000   16.00000     1.00000  model_id_model_9 0.82979</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.5. Get best model</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>gbm <span class="ot">&lt;-</span> <span class="fu">h2o.getModel</span>(sortedGrid<span class="sc">@</span>model_ids[[<span class="dv">1</span>]])</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters of the best model</span></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>gbm<span class="sc">@</span>parameters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 9.5. Get best model</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>gbm <span class="ot">&lt;-</span> <span class="fu">h2o.getModel</span>(sortedGrid<span class="sc">@</span>model_ids[[<span class="dv">1</span>]])</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameters of the best model</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>gbm<span class="sc">@</span>parameters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$model_id
-[1] "model_id_model_3"
-
-$training_frame
-[1] "RTMP_sid_be09_3"
-
-$validation_frame
-[1] "RTMP_sid_be09_5"
+[1] "model_id_model_2"
 
 $score_tree_interval
 [1] 10
@@ -2120,17 +1687,14 @@ $score_tree_interval
 $ntrees
 [1] 200
 
-$max_depth
-[1] 7
-
 $min_rows
-[1] 1
+[1] 4
 
 $nbins
-[1] 512
+[1] 64
 
 $nbins_cats
-[1] 2048
+[1] 512
 
 $stopping_rounds
 [1] 5
@@ -2139,7 +1703,7 @@ $stopping_metric
 [1] "AUC"
 
 $max_runtime_secs
-[1] 1.978
+[1] 3.343
 
 $seed
 [1] 1234
@@ -2154,16 +1718,16 @@ $distribution
 [1] "bernoulli"
 
 $sample_rate
-[1] 0.55
+[1] 0.5
 
 $col_sample_rate
-[1] 0.8
+[1] 0.75
 
 $min_split_improvement
 [1] 1e-08
 
 $histogram_type
-[1] "UniformAdaptive"
+[1] "QuantilesGlobal"
 
 $categorical_encoding
 [1] "Enum"
@@ -2172,296 +1736,211 @@ $calibration_method
 [1] "PlattScaling"
 
 $x
- [1] "Duration"                              
- [2] "Amount"                                
- [3] "InstallmentRatePercentage"             
- [4] "ResidenceDuration"                     
- [5] "Age"                                   
- [6] "NumberExistingCredits"                 
- [7] "NumberPeopleMaintenance"               
- [8] "Telephone"                             
- [9] "ForeignWorker"                         
-[10] "CheckingAccountStatus.lt.0"            
-[11] "CheckingAccountStatus.0.to.200"        
-[12] "CheckingAccountStatus.gt.200"          
-[13] "CheckingAccountStatus.none"            
-[14] "CreditHistory.NoCredit.AllPaid"        
-[15] "CreditHistory.ThisBank.AllPaid"        
-[16] "CreditHistory.PaidDuly"                
-[17] "CreditHistory.Delay"                   
-[18] "CreditHistory.Critical"                
-[19] "Purpose.NewCar"                        
-[20] "Purpose.UsedCar"                       
-[21] "Purpose.Furniture.Equipment"           
-[22] "Purpose.Radio.Television"              
-[23] "Purpose.DomesticAppliance"             
-[24] "Purpose.Repairs"                       
-[25] "Purpose.Education"                     
-[26] "Purpose.Retraining"                    
-[27] "Purpose.Business"                      
-[28] "Purpose.Other"                         
-[29] "SavingsAccountBonds.lt.100"            
-[30] "SavingsAccountBonds.100.to.500"        
-[31] "SavingsAccountBonds.500.to.1000"       
-[32] "SavingsAccountBonds.gt.1000"           
-[33] "SavingsAccountBonds.Unknown"           
-[34] "EmploymentDuration.lt.1"               
-[35] "EmploymentDuration.1.to.4"             
-[36] "EmploymentDuration.4.to.7"             
-[37] "EmploymentDuration.gt.7"               
-[38] "EmploymentDuration.Unemployed"         
-[39] "Personal.Male.Divorced.Seperated"      
-[40] "Personal.Female.NotSingle"             
-[41] "Personal.Male.Single"                  
-[42] "Personal.Male.Married.Widowed"         
-[43] "OtherDebtorsGuarantors.None"           
-[44] "OtherDebtorsGuarantors.CoApplicant"    
-[45] "OtherDebtorsGuarantors.Guarantor"      
-[46] "Property.RealEstate"                   
-[47] "Property.Insurance"                    
-[48] "Property.CarOther"                     
-[49] "Property.Unknown"                      
-[50] "OtherInstallmentPlans.Bank"            
-[51] "OtherInstallmentPlans.Stores"          
-[52] "OtherInstallmentPlans.None"            
-[53] "Housing.Rent"                          
-[54] "Housing.Own"                           
-[55] "Housing.ForFree"                       
-[56] "Job.UnemployedUnskilled"               
-[57] "Job.UnskilledResident"                 
-[58] "Job.SkilledEmployee"                   
-[59] "Job.Management.SelfEmp.HighlyQualified"
+ [1] "seniority" "home"      "time"      "age"       "marital"   "records"  
+ [7] "job"       "expenses"  "income"    "assets"    "debt"      "amount"   
+[13] "price"    
 
 $y
-[1] "Class"</code></pre>
+[1] "status"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary best model</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>gbm <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary best model</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>gbm <span class="sc">%&gt;%</span> summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Model Details:
 ==============
 
 H2OBinomialModel: gbm
-Model Key:  model_id_model_3 
+Model Key:  model_id_model_2 
 Model Summary: 
   number_of_trees number_of_internal_trees model_size_in_bytes min_depth
-1             160                      160              132081         7
+1             101                      101               41267         5
   max_depth mean_depth min_leaves max_leaves mean_leaves
-1         7    7.00000         37         90    60.88750
+1         5    5.00000         22         32    27.84158
 
 H2OBinomialMetrics: gbm
 ** Reported on training data. **
 
-MSE:  0.0301219
-RMSE:  0.1735566
-LogLoss:  0.1504146
-Mean Per-Class Error:  0.003942542
-AUC:  0.9997027
-AUCPR:  0.9998713
-Gini:  0.9994053
-R^2:  0.8562831
+MSE:  0.1038766
+RMSE:  0.3222989
+LogLoss:  0.3444046
+Mean Per-Class Error:  0.1962122
+AUC:  0.922945
+AUCPR:  0.9656416
+Gini:  0.8458901
+R^2:  0.4888564
 
 Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:
-       Bad Good    Error    Rate
-Bad    234    1 0.004255  =1/235
-Good     2  549 0.003630  =2/551
-Totals 236  550 0.003817  =3/786
+       bad good    Error       Rate
+bad    662  335 0.336008   =335/997
+good   142 2375 0.056416  =142/2517
+Totals 804 2710 0.135743  =477/3514
 
 Maximum Metrics: Maximum metrics at their respective thresholds
-                        metric threshold      value idx
-1                       max f1  0.584274   0.997275 221
-2                       max f2  0.559127   0.997461 224
-3                 max f0point5  0.584274   0.997819 221
-4                 max accuracy  0.584274   0.996183 221
-5                max precision  0.987277   1.000000   0
-6                   max recall  0.499648   1.000000 231
-7              max specificity  0.987277   1.000000   0
-8             max absolute_mcc  0.584274   0.990910 221
-9   max min_per_class_accuracy  0.584274   0.995745 221
-10 max mean_per_class_accuracy  0.584274   0.996057 221
-11                     max tns  0.987277 235.000000   0
-12                     max fns  0.987277 550.000000   0
-13                     max fps  0.049099 235.000000 399
-14                     max tps  0.499648 551.000000 231
-15                     max tnr  0.987277   1.000000   0
-16                     max fnr  0.987277   0.998185   0
-17                     max fpr  0.049099   1.000000 399
-18                     max tpr  0.499648   1.000000 231
+                        metric threshold       value idx
+1                       max f1  0.542663    0.908743 238
+2                       max f2  0.294600    0.945905 323
+3                 max f0point5  0.714438    0.916011 169
+4                 max accuracy  0.613301    0.865680 211
+5                max precision  0.966763    1.000000   0
+6                   max recall  0.208347    1.000000 353
+7              max specificity  0.966763    1.000000   0
+8             max absolute_mcc  0.638907    0.669366 201
+9   max min_per_class_accuracy  0.705850    0.846540 173
+10 max mean_per_class_accuracy  0.714438    0.849024 169
+11                     max tns  0.966763  997.000000   0
+12                     max fns  0.966763 2506.000000   0
+13                     max fps  0.051253  997.000000 399
+14                     max tps  0.208347 2517.000000 353
+15                     max tnr  0.966763    1.000000   0
+16                     max fnr  0.966763    0.995630   0
+17                     max fpr  0.051253    1.000000 399
+18                     max tpr  0.208347    1.000000 353
 
 Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`
 H2OBinomialMetrics: gbm
 ** Reported on validation data. **
 
-MSE:  0.1698508
-RMSE:  0.4121295
-LogLoss:  0.5118234
-Mean Per-Class Error:  0.411048
-AUC:  0.77873
-AUCPR:  0.886226
-Gini:  0.55746
-R^2:  0.1968523
+MSE:  0.1428533
+RMSE:  0.3779594
+LogLoss:  0.4379932
+Mean Per-Class Error:  0.3311096
+AUC:  0.8392535
+AUCPR:  0.9339088
+Gini:  0.6785069
+R^2:  0.2808953
 
 Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:
-       Bad Good    Error     Rate
-Bad     12   53 0.815385   =53/65
-Good     1  148 0.006711   =1/149
-Totals  13  201 0.252336  =54/214
+       bad good    Error      Rate
+bad    106  151 0.587549  =151/257
+good    51  632 0.074671   =51/683
+Totals 157  783 0.214894  =202/940
 
 Maximum Metrics: Maximum metrics at their respective thresholds
                         metric threshold      value idx
-1                       max f1  0.270659   0.845714 200
-2                       max f2  0.270659   0.928482 200
-3                 max f0point5  0.609504   0.821095 149
-4                 max accuracy  0.568169   0.757009 158
-5                max precision  0.984562   1.000000   0
-6                   max recall  0.146165   1.000000 210
-7              max specificity  0.984562   1.000000   0
-8             max absolute_mcc  0.609504   0.411930 149
-9   max min_per_class_accuracy  0.734044   0.707692 124
-10 max mean_per_class_accuracy  0.748205   0.715849 116
-11                     max tns  0.984562  65.000000   0
-12                     max fns  0.984562 148.000000   0
-13                     max fps  0.092630  65.000000 213
-14                     max tps  0.146165 149.000000 210
-15                     max tnr  0.984562   1.000000   0
-16                     max fnr  0.984562   0.993289   0
-17                     max fpr  0.092630   1.000000 213
-18                     max tpr  0.146165   1.000000 210
+1                       max f1  0.441956   0.862210 290
+2                       max f2  0.121529   0.931787 392
+3                 max f0point5  0.718631   0.873643 183
+4                 max accuracy  0.564764   0.791489 249
+5                max precision  0.969009   1.000000   0
+6                   max recall  0.121529   1.000000 392
+7              max specificity  0.969009   1.000000   0
+8             max absolute_mcc  0.718631   0.508423 183
+9   max min_per_class_accuracy  0.719839   0.774319 182
+10 max mean_per_class_accuracy  0.718631   0.775886 183
+11                     max tns  0.969009 257.000000   0
+12                     max fns  0.969009 682.000000   0
+13                     max fps  0.067426 257.000000 399
+14                     max tps  0.121529 683.000000 392
+15                     max tnr  0.969009   1.000000   0
+16                     max fnr  0.969009   0.998536   0
+17                     max fpr  0.067426   1.000000 399
+18                     max tpr  0.121529   1.000000 392
 
 Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`
 
 
 Scoring History: 
              timestamp   duration number_of_trees training_rmse
-1  2024-01-27 11:03:10  8.035 sec               0       0.45781
-2  2024-01-27 11:03:11  8.230 sec              10       0.38021
-3  2024-01-27 11:03:11  8.379 sec              20       0.33012
-4  2024-01-27 11:03:11  8.502 sec              30       0.29559
-5  2024-01-27 11:03:11  8.604 sec              40       0.27103
-6  2024-01-27 11:03:11  8.705 sec              50       0.25164
-7  2024-01-27 11:03:11  8.810 sec              60       0.23528
-8  2024-01-27 11:03:11  8.914 sec              70       0.22403
-9  2024-01-27 11:03:11  9.013 sec              80       0.21344
-10 2024-01-27 11:03:11  9.125 sec              90       0.20578
-11 2024-01-27 11:03:12  9.233 sec             100       0.19796
-12 2024-01-27 11:03:12  9.357 sec             110       0.19256
-13 2024-01-27 11:03:12  9.499 sec             120       0.18836
-14 2024-01-27 11:03:12  9.631 sec             130       0.18327
-15 2024-01-27 11:03:12  9.729 sec             140       0.17954
-16 2024-01-27 11:03:12  9.872 sec             150       0.17647
-17 2024-01-27 11:03:12 10.019 sec             160       0.17356
+1  2024-07-21 00:47:47  6.695 sec               0       0.45080
+2  2024-07-21 00:47:48  7.465 sec              10       0.40036
+3  2024-07-21 00:47:48  7.794 sec              20       0.37458
+4  2024-07-21 00:47:48  8.049 sec              30       0.35923
+5  2024-07-21 00:47:49  8.310 sec              40       0.34906
+6  2024-07-21 00:47:49  8.618 sec              50       0.34114
+7  2024-07-21 00:47:49  8.881 sec              60       0.33579
+8  2024-07-21 00:47:50  9.173 sec              70       0.33160
+9  2024-07-21 00:47:50  9.421 sec              80       0.32802
+10 2024-07-21 00:47:50  9.661 sec              90       0.32507
+11 2024-07-21 00:47:50  9.943 sec             100       0.32249
+12 2024-07-21 00:47:50 10.024 sec             101       0.32230
    training_logloss training_auc training_pr_auc training_lift
-1           0.61000      0.50000         0.70102       1.00000
-2           0.45947      0.96683         0.98507       1.42650
-3           0.37361      0.98343         0.99259       1.42650
-4           0.31846      0.99070         0.99579       1.42650
-5           0.28075      0.99421         0.99734       1.42650
-6           0.25232      0.99597         0.99820       1.42650
-7           0.22911      0.99682         0.99859       1.42650
-8           0.21353      0.99772         0.99901       1.42650
-9           0.19968      0.99841         0.99931       1.42650
-10          0.18953      0.99878         0.99947       1.42650
-11          0.17986      0.99908         0.99961       1.42650
-12          0.17317      0.99919         0.99965       1.42650
-13          0.16761      0.99928         0.99969       1.42650
-14          0.16165      0.99944         0.99976       1.42650
-15          0.15721      0.99957         0.99981       1.42650
-16          0.15372      0.99963         0.99984       1.42650
-17          0.15041      0.99970         0.99987       1.42650
+1           0.59643      0.50000         0.71628       1.00000
+2           0.49553      0.86878         0.93508       1.37866
+3           0.44705      0.88372         0.94399       1.39611
+4           0.41759      0.89342         0.94946       1.39611
+5           0.39769      0.89918         0.95265       1.39611
+6           0.38221      0.90611         0.95626       1.39611
+7           0.37140      0.91002         0.95838       1.39611
+8           0.36303      0.91369         0.96043       1.39611
+9           0.35584      0.91740         0.96247       1.39611
+10          0.34982      0.92029         0.96416       1.39611
+11          0.34478      0.92285         0.96560       1.39611
+12          0.34440      0.92295         0.96564       1.39611
    training_classification_error validation_rmse validation_logloss
-1                        0.29898         0.45990            0.61405
-2                        0.08524         0.43380            0.55706
-3                        0.06107         0.42038            0.52747
-4                        0.04453         0.41787            0.52099
-5                        0.03181         0.41491            0.51435
-6                        0.02417         0.41453            0.51243
-7                        0.02163         0.41477            0.51231
-8                        0.01908         0.41367            0.51055
-9                        0.01527         0.41347            0.51122
-10                       0.01527         0.41203            0.50889
-11                       0.01145         0.41213            0.50923
-12                       0.01018         0.41182            0.50903
-13                       0.00891         0.41179            0.50945
-14                       0.00763         0.41150            0.50925
-15                       0.00763         0.41181            0.51021
-16                       0.00636         0.41169            0.51012
-17                       0.00382         0.41213            0.51182
+1                        0.28372         0.44583            0.58688
+2                        0.17018         0.40908            0.51104
+3                        0.16107         0.39433            0.48005
+4                        0.15652         0.38791            0.46455
+5                        0.14855         0.38363            0.45392
+6                        0.14542         0.38158            0.44841
+7                        0.14200         0.38040            0.44500
+8                        0.14257         0.37967            0.44279
+9                        0.14001         0.37912            0.44085
+10                       0.13773         0.37843            0.43921
+11                       0.13631         0.37793            0.43792
+12                       0.13574         0.37796            0.43799
    validation_auc validation_pr_auc validation_lift
-1         0.50000           0.69626         1.00000
-2         0.74734           0.88451         1.43624
-3         0.76851           0.88894         1.43624
-4         0.76489           0.88515         1.43624
-5         0.77078           0.88528         1.43624
-6         0.77202           0.88675         1.43624
-7         0.77481           0.88866         1.43624
-8         0.77584           0.88846         1.43624
-9         0.77739           0.88715         1.43624
-10        0.77904           0.88849         1.43624
-11        0.77801           0.88722         1.43624
-12        0.78007           0.88798         1.43624
-13        0.78152           0.88848         1.43624
-14        0.78286           0.88893         1.43624
-15        0.78080           0.88712         1.43624
-16        0.78090           0.88723         1.43624
-17        0.77873           0.88623         1.43624
+1         0.50000           0.72660         1.00000
+2         0.81990           0.92592         1.37628
+3         0.82699           0.92973         1.37628
+4         0.83052           0.93151         1.37628
+5         0.83445           0.93282         1.37628
+6         0.83548           0.93258         1.37628
+7         0.83624           0.93228         1.37628
+8         0.83724           0.93272         1.37628
+9         0.83846           0.93397         1.37628
+10        0.83879           0.93375         1.37628
+11        0.83950           0.93411         1.37628
+12        0.83925           0.93391         1.37628
    validation_classification_error
-1                          0.30374
-2                          0.28972
-3                          0.27103
-4                          0.26636
-5                          0.25234
-6                          0.25234
-7                          0.25701
-8                          0.27570
-9                          0.26636
-10                         0.26168
-11                         0.25701
-12                         0.25701
-13                         0.26168
-14                         0.25701
-15                         0.25701
-16                         0.25234
-17                         0.25234
+1                          0.27340
+2                          0.23511
+3                          0.22553
+4                          0.22766
+5                          0.23085
+6                          0.22128
+7                          0.22021
+8                          0.22766
+9                          0.21170
+10                         0.21596
+11                         0.21383
+12                         0.21489
 
 Variable Importances: (Extract with `h2o.varimp`) 
 =================================================
 
 Variable Importances: 
-                    variable relative_importance scaled_importance percentage
-1                     Amount          313.728577          1.000000   0.157860
-2                        Age          189.207153          0.603092   0.095204
-3                   Duration          183.591110          0.585191   0.092379
-4 CheckingAccountStatus.none          182.698227          0.582345   0.091929
-5          ResidenceDuration           73.159607          0.233194   0.036812
-
----
-                    variable relative_importance scaled_importance percentage
-54           Purpose.Repairs            8.041581          0.025632   0.004046
-55 Purpose.DomesticAppliance            6.466620          0.020612   0.003254
-56   Job.UnemployedUnskilled            6.073302          0.019358   0.003056
-57             ForeignWorker            5.531750          0.017632   0.002783
-58        Purpose.Retraining            2.407418          0.007674   0.001211
-59             Purpose.Other            1.443236          0.004600   0.000726</code></pre>
+    variable relative_importance scaled_importance percentage
+1     income          601.478210          1.000000   0.164163
+2  seniority          588.334229          0.978147   0.160575
+3    records          508.306793          0.845096   0.138733
+4     amount          403.860840          0.671447   0.110227
+5      price          290.374207          0.482768   0.079252
+6       home          232.835678          0.387106   0.063548
+7     assets          229.250427          0.381145   0.062570
+8        job          215.411026          0.358136   0.058793
+9        age          183.053497          0.304339   0.049961
+10  expenses          148.772507          0.247345   0.040605
+11      time           99.452026          0.165346   0.027144
+12      debt           82.594765          0.137320   0.022543
+13   marital           80.189468          0.133321   0.021886</code></pre>
 </div>
 </div>
+<p>Như vậy, sau khi <code>tuning</code>, ta đã nâng chất lượng mô hình với AUC từ 0.82 lên 0.84.</p>
 </section>
 <section id="lưu-và-load-mô-hình" class="level3" data-number="25.3.10">
 <h3 data-number="25.3.10" class="anchored" data-anchor-id="lưu-và-load-mô-hình"><span class="header-section-number">25.3.10</span> Lưu và load mô hình</h3>
 <p>Để lưu lại mô hình trên H2O, chúng ta sử dụng câu lệnh <code>h2o.saveModel()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lưu model</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.saveModel</span>(gbm, <span class="co"># Tên mô hình</span></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">path =</span> <span class="fu">getwd</span>(), <span class="co"># Đường dẫn muốn lưu</span></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">force =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lưu model</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.saveModel</span>(gbm, <span class="co"># Tên mô hình</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">path =</span> <span class="fu">getwd</span>(), <span class="co"># Đường dẫn muốn lưu</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">force =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Để load mô hình trên H2O, chúng ta sử dụng câu lệnh <code>h2o.loadModel()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.shutdown</span>(<span class="at">prompt =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">h2o.shutdown</span>(<span class="at">prompt =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<center>
-<font size="4">§</font>
-</center>
-<p>Như vậy, trong chương này, chúng ta được học cách xây dựng mô hình dự báo với H2O. Đây là một platform rất mạnh giúp cải thiện chất lượng dự báo, tốc độ xử lý, tối ưu hóa mô hình, cũng như hiển thị kết quả mô hình một cách rất hiệu quả.</p>
 </section>
 </section>
 <section id="tìm-kiếm-mô-hình-tự-động" class="level2" data-number="25.4">
@@ -2469,131 +1948,152 @@ Variable Importances:
 <p>Bên cạnh các mô hình thông thường như random forest, gbm,… <code>h2o</code> còn cho phép tự động xây dựng mô hình với hàm <code>h2o.automl</code> bằng cách xây dựng 1 loạt nhiều mô hình về đánh giá hiệu quả mô hình. Bên cạnh các thuật toán thông thường, h2o còn có thể sử dụng cả các thuật toán thuộc nhóm <code>stack ensemble</code> khi kết hợp kết quả đầu ra của nhiều mô hình</p>
 <p>Xêm thêm hướng dẫn về <a href="https://docs.h2o.ai/h2o/latest-stable/h2o-docs/automl.html">h2o.automl</a></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 6: Xây dựng mô hình trên train</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>auto_model <span class="ot">&lt;-</span> <span class="fu">h2o.automl</span>(<span class="at">training_frame =</span> train, <span class="co"># Tập dữ liệu train</span></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(GermanCredit), <span class="st">"Class"</span>),  <span class="co"># Các biến đầu vào</span></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="st">"Class"</span>, <span class="co"># Biến đầu ra (biến muốn dự báo),</span></span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">max_runtime_secs =</span> <span class="dv">60</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bước 6: Xây dựng mô hình trên train</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>auto_model <span class="ot">&lt;-</span> <span class="fu">h2o.automl</span>(<span class="at">training_frame =</span> train, <span class="co"># Tập dữ liệu train</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">validation_frame =</span> test,</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">x =</span> <span class="fu">setdiff</span>(<span class="fu">names</span>(credit_data), <span class="st">"status"</span>),  <span class="co"># Các biến đầu vào</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>                      <span class="at">y =</span> <span class="st">"status"</span>, <span class="co"># Biến đầu ra (biến muốn dự báo),</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">max_runtime_secs =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   |                                                                            
   |                                                                      |   0%
   |                                                                            
-  |=                                                                     |   2%
-11:03:13.755: _train param, Dropping bad and constant columns: [Personal.Female.Single, Purpose.Vacation]
+  |=                                                                     |   1%
+01:31:44.938: User specified a validation frame with cross-validation still enabled. Please note that the models will still be validated using cross-validation only, the validation frame will be used to provide purely informative validation metrics on the trained models.
+  |                                                                            
+  |==                                                                    |   3%
   |                                                                            
   |====                                                                  |   5%
-11:03:16.671: _train param, Dropping bad and constant columns: [Personal.Female.Single, Purpose.Vacation]
   |                                                                            
-  |======                                                                |   9%
-11:03:18.826: _train param, Dropping bad and constant columns: [Personal.Female.Single, Purpose.Vacation]
+  |=====                                                                 |   7%
+  |                                                                            
+  |=======                                                               |   9%
   |                                                                            
   |========                                                              |  12%
-11:03:21.146: _train param, Dropping unused columns: [Personal.Female.Single, Purpose.Vacation]
-11:03:21.511: _train param, Dropping bad and constant columns: [Personal.Female.Single, Purpose.Vacation]
+  |                                                                            
+  |==========                                                            |  14%
   |                                                                            
   |===========                                                           |  16%
-11:03:24.139: _train param, Dropping bad and constant columns: [Personal.Female.Single, Purpose.Vacation]
   |                                                                            
-  |=============                                                         |  19%
+  |============                                                          |  18%
   |                                                                            
-  |================                                                      |  23%
+  |==============                                                        |  20%
+  |                                                                            
+  |===============                                                       |  22%
+  |                                                                            
+  |=================                                                     |  24%
   |                                                                            
   |==================                                                    |  26%
-11:03:28.822: _train param, Dropping bad and constant columns: [Personal.Female.Single, Purpose.Vacation]
   |                                                                            
-  |=====================                                                 |  29%
-11:03:30.987: _train param, Dropping bad and constant columns: [Personal.Female.Single, Purpose.Vacation]
+  |====================                                                  |  28%
   |                                                                            
-  |=======================                                               |  33%
-11:03:33.342: _train param, Dropping bad and constant columns: [Personal.Female.Single, Purpose.Vacation]
+  |=====================                                                 |  30%
   |                                                                            
-  |=========================                                             |  36%
-11:03:36.296: _train param, Dropping unused columns: [Personal.Female.Single, Purpose.Vacation]
+  |=======================                                               |  32%
   |                                                                            
-  |============================                                          |  40%
-11:03:36.778: _train param, Dropping unused columns: [Personal.Female.Single, Purpose.Vacation]
-11:03:37.280: _train param, Dropping bad and constant columns: [Personal.Female.Single, Purpose.Vacation]
+  |========================                                              |  34%
+  |                                                                            
+  |==========================                                            |  37%
+  |                                                                            
+  |===========================                                           |  39%
+  |                                                                            
+  |============================                                          |  41%
   |                                                                            
   |==============================                                        |  43%
-11:03:39.961: _train param, Dropping bad and constant columns: [Personal.Female.Single, Purpose.Vacation]
+  |                                                                            
+  |===============================                                       |  45%
   |                                                                            
   |=================================                                     |  47%
-11:03:41.611: _train param, Dropping bad and constant columns: [Personal.Female.Single, Purpose.Vacation]
   |                                                                            
-  |===================================                                   |  50%
-11:03:43.627: _train param, Dropping bad and constant columns: [Personal.Female.Single, Purpose.Vacation]
+  |==================================                                    |  49%
   |                                                                            
-  |======================================                                |  54%
-11:03:45.449: _train param, Dropping unused columns: [Personal.Female.Single, Purpose.Vacation]
-11:03:45.955: _train param, Dropping unused columns: [Personal.Female.Single, Purpose.Vacation]
+  |====================================                                  |  51%
+  |                                                                            
+  |=====================================                                 |  53%
+  |                                                                            
+  |=======================================                               |  55%
   |                                                                            
   |========================================                              |  57%
   |                                                                            
-  |===========================================                           |  61%
+  |==========================================                            |  60%
+  |                                                                            
+  |===========================================                           |  62%
   |                                                                            
   |=============================================                         |  64%
   |                                                                            
+  |==============================================                        |  66%
+  |                                                                            
   |===============================================                       |  68%
   |                                                                            
-  |==================================================                    |  71%
+  |=================================================                     |  70%
   |                                                                            
-  |====================================================                  |  75%
+  |==================================================                    |  72%
+  |                                                                            
+  |====================================================                  |  74%
+  |                                                                            
+  |=====================================================                 |  76%
   |                                                                            
   |=======================================================               |  78%
   |                                                                            
-  |=========================================================             |  82%
+  |========================================================              |  80%
   |                                                                            
-  |============================================================          |  85%
+  |==========================================================            |  82%
+  |                                                                            
+  |===========================================================           |  85%
+  |                                                                            
+  |=============================================================         |  87%
   |                                                                            
   |==============================================================        |  89%
   |                                                                            
-  |=================================================================     |  92%
+  |================================================================      |  91%
   |                                                                            
-  |===================================================================   |  96%
-11:04:12.107: _train param, Dropping unused columns: [Personal.Female.Single, Purpose.Vacation]
+  |=================================================================     |  93%
   |                                                                            
-  |======================================================================|  99%
-11:04:12.504: _train param, Dropping unused columns: [Personal.Female.Single, Purpose.Vacation]
+  |==================================================================    |  95%
+  |                                                                            
+  |====================================================================  |  97%
+  |                                                                            
+  |===================================================================== |  99%
   |                                                                            
   |======================================================================| 100%</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>leader_board <span class="ot">&lt;-</span> auto_model<span class="sc">@</span>leaderboard</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(leader_board)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>leader_board <span class="ot">&lt;-</span> auto_model<span class="sc">@</span>leaderboard</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(leader_board)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                                                 model_id       auc   logloss
-1 StackedEnsemble_BestOfFamily_4_AutoML_3_20240127_110313 0.7925860 0.4898369
-2 StackedEnsemble_BestOfFamily_1_AutoML_3_20240127_110313 0.7888404 0.4944783
-3 StackedEnsemble_BestOfFamily_3_AutoML_3_20240127_110313 0.7885006 0.4937585
-4                          GLM_1_AutoML_3_20240127_110313 0.7879137 0.4948324
-5    StackedEnsemble_AllModels_1_AutoML_3_20240127_110313 0.7851489 0.4962340
-6 StackedEnsemble_BestOfFamily_2_AutoML_3_20240127_110313 0.7840677 0.4980313
+<pre><code>                                                model_id       auc   logloss
+1 StackedEnsemble_BestOfFamily_4_AutoML_2_20240721_13144 0.8534487 0.4169469
+2    StackedEnsemble_AllModels_1_AutoML_2_20240721_13144 0.8531564 0.4171070
+3 StackedEnsemble_BestOfFamily_2_AutoML_2_20240721_13144 0.8528731 0.4173195
+4    StackedEnsemble_AllModels_2_AutoML_2_20240721_13144 0.8528609 0.4177210
+5 StackedEnsemble_BestOfFamily_3_AutoML_2_20240721_13144 0.8526422 0.4180335
+6 StackedEnsemble_BestOfFamily_1_AutoML_2_20240721_13144 0.8524405 0.4192514
       aucpr mean_per_class_error      rmse       mse
-1 0.8973745            0.3770977 0.4026156 0.1620993
-2 0.8961402            0.3603275 0.4048651 0.1639157
-3 0.8951806            0.3721860 0.4050430 0.1640598
-4 0.8952975            0.3393018 0.4051039 0.1641091
-5 0.8933682            0.3795073 0.4058725 0.1647325
-6 0.8911998            0.3828552 0.4063598 0.1651282
+1 0.9341279            0.2999846 0.3675472 0.1350909
+2 0.9341054            0.3255450 0.3678989 0.1353496
+3 0.9339738            0.2993496 0.3680767 0.1354805
+4 0.9341232            0.3221191 0.3682857 0.1356344
+5 0.9339085            0.3043841 0.3684068 0.1357235
+6 0.9326967            0.3003526 0.3684118 0.1357272
 
-[30 rows x 7 columns] </code></pre>
+[23 rows x 7 columns] </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>auto_model<span class="sc">@</span>leader</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>auto_model<span class="sc">@</span>leader</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Model Details:
 ==============
 
 H2OBinomialModel: stackedensemble
-Model ID:  StackedEnsemble_BestOfFamily_4_AutoML_3_20240127_110313 
+Model ID:  StackedEnsemble_BestOfFamily_4_AutoML_2_20240721_13144 
 Model Summary for Stacked Ensemble: 
                                          key            value
 1                          Stacking strategy cross_validation
 2       Number of base models (used / total)              5/6
 3           # GBM base models (used / total)              1/1
 4       # XGBoost base models (used / total)              1/1
-5           # GLM base models (used / total)              1/1
-6           # DRF base models (used / total)              1/2
+5           # DRF base models (used / total)              1/2
+6           # GLM base models (used / total)              1/1
 7  # DeepLearning base models (used / total)              1/1
 8                      Metalearner algorithm              GLM
 9         Metalearner fold assignment scheme           Random
@@ -2605,120 +2105,165 @@ Model Summary for Stacked Ensemble:
 H2OBinomialMetrics: stackedensemble
 ** Reported on training data. **
 
-MSE:  0.09446603
-RMSE:  0.3073533
-LogLoss:  0.3205342
-Mean Per-Class Error:  0.1424296
-AUC:  0.9531104
-AUCPR:  0.9796067
-Gini:  0.9062208
+MSE:  0.09643506
+RMSE:  0.3105399
+LogLoss:  0.3128246
+Mean Per-Class Error:  0.1923532
+AUC:  0.9355476
+AUCPR:  0.9737279
+Gini:  0.8710952
 
 Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:
-       Bad Good    Error     Rate
-Bad    180   55 0.234043  =55/235
-Good    28  523 0.050817  =28/551
-Totals 208  578 0.105598  =83/786
+       bad good    Error       Rate
+bad    659  338 0.339017   =338/997
+good   115 2402 0.045689  =115/2517
+Totals 774 2740 0.128913  =453/3514
+
+Maximum Metrics: Maximum metrics at their respective thresholds
+                        metric threshold       value idx
+1                       max f1  0.494350    0.913829 247
+2                       max f2  0.350355    0.945802 299
+3                 max f0point5  0.725015    0.924141 158
+4                 max accuracy  0.517631    0.871372 238
+5                max precision  0.999255    1.000000   0
+6                   max recall  0.103566    1.000000 378
+7              max specificity  0.999255    1.000000   0
+8             max absolute_mcc  0.660383    0.678322 184
+9   max min_per_class_accuracy  0.680776    0.855781 176
+10 max mean_per_class_accuracy  0.725015    0.860751 158
+11                     max tns  0.999255  997.000000   0
+12                     max fns  0.999255 2415.000000   0
+13                     max fps  0.002845  997.000000 399
+14                     max tps  0.103566 2517.000000 378
+15                     max tnr  0.999255    1.000000   0
+16                     max fnr  0.999255    0.959476   0
+17                     max fpr  0.002845    1.000000 399
+18                     max tpr  0.103566    1.000000 378
+
+Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`
+H2OBinomialMetrics: stackedensemble
+** Reported on validation data. **
+
+MSE:  0.140289
+RMSE:  0.3745517
+LogLoss:  0.4362446
+Mean Per-Class Error:  0.2819901
+AUC:  0.8385641
+AUCPR:  0.9285414
+Gini:  0.6771283
+
+Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:
+       bad good    Error      Rate
+bad    132  125 0.486381  =125/257
+good    53  630 0.077599   =53/683
+Totals 185  755 0.189362  =178/940
 
 Maximum Metrics: Maximum metrics at their respective thresholds
                         metric threshold      value idx
-1                       max f1  0.543220   0.926484 254
-2                       max f2  0.413375   0.954051 299
-3                 max f0point5  0.710304   0.932273 187
-4                 max accuracy  0.543220   0.894402 254
-5                max precision  0.986866   1.000000   0
-6                   max recall  0.282334   1.000000 344
-7              max specificity  0.986866   1.000000   0
-8             max absolute_mcc  0.543220   0.742174 254
-9   max min_per_class_accuracy  0.665172   0.872340 208
-10 max mean_per_class_accuracy  0.710304   0.876403 187
-11                     max tns  0.986866 235.000000   0
-12                     max fns  0.986866 549.000000   0
-13                     max fps  0.090883 235.000000 399
-14                     max tps  0.282334 551.000000 344
-15                     max tnr  0.986866   1.000000   0
-16                     max fnr  0.986866   0.996370   0
-17                     max fpr  0.090883   1.000000 399
-18                     max tpr  0.282334   1.000000 344
+1                       max f1  0.469641   0.876217 281
+2                       max f2  0.092632   0.931025 395
+3                 max f0point5  0.699172   0.871997 190
+4                 max accuracy  0.487164   0.810638 273
+5                max precision  0.999320   1.000000   0
+6                   max recall  0.092632   1.000000 395
+7              max specificity  0.999320   1.000000   0
+8             max absolute_mcc  0.699172   0.503488 190
+9   max min_per_class_accuracy  0.703256   0.770428 188
+10 max mean_per_class_accuracy  0.699172   0.773208 190
+11                     max tns  0.999320 257.000000   0
+12                     max fns  0.999320 667.000000   0
+13                     max fps  0.037535 257.000000 399
+14                     max tps  0.092632 683.000000 395
+15                     max tnr  0.999320   1.000000   0
+16                     max fnr  0.999320   0.976574   0
+17                     max fpr  0.037535   1.000000 399
+18                     max tpr  0.092632   1.000000 395
 
 Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`
-
 H2OBinomialMetrics: stackedensemble
 ** Reported on cross-validation data. **
 ** 5-fold cross-validation on training data (Metrics computed for combined holdout predictions) **
 
-MSE:  0.1620993
-RMSE:  0.4026156
-LogLoss:  0.4898369
-Mean Per-Class Error:  0.3770977
-AUC:  0.792586
-AUCPR:  0.8973745
-Gini:  0.585172
+MSE:  0.1350909
+RMSE:  0.3675472
+LogLoss:  0.4169469
+Mean Per-Class Error:  0.2999846
+AUC:  0.8534487
+AUCPR:  0.9341279
+Gini:  0.7068974
 
 Confusion Matrix (vertical: actual; across: predicted) for F1-optimal threshold:
-       Bad Good    Error      Rate
-Bad     68  167 0.710638  =167/235
-Good    24  527 0.043557   =24/551
-Totals  92  694 0.243003  =191/786
+       bad good    Error       Rate
+bad    463  534 0.535607   =534/997
+good   162 2355 0.064362  =162/2517
+Totals 625 2889 0.198065  =696/3514
 
 Maximum Metrics: Maximum metrics at their respective thresholds
-                        metric threshold      value idx
-1                       max f1  0.381001   0.846586 331
-2                       max f2  0.233628   0.922740 377
-3                 max f0point5  0.647875   0.836893 220
-4                 max accuracy  0.561549   0.765903 262
-5                max precision  0.989967   1.000000   0
-6                   max recall  0.107752   1.000000 397
-7              max specificity  0.989967   1.000000   0
-8             max absolute_mcc  0.647875   0.442688 220
-9   max min_per_class_accuracy  0.704439   0.722323 197
-10 max mean_per_class_accuracy  0.647875   0.731533 220
-11                     max tns  0.989967 235.000000   0
-12                     max fns  0.989967 550.000000   0
-13                     max fps  0.086524 235.000000 399
-14                     max tps  0.107752 551.000000 397
-15                     max tnr  0.989967   1.000000   0
-16                     max fnr  0.989967   0.998185   0
-17                     max fpr  0.086524   1.000000 399
-18                     max tpr  0.107752   1.000000 397
+                        metric threshold       value idx
+1                       max f1  0.446814    0.871254 271
+2                       max f2  0.265483    0.930775 333
+3                 max f0point5  0.676737    0.870721 178
+4                 max accuracy  0.505327    0.806488 249
+5                max precision  0.999446    1.000000   0
+6                   max recall  0.066952    1.000000 390
+7              max specificity  0.999446    1.000000   0
+8             max absolute_mcc  0.670883    0.521238 181
+9   max min_per_class_accuracy  0.711799    0.770311 164
+10 max mean_per_class_accuracy  0.676737    0.775374 178
+11                     max tns  0.999446  997.000000   0
+12                     max fns  0.999446 2466.000000   0
+13                     max fps  0.002866  997.000000 399
+14                     max tps  0.066952 2517.000000 390
+15                     max tnr  0.999446    1.000000   0
+16                     max fnr  0.999446    0.979738   0
+17                     max fpr  0.002866    1.000000 399
+18                     max tpr  0.066952    1.000000 390
 
 Gains/Lift Table: Extract with `h2o.gainsLift(&lt;model&gt;, &lt;data&gt;)` or `h2o.gainsLift(&lt;model&gt;, valid=&lt;T/F&gt;, xval=&lt;T/F&gt;)`
 Cross-Validation Metrics Summary: 
-               mean       sd cv_1_valid cv_2_valid cv_3_valid cv_4_valid
-accuracy   0.771291 0.017618   0.774011   0.778481   0.765517   0.793103
-auc        0.794359 0.023192   0.813818   0.774041   0.807381   0.811905
-err        0.228709 0.017618   0.225989   0.221519   0.234483   0.206897
-err_count 36.000000 4.527693  40.000000  35.000000  34.000000  30.000000
-f0point5   0.806521 0.013979   0.800294   0.812030   0.816514   0.818760
+                mean       sd cv_1_valid cv_2_valid cv_3_valid cv_4_valid
+accuracy    0.808428 0.012594   0.802594   0.815860   0.808720   0.791001
+auc         0.851518 0.017519   0.835943   0.878418   0.858033   0.837123
+err         0.191572 0.012594   0.197406   0.184140   0.191280   0.208999
+err_count 134.600000 9.289780 137.000000 137.000000 136.000000 144.000000
+f0point5    0.842002 0.012469   0.825227   0.851689   0.840466   0.836139
           cv_5_valid
-accuracy    0.745342
-auc         0.764650
-err         0.254658
-err_count  41.000000
-f0point5    0.785007
+accuracy    0.823964
+auc         0.848073
+err         0.176036
+err_count 119.000000
+f0point5    0.856490
 
 ---
                         mean        sd cv_1_valid cv_2_valid cv_3_valid
-precision           0.778744  0.019116   0.773050   0.782609   0.801802
-r2                  0.223891  0.038729   0.260007   0.198833   0.238333
-recall              0.942947  0.038880   0.931624   0.955752   0.881188
-residual_deviance 154.004730 17.749662 176.486950 157.258740 139.797700
-rmse                0.402089  0.009688   0.407201   0.403971   0.401237
-specificity         0.359130  0.124795   0.466667   0.333333   0.500000
+precision           0.821474  0.019687   0.791602   0.839060   0.816972
+r2                  0.315125  0.031421   0.276733   0.337323   0.333887
+recall              0.937694  0.036457   0.994141   0.906250   0.949710
+residual_deviance 604.525800 32.584343 603.022900 656.117300 588.399840
+rmse                0.372478  0.007452   0.374077   0.377100   0.363539
+specificity         0.473502  0.135374   0.263736   0.616379   0.432990
                   cv_4_valid cv_5_valid
-precision           0.786260   0.750000
-r2                  0.253174   0.169105
-recall              0.980952   0.965217
-residual_deviance 132.815110 163.665150
-rmse                0.386248   0.411789
-specificity         0.300000   0.195652</code></pre>
+precision           0.820183   0.839552
+r2                  0.285319   0.342363
+recall              0.906694   0.931677
+residual_deviance 606.860700 568.228200
+rmse                0.381407   0.366268
+specificity         0.500000   0.554404</code></pre>
 </div>
 </div>
 </section>
-<section id="tài-liệu-tham-khảo" class="level2" data-number="25.5">
-<h2 data-number="25.5" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">25.5</span> Tài liệu tham khảo</h2>
+<section id="h2o-flow" class="level2" data-number="25.5">
+<h2 data-number="25.5" class="anchored" data-anchor-id="h2o-flow"><span class="header-section-number">25.5</span> H2o Flow</h2>
+<p>Bên cạnh sử dụng các câu lệnh trong R, H2O còn hỗ trợ xây dựng mô hình với flow. Sau khi khởi động h2o, ta có thể truy cập vào <code>localhost:54321</code> và xây dựng mô hình dưới dạng GUI</p>
+<p><img src="Images/p03-07-h2o-flow.png" class="img-fluid"></p>
+<p>Chi tiết hướng dẫn sử dụng có thể xem thêm tại <a href="">https://docs.h2o.ai/h2o/latest-stable/h2o-docs/flow.html</a></p>
+</section>
+<section id="tài-liệu-tham-khảo" class="level2" data-number="25.6">
+<h2 data-number="25.6" class="anchored" data-anchor-id="tài-liệu-tham-khảo"><span class="header-section-number">25.6</span> Tài liệu tham khảo</h2>
 <ul>
 <li><a href="https://github.com/h2oai/h2o-tutorials">https://github.com/h2oai/h2o-tutorials</a></li>
 <li><a href="https://docs.h2o.ai/h2o/latest-stable/h2o-docs/automl.html">https://docs.h2o.ai/h2o/latest-stable/h2o-docs/automl.html</a></li>
+<li><a href="https://h2o.ai/blog/2016/h2o-gbm-tuning-tutorial-for-r/">https://h2o.ai/blog/2016/h2o-gbm-tuning-tutorial-for-r/</a></li>
 </ul>
 
 
